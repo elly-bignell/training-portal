@@ -634,137 +634,27 @@ export const trainingProgram: Module[] = [
   },
   {
     id: "module-4",
-    title: "MODULE 4 — Quodo Product & Plans",
+    title: "MODULE 4 — Sales Admin + Execution Readiness",
     purpose:
-      "Master the Quodo product offering, understand the plan ladder and pricing, and learn how to match clients to the right plan.",
+      "Content coming soon. This module will cover the complete end-to-end sales flow and key sales mindset concepts for success.",
     proficiency: [
-      "Explain what Quodo is and its core value proposition",
-      "Recall the plan ladder and pricing structure",
-      "Choose the appropriate plan for different client scenarios",
-      "Share the correct post-meeting link with prospects",
+      "To be confirmed",
     ],
     deliverable:
-      "Write roleplay script notes in the notes section: Prepare a brief script for introducing Quodo to a prospect who currently uses no CRM or automation tools.",
+      "To be confirmed.",
     checklist: [
       {
         id: "m4-item1",
-        label: "Watch the Quodo product demo video",
-        link: "#",
-        estimatedTime: "30 min",
-      },
-      {
-        id: "m4-item2",
-        label: "Read the Quodo features overview",
-        link: "#",
-        estimatedTime: "20 min",
-      },
-      {
-        id: "m4-item3",
-        label: "Study the plan ladder and pricing structure",
-        link: "#",
-        estimatedTime: "15 min",
-      },
-      {
-        id: "m4-item4",
-        label: "Review the post-meeting link process",
-        link: "#",
-        estimatedTime: "10 min",
-      },
-      {
-        id: "m4-item5",
-        label: "Practice scenario: Recommend a plan for a solo consultant",
-        estimatedTime: "15 min",
-      },
-      {
-        id: "m4-item6",
-        label: "Practice scenario: Recommend a plan for a 10-person agency",
-        estimatedTime: "15 min",
-      },
-      {
-        id: "m4-item7",
-        label: "Write your roleplay script (deliverable)",
-        estimatedTime: "30 min",
+        label: "🚧 Content coming soon",
       },
     ],
-    resources: [
-      { label: "Quodo Website", url: "#" },
-      { label: "Plan Comparison Chart", url: "#" },
-      { label: "Post-Meeting Link Generator", url: "#" },
-    ],
-  },
-  {
-    id: "module-5",
-    title: "MODULE 5 — Sales Admin + Execution Readiness",
-    purpose:
-      "Demonstrate the complete end-to-end sales flow and understand key sales mindset concepts for success.",
-    proficiency: [
-      "Demonstrate the end-to-end flow from cold call to booking to admin steps",
-      "Explain key sales mindset concepts",
-      "Navigate the CRM and booking systems confidently",
-      "Complete all required admin tasks accurately",
-    ],
-    deliverable:
-      "In the notes section, write: 1) Your 5-step sales flow from initial contact to closed deal. 2) Mock booking entry notes for a fictional prospect.",
-    checklist: [
-      {
-        id: "m5-item1",
-        label: "Watch the 'Cold Call to Close' process video",
-        link: "#",
-        estimatedTime: "30 min",
-      },
-      {
-        id: "m5-item2",
-        label: "Read the Sales Admin checklist document",
-        link: "#",
-        estimatedTime: "15 min",
-      },
-      {
-        id: "m5-item3",
-        label: "Complete CRM navigation tutorial",
-        link: "#",
-        estimatedTime: "25 min",
-      },
-      {
-        id: "m5-item4",
-        label: "Review the booking system walkthrough",
-        link: "#",
-        estimatedTime: "20 min",
-      },
-      {
-        id: "m5-item5",
-        label: "Read the 'Sales Mindset' article",
-        link: "#",
-        estimatedTime: "15 min",
-      },
-      {
-        id: "m5-item6",
-        label: "Watch the 'Handling Objections' training video",
-        link: "#",
-        estimatedTime: "25 min",
-      },
-      {
-        id: "m5-item7",
-        label: "Practice: Complete a mock booking in the CRM",
-        estimatedTime: "20 min",
-      },
-      {
-        id: "m5-item8",
-        label: "Write your 5-step sales flow + mock booking entry (deliverable)",
-        estimatedTime: "30 min",
-      },
-    ],
-    resources: [
-      { label: "CRM Login", url: "#" },
-      { label: "Booking System", url: "#" },
-      { label: "Sales Playbook", url: "#" },
-      { label: "Objection Handling Guide", url: "#" },
-    ],
+    resources: [],
   },
 ];
 
 export function getTotalChecklistItems(): number {
   return trainingProgram.reduce(
-    (total, module) => total + module.checklist.length,
+    (total, module) => total + module.checklist.filter(item => !item.isSection).length,
     0
   );
 }
