@@ -11,7 +11,6 @@ export const trainingProgram: Module[] = [
     proficiency: [
       "Explain who Marketing Sweet and Quodo are",
       "Articulate why clients trust us",
-      "Define what 'closed circuit selling' means",
       "Summarize key points from reviews, core strengths, and company direction video",
     ],
     deliverable:
@@ -19,44 +18,45 @@ export const trainingProgram: Module[] = [
     checklist: [
       {
         id: "m1-item1",
-        label: "Watch the Company Overview Video",
-        link: "#",
-        estimatedTime: "15 min",
+        label: "Read: Welcome to The Core Strength Series",
+        link: "https://docs.google.com/presentation/d/1hz1VSOp9BizaKimvXe-vlzNhPIqFryTXyhOuEAwY2I0/edit?usp=sharing",
+        estimatedTime: "10 min",
       },
       {
         id: "m1-item2",
-        label: "Read the Marketing Sweet 'About Us' page",
-        link: "#",
+        label: "Read: Part 1 - Our Leader",
+        link: "https://docs.google.com/presentation/d/1j9Fn0MgnvEtSOTBDeoA_ykcMM4zT2Jzdlym6PxpKuao/edit?usp=drive_link",
         estimatedTime: "10 min",
       },
       {
         id: "m1-item3",
-        label: "Read the Quodo 'About Us' page",
-        link: "#",
+        label: "Read: Part 2 - Our People",
+        link: "https://docs.google.com/presentation/d/1XWb8y9V24Vs33LGHbVcXQfY8JCkO5sgPICnj6VZBFO4/edit?usp=drive_link",
         estimatedTime: "10 min",
       },
       {
         id: "m1-item4",
-        label: "Review client testimonials and case studies",
-        link: "#",
-        estimatedTime: "20 min",
+        label: "Read: Part 3 - Our Company",
+        link: "https://docs.google.com/presentation/d/1Ikb2YP96r-QwZPkpsYqS2QBaB-_qQ6qNbFfRl81jq2A/edit?usp=drive_link",
+        estimatedTime: "10 min",
       },
       {
         id: "m1-item5",
-        label: "Watch the 'Company Direction' video",
-        link: "#",
-        estimatedTime: "20 min",
+        label: "Read some of our Google Reviews",
+        link: "https://sweetgroup.marketingsweet.com.au/google-reviews",
+        estimatedTime: "10 min",
       },
       {
         id: "m1-item6",
-        label: "Read the 'Closed Circuit Selling' methodology document",
-        link: "#",
+        label: "Watch this Video About Our Company in 2026",
+        link: "https://www.youtube.com/watch?v=KjBs0Kl-gkM",
         estimatedTime: "15 min",
       },
       {
         id: "m1-item7",
         label: "Complete your 60-second company explanation (deliverable)",
         estimatedTime: "30 min",
+      },
       },
     ],
     resources: [
