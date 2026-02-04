@@ -7,6 +7,7 @@ import Link from "next/link";
 import { trainees } from "@/data/trainees";
 import { trainingProgram } from "@/data/trainingProgram";
 import ProgressBar from "@/components/ProgressBar";
+import PasswordGate from "@/components/PasswordGate";
 
 interface TraineeProgressData {
   trainee_slug: string;
@@ -17,7 +18,7 @@ interface TraineeProgressData {
   last_updated: string;
 }
 
-export default function AdminDashboard() {
+function AdminDashboardContent() {
   const [progressData, setProgressData] = useState<TraineeProgressData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -286,5 +287,13 @@ export default function AdminDashboard() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function AdminDashboard() {
+  return (
+    <PasswordGate requireMaster>
+      <AdminDashboardContent />
+    </PasswordGate>
   );
 }

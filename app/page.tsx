@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { trainees } from "@/data/trainees";
 import { trainingProgram, getTotalChecklistItems } from "@/data/trainingProgram";
+import PasswordGate from "@/components/PasswordGate";
 
 interface TraineeProgressData {
   trainee_slug: string;
@@ -82,7 +83,7 @@ function formatAdelaideDate(dateString: string | undefined, includeTime: boolean
   return date.toLocaleString("en-AU", options);
 }
 
-export default function Home() {
+function HomeContent() {
   const [progressData, setProgressData] = useState<TraineeProgressData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
@@ -280,5 +281,13 @@ export default function Home() {
         </footer>
       </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <PasswordGate requireMaster>
+      <HomeContent />
+    </PasswordGate>
   );
 }

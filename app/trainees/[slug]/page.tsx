@@ -9,8 +9,9 @@ import { trainingProgram } from "@/data/trainingProgram";
 import { useTraineeProgress } from "@/hooks/useLocalStorage";
 import ProgressBar from "@/components/ProgressBar";
 import ModuleCard from "@/components/ModuleCard";
+import PasswordGate from "@/components/PasswordGate";
 
-export default function TraineeDashboard() {
+function TraineeDashboardContent() {
   const params = useParams();
   const slug = params.slug as string;
   const trainee = getTraineeBySlug(slug);
@@ -257,5 +258,16 @@ export default function TraineeDashboard() {
         </footer>
       </div>
     </main>
+  );
+}
+
+export default function TraineeDashboard() {
+  const params = useParams();
+  const slug = params.slug as string;
+  
+  return (
+    <PasswordGate traineeSlug={slug}>
+      <TraineeDashboardContent />
+    </PasswordGate>
   );
 }
