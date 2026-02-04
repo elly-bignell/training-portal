@@ -1,12 +1,115 @@
 // app/page.tsx
 
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { trainees } from "@/data/trainees";
 import { trainingProgram, getTotalChecklistItems } from "@/data/trainingProgram";
 
+interface TraineeProgressData {
+  trainee_slug: string;
+  trainee_name: string;
+  overall_progress: number;
+  last_updated: string;
+  first_activity?: string;
+}
+
+// Circular Progress Component
+function CircularProgress({ percentage }: { percentage: number }) {
+  const radius = 28;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (percentage / 100) * circumference;
+  
+  // Color based on progress
+  const getColor = (pct: number) => {
+    if (pct >= 75) return "#22c55e"; // green
+    if (pct >= 50) return "#3b82f6"; // blue
+    if (pct >= 25) return "#f59e0b"; // amber
+    return "#94a3b8"; // gray
+  };
+
+  return (
+    <div className="relative w-16 h-16 flex items-center justify-center">
+      <svg className="w-16 h-16 transform -rotate-90">
+        {/* Background circle */}
+        <circle
+          cx="32"
+          cy="32"
+          r={radius}
+          stroke="#e5e7eb"
+          strokeWidth="6"
+          fill="none"
+        />
+        {/* Progress circle */}
+        <circle
+          cx="32"
+          cy="32"
+          r={radius}
+          stroke={getColor(percentage)}
+          strokeWidth="6"
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          className="transition-all duration-500"
+        />
+      </svg>
+      <span className="absolute text-sm font-bold text-gray-700">
+        {percentage}%
+      </span>
+    </div>
+  );
+}
+
+// Format date to Adelaide timezone
+function formatAdelaideDate(dateString: string | undefined, includeTime: boolean = false) {
+  if (!dateString) return null;
+  
+  const date = new Date(dateString);
+  const options: Intl.DateTimeFormatOptions = {
+    timeZone: "Australia/Adelaide",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    ...(includeTime && {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }),
+  };
+  
+  return date.toLocaleString("en-AU", options);
+}
+
 export default function Home() {
+  const [progressData, setProgressData] = useState<TraineeProgressData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
   const totalItems = getTotalChecklistItems();
   const totalModules = trainingProgram.length;
+
+  useEffect(() => {
+    const fetchProgress = async () => {
+      try {
+        const response = await fetch("/api/progress/all");
+        const data = await response.json();
+        if (data.records) {
+          setProgressData(data.records);
+        }
+      } catch (error) {
+        console.error("Failed to fetch progress:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProgress();
+  }, []);
+
+  const getTraineeProgress = (slug: string): TraineeProgressData | undefined => {
+    return progressData.find((p) => p.trainee_slug === slug);
+  };
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -70,7 +173,7 @@ export default function Home() {
               <div className="text-sm text-gray-600">Trainees</div>
             </div>
             <div className="text-center p-4 bg-orange-50 rounded-lg">
-              <div className="text-3xl font-bold text-orange-600">5</div>
+              <div className="text-3xl font-bold text-orange-600">4</div>
               <div className="text-sm text-gray-600">Deliverables</div>
             </div>
           </div>
@@ -81,46 +184,67 @@ export default function Home() {
           <h2 className="text-lg font-semibold text-gray-800">
             Select Your Dashboard
           </h2>
-          {trainees.map((trainee) => (
-            <Link
-              key={trainee.id}
-              href={`/trainees/${trainee.slug}`}
-              className="block bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md hover:border-blue-300 transition-all duration-200"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-lg">
-                    {trainee.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .slice(0, 2)}
+          {trainees.map((trainee) => {
+            const progress = getTraineeProgress(trainee.slug);
+            const hasStarted = progress && progress.overall_progress > 0;
+            
+            return (
+              <Link
+                key={trainee.id}
+                href={`/trainees/${trainee.slug}`}
+                className="block bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md hover:border-blue-300 transition-all duration-200"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-lg">
+                      {trainee.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .slice(0, 2)}
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {trainee.name}
+                      </h3>
+                      <div className="text-sm text-gray-500 space-y-0.5">
+                        {hasStarted ? (
+                          <>
+                            <p>Started: {formatAdelaideDate(progress.last_updated, false)}</p>
+                            <p>Last updated: {formatAdelaideDate(progress.last_updated, true)}</p>
+                          </>
+                        ) : (
+                          <p className="text-gray-400 italic">Not started yet</p>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {trainee.name}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      Started: {new Date(trainee.startDate).toLocaleDateString()}
-                    </p>
+                  <div className="flex items-center gap-4">
+                    {isLoading ? (
+                      <div className="w-16 h-16 flex items-center justify-center">
+                        <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+                      </div>
+                    ) : (
+                      <CircularProgress percentage={progress?.overall_progress || 0} />
+                    )}
+                    <svg
+                      className="w-6 h-6 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
                   </div>
                 </div>
-                <svg
-                  className="w-6 h-6 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Module Preview */}
@@ -140,7 +264,7 @@ export default function Home() {
                 <div>
                   <h3 className="font-medium text-gray-800">{module.title}</h3>
                   <p className="text-sm text-gray-500">
-                    {module.checklist.length} tasks
+                    {module.checklist.filter(item => !item.isSection).length} tasks
                   </p>
                 </div>
               </div>
