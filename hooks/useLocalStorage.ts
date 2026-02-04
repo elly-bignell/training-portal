@@ -10,7 +10,7 @@ const getStorageKey = (traineeSlug: string) => `training-progress-${traineeSlug}
 const defaultProgress: TraineeProgress = {
   checkedItems: {},
   notes: {},
-  lastUpdated: new Date().toISOString(),
+  lastUpdated: "",
 };
 
 export function useTraineeProgress(traineeSlug: string, traineeName: string) {
@@ -44,47 +44,44 @@ export function useTraineeProgress(traineeSlug: string, traineeName: string) {
     [traineeSlug, traineeName]
   );
 
-  // Load from localStorage first, then try to fetch from Airtable
+  // Load from Airtable first (source of truth), fall back to localStorage
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     const loadProgress = async () => {
       const storageKey = getStorageKey(traineeSlug);
-      const stored = localStorage.getItem(storageKey);
-      let localProgress = defaultProgress;
-
-      if (stored) {
-        try {
-          localProgress = JSON.parse(stored) as TraineeProgress;
-          setProgress(localProgress);
-        } catch (e) {
-          console.error("Failed to parse stored progress:", e);
-        }
-      }
-
-      // Try to fetch from Airtable
+      
+      // Try to fetch from Airtable first (source of truth)
       try {
         const response = await fetch(`/api/progress?trainee_slug=${traineeSlug}`);
         const data = await response.json();
 
         if (data && !data.error && data.checked_items) {
           const airtableProgress: TraineeProgress = {
-            checkedItems: data.checked_items,
+            checkedItems: data.checked_items || {},
             notes: data.notes || {},
             lastUpdated: data.last_updated || new Date().toISOString(),
           };
 
-          // Use Airtable data if it's newer
-          const localDate = new Date(localProgress.lastUpdated || 0);
-          const airtableDate = new Date(airtableProgress.lastUpdated || 0);
-
-          if (airtableDate > localDate) {
-            setProgress(airtableProgress);
-            localStorage.setItem(storageKey, JSON.stringify(airtableProgress));
-          }
+          // Use Airtable data and update localStorage to match
+          setProgress(airtableProgress);
+          localStorage.setItem(storageKey, JSON.stringify(airtableProgress));
+          setIsLoaded(true);
+          return;
         }
       } catch (error) {
         console.error("Failed to fetch from Airtable:", error);
+      }
+
+      // Fall back to localStorage if Airtable fetch failed or returned no data
+      const stored = localStorage.getItem(storageKey);
+      if (stored) {
+        try {
+          const localProgress = JSON.parse(stored) as TraineeProgress;
+          setProgress(localProgress);
+        } catch (e) {
+          console.error("Failed to parse stored progress:", e);
+        }
       }
 
       setIsLoaded(true);
