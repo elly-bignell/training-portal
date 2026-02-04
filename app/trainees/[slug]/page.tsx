@@ -15,9 +15,9 @@ export default function TraineeDashboard() {
   const slug = params.slug as string;
   const trainee = getTraineeBySlug(slug);
 
-  // Get all checklist item IDs for overall progress calculation
+  // Get all checklist item IDs for overall progress calculation (excluding section headers)
   const allChecklistIds = trainingProgram.flatMap((module) =>
-    module.checklist.map((item) => item.id)
+    module.checklist.filter((item) => !item.isSection).map((item) => item.id)
   );
 
   const {
@@ -194,7 +194,7 @@ export default function TraineeDashboard() {
           </h3>
           <div className="flex flex-wrap gap-2">
             {trainingProgram.map((module, index) => {
-              const moduleIds = module.checklist.map((item) => item.id);
+              const moduleIds = module.checklist.filter((item) => !item.isSection).map((item) => item.id);
               const moduleProg = getModuleProgress(moduleIds);
               return (
                 <a
@@ -217,7 +217,7 @@ export default function TraineeDashboard() {
         {/* Module Cards */}
         <div className="space-y-6">
           {trainingProgram.map((module) => {
-            const moduleIds = module.checklist.map((item) => item.id);
+            const moduleIds = module.checklist.filter((item) => !item.isSection).map((item) => item.id);
             const moduleProgress = getModuleProgress(moduleIds);
 
             return (
