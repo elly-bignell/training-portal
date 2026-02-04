@@ -65,9 +65,9 @@ export default function AdminDashboard() {
     checkedItems: Record<string, boolean>,
     moduleId: string
   ): number => {
-    const module = trainingProgram.find((m) => m.id === moduleId);
-    if (!module) return 0;
-    const moduleChecklistIds = module.checklist.map((item) => item.id);
+    const trainingModule = trainingProgram.find((m) => m.id === moduleId);
+    if (!trainingModule) return 0;
+    const moduleChecklistIds = trainingModule.checklist.map((item) => item.id);
     const checkedCount = moduleChecklistIds.filter(
       (id) => checkedItems[id]
     ).length;
