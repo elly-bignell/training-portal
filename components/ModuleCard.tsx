@@ -94,12 +94,20 @@ export default function ModuleCard({
             </h4>
             <div className="space-y-2">
               {module.checklist.map((item) => (
-                <ChecklistItem
-                  key={item.id}
-                  item={item}
-                  isChecked={checkedItems[item.id] || false}
-                  onToggle={onToggleItem}
-                />
+                item.isSection ? (
+                  <div key={item.id} className="pt-4 pb-2">
+                    <h5 className="text-sm font-bold text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">
+                      {item.label}
+                    </h5>
+                  </div>
+                ) : (
+                  <ChecklistItem
+                    key={item.id}
+                    item={item}
+                    isChecked={checkedItems[item.id] || false}
+                    onToggle={onToggleItem}
+                  />
+                )
               ))}
             </div>
           </div>

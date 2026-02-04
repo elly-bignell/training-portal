@@ -5,6 +5,7 @@ export interface ChecklistItem {
   label: string;
   link?: string;
   estimatedTime?: string;
+  isSection?: boolean;
 }
 
 export interface Resource {
