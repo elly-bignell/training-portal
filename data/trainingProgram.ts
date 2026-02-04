@@ -57,7 +57,6 @@ export const trainingProgram: Module[] = [
         label: "Complete your 60-second company explanation (deliverable)",
         estimatedTime: "30 min",
       },
-      },
     ],
     resources: [
       { label: "Marketing Sweet Website", url: "#" },
