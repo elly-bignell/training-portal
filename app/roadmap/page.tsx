@@ -2,14 +2,15 @@
 
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import PasswordGate from "@/components/PasswordGate";
 
 interface WeekData {
   week: number;
-  overallWeek: number;
   dateRange: string;
-  phase: "ramp" | "gold" | "maintain";
+  startDate: string; // ISO date string for the Monday of this week
+  phase: "training" | "ramp" | "gold" | "maintain";
   label?: string;
   daily: {
     revenue: number;
@@ -22,69 +23,76 @@ interface WeekData {
 
 const weeklyData: WeekData[] = [
   {
+    week: 0,
+    dateRange: "Mon 27 Jan – Fri 21 Feb",
+    startDate: "2025-01-27",
+    phase: "training",
+    label: "Training Week",
+    daily: { revenue: 0, units: 0, meetings: 0, bookings: 0, calls: 0 },
+  },
+  {
     week: 1,
-    overallWeek: 5,
     dateRange: "Mon 23 Feb – Fri 27 Feb",
+    startDate: "2025-02-23",
     phase: "ramp",
     label: "First Week Out",
     daily: { revenue: 0, units: 0, meetings: 0.4, bookings: 3, calls: 60 },
   },
   {
     week: 2,
-    overallWeek: 6,
     dateRange: "Mon 2 Mar – Fri 6 Mar",
+    startDate: "2025-03-02",
     phase: "ramp",
     daily: { revenue: 100, units: 0.2, meetings: 1.6, bookings: 3.2, calls: 50 },
   },
   {
     week: 3,
-    overallWeek: 7,
     dateRange: "Mon 9 Mar – Fri 13 Mar",
+    startDate: "2025-03-09",
     phase: "ramp",
     label: "First Deals Expected",
     daily: { revenue: 200, units: 0.4, meetings: 1.6, bookings: 3.2, calls: 50 },
   },
   {
     week: 4,
-    overallWeek: 8,
     dateRange: "Mon 16 Mar – Fri 20 Mar",
+    startDate: "2025-03-16",
     phase: "ramp",
     daily: { revenue: 300, units: 0.6, meetings: 2, bookings: 4, calls: 50 },
   },
   {
     week: 5,
-    overallWeek: 9,
     dateRange: "Mon 23 Mar – Fri 27 Mar",
+    startDate: "2025-03-23",
     phase: "ramp",
     label: "Nearly There",
     daily: { revenue: 400, units: 0.8, meetings: 2, bookings: 4, calls: 40 },
   },
   {
     week: 6,
-    overallWeek: 10,
     dateRange: "Mon 30 Mar – Fri 3 Apr",
+    startDate: "2025-03-30",
     phase: "gold",
     label: "⭐ Gold Standard",
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
   },
   {
     week: 7,
-    overallWeek: 11,
     dateRange: "Mon 6 Apr – Fri 10 Apr",
+    startDate: "2025-04-06",
     phase: "maintain",
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
   },
   {
     week: 8,
-    overallWeek: 12,
     dateRange: "Mon 13 Apr – Fri 17 Apr",
+    startDate: "2025-04-13",
     phase: "maintain",
     label: "Fully Operational",
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
   },
 ];
 
-// Gold standard daily values for % calculation
 const goldDaily = { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 };
 
 function getWeekly(daily: WeekData["daily"]) {
@@ -107,21 +115,44 @@ function formatNumber(val: number) {
   return val.toFixed(1);
 }
 
-// Calculate % to gold based on average of all metrics (excluding calls which decrease)
+function getConversions(daily: WeekData["daily"]) {
+  return {
+    callsToBookings: daily.calls > 0 ? (daily.bookings / daily.calls) * 100 : 0,
+    bookingsToMeetings: daily.bookings > 0 ? (daily.meetings / daily.bookings) * 100 : 0,
+    meetingsToUnits: daily.meetings > 0 ? (daily.units / daily.meetings) * 100 : 0,
+    revenuePerUnit: daily.units > 0 ? daily.revenue / daily.units : 0,
+  };
+}
+
 function getPercentToGold(daily: WeekData["daily"]) {
-  // For revenue & units: higher = better (% of gold target)
   const revPct = goldDaily.revenue > 0 ? Math.min(100, (daily.revenue / goldDaily.revenue) * 100) : 100;
   const unitPct = goldDaily.units > 0 ? Math.min(100, (daily.units / goldDaily.units) * 100) : 100;
   const meetPct = Math.min(100, (daily.meetings / goldDaily.meetings) * 100);
   const bookPct = Math.min(100, (daily.bookings / goldDaily.bookings) * 100);
-  // For calls: lower is better (they ramp down), so we invert
-  // At 60 calls (max) = 0% progress, at 40 calls (gold) = 100% progress
   const callPct = Math.min(100, Math.max(0, ((60 - daily.calls) / (60 - goldDaily.calls)) * 100));
-
   return Math.round((revPct + unitPct + meetPct + bookPct + callPct) / 5);
 }
 
-// Phase colors
+// Determine current week based on Adelaide time
+function getCurrentWeek(): number {
+  const now = new Date();
+  // Convert to Adelaide time
+  const adelaide = new Date(now.toLocaleString("en-US", { timeZone: "Australia/Adelaide" }));
+  
+  // Check each week's start date (Sundays before the Monday)
+  for (let i = weeklyData.length - 1; i >= 0; i--) {
+    const weekStart = new Date(weeklyData[i].startDate);
+    // The "You are here" moves on the Sunday before (1 day before Monday)
+    const activateDate = new Date(weekStart);
+    activateDate.setDate(activateDate.getDate() - 1);
+    
+    if (adelaide >= activateDate) {
+      return weeklyData[i].week;
+    }
+  }
+  return 0;
+}
+
 function getPhaseStyles(phase: string) {
   switch (phase) {
     case "gold":
@@ -132,6 +163,7 @@ function getPhaseStyles(phase: string) {
         metricBg: "bg-amber-100/60",
         textColor: "text-amber-700",
         dailyColor: "text-amber-500",
+        arrowColor: "text-amber-400",
       };
     case "maintain":
       return {
@@ -141,6 +173,17 @@ function getPhaseStyles(phase: string) {
         metricBg: "bg-emerald-100/60",
         textColor: "text-emerald-700",
         dailyColor: "text-emerald-500",
+        arrowColor: "text-emerald-400",
+      };
+    case "training":
+      return {
+        border: "border-blue-300",
+        bg: "bg-gradient-to-br from-blue-50 to-indigo-50",
+        badge: "bg-blue-600 text-white",
+        metricBg: "bg-blue-100/60",
+        textColor: "text-blue-700",
+        dailyColor: "text-blue-500",
+        arrowColor: "text-blue-400",
       };
     default:
       return {
@@ -150,26 +193,64 @@ function getPhaseStyles(phase: string) {
         metricBg: "bg-slate-50",
         textColor: "text-slate-800",
         dailyColor: "text-slate-400",
+        arrowColor: "text-slate-300",
       };
   }
 }
 
-const metricLabels = [
-  { key: "revenue" as const, label: "Revenue", format: "currency" },
-  { key: "units" as const, label: "Units", format: "number" },
-  { key: "meetings" as const, label: "Meetings", format: "number" },
-  { key: "bookings" as const, label: "Bookings", format: "number" },
+const funnelMetrics = [
   { key: "calls" as const, label: "Calls", format: "number" },
+  { key: "bookings" as const, label: "Bookings", format: "number" },
+  { key: "meetings" as const, label: "Meetings", format: "number" },
+  { key: "units" as const, label: "Units", format: "number" },
+  { key: "revenue" as const, label: "Revenue", format: "currency" },
 ];
 
+const conversionLabels = ["Call → Book", "Book → Meet", "Meet → Close", "Avg Deal"];
+
+function ConversionArrow({ rate, label, format, phaseColor }: { rate: number; label: string; format: "pct" | "currency"; phaseColor: string }) {
+  const display = format === "currency"
+    ? (rate > 0 ? formatCurrency(rate) : "—")
+    : (rate > 0 ? rate.toFixed(1) + "%" : "—");
+
+  return (
+    <div className="flex flex-col items-center justify-center px-1">
+      <svg className={`w-4 h-4 ${phaseColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+      </svg>
+      <span className={`text-xs font-bold ${rate > 0 ? "text-slate-700" : "text-slate-300"} whitespace-nowrap`}>
+        {display}
+      </span>
+      <span className="text-[9px] text-slate-400 whitespace-nowrap leading-tight">{label}</span>
+    </div>
+  );
+}
+
+function YouAreHereBadge() {
+  return (
+    <div className="inline-flex items-center gap-1.5 bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md shadow-blue-200 animate-pulse">
+      <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+      </svg>
+      YOU ARE HERE
+    </div>
+  );
+}
+
 function RoadmapContent() {
+  const [currentWeek, setCurrentWeek] = useState<number>(0);
   const goldWeekly = getWeekly(goldDaily);
+  const goldConversions = getConversions(goldDaily);
+
+  useEffect(() => {
+    setCurrentWeek(getCurrentWeek());
+  }, []);
 
   return (
     <main className="min-h-screen bg-slate-50">
       {/* Header */}
       <header className="bg-slate-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 py-8 sm:py-12">
+        <div className="max-w-3xl mx-auto px-4 py-8 sm:py-12">
           <div className="flex items-center justify-between mb-6">
             <Link
               href="/"
@@ -187,7 +268,7 @@ function RoadmapContent() {
               Admin Dashboard →
             </Link>
           </div>
-          
+
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
             Our Standards
           </h1>
@@ -195,113 +276,102 @@ function RoadmapContent() {
             The Roadmap to Achieving 1 Deal Per Day
           </p>
           <p className="text-slate-400 mt-3 max-w-2xl">
-            Weeks 1–4 are onboarding &amp; training. This roadmap covers Weeks 5–12: 
-            your first 8 weeks in the field, building up to the Gold Standard by Week 6.
+            Weeks 1–4 are onboarding &amp; training. This roadmap covers your first 8 weeks in the field, building up to the Gold Standard by Week 6.
           </p>
         </div>
       </header>
 
       {/* Gold Standard Summary */}
-      <div className="max-w-6xl mx-auto px-4 -mt-6">
+      <div className="max-w-3xl mx-auto px-4 -mt-6">
         <div className="bg-gradient-to-r from-amber-500 to-yellow-500 rounded-2xl p-6 sm:p-8 text-white shadow-xl shadow-amber-200/30">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-2xl">⭐</span>
             <h2 className="text-xl font-bold">The Gold Standard — Week 6 Target</h2>
           </div>
           <p className="text-amber-100 text-sm mb-6">
-            From Week 6 (Week 10 overall) onwards — these are your targets to maintain
+            From Week 6 onwards — these are your targets to maintain
           </p>
-          <div className="grid grid-cols-5 gap-4">
-            {metricLabels.map((m) => (
-              <div key={m.key} className="bg-white/15 backdrop-blur rounded-xl p-4 text-center">
-                <div className="text-xs text-amber-200 uppercase tracking-wide font-semibold mb-2">{m.label}</div>
-                <div className="text-xl sm:text-2xl font-bold">
-                  {m.format === "currency" ? formatCurrency(goldWeekly[m.key]) : formatNumber(goldWeekly[m.key])}
+
+          {/* Gold Funnel */}
+          <div className="flex items-center justify-between">
+            {funnelMetrics.map((m, i) => (
+              <div key={m.key} className="flex items-center">
+                <div className="bg-white/15 backdrop-blur rounded-xl p-3 sm:p-4 text-center min-w-[80px]">
+                  <div className="text-[10px] text-amber-200 uppercase tracking-wide font-semibold mb-1">{m.label}</div>
+                  <div className="text-lg sm:text-xl font-bold">
+                    {m.format === "currency" ? formatCurrency(goldWeekly[m.key]) : formatNumber(goldWeekly[m.key])}
+                  </div>
+                  <div className="text-[10px] text-amber-200">/ week</div>
+                  <div className="text-xs text-white/70 mt-0.5">
+                    {m.format === "currency" ? formatCurrency(goldDaily[m.key]) : formatNumber(goldDaily[m.key])}
+                    <span className="text-[10px]"> / day</span>
+                  </div>
                 </div>
-                <div className="text-xs text-amber-200 mt-1">/ week</div>
-                <div className="text-sm text-white/70 mt-1">
-                  {m.format === "currency" ? formatCurrency(goldDaily[m.key]) : formatNumber(goldDaily[m.key])}
-                  <span className="text-xs"> / day</span>
-                </div>
+                {i < funnelMetrics.length - 1 && (
+                  <div className="flex flex-col items-center mx-1 sm:mx-2">
+                    <svg className="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    <span className="text-[10px] font-bold text-white/90">
+                      {i === 3 ? formatCurrency(goldConversions.revenuePerUnit) : [
+                        goldConversions.callsToBookings,
+                        goldConversions.bookingsToMeetings,
+                        goldConversions.meetingsToUnits,
+                      ][i].toFixed(0) + "%"}
+                    </span>
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Progress Timeline */}
-      <div className="max-w-6xl mx-auto px-4 mt-10 mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-slate-800">
-            8-Week Progression
-          </h2>
-          <div className="flex items-center gap-4 text-xs text-slate-500">
-            <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-full bg-slate-400 inline-block" /> Ramp Up
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-full bg-amber-500 inline-block" /> Gold Standard
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" /> Maintain
-            </span>
-          </div>
-        </div>
-
-        {/* Timeline Bar */}
-        <div className="relative mb-8">
-          <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-slate-400 via-amber-500 to-emerald-500 rounded-full" style={{ width: "100%" }} />
-          </div>
-          <div className="flex justify-between mt-2">
-            {weeklyData.map((w) => (
-              <div key={w.week} className="flex flex-col items-center" style={{ width: `${100 / 8}%` }}>
-                <div className={`w-4 h-4 rounded-full border-2 border-white -mt-5 shadow ${
-                  w.phase === "gold" ? "bg-amber-500 ring-2 ring-amber-300" : 
-                  w.phase === "maintain" ? "bg-emerald-500" : "bg-slate-400"
-                }`} />
-                <span className={`text-xs mt-1 font-medium ${
-                  w.phase === "gold" ? "text-amber-600" : "text-slate-500"
-                }`}>
-                  Wk {w.week}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Weekly Cards */}
-      <div className="max-w-6xl mx-auto px-4 pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Weekly Cards - Stacked */}
+      <div className="max-w-3xl mx-auto px-4 py-10">
+        <div className="space-y-4">
           {weeklyData.map((w) => {
             const styles = getPhaseStyles(w.phase);
             const weekly = getWeekly(w.daily);
             const daily = w.daily;
             const isGold = w.phase === "gold";
+            const isTraining = w.phase === "training";
+            const isHere = currentWeek === w.week;
             const pctToGold = getPercentToGold(w.daily);
+            const conversions = getConversions(w.daily);
+            const conversionValues = [
+              { rate: conversions.callsToBookings, format: "pct" as const },
+              { rate: conversions.bookingsToMeetings, format: "pct" as const },
+              { rate: conversions.meetingsToUnits, format: "pct" as const },
+              { rate: conversions.revenuePerUnit, format: "currency" as const },
+            ];
 
             return (
               <div
                 key={w.week}
-                className={`rounded-xl border-2 ${styles.border} ${styles.bg} p-5 transition-all ${
-                  isGold ? "md:col-span-2 shadow-lg shadow-amber-200/50" : "shadow-sm"
-                }`}
+                className={`rounded-xl border-2 ${styles.border} ${styles.bg} p-5 transition-all shadow-sm ${
+                  isGold ? "shadow-lg shadow-amber-200/50" : ""
+                } ${isHere ? "ring-2 ring-blue-500 ring-offset-2" : ""}`}
               >
+                {/* You Are Here Badge */}
+                {isHere && (
+                  <div className="mb-3">
+                    <YouAreHereBadge />
+                  </div>
+                )}
+
                 {/* Card Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${styles.badge}`}>
-                        WEEK {w.week}
-                      </span>
-                      <span className="text-xs text-slate-400 font-medium">
-                        (Week {w.overallWeek} overall)
+                        {isTraining ? "TRAINING" : `WEEK ${w.week}`}
                       </span>
                       {w.label && (
                         <span className={`text-xs font-semibold ${
-                          isGold ? "text-amber-600" : 
-                          w.phase === "maintain" ? "text-emerald-600" : "text-slate-500"
+                          isGold ? "text-amber-600" :
+                          w.phase === "maintain" ? "text-emerald-600" :
+                          isTraining ? "text-blue-600" : "text-slate-500"
                         }`}>
                           {w.label}
                         </span>
@@ -309,64 +379,94 @@ function RoadmapContent() {
                     </div>
                     <p className="text-sm text-slate-500 mt-1">{w.dateRange}</p>
                   </div>
-                  {isGold && (
-                    <div className="text-3xl">🏆</div>
-                  )}
+                  {isGold && <div className="text-3xl">🏆</div>}
                 </div>
 
-                {/* Metrics Grid - Weekly prominent, daily underneath */}
-                <div className="grid grid-cols-5 gap-3">
-                  {metricLabels.map((m) => {
-                    const weeklyVal = weekly[m.key];
-                    const dailyVal = daily[m.key];
-                    const isZero = weeklyVal === 0;
-                    const fmtWeekly = m.format === "currency" ? formatCurrency(weeklyVal) : formatNumber(weeklyVal);
-                    const fmtDaily = m.format === "currency" ? formatCurrency(dailyVal) : formatNumber(dailyVal);
-
-                    return (
-                      <div key={m.key} className={`rounded-lg p-3 text-center ${styles.metricBg}`}>
-                        <div className="text-xs text-slate-500 uppercase tracking-wide font-semibold mb-2">
-                          {m.label}
-                        </div>
-                        <div className={`text-lg font-bold ${isZero ? "text-slate-300" : styles.textColor}`}>
-                          {fmtWeekly}
-                        </div>
-                        <div className="text-xs text-slate-400 mt-0.5">/ week</div>
-                        <div className={`text-xs mt-1 ${isZero ? "text-slate-300" : styles.dailyColor}`}>
-                          {fmtDaily} / day
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Progress indicator for ramp weeks */}
-                {w.phase === "ramp" && (
-                  <div className="mt-3 flex items-center gap-2">
-                    <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-slate-400 to-amber-400 rounded-full transition-all"
-                        style={{ width: `${pctToGold}%` }}
-                      />
-                    </div>
-                    <span className="text-xs text-slate-400 font-medium whitespace-nowrap">
-                      {pctToGold}% to Gold
-                    </span>
-                  </div>
-                )}
-
-                {isGold && (
-                  <div className="mt-4 p-3 bg-amber-100 rounded-lg border border-amber-200">
-                    <p className="text-sm text-amber-800 font-medium text-center">
-                      🎯 This is the benchmark. From this week onwards, these are your daily and weekly targets to maintain.
+                {/* Training Week - special content */}
+                {isTraining && (
+                  <div className="bg-blue-100/60 rounded-lg p-4">
+                    <p className="text-sm text-blue-800 mb-3">
+                      Complete your onboarding modules before heading into the field. This is your foundation.
                     </p>
+                    <Link
+                      href="/"
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+                    >
+                      See the training schedule
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
                   </div>
                 )}
 
-                {w.phase === "maintain" && (
-                  <div className="mt-3 flex items-center gap-2 justify-center">
-                    <span className="text-xs text-emerald-600 font-medium">✓ Maintaining Gold Standard</span>
-                  </div>
+                {/* Funnel Metrics - for non-training weeks */}
+                {!isTraining && (
+                  <>
+                    <div className="flex items-stretch justify-between">
+                      {funnelMetrics.map((m, i) => {
+                        const weeklyVal = weekly[m.key];
+                        const dailyVal = daily[m.key];
+                        const isZero = weeklyVal === 0;
+                        const fmtWeekly = m.format === "currency" ? formatCurrency(weeklyVal) : formatNumber(weeklyVal);
+                        const fmtDaily = m.format === "currency" ? formatCurrency(dailyVal) : formatNumber(dailyVal);
+
+                        return (
+                          <div key={m.key} className="flex items-center flex-1">
+                            <div className={`rounded-lg p-3 text-center w-full ${styles.metricBg}`}>
+                              <div className="text-[10px] text-slate-500 uppercase tracking-wide font-semibold mb-1">
+                                {m.label}
+                              </div>
+                              <div className={`text-lg font-bold ${isZero ? "text-slate-300" : styles.textColor}`}>
+                                {fmtWeekly}
+                              </div>
+                              <div className="text-[10px] text-slate-400">/ week</div>
+                              <div className={`text-xs mt-0.5 ${isZero ? "text-slate-300" : styles.dailyColor}`}>
+                                {fmtDaily} / day
+                              </div>
+                            </div>
+                            {i < funnelMetrics.length - 1 && (
+                              <ConversionArrow
+                                rate={conversionValues[i].rate}
+                                label={conversionLabels[i]}
+                                format={conversionValues[i].format}
+                                phaseColor={styles.arrowColor}
+                              />
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Progress indicator for ramp weeks */}
+                    {w.phase === "ramp" && (
+                      <div className="mt-3 flex items-center gap-2">
+                        <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-slate-400 to-amber-400 rounded-full transition-all"
+                            style={{ width: `${pctToGold}%` }}
+                          />
+                        </div>
+                        <span className="text-xs text-slate-400 font-medium whitespace-nowrap">
+                          {pctToGold}% to Gold
+                        </span>
+                      </div>
+                    )}
+
+                    {isGold && (
+                      <div className="mt-4 p-3 bg-amber-100 rounded-lg border border-amber-200">
+                        <p className="text-sm text-amber-800 font-medium text-center">
+                          🎯 This is the benchmark. From this week onwards, these are your daily and weekly targets to maintain.
+                        </p>
+                      </div>
+                    )}
+
+                    {w.phase === "maintain" && (
+                      <div className="mt-3 flex items-center gap-2 justify-center">
+                        <span className="text-xs text-emerald-600 font-medium">✓ Maintaining Gold Standard</span>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             );
@@ -378,31 +478,31 @@ function RoadmapContent() {
           <h3 className="text-lg font-bold text-slate-800 mb-4">Key Observations</h3>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="p-4 bg-blue-50 rounded-lg">
-              <h4 className="font-semibold text-blue-900 text-sm mb-2">Calls Decrease Over Time</h4>
+              <h4 className="font-semibold text-blue-900 text-sm mb-2">Calls Decrease, Efficiency Increases</h4>
               <p className="text-sm text-blue-700">
-                You start at 300 calls/week and work down to 200. As your pipeline builds and meetings increase, 
-                you spend less time on the phone and more time closing.
+                You start at 300 calls/week but drop to 200 by Gold Standard.
+                Your call-to-booking rate improves from 5% to 10% — fewer calls, better results.
               </p>
             </div>
             <div className="p-4 bg-purple-50 rounded-lg">
-              <h4 className="font-semibold text-purple-900 text-sm mb-2">Bookings Stay Consistent</h4>
+              <h4 className="font-semibold text-purple-900 text-sm mb-2">Booking-to-Meeting Rate Jumps</h4>
               <p className="text-sm text-purple-700">
-                Bookings remain steady at 15–20 per week throughout. The difference is your conversion rate 
-                improves — more bookings turn into attended meetings.
+                In Week 1, only 13% of bookings become attended meetings.
+                By Week 2 this jumps to 50% and holds — your qualification improves fast.
               </p>
             </div>
             <div className="p-4 bg-amber-50 rounded-lg">
-              <h4 className="font-semibold text-amber-900 text-sm mb-2">Meetings Ramp Steadily</h4>
+              <h4 className="font-semibold text-amber-900 text-sm mb-2">Close Rate Builds Steadily</h4>
               <p className="text-sm text-amber-700">
-                From 2 meetings per week in Week 1 to 10 per week by Gold Standard. 
-                This is the engine that drives your deals.
+                Your meeting-to-close rate grows from 0% (building pipeline) to 50% at Gold Standard.
+                This is where experience and product knowledge pay off.
               </p>
             </div>
             <div className="p-4 bg-emerald-50 rounded-lg">
-              <h4 className="font-semibold text-emerald-900 text-sm mb-2">Revenue Is the Result</h4>
+              <h4 className="font-semibold text-emerald-900 text-sm mb-2">$500 Average Deal Value</h4>
               <p className="text-sm text-emerald-700">
-                $0 in Week 1 is expected — you&apos;re building pipeline. By Week 6, $2,500/week 
-                becomes your sustainable standard.
+                Revenue per unit stays consistent at $500. The growth comes from closing more deals,
+                not bigger deals — 1 deal per day is the Gold Standard.
               </p>
             </div>
           </div>
