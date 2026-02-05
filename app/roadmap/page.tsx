@@ -274,7 +274,7 @@ function ConversionArrowLeft({ rate, label, format, color }: { rate: number; lab
     : (rate > 0 ? rate + "%" : "—");
 
   return (
-    <div className="flex flex-col items-center justify-center flex-shrink-0" style={{ width: "80px" }}>
+    <div className="flex flex-col items-center justify-center">
       <div className="flex items-center mb-1" style={{ color: rate > 0 ? color : "#d1d5db" }}>
         <svg className="w-5 h-5 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
@@ -326,7 +326,7 @@ function RoadmapContent() {
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Our Standards</h1>
           <p className="text-lg sm:text-xl font-semibold mt-2" style={{ color: PINK }}>The Roadmap to Achieving 1 Deal Per Day</p>
-          <p className="text-slate-400 mt-3 max-w-2xl">
+          <p className="text-slate-400 mt-3">
             This roadmap covers your first 8 weeks in the field, building up to The Standard by Week 6.
           </p>
         </div>
@@ -341,10 +341,10 @@ function RoadmapContent() {
           </div>
           <p className="text-pink-200 text-sm mb-6">From Week 6 onwards — these are your targets to maintain</p>
 
-          <div className="flex items-center">
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 60px 1fr 60px 1fr 60px 1fr 60px 1fr", alignItems: "center" }}>
             {funnelMetrics.map((m, i) => (
-              <div key={m.key} className="flex items-center flex-1">
-                <div className="bg-white/15 backdrop-blur rounded-xl p-3 sm:p-4 text-center w-full">
+              <div key={m.key} className="contents">
+                <div className="bg-white/15 backdrop-blur rounded-xl p-3 sm:p-4 text-center">
                   <div className="text-[10px] text-pink-200 uppercase tracking-wide font-semibold mb-1">{m.label}</div>
                   <div className="text-xl sm:text-2xl font-bold">
                     {m.format === "currency" ? formatCurrency(standardWeekly[m.key]) : formatNumber(standardWeekly[m.key])}
@@ -356,7 +356,7 @@ function RoadmapContent() {
                   </div>
                 </div>
                 {i < funnelMetrics.length - 1 && (
-                  <div className="flex flex-col items-center flex-shrink-0" style={{ width: "80px" }}>
+                  <div className="flex flex-col items-center">
                     <svg className="w-5 h-5 text-white/60 rotate-180 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                     </svg>
@@ -460,7 +460,7 @@ function RoadmapContent() {
                 ) : (
                   <div className="flex gap-4">
                     <div className="flex-1">
-                      <div className="flex items-stretch">
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 60px 1fr 60px 1fr 60px 1fr 60px 1fr", alignItems: "center" }}>
                         {funnelMetrics.map((m, i) => {
                           const weeklyVal = weekly[m.key];
                           const dailyVal = daily[m.key];
@@ -469,8 +469,8 @@ function RoadmapContent() {
                           const fmtDaily = m.format === "currency" ? formatCurrency(dailyVal) : formatNumber(dailyVal);
 
                           return (
-                            <div key={m.key} className="flex items-center flex-1">
-                              <div className={`rounded-lg p-3 text-center w-full ${styles.metricBg}`}>
+                            <div key={m.key} className="contents">
+                              <div className={`rounded-lg p-3 text-center ${styles.metricBg}`}>
                                 <div className="text-[10px] text-slate-500 uppercase tracking-wide font-semibold mb-1">
                                   {m.label}
                                 </div>
