@@ -13,6 +13,15 @@ export interface Resource {
   url: string;
 }
 
+export interface Questionnaire {
+  id: string;
+  title: string;
+  description: string;
+  afterItemId: string; // render this questionnaire block after this checklist item
+  willoLink?: string; // will be added when Willo quizzes are created
+  questionCount?: number;
+}
+
 export interface Module {
   id: string;
   title: string;
@@ -21,6 +30,7 @@ export interface Module {
   deliverable: string;
   checklist: ChecklistItem[];
   resources?: Resource[];
+  questionnaires?: Questionnaire[];
 }
 
 export interface Trainee {

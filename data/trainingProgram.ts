@@ -57,6 +57,15 @@ export const trainingProgram: Module[] = [
       { label: "Marketing Sweet Website", url: "https://marketingsweet.com.au/" },
       { label: "Quodo Website", url: "https://www.quodo.com.au/" },
     ],
+    questionnaires: [
+      {
+        id: "q-m1",
+        title: "Module 1 Questionnaire: Company & Culture",
+        description: "Record a short video response to each question demonstrating your understanding of who we are, what we do, and why clients trust us.",
+        afterItemId: "m1-item6",
+        questionCount: 6,
+      },
+    ],
   },
   {
     id: "module-2",
@@ -469,6 +478,22 @@ export const trainingProgram: Module[] = [
     resources: [
       { label: "M-Quote Login", url: "https://app.m-quote.com.au/login?redirect=%2F" },
     ],
+    questionnaires: [
+      {
+        id: "q-m2-s1",
+        title: "Section 1 Questionnaire: Our Memberships",
+        description: "Record a short video response to each question demonstrating your understanding of Web Support, SEO Support, and Digital Support memberships.",
+        afterItemId: "m2-item19",
+        questionCount: 8,
+      },
+      {
+        id: "q-m2-s2",
+        title: "Section 2 Questionnaire: Extras & Once-Off Products",
+        description: "Record a short video response to each question demonstrating your understanding of our extras and once-off products.",
+        afterItemId: "m2-item56",
+        questionCount: 7,
+      },
+    ],
   },
   {
     id: "module-3",
@@ -612,6 +637,15 @@ export const trainingProgram: Module[] = [
     ],
     resources: [
       { label: "Q-Quote Login", url: "https://www.app.quodo.com.au/plans" },
+    ],
+    questionnaires: [
+      {
+        id: "q-m3",
+        title: "Module 3 Questionnaire: Quodo Plans",
+        description: "Record a short video response to each question demonstrating your understanding of the Quodo plan ladder and how to match clients to the right plan.",
+        afterItemId: "m3-item16",
+        questionCount: 7,
+      },
     ],
   },
   {

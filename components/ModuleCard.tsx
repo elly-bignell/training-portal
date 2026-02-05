@@ -3,10 +3,9 @@
 "use client";
 
 import { useState } from "react";
-import { Module } from "@/types";
+import { Module, Questionnaire } from "@/types";
 import ProgressBar from "./ProgressBar";
 import ChecklistItem from "./ChecklistItem";
-import NotesSection from "./NotesSection";
 
 interface ModuleCardProps {
   module: Module;
@@ -15,6 +14,56 @@ interface ModuleCardProps {
   onToggleItem: (itemId: string) => void;
   onUpdateNotes: (moduleId: string, content: string) => void;
   moduleProgress: number;
+}
+
+function QuestionnaireBlock({ questionnaire }: { questionnaire: Questionnaire }) {
+  const hasLink = !!questionnaire.willoLink;
+
+  return (
+    <div className="my-4 rounded-lg border-2 border-dashed border-[#E6017D]/30 bg-gradient-to-r from-pink-50 to-rose-50 p-4">
+      <div className="flex items-start gap-3">
+        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#E6017D]/10 flex items-center justify-center">
+          <svg className="w-5 h-5 text-[#E6017D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-1">
+            <h5 className="text-sm font-bold text-[#E6017D]">🎥 {questionnaire.title}</h5>
+            {questionnaire.questionCount && (
+              <span className="text-[10px] font-semibold bg-[#E6017D]/10 text-[#E6017D] px-2 py-0.5 rounded-full">
+                {questionnaire.questionCount} questions
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-slate-600 mb-3">{questionnaire.description}</p>
+          {hasLink ? (
+            <a
+              href={questionnaire.willoLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#E6017D] text-white text-sm font-semibold rounded-lg hover:bg-[#c9016b] transition-colors shadow-sm"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Complete the Willo Questionnaire
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          ) : (
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-200 text-slate-500 text-sm font-semibold rounded-lg cursor-not-allowed">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Complete the Willo Questionnaire — link coming soon
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function ModuleCard({
@@ -26,6 +75,14 @@ export default function ModuleCard({
   moduleProgress,
 }: ModuleCardProps) {
   const [isExpanded, setIsExpanded] = useState(true);
+
+  // Build a map of afterItemId -> questionnaire for inline rendering
+  const questionnaireMap = new Map<string, Questionnaire>();
+  if (module.questionnaires) {
+    for (const q of module.questionnaires) {
+      questionnaireMap.set(q.afterItemId, q);
+    }
+  }
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -87,27 +144,32 @@ export default function ModuleCard({
             </ul>
           </div>
 
-          {/* Checklist */}
+          {/* Checklist with inline questionnaires */}
           <div className="mt-6">
             <h4 className="text-sm font-semibold text-gray-700 mb-3">
               ✅ Tasks to Complete
             </h4>
             <div className="space-y-2">
               {module.checklist.map((item) => (
-                item.isSection ? (
-                  <div key={item.id} className="pt-4 pb-2">
-                    <h5 className="text-sm font-bold text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">
-                      {item.label}
-                    </h5>
-                  </div>
-                ) : (
-                  <ChecklistItem
-                    key={item.id}
-                    item={item}
-                    isChecked={checkedItems[item.id] || false}
-                    onToggle={onToggleItem}
-                  />
-                )
+                <div key={item.id}>
+                  {item.isSection ? (
+                    <div className="pt-4 pb-2">
+                      <h5 className="text-sm font-bold text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">
+                        {item.label}
+                      </h5>
+                    </div>
+                  ) : (
+                    <ChecklistItem
+                      item={item}
+                      isChecked={checkedItems[item.id] || false}
+                      onToggle={onToggleItem}
+                    />
+                  )}
+                  {/* Render questionnaire block after this item if mapped */}
+                  {questionnaireMap.has(item.id) && (
+                    <QuestionnaireBlock questionnaire={questionnaireMap.get(item.id)!} />
+                  )}
+                </div>
               ))}
             </div>
           </div>
@@ -146,14 +208,6 @@ export default function ModuleCard({
               </div>
             </div>
           )}
-
-          {/* Notes Section for Deliverable */}
-          <NotesSection
-            moduleId={module.id}
-            deliverablePrompt={module.deliverable}
-            savedContent={notes[module.id] || ""}
-            onSave={onUpdateNotes}
-          />
         </div>
       )}
     </div>
