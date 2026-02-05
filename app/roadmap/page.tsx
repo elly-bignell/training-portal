@@ -203,7 +203,7 @@ function getPhaseStyles(phase: string) {
       return {
         border: `border-[${PINK}]`,
         bg: "bg-gradient-to-br from-pink-50 to-rose-50",
-        badge: `bg-[${PINK}] text-white`,
+        badge: "bg-slate-700 text-white",
         metricBg: "bg-pink-100/60",
         textColor: `text-[${PINK}]`,
         dailyColor: "text-pink-400",
@@ -217,7 +217,7 @@ function getPhaseStyles(phase: string) {
       return {
         border: `border-[${MINT}]`,
         bg: "bg-gradient-to-br from-emerald-50 to-teal-50",
-        badge: `bg-[${MINT}] text-slate-800`,
+        badge: "bg-slate-700 text-white",
         metricBg: "bg-teal-100/60",
         textColor: "text-teal-700",
         dailyColor: "text-teal-500",
@@ -312,7 +312,7 @@ function RoadmapContent() {
     <main className="min-h-screen bg-slate-50">
       {/* Header */}
       <header className="bg-slate-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 py-8 sm:py-12">
+        <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
           <div className="flex items-center justify-between mb-6">
             <Link href="/" className="text-slate-400 hover:text-white transition-colors text-sm flex items-center gap-1">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -327,13 +327,13 @@ function RoadmapContent() {
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Our Standards</h1>
           <p className="text-lg sm:text-xl font-semibold mt-2" style={{ color: PINK }}>The Roadmap to Achieving 1 Deal Per Day</p>
           <p className="text-slate-400 mt-3 max-w-2xl">
-            Weeks 1–4 are onboarding &amp; training. This roadmap covers your first 8 weeks in the field, building up to The Standard by Week 6.
+            This roadmap covers your first 8 weeks in the field, building up to The Standard by Week 6.
           </p>
         </div>
       </header>
 
       {/* The Standard Summary */}
-      <div className="max-w-6xl mx-auto px-4 -mt-6">
+      <div className="max-w-7xl mx-auto px-4 -mt-6">
         <div className="rounded-2xl p-6 sm:p-8 text-white shadow-xl" style={{ background: `linear-gradient(135deg, ${PINK} 0%, #ff4da6 100%)` }}>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-2xl">🎯</span>
@@ -341,10 +341,10 @@ function RoadmapContent() {
           </div>
           <p className="text-pink-200 text-sm mb-6">From Week 6 onwards — these are your targets to maintain</p>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center">
             {funnelMetrics.map((m, i) => (
-              <div key={m.key} className="flex items-center">
-                <div className="bg-white/15 backdrop-blur rounded-xl p-3 sm:p-4 text-center min-w-[85px]">
+              <div key={m.key} className="flex items-center flex-1">
+                <div className="bg-white/15 backdrop-blur rounded-xl p-3 sm:p-4 text-center w-full">
                   <div className="text-[10px] text-pink-200 uppercase tracking-wide font-semibold mb-1">{m.label}</div>
                   <div className="text-xl sm:text-2xl font-bold">
                     {m.format === "currency" ? formatCurrency(standardWeekly[m.key]) : formatNumber(standardWeekly[m.key])}
@@ -356,7 +356,7 @@ function RoadmapContent() {
                   </div>
                 </div>
                 {i < funnelMetrics.length - 1 && (
-                  <div className="flex flex-col items-center" style={{ width: "80px" }}>
+                  <div className="flex flex-col items-center flex-shrink-0" style={{ width: "80px" }}>
                     <svg className="w-5 h-5 text-white/60 rotate-180 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                     </svg>
@@ -377,7 +377,7 @@ function RoadmapContent() {
       </div>
 
       {/* Weekly Cards */}
-      <div className="max-w-6xl mx-auto px-4 py-10">
+      <div className="max-w-7xl mx-auto px-4 py-10">
         <div className="space-y-4">
           {weeklyData.map((w) => {
             const styles = getPhaseStyles(w.phase);
@@ -460,7 +460,7 @@ function RoadmapContent() {
                 ) : (
                   <div className="flex gap-4">
                     <div className="flex-1">
-                      <div className="flex items-stretch justify-between">
+                      <div className="flex items-stretch">
                         {funnelMetrics.map((m, i) => {
                           const weeklyVal = weekly[m.key];
                           const dailyVal = daily[m.key];
@@ -469,7 +469,7 @@ function RoadmapContent() {
                           const fmtDaily = m.format === "currency" ? formatCurrency(dailyVal) : formatNumber(dailyVal);
 
                           return (
-                            <div key={m.key} className="flex items-center flex-1 min-w-0">
+                            <div key={m.key} className="flex items-center flex-1">
                               <div className={`rounded-lg p-3 text-center w-full ${styles.metricBg}`}>
                                 <div className="text-[10px] text-slate-500 uppercase tracking-wide font-semibold mb-1">
                                   {m.label}
