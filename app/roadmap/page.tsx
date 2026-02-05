@@ -2,7 +2,6 @@
 
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import PasswordGate from "@/components/PasswordGate";
 
@@ -35,7 +34,7 @@ const weeklyData: WeekData[] = [
     overallWeek: 6,
     dateRange: "Mon 2 Mar – Fri 6 Mar",
     phase: "ramp",
-    daily: { revenue: 0, units: 0, meetings: 0.6, bookings: 3, calls: 55 },
+    daily: { revenue: 100, units: 0.2, meetings: 1.6, bookings: 3.2, calls: 50 },
   },
   {
     week: 3,
@@ -43,14 +42,14 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 9 Mar – Fri 13 Mar",
     phase: "ramp",
     label: "First Deals Expected",
-    daily: { revenue: 100, units: 0.2, meetings: 1, bookings: 3, calls: 50 },
+    daily: { revenue: 200, units: 0.4, meetings: 1.6, bookings: 3.2, calls: 50 },
   },
   {
     week: 4,
     overallWeek: 8,
     dateRange: "Mon 16 Mar – Fri 20 Mar",
     phase: "ramp",
-    daily: { revenue: 200, units: 0.4, meetings: 1.4, bookings: 3.5, calls: 45 },
+    daily: { revenue: 300, units: 0.6, meetings: 2, bookings: 4, calls: 50 },
   },
   {
     week: 5,
@@ -58,7 +57,7 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 23 Mar – Fri 27 Mar",
     phase: "ramp",
     label: "Nearly There",
-    daily: { revenue: 350, units: 0.6, meetings: 1.8, bookings: 4, calls: 42 },
+    daily: { revenue: 400, units: 0.8, meetings: 2, bookings: 4, calls: 40 },
   },
   {
     week: 6,
@@ -85,6 +84,9 @@ const weeklyData: WeekData[] = [
   },
 ];
 
+// Gold standard daily values for % calculation
+const goldDaily = { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 };
+
 function getWeekly(daily: WeekData["daily"]) {
   return {
     revenue: daily.revenue * 5,
@@ -105,6 +107,20 @@ function formatNumber(val: number) {
   return val.toFixed(1);
 }
 
+// Calculate % to gold based on average of all metrics (excluding calls which decrease)
+function getPercentToGold(daily: WeekData["daily"]) {
+  // For revenue & units: higher = better (% of gold target)
+  const revPct = goldDaily.revenue > 0 ? Math.min(100, (daily.revenue / goldDaily.revenue) * 100) : 100;
+  const unitPct = goldDaily.units > 0 ? Math.min(100, (daily.units / goldDaily.units) * 100) : 100;
+  const meetPct = Math.min(100, (daily.meetings / goldDaily.meetings) * 100);
+  const bookPct = Math.min(100, (daily.bookings / goldDaily.bookings) * 100);
+  // For calls: lower is better (they ramp down), so we invert
+  // At 60 calls (max) = 0% progress, at 40 calls (gold) = 100% progress
+  const callPct = Math.min(100, Math.max(0, ((60 - daily.calls) / (60 - goldDaily.calls)) * 100));
+
+  return Math.round((revPct + unitPct + meetPct + bookPct + callPct) / 5);
+}
+
 // Phase colors
 function getPhaseStyles(phase: string) {
   switch (phase) {
@@ -113,40 +129,41 @@ function getPhaseStyles(phase: string) {
         border: "border-amber-400",
         bg: "bg-gradient-to-br from-amber-50 to-yellow-50",
         badge: "bg-amber-500 text-white",
-        ring: "ring-amber-400",
-        glow: "shadow-amber-200/50",
-        dot: "bg-amber-500",
+        metricBg: "bg-amber-100/60",
+        textColor: "text-amber-700",
+        dailyColor: "text-amber-500",
       };
     case "maintain":
       return {
         border: "border-emerald-300",
         bg: "bg-gradient-to-br from-emerald-50 to-green-50",
         badge: "bg-emerald-600 text-white",
-        ring: "ring-emerald-400",
-        glow: "shadow-emerald-200/50",
-        dot: "bg-emerald-500",
+        metricBg: "bg-emerald-100/60",
+        textColor: "text-emerald-700",
+        dailyColor: "text-emerald-500",
       };
     default:
       return {
         border: "border-slate-200",
         bg: "bg-white",
         badge: "bg-slate-600 text-white",
-        ring: "ring-slate-300",
-        glow: "shadow-slate-100",
-        dot: "bg-slate-400",
+        metricBg: "bg-slate-50",
+        textColor: "text-slate-800",
+        dailyColor: "text-slate-400",
       };
   }
 }
 
-function getProgressWidth(week: number) {
-  return Math.min(100, (week / 6) * 100);
-}
+const metricLabels = [
+  { key: "revenue" as const, label: "Revenue", format: "currency" },
+  { key: "units" as const, label: "Units", format: "number" },
+  { key: "meetings" as const, label: "Meetings", format: "number" },
+  { key: "bookings" as const, label: "Bookings", format: "number" },
+  { key: "calls" as const, label: "Calls", format: "number" },
+];
 
 function RoadmapContent() {
-  const [viewMode, setViewMode] = useState<"daily" | "weekly">("daily");
-
-  const goldStandard = weeklyData.find((w) => w.phase === "gold")!;
-  const goldValues = viewMode === "daily" ? goldStandard.daily : getWeekly(goldStandard.daily);
+  const goldWeekly = getWeekly(goldDaily);
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -187,60 +204,27 @@ function RoadmapContent() {
       {/* Gold Standard Summary */}
       <div className="max-w-6xl mx-auto px-4 -mt-6">
         <div className="bg-gradient-to-r from-amber-500 to-yellow-500 rounded-2xl p-6 sm:p-8 text-white shadow-xl shadow-amber-200/30">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-2xl">⭐</span>
-                <h2 className="text-xl font-bold">The Gold Standard</h2>
-              </div>
-              <p className="text-amber-100 text-sm">
-                Target from Week 6 (Week 10 overall) onwards — 1 deal per day
-              </p>
-            </div>
-            <div className="flex bg-white/20 rounded-lg p-1 self-start">
-              <button
-                onClick={() => setViewMode("daily")}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
-                  viewMode === "daily"
-                    ? "bg-white text-amber-700 shadow-sm"
-                    : "text-white/80 hover:text-white"
-                }`}
-              >
-                Daily
-              </button>
-              <button
-                onClick={() => setViewMode("weekly")}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
-                  viewMode === "weekly"
-                    ? "bg-white text-amber-700 shadow-sm"
-                    : "text-white/80 hover:text-white"
-                }`}
-              >
-                Weekly
-              </button>
-            </div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-2xl">⭐</span>
+            <h2 className="text-xl font-bold">The Gold Standard — Week 6 Target</h2>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-            <div className="bg-white/15 backdrop-blur rounded-xl p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-bold">{formatCurrency(goldValues.revenue)}</div>
-              <div className="text-sm text-amber-100 mt-1">Sales Revenue</div>
-            </div>
-            <div className="bg-white/15 backdrop-blur rounded-xl p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-bold">{formatNumber(goldValues.units)}</div>
-              <div className="text-sm text-amber-100 mt-1">Sales Units</div>
-            </div>
-            <div className="bg-white/15 backdrop-blur rounded-xl p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-bold">{formatNumber(goldValues.meetings)}</div>
-              <div className="text-sm text-amber-100 mt-1">Attended Meetings</div>
-            </div>
-            <div className="bg-white/15 backdrop-blur rounded-xl p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-bold">{formatNumber(goldValues.bookings)}</div>
-              <div className="text-sm text-amber-100 mt-1">Bookings Made</div>
-            </div>
-            <div className="col-span-2 sm:col-span-1 bg-white/15 backdrop-blur rounded-xl p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-bold">{formatNumber(goldValues.calls)}</div>
-              <div className="text-sm text-amber-100 mt-1">Calls Connected</div>
-            </div>
+          <p className="text-amber-100 text-sm mb-6">
+            From Week 6 (Week 10 overall) onwards — these are your targets to maintain
+          </p>
+          <div className="grid grid-cols-5 gap-4">
+            {metricLabels.map((m) => (
+              <div key={m.key} className="bg-white/15 backdrop-blur rounded-xl p-4 text-center">
+                <div className="text-xs text-amber-200 uppercase tracking-wide font-semibold mb-2">{m.label}</div>
+                <div className="text-xl sm:text-2xl font-bold">
+                  {m.format === "currency" ? formatCurrency(goldWeekly[m.key]) : formatNumber(goldWeekly[m.key])}
+                </div>
+                <div className="text-xs text-amber-200 mt-1">/ week</div>
+                <div className="text-sm text-white/70 mt-1">
+                  {m.format === "currency" ? formatCurrency(goldDaily[m.key]) : formatNumber(goldDaily[m.key])}
+                  <span className="text-xs"> / day</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -292,20 +276,22 @@ function RoadmapContent() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {weeklyData.map((w) => {
             const styles = getPhaseStyles(w.phase);
-            const values = viewMode === "daily" ? w.daily : getWeekly(w.daily);
+            const weekly = getWeekly(w.daily);
+            const daily = w.daily;
             const isGold = w.phase === "gold";
+            const pctToGold = getPercentToGold(w.daily);
 
             return (
               <div
                 key={w.week}
                 className={`rounded-xl border-2 ${styles.border} ${styles.bg} p-5 transition-all ${
-                  isGold ? "md:col-span-2 shadow-lg " + styles.glow : "shadow-sm"
+                  isGold ? "md:col-span-2 shadow-lg shadow-amber-200/50" : "shadow-sm"
                 }`}
               >
                 {/* Card Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${styles.badge}`}>
                         WEEK {w.week}
                       </span>
@@ -328,74 +314,30 @@ function RoadmapContent() {
                   )}
                 </div>
 
-                {/* Metrics Grid */}
-                <div className={`grid gap-3 ${isGold ? "grid-cols-5" : "grid-cols-5"}`}>
-                  {/* Revenue */}
-                  <div className={`rounded-lg p-3 text-center ${
-                    isGold ? "bg-amber-100/60" : w.phase === "maintain" ? "bg-emerald-100/60" : "bg-slate-100"
-                  }`}>
-                    <div className="text-xs text-slate-500 mb-1">💰 Revenue</div>
-                    <div className={`text-lg font-bold ${
-                      values.revenue === 0 ? "text-slate-300" : 
-                      isGold ? "text-amber-700" : 
-                      w.phase === "maintain" ? "text-emerald-700" : "text-slate-800"
-                    }`}>
-                      {formatCurrency(values.revenue)}
-                    </div>
-                  </div>
+                {/* Metrics Grid - Weekly prominent, daily underneath */}
+                <div className="grid grid-cols-5 gap-3">
+                  {metricLabels.map((m) => {
+                    const weeklyVal = weekly[m.key];
+                    const dailyVal = daily[m.key];
+                    const isZero = weeklyVal === 0;
+                    const fmtWeekly = m.format === "currency" ? formatCurrency(weeklyVal) : formatNumber(weeklyVal);
+                    const fmtDaily = m.format === "currency" ? formatCurrency(dailyVal) : formatNumber(dailyVal);
 
-                  {/* Units */}
-                  <div className={`rounded-lg p-3 text-center ${
-                    isGold ? "bg-amber-100/60" : w.phase === "maintain" ? "bg-emerald-100/60" : "bg-slate-100"
-                  }`}>
-                    <div className="text-xs text-slate-500 mb-1">📊 Units</div>
-                    <div className={`text-lg font-bold ${
-                      values.units === 0 ? "text-slate-300" :
-                      isGold ? "text-amber-700" :
-                      w.phase === "maintain" ? "text-emerald-700" : "text-slate-800"
-                    }`}>
-                      {formatNumber(values.units)}
-                    </div>
-                  </div>
-
-                  {/* Meetings */}
-                  <div className={`rounded-lg p-3 text-center ${
-                    isGold ? "bg-amber-100/60" : w.phase === "maintain" ? "bg-emerald-100/60" : "bg-slate-100"
-                  }`}>
-                    <div className="text-xs text-slate-500 mb-1">🤝 Meetings</div>
-                    <div className={`text-lg font-bold ${
-                      isGold ? "text-amber-700" :
-                      w.phase === "maintain" ? "text-emerald-700" : "text-slate-800"
-                    }`}>
-                      {formatNumber(values.meetings)}
-                    </div>
-                  </div>
-
-                  {/* Bookings */}
-                  <div className={`rounded-lg p-3 text-center ${
-                    isGold ? "bg-amber-100/60" : w.phase === "maintain" ? "bg-emerald-100/60" : "bg-slate-100"
-                  }`}>
-                    <div className="text-xs text-slate-500 mb-1">📅 Bookings</div>
-                    <div className={`text-lg font-bold ${
-                      isGold ? "text-amber-700" :
-                      w.phase === "maintain" ? "text-emerald-700" : "text-slate-800"
-                    }`}>
-                      {formatNumber(values.bookings)}
-                    </div>
-                  </div>
-
-                  {/* Calls */}
-                  <div className={`rounded-lg p-3 text-center ${
-                    isGold ? "bg-amber-100/60" : w.phase === "maintain" ? "bg-emerald-100/60" : "bg-slate-100"
-                  }`}>
-                    <div className="text-xs text-slate-500 mb-1">📞 Calls</div>
-                    <div className={`text-lg font-bold ${
-                      isGold ? "text-amber-700" :
-                      w.phase === "maintain" ? "text-emerald-700" : "text-slate-800"
-                    }`}>
-                      {formatNumber(values.calls)}
-                    </div>
-                  </div>
+                    return (
+                      <div key={m.key} className={`rounded-lg p-3 text-center ${styles.metricBg}`}>
+                        <div className="text-xs text-slate-500 uppercase tracking-wide font-semibold mb-2">
+                          {m.label}
+                        </div>
+                        <div className={`text-lg font-bold ${isZero ? "text-slate-300" : styles.textColor}`}>
+                          {fmtWeekly}
+                        </div>
+                        <div className="text-xs text-slate-400 mt-0.5">/ week</div>
+                        <div className={`text-xs mt-1 ${isZero ? "text-slate-300" : styles.dailyColor}`}>
+                          {fmtDaily} / day
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
 
                 {/* Progress indicator for ramp weeks */}
@@ -404,11 +346,11 @@ function RoadmapContent() {
                     <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-gradient-to-r from-slate-400 to-amber-400 rounded-full transition-all"
-                        style={{ width: `${getProgressWidth(w.week)}%` }}
+                        style={{ width: `${pctToGold}%` }}
                       />
                     </div>
-                    <span className="text-xs text-slate-400 font-medium">
-                      {Math.round(getProgressWidth(w.week))}% to Gold
+                    <span className="text-xs text-slate-400 font-medium whitespace-nowrap">
+                      {pctToGold}% to Gold
                     </span>
                   </div>
                 )}
@@ -433,34 +375,34 @@ function RoadmapContent() {
 
         {/* Key Insights */}
         <div className="mt-10 bg-white rounded-xl border border-slate-200 p-6">
-          <h3 className="text-lg font-bold text-slate-800 mb-4">📌 Key Observations</h3>
+          <h3 className="text-lg font-bold text-slate-800 mb-4">Key Observations</h3>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="p-4 bg-blue-50 rounded-lg">
-              <h4 className="font-semibold text-blue-900 text-sm mb-2">📞 Calls Decrease Over Time</h4>
+              <h4 className="font-semibold text-blue-900 text-sm mb-2">Calls Decrease Over Time</h4>
               <p className="text-sm text-blue-700">
-                You start at 60 calls/day and work down to 40. As your pipeline builds and meetings increase, 
+                You start at 300 calls/week and work down to 200. As your pipeline builds and meetings increase, 
                 you spend less time on the phone and more time closing.
               </p>
             </div>
             <div className="p-4 bg-purple-50 rounded-lg">
-              <h4 className="font-semibold text-purple-900 text-sm mb-2">📅 Bookings Stay Consistent</h4>
+              <h4 className="font-semibold text-purple-900 text-sm mb-2">Bookings Stay Consistent</h4>
               <p className="text-sm text-purple-700">
-                Bookings remain steady at 3–4 per day throughout. The difference is your conversion rate 
+                Bookings remain steady at 15–20 per week throughout. The difference is your conversion rate 
                 improves — more bookings turn into attended meetings.
               </p>
             </div>
             <div className="p-4 bg-amber-50 rounded-lg">
-              <h4 className="font-semibold text-amber-900 text-sm mb-2">🤝 Meetings Ramp Steadily</h4>
+              <h4 className="font-semibold text-amber-900 text-sm mb-2">Meetings Ramp Steadily</h4>
               <p className="text-sm text-amber-700">
-                From less than 1 meeting per day in Week 1 to 2 per day by Gold Standard. 
+                From 2 meetings per week in Week 1 to 10 per week by Gold Standard. 
                 This is the engine that drives your deals.
               </p>
             </div>
             <div className="p-4 bg-emerald-50 rounded-lg">
-              <h4 className="font-semibold text-emerald-900 text-sm mb-2">💰 Revenue Is the Result</h4>
+              <h4 className="font-semibold text-emerald-900 text-sm mb-2">Revenue Is the Result</h4>
               <p className="text-sm text-emerald-700">
-                $0 in Week 1 is expected — you&apos;re building pipeline. By Week 6, $500/day 
-                ($2,500/week) becomes your sustainable standard.
+                $0 in Week 1 is expected — you&apos;re building pipeline. By Week 6, $2,500/week 
+                becomes your sustainable standard.
               </p>
             </div>
           </div>
