@@ -35,7 +35,7 @@ const weeklyData: WeekData[] = [
     overallWeek: 6,
     dateRange: "Mon 2 Mar – Fri 6 Mar",
     phase: "ramp",
-    daily: { revenue: 100, units: 0.2, meetings: 1.6, bookings: 3.2, calls: 50 },
+    daily: { revenue: 0, units: 0, meetings: 0.6, bookings: 3, calls: 55 },
   },
   {
     week: 3,
@@ -43,14 +43,14 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 9 Mar – Fri 13 Mar",
     phase: "ramp",
     label: "First Deals Expected",
-    daily: { revenue: 200, units: 0.4, meetings: 1.6, bookings: 3.2, calls: 50 },
+    daily: { revenue: 100, units: 0.2, meetings: 1, bookings: 3, calls: 50 },
   },
   {
     week: 4,
     overallWeek: 8,
     dateRange: "Mon 16 Mar – Fri 20 Mar",
     phase: "ramp",
-    daily: { revenue: 300, units: 0.6, meetings: 2, bookings: 4, calls: 50 },
+    daily: { revenue: 200, units: 0.4, meetings: 1.4, bookings: 3.5, calls: 45 },
   },
   {
     week: 5,
@@ -58,7 +58,7 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 23 Mar – Fri 27 Mar",
     phase: "ramp",
     label: "Nearly There",
-    daily: { revenue: 400, units: 0.8, meetings: 2, bookings: 4, calls: 40 },
+    daily: { revenue: 350, units: 0.6, meetings: 1.8, bookings: 4, calls: 42 },
   },
   {
     week: 6,

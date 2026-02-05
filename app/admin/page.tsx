@@ -285,6 +285,27 @@ function AdminDashboardContent() {
             ))}
           </div>
         </div>
+
+        {/* Roadmap Link */}
+        <Link
+          href="/roadmap"
+          className="block bg-gradient-to-r from-amber-500 to-yellow-500 rounded-xl p-6 hover:from-amber-600 hover:to-yellow-600 transition-all shadow-md hover:shadow-lg group"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-bold text-white">⭐ Our Standards</h3>
+              <p className="text-amber-100 text-sm mt-1">The Roadmap to Achieving 1 Deal Per Day</p>
+            </div>
+            <svg
+              className="w-6 h-6 text-white/80 group-hover:text-white group-hover:translate-x-1 transition-all"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </Link>
       </div>
     </main>
   );
