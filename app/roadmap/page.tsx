@@ -54,7 +54,7 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 2 Mar – Fri 6 Mar",
     startDate: "2026-03-02",
     phase: "ramp",
-    label: "First Deals Expected",
+    label: "First Deal Expected",
     daily: { revenue: 100, units: 0.2, meetings: 1.6, bookings: 3.2, calls: 50 },
     takeaways: [
       "First deal drops — momentum is building",
@@ -132,9 +132,9 @@ const weeklyData: WeekData[] = [
     label: "Fully Operational",
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
     takeaways: [
-      "You've proven you can sustain the Gold Standard",
-      "These numbers are now your baseline, not your ceiling",
-      "Focus shifts to increasing average deal value and upselling",
+      "Your commission is uncapped — focus shifts to output over input",
+      "5 deals/week minimum, achieved however you see fit with the inputs you choose",
+      "Find your flow — 1 call = 1 deal should always be the goal",
     ],
   },
 ];
@@ -275,14 +275,14 @@ function ConversionArrowLeft({ rate, label, format, phaseColor }: { rate: number
     : (rate > 0 ? rate + "%" : "—");
 
   return (
-    <div className="flex flex-col items-center justify-center px-0.5 flex-shrink-0">
+    <div className="flex flex-col items-center justify-center px-1.5 flex-shrink-0">
       <svg className={`w-4 h-4 ${phaseColor} rotate-180`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
       </svg>
-      <span className={`text-[10px] font-bold ${rate > 0 ? "text-slate-600" : "text-slate-300"} whitespace-nowrap`}>
+      <span className={`text-xs font-bold ${rate > 0 ? "text-slate-600" : "text-slate-300"} whitespace-nowrap`}>
         {display}
       </span>
-      <span className="text-[8px] text-slate-400 whitespace-nowrap leading-tight">{label}</span>
+      <span className="text-[9px] text-slate-400 whitespace-nowrap leading-tight">{label}</span>
     </div>
   );
 }
@@ -311,7 +311,7 @@ function RoadmapContent() {
     <main className="min-h-screen bg-slate-50">
       {/* Header */}
       <header className="bg-slate-900 text-white">
-        <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+        <div className="max-w-6xl mx-auto px-4 py-8 sm:py-12">
           <div className="flex items-center justify-between mb-6">
             <Link href="/" className="text-slate-400 hover:text-white transition-colors text-sm flex items-center gap-1">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -332,7 +332,7 @@ function RoadmapContent() {
       </header>
 
       {/* Gold Standard Summary */}
-      <div className="max-w-4xl mx-auto px-4 -mt-6">
+      <div className="max-w-6xl mx-auto px-4 -mt-6">
         <div className="bg-gradient-to-r from-amber-500 to-yellow-500 rounded-2xl p-6 sm:p-8 text-white shadow-xl shadow-amber-200/30">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-2xl">⭐</span>
@@ -376,7 +376,7 @@ function RoadmapContent() {
       </div>
 
       {/* Weekly Cards */}
-      <div className="max-w-4xl mx-auto px-4 py-10">
+      <div className="max-w-6xl mx-auto px-4 py-10">
         <div className="space-y-4">
           {weeklyData.map((w) => {
             const styles = getPhaseStyles(w.phase);
@@ -453,7 +453,7 @@ function RoadmapContent() {
                         </svg>
                       </Link>
                     </div>
-                    <div className={`w-72 flex-shrink-0 rounded-lg p-4 border ${styles.takeawayBorder} ${styles.takeawayBg}`}>
+                    <div className={`w-80 flex-shrink-0 rounded-lg p-4 border ${styles.takeawayBorder} ${styles.takeawayBg}`}>
                       <div className="text-[10px] uppercase tracking-wide font-semibold text-slate-500 mb-2">Key Takeaways</div>
                       <div className="space-y-2">
                         {w.takeaways.map((t, i) => (
@@ -481,15 +481,15 @@ function RoadmapContent() {
 
                             return (
                               <div key={m.key} className="flex items-center flex-1 min-w-0">
-                                <div className={`rounded-lg p-2 sm:p-3 text-center w-full ${styles.metricBg}`}>
-                                  <div className="text-[9px] sm:text-[10px] text-slate-500 uppercase tracking-wide font-semibold mb-1">
+                                <div className={`rounded-lg p-3 text-center w-full ${styles.metricBg}`}>
+                                  <div className="text-[10px] text-slate-500 uppercase tracking-wide font-semibold mb-1">
                                     {m.label}
                                   </div>
-                                  <div className={`text-base sm:text-lg font-bold ${isZero ? "text-slate-300" : styles.textColor}`}>
+                                  <div className={`text-lg font-bold ${isZero ? "text-slate-300" : styles.textColor}`}>
                                     {fmtWeekly}
                                   </div>
-                                  <div className="text-[9px] sm:text-[10px] text-slate-400">/ week</div>
-                                  <div className={`text-[10px] sm:text-xs mt-0.5 ${isZero ? "text-slate-300" : styles.dailyColor}`}>
+                                  <div className="text-[10px] text-slate-400">/ week</div>
+                                  <div className={`text-xs mt-0.5 ${isZero ? "text-slate-300" : styles.dailyColor}`}>
                                     {fmtDaily} / day
                                   </div>
                                 </div>
@@ -537,7 +537,7 @@ function RoadmapContent() {
                       </div>
 
                       {/* Right: Takeaways */}
-                      <div className={`w-64 flex-shrink-0 rounded-lg p-4 border ${styles.takeawayBorder} ${styles.takeawayBg}`}>
+                      <div className={`w-80 flex-shrink-0 rounded-lg p-4 border ${styles.takeawayBorder} ${styles.takeawayBg}`}>
                         <div className="text-[10px] uppercase tracking-wide font-semibold text-slate-500 mb-2">Key Takeaways</div>
                         <div className="space-y-2">
                           {w.takeaways.map((t, i) => (
