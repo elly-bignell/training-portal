@@ -4,6 +4,7 @@ export interface ChecklistItem {
   id: string;
   label: string;
   link?: string;
+  audioLink?: string; // Google Drive or direct audio URL for embedded player
   estimatedTime?: string;
   isSection?: boolean;
 }

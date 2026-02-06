@@ -10,19 +10,32 @@ interface ChecklistItemProps {
   onToggle: (itemId: string) => void;
 }
 
+// Convert Google Drive share link to embed URL
+function getGoogleDriveEmbedUrl(url: string): string | null {
+  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (match) {
+    return `https://drive.google.com/file/d/${match[1]}/preview`;
+  }
+  return null;
+}
+
 export default function ChecklistItem({
   item,
   isChecked,
   onToggle,
 }: ChecklistItemProps) {
+  const embedUrl = item.audioLink ? getGoogleDriveEmbedUrl(item.audioLink) : null;
+
   return (
     <div
-      className={`flex items-start gap-3 p-3 rounded-lg border transition-all duration-200 cursor-pointer hover:bg-gray-50 ${
+      className={`flex items-start gap-3 p-3 rounded-lg border transition-all duration-200 ${
+        item.audioLink ? "" : "cursor-pointer hover:bg-gray-50"
+      } ${
         isChecked
           ? "bg-green-50 border-green-200"
           : "bg-white border-gray-200"
       }`}
-      onClick={() => onToggle(item.id)}
+      onClick={() => !item.audioLink && onToggle(item.id)}
     >
       <div className="flex-shrink-0 pt-0.5">
         <input
@@ -58,6 +71,17 @@ export default function ChecklistItem({
           >
             Open resource →
           </a>
+        )}
+        {embedUrl && (
+          <div className="mt-3 rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+            <iframe
+              src={embedUrl}
+              width="100%"
+              height="80"
+              allow="autoplay"
+              className="border-0"
+            />
+          </div>
         )}
       </div>
     </div>

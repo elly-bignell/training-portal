@@ -37,6 +37,7 @@ export const trainingProgram: Module[] = [
       {
         id: "m1-item2b",
         label: "Listen to the Podcast: Part 1 - Our Leader",
+        audioLink: "https://drive.google.com/file/d/1ZyG_-s2xUFYb1ndtjVlH97B7DqTDVrhR/view",
         estimatedTime: "15 mins",
       },
       {
