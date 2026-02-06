@@ -127,8 +127,8 @@ function HomeContent() {
           </p>
         </div>
 
-        {/* Admin Link */}
-        <div className="flex justify-center mb-8">
+        {/* Admin Links */}
+        <div className="flex justify-center gap-3 mb-8">
           <Link
             href="/admin"
             className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm"
@@ -147,6 +147,25 @@ function HomeContent() {
               />
             </svg>
             Admin Dashboard
+          </Link>
+          <Link
+            href="/admin/performance"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#E6017D] text-white rounded-lg hover:bg-[#c4016a] transition-colors text-sm"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              />
+            </svg>
+            Performance Tracker
           </Link>
         </div>
 

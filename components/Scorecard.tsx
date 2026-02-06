@@ -41,7 +41,7 @@ function MetricCard({
 }: MetricCardProps) {
   const dailyPct = target > 0 ? Math.min(100, (value / target) * 100) : 100;
   const weeklyPct = weeklyTarget > 0 ? Math.min(100, (weeklyValue / weeklyTarget) * 100) : 100;
-  const isOnTrack = dailyPct >= 100;
+  const isOnTrack = target > 0 && dailyPct >= 100;
 
   const formatValue = (v: number) => {
     if (isCurrency) return `$${v.toLocaleString()}`;
@@ -53,6 +53,13 @@ function MetricCard({
     <div className={`rounded-xl p-4 ${color} relative overflow-hidden`}>
       {/* Background icon */}
       <div className="absolute top-2 right-2 text-4xl opacity-20">{icon}</div>
+      
+      {/* Status indicator - moved to not overlap */}
+      {isOnTrack && (
+        <div className="mb-2">
+          <span className="text-[10px] bg-white/30 text-white px-2 py-0.5 rounded-full font-semibold">✓ On track</span>
+        </div>
+      )}
       
       {/* Label */}
       <div className="text-xs font-semibold text-white/80 uppercase tracking-wide mb-1">
@@ -75,9 +82,9 @@ function MetricCard({
       
       {/* Weekly progress */}
       <div className="flex items-center justify-between text-xs text-white/70 mb-3">
-        <span>Week: {formatValue(weeklyValue)} / {formatValue(weeklyTarget)}</span>
-        <span className={weeklyPct >= 100 ? "text-white font-semibold" : ""}>
-          {Math.round(weeklyPct)}%
+        <span>WTD: {formatValue(weeklyValue)} / {formatValue(weeklyTarget)}</span>
+        <span className={weeklyPct >= 100 && weeklyTarget > 0 ? "text-white font-semibold" : ""}>
+          {weeklyTarget > 0 ? `${Math.round(weeklyPct)}%` : "—"}
         </span>
       </div>
       
@@ -98,13 +105,6 @@ function MetricCard({
           +1
         </button>
       </div>
-      
-      {/* Status indicator */}
-      {isOnTrack && (
-        <div className="absolute top-2 left-2">
-          <span className="text-xs bg-white/30 text-white px-2 py-0.5 rounded-full">✓ On track</span>
-        </div>
-      )}
     </div>
   );
 }
@@ -127,6 +127,7 @@ function RevenueInput({
   const [inputValue, setInputValue] = useState(value.toString());
   const dailyPct = target > 0 ? Math.min(100, (value / target) * 100) : 100;
   const weeklyPct = weeklyTarget > 0 ? Math.min(100, (weeklyValue / weeklyTarget) * 100) : 100;
+  const isOnTrack = target > 0 && dailyPct >= 100;
 
   const handleSubmit = () => {
     const numVal = parseFloat(inputValue) || 0;
@@ -137,8 +138,14 @@ function RevenueInput({
     <div className="rounded-xl p-4 bg-gradient-to-br from-emerald-500 to-emerald-600 relative overflow-hidden">
       <div className="absolute top-2 right-2 text-4xl opacity-20">💰</div>
       
+      {isOnTrack && (
+        <div className="mb-2">
+          <span className="text-[10px] bg-white/30 text-white px-2 py-0.5 rounded-full font-semibold">✓ On track</span>
+        </div>
+      )}
+      
       <div className="text-xs font-semibold text-white/80 uppercase tracking-wide mb-1">
-        Revenue
+        Sales Revenue ($)
       </div>
       
       <div className="flex items-end gap-2 mb-2">
@@ -154,9 +161,9 @@ function RevenueInput({
       </div>
       
       <div className="flex items-center justify-between text-xs text-white/70 mb-3">
-        <span>Week: ${weeklyValue.toLocaleString()} / ${weeklyTarget.toLocaleString()}</span>
-        <span className={weeklyPct >= 100 ? "text-white font-semibold" : ""}>
-          {Math.round(weeklyPct)}%
+        <span>WTD: ${weeklyValue.toLocaleString()} / ${weeklyTarget.toLocaleString()}</span>
+        <span className={weeklyPct >= 100 && weeklyTarget > 0 ? "text-white font-semibold" : ""}>
+          {weeklyTarget > 0 ? `${Math.round(weeklyPct)}%` : "—"}
         </span>
       </div>
       
@@ -182,12 +189,6 @@ function RevenueInput({
           Save
         </button>
       </div>
-      
-      {dailyPct >= 100 && (
-        <div className="absolute top-2 left-2">
-          <span className="text-xs bg-white/30 text-white px-2 py-0.5 rounded-full">✓ On track</span>
-        </div>
-      )}
     </div>
   );
 }
@@ -280,9 +281,9 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
       {/* Metric Cards Grid */}
       <div className="p-4">
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-          {/* Calls */}
+          {/* Calls Connected */}
           <MetricCard
-            label="Calls"
+            label="Calls Connected"
             value={todayActivity.calls}
             target={dailyStandard.calls}
             weeklyValue={weeklyTotals.calls}
@@ -294,9 +295,9 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
             isSaving={isSaving}
           />
           
-          {/* Bookings */}
+          {/* Bookings Made */}
           <MetricCard
-            label="Bookings"
+            label="Bookings Made"
             value={todayActivity.bookings}
             target={dailyStandard.bookings}
             weeklyValue={weeklyTotals.bookings}
@@ -308,9 +309,9 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
             isSaving={isSaving}
           />
           
-          {/* Meetings */}
+          {/* Attended Meetings */}
           <MetricCard
-            label="Meetings"
+            label="Attended Meetings"
             value={todayActivity.meetings}
             target={dailyStandard.meetings}
             weeklyValue={weeklyTotals.meetings}
@@ -322,9 +323,9 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
             isSaving={isSaving}
           />
           
-          {/* Units (Deals) */}
+          {/* Sales Units */}
           <MetricCard
-            label="Units"
+            label="Sales Units"
             value={todayActivity.units}
             target={dailyStandard.units}
             weeklyValue={weeklyTotals.units}
