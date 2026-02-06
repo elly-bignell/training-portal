@@ -31,6 +31,7 @@ export const trainingProgram: Module[] = [
       {
         id: "m1-item2a",
         label: "Watch the Presentation: Part 1 - Our Leader",
+        link: "https://youtu.be/0oLYq0ivsQM",
         estimatedTime: "12 mins",
       },
       {
