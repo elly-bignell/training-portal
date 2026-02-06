@@ -130,7 +130,7 @@ function PerformanceDashboardContent() {
 
           // Convert to WeekData array, sorted by week number descending (newest first)
           const weeks: WeekData[] = [];
-          for (const [weekNum, days] of weekMap) {
+          weekMap.forEach((days, weekNum) => {
             // Sort days by date ascending within week
             days.sort((a, b) => a.date.localeCompare(b.date));
 
@@ -161,7 +161,7 @@ function PerformanceDashboardContent() {
               totals,
               targets,
             });
-          }
+          });
 
           // Sort weeks descending (newest first)
           weeks.sort((a, b) => b.weekNum - a.weekNum);
