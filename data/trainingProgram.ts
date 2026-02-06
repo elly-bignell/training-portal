@@ -49,11 +49,13 @@ export const trainingProgram: Module[] = [
       {
         id: "m1-item3a",
         label: "Watch the Presentation: Part 2 - Our People",
+        link: "https://youtu.be/AEC89q8ky-c",
         estimatedTime: "12 mins",
       },
       {
         id: "m1-item3b",
         label: "Listen to the Podcast: Part 2 - Our People",
+        audioLink: "https://drive.google.com/file/d/14b-aZput68-m31o5O0eClFuR7goKWNih/view?usp=drive_link",
         estimatedTime: "15 mins",
       },
       {
@@ -65,11 +67,13 @@ export const trainingProgram: Module[] = [
       {
         id: "m1-item4a",
         label: "Watch the Presentation: Part 3 - Our Company",
+        link: "https://youtu.be/sPEEv1yx3I8",
         estimatedTime: "10 mins",
       },
       {
         id: "m1-item4b",
         label: "Listen to the Podcast: Part 3 - Our Company",
+        audioLink: "https://drive.google.com/file/d/15R1PfzWSm-v0I4hY2t18pbT8Hsq8d38v/view?usp=drive_link",
         estimatedTime: "15 mins",
       },
       {
