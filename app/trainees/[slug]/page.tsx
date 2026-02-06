@@ -10,6 +10,7 @@ import { useTraineeProgress } from "@/hooks/useLocalStorage";
 import ProgressBar from "@/components/ProgressBar";
 import ModuleCard from "@/components/ModuleCard";
 import PasswordGate from "@/components/PasswordGate";
+import Scorecard from "@/components/Scorecard";
 
 function TraineeDashboardContent() {
   const params = useParams();
@@ -160,7 +161,7 @@ function TraineeDashboardContent() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-800">
-              Overall Progress
+              Training Progress
             </h2>
             <span className="text-3xl font-bold text-blue-600">
               {overallProgress}%
@@ -186,6 +187,11 @@ function TraineeDashboardContent() {
               </span>
             )}
           </div>
+        </div>
+
+        {/* Daily Activity Scorecard */}
+        <div className="mb-6">
+          <Scorecard traineeSlug={slug} traineeName={trainee.name} />
         </div>
 
         {/* Quick Navigation */}

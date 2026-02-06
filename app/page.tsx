@@ -7,6 +7,7 @@ import Link from "next/link";
 import { trainees } from "@/data/trainees";
 import { trainingProgram, getTotalChecklistItems } from "@/data/trainingProgram";
 import PasswordGate from "@/components/PasswordGate";
+import PerformanceSummary from "@/components/PerformanceSummary";
 
 interface TraineeProgressData {
   trainee_slug: string;
@@ -248,6 +249,11 @@ function HomeContent() {
           })}
         </div>
 
+        {/* Performance vs Standards Summary */}
+        <div className="mt-8">
+          <PerformanceSummary />
+        </div>
+
         {/* Module Preview */}
         <div className="mt-12 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
@@ -276,12 +282,13 @@ function HomeContent() {
         {/* Roadmap Link */}
         <Link
           href="/roadmap"
-          className="mt-8 block bg-gradient-to-r from-amber-500 to-yellow-500 rounded-xl p-6 hover:from-amber-600 hover:to-yellow-600 transition-all shadow-md hover:shadow-lg group"
+          className="mt-8 block rounded-xl p-6 transition-all shadow-md hover:shadow-lg group"
+          style={{ background: "linear-gradient(135deg, #E6017D 0%, #ff4da6 100%)" }}
         >
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-bold text-white">⭐ Our Standards</h3>
-              <p className="text-amber-100 text-sm mt-1">The Roadmap to Achieving 1 Deal Per Day</p>
+              <h3 className="text-lg font-bold text-white">🎯 Our Standards</h3>
+              <p className="text-pink-100 text-sm mt-1">The Roadmap to Achieving 1 Deal Per Day</p>
             </div>
             <svg
               className="w-6 h-6 text-white/80 group-hover:text-white group-hover:translate-x-1 transition-all"
