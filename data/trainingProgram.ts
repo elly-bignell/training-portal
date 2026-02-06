@@ -29,6 +29,16 @@ export const trainingProgram: Module[] = [
         estimatedTime: "12 mins",
       },
       {
+        id: "m1-item2a",
+        label: "Watch the Presentation: Part 1 - Our Leader",
+        estimatedTime: "12 mins",
+      },
+      {
+        id: "m1-item2b",
+        label: "Listen to the Podcast: Part 1 - Our Leader",
+        estimatedTime: "15 mins",
+      },
+      {
         id: "m1-item3",
         label: "Read: Part 2 - Our People",
         link: "https://docs.google.com/presentation/d/1XWb8y9V24Vs33LGHbVcXQfY8JCkO5sgPICnj6VZBFO4/edit?usp=drive_link",
