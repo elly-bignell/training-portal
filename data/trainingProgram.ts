@@ -82,12 +82,6 @@ export const trainingProgram: Module[] = [
         link: "https://sweetgroup.marketingsweet.com.au/google-reviews",
         estimatedTime: "15 mins",
       },
-      {
-        id: "m1-item6",
-        label: "Watch this Video About Our Company in 2026",
-        link: "https://www.youtube.com/watch?v=KjBs0Kl-gkM",
-        estimatedTime: "19 mins",
-      },
     ],
     resources: [
       { label: "Marketing Sweet Website", url: "https://marketingsweet.com.au/" },
@@ -98,7 +92,7 @@ export const trainingProgram: Module[] = [
         id: "q-m1",
         title: "Module 1 Questionnaire: Company & Culture",
         description: "Record a short video response to each question demonstrating your understanding of who we are, what we do, and why clients trust us.",
-        afterItemId: "m1-item6",
+        afterItemId: "m1-item5",
         questionCount: 6,
       },
     ],
