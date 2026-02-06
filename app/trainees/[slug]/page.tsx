@@ -10,7 +10,6 @@ import { useTraineeProgress } from "@/hooks/useLocalStorage";
 import ProgressBar from "@/components/ProgressBar";
 import ModuleCard from "@/components/ModuleCard";
 import PasswordGate from "@/components/PasswordGate";
-import Scorecard from "@/components/Scorecard";
 
 function TraineeDashboardContent() {
   const params = useParams();
@@ -189,10 +188,31 @@ function TraineeDashboardContent() {
           </div>
         </div>
 
-        {/* Daily Activity Scorecard */}
-        <div className="mb-6">
-          <Scorecard traineeSlug={slug} traineeName={trainee.name} />
-        </div>
+        {/* Link to Activity Scorecard */}
+        <Link
+          href={`/scorecard/${slug}`}
+          className="block mb-6 rounded-xl p-5 transition-all shadow-sm hover:shadow-md border-2 border-dashed border-[#E6017D]/30 bg-gradient-to-r from-pink-50 to-rose-50 hover:border-[#E6017D]/50"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-[#E6017D]/10 flex items-center justify-center">
+                <span className="text-2xl">📊</span>
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-[#E6017D]">Today&apos;s Scorecard</h3>
+                <p className="text-sm text-slate-600">Track your daily calls, bookings, meetings & revenue</p>
+              </div>
+            </div>
+            <svg
+              className="w-6 h-6 text-[#E6017D]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </Link>
 
         {/* Quick Navigation */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
