@@ -648,24 +648,6 @@ export const trainingProgram: Module[] = [
       },
     ],
   },
-  {
-    id: "module-4",
-    title: "MODULE 4 — Sales Admin + Execution Readiness",
-    purpose:
-      "Content coming soon. This module will cover the complete end-to-end sales flow and key sales mindset concepts for success.",
-    proficiency: [
-      "To be confirmed",
-    ],
-    deliverable:
-      "To be confirmed.",
-    checklist: [
-      {
-        id: "m4-item1",
-        label: "🚧 Content coming soon",
-      },
-    ],
-    resources: [],
-  },
 ];
 
 export function getTotalChecklistItems(): number {

@@ -194,7 +194,7 @@ function HomeContent() {
               <div className="text-sm text-gray-600">Trainees</div>
             </div>
             <div className="text-center p-4 bg-orange-50 rounded-lg">
-              <div className="text-3xl font-bold text-orange-600">4</div>
+              <div className="text-3xl font-bold text-orange-600">3</div>
               <div className="text-sm text-gray-600">Deliverables</div>
             </div>
           </div>
