@@ -47,10 +47,30 @@ export const trainingProgram: Module[] = [
         estimatedTime: "12 mins",
       },
       {
+        id: "m1-item3a",
+        label: "Watch the Presentation: Part 2 - Our People",
+        estimatedTime: "12 mins",
+      },
+      {
+        id: "m1-item3b",
+        label: "Listen to the Podcast: Part 2 - Our People",
+        estimatedTime: "15 mins",
+      },
+      {
         id: "m1-item4",
         label: "Read: Part 3 - Our Company",
         link: "https://docs.google.com/presentation/d/1Ikb2YP96r-QwZPkpsYqS2QBaB-_qQ6qNbFfRl81jq2A/edit?usp=drive_link",
         estimatedTime: "10 mins",
+      },
+      {
+        id: "m1-item4a",
+        label: "Watch the Presentation: Part 3 - Our Company",
+        estimatedTime: "10 mins",
+      },
+      {
+        id: "m1-item4b",
+        label: "Listen to the Podcast: Part 3 - Our Company",
+        estimatedTime: "15 mins",
       },
       {
         id: "m1-item5",
