@@ -50,18 +50,20 @@ export async function GET(request: NextRequest) {
 
     const data = await response.json();
 
-    const submissions = data.records.map((record: any) => ({
-      id: record.id,
-      examId: record.fields.exam_id,
-      traineeSlug: record.fields.trainee_slug,
-      traineeName: record.fields.trainee_name,
-      score: record.fields.score || 0,
-      totalPoints: record.fields.total_points || 0,
-      percentage: record.fields.percentage || 0,
-      passed: record.fields.passed || false,
-      submittedAt: record.fields.submitted_at,
-      answers: record.fields.answers ? JSON.parse(record.fields.answers) : {},
-    }));
+    const submissions = data.records
+      .filter((record: any) => record.fields.exam_id && record.fields.trainee_slug) // Filter out empty rows
+      .map((record: any) => ({
+        id: record.id,
+        examId: record.fields.exam_id,
+        traineeSlug: record.fields.trainee_slug,
+        traineeName: record.fields.trainee_name,
+        score: record.fields.score || 0,
+        totalPoints: record.fields.total_points || 0,
+        percentage: record.fields.percentage || 0,
+        passed: record.fields.passed || false,
+        submittedAt: record.fields.submitted_at,
+        answers: record.fields.answers ? JSON.parse(record.fields.answers) : {},
+      }));
 
     return NextResponse.json({ submissions });
   } catch (error) {
