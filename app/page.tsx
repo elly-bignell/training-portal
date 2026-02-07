@@ -412,9 +412,57 @@ function HomeContent() {
           <h2 className="text-lg font-semibold text-gray-800 mb-2">
             🧠 Sales Knowledge Framework
           </h2>
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-gray-500 mb-6">
             The 7 core competencies that make up the ultimate salesperson
           </p>
+          
+          {/* Brain Illustration */}
+          <div className="flex justify-center mb-8">
+            <svg viewBox="0 0 400 320" className="w-full max-w-md">
+              {/* Brain outline */}
+              <ellipse cx="200" cy="160" rx="180" ry="140" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="2"/>
+              
+              {/* Segment 1 - Product Knowledge (25%) - Top center */}
+              <path d="M200,30 Q280,30 280,100 Q280,140 200,140 Q120,140 120,100 Q120,30 200,30" fill="#ecfdf5" stroke="#10b981" strokeWidth="2"/>
+              <text x="200" y="75" textAnchor="middle" className="text-xs font-bold" fill="#059669">Product Knowledge</text>
+              <text x="200" y="95" textAnchor="middle" className="text-sm font-bold" fill="#047857">25%</text>
+              
+              {/* Segment 2 - Company & Culture (20%) - Top left */}
+              <path d="M40,100 Q40,50 100,50 Q140,50 140,100 Q140,160 100,180 Q40,180 40,100" fill="#ecfdf5" stroke="#10b981" strokeWidth="2"/>
+              <text x="90" y="105" textAnchor="middle" className="text-xs font-bold" fill="#059669">Company</text>
+              <text x="90" y="120" textAnchor="middle" className="text-xs font-bold" fill="#059669">& Culture</text>
+              <text x="90" y="145" textAnchor="middle" className="text-sm font-bold" fill="#047857">20%</text>
+              
+              {/* Segment 3 - Objection Handling (15%) - Top right */}
+              <path d="M260,50 Q320,50 360,100 Q360,180 300,180 Q260,160 260,100 Q260,50 260,50" fill="#eff6ff" stroke="#3b82f6" strokeWidth="2"/>
+              <text x="310" y="105" textAnchor="middle" className="text-xs font-bold" fill="#2563eb">Objection</text>
+              <text x="310" y="120" textAnchor="middle" className="text-xs font-bold" fill="#2563eb">Handling</text>
+              <text x="310" y="145" textAnchor="middle" className="text-sm font-bold" fill="#1d4ed8">15%</text>
+              
+              {/* Segment 4 - End to End Sales Process (15%) - Middle right */}
+              <path d="M280,160 Q340,160 350,210 Q350,260 280,270 Q240,260 240,210 Q240,160 280,160" fill="#eff6ff" stroke="#3b82f6" strokeWidth="2"/>
+              <text x="295" y="200" textAnchor="middle" className="text-xs font-bold" fill="#2563eb">Sales</text>
+              <text x="295" y="215" textAnchor="middle" className="text-xs font-bold" fill="#2563eb">Process</text>
+              <text x="295" y="240" textAnchor="middle" className="text-sm font-bold" fill="#1d4ed8">15%</text>
+              
+              {/* Segment 5 - Customer Service Team (10%) - Bottom center */}
+              <path d="M140,220 Q140,280 200,290 Q260,280 260,220 Q260,190 200,190 Q140,190 140,220" fill="#f9fafb" stroke="#6b7280" strokeWidth="2"/>
+              <text x="200" y="225" textAnchor="middle" className="text-xs font-bold" fill="#4b5563">Customer</text>
+              <text x="200" y="240" textAnchor="middle" className="text-xs font-bold" fill="#4b5563">Service</text>
+              <text x="200" y="265" textAnchor="middle" className="text-sm font-bold" fill="#374151">10%</text>
+              
+              {/* Segment 6 - Softwares (8%) - Middle left */}
+              <path d="M50,160 Q50,210 80,240 Q120,260 140,210 Q150,160 100,150 Q50,150 50,160" fill="#f9fafb" stroke="#6b7280" strokeWidth="2"/>
+              <text x="95" y="195" textAnchor="middle" className="text-xs font-bold" fill="#4b5563">Softwares</text>
+              <text x="95" y="220" textAnchor="middle" className="text-sm font-bold" fill="#374151">8%</text>
+              
+              {/* Segment 7 - Booking & Deal Admin (7%) - Bottom left */}
+              <path d="M60,240 Q40,270 70,290 Q120,300 140,270 Q150,240 100,230 Q60,230 60,240" fill="#f9fafb" stroke="#6b7280" strokeWidth="2"/>
+              <text x="100" y="260" textAnchor="middle" className="text-xs font-bold" fill="#4b5563">Admin</text>
+              <text x="100" y="280" textAnchor="middle" className="text-sm font-bold" fill="#374151">7%</text>
+            </svg>
+          </div>
+
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -436,7 +484,7 @@ function HomeContent() {
                 </tr>
                 <tr className="border-b border-gray-100 bg-emerald-50/50">
                   <td className="py-3 px-3 font-bold text-emerald-600">2</td>
-                  <td className="py-3 px-3 font-medium text-gray-800">Company Culture</td>
+                  <td className="py-3 px-3 font-medium text-gray-800">Company & Culture</td>
                   <td className="py-3 px-3 text-center">
                     <span className="inline-block px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full font-bold text-xs">20%</span>
                   </td>
@@ -507,7 +555,16 @@ function HomeContent() {
             Training Modules
           </h2>
           <div className="space-y-3">
-            {trainingProgram.map((module, index) => (
+            {trainingProgram.map((module, index) => {
+              // Map modules to knowledge segments
+              const segmentMap: Record<number, { name: string; color: string }> = {
+                0: { name: "Company & Culture", color: "bg-emerald-100 text-emerald-700" },
+                1: { name: "Product Knowledge", color: "bg-emerald-100 text-emerald-700" },
+                2: { name: "Product Knowledge", color: "bg-emerald-100 text-emerald-700" },
+              };
+              const segment = segmentMap[index];
+
+              return (
               <div
                 key={module.id}
                 className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
@@ -515,14 +572,22 @@ function HomeContent() {
                 <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
                   {index + 1}
                 </div>
-                <div>
-                  <h3 className="font-medium text-gray-800">{module.title}</h3>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-medium text-gray-800">{module.title}</h3>
+                    {segment && (
+                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${segment.color}`}>
+                        {segment.name}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-sm text-gray-500">
                     {module.checklist.filter(item => !item.isSection).length} tasks
                   </p>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
