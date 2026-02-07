@@ -407,6 +407,100 @@ function HomeContent() {
           })}
         </div>
 
+        {/* Sales Knowledge Framework */}
+        <div className="mt-12 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-2">
+            🧠 Sales Knowledge Framework
+          </h2>
+          <p className="text-sm text-gray-500 mb-4">
+            The 7 core competencies that make up the ultimate salesperson
+          </p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-2 px-3 font-semibold text-gray-600 w-12">#</th>
+                  <th className="text-left py-2 px-3 font-semibold text-gray-600">Segment</th>
+                  <th className="text-center py-2 px-3 font-semibold text-gray-600 w-24">Weight</th>
+                  <th className="text-left py-2 px-3 font-semibold text-gray-600 hidden md:table-cell">Rationale</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-gray-100 bg-emerald-50">
+                  <td className="py-3 px-3 font-bold text-emerald-700">1</td>
+                  <td className="py-3 px-3 font-medium text-gray-800">Product Knowledge</td>
+                  <td className="py-3 px-3 text-center">
+                    <span className="inline-block px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full font-bold text-xs">25%</span>
+                  </td>
+                  <td className="py-3 px-3 text-gray-600 hidden md:table-cell">Foundation of everything — can&apos;t sell what you don&apos;t understand</td>
+                </tr>
+                <tr className="border-b border-gray-100 bg-emerald-50/50">
+                  <td className="py-3 px-3 font-bold text-emerald-600">2</td>
+                  <td className="py-3 px-3 font-medium text-gray-800">Company Culture</td>
+                  <td className="py-3 px-3 text-center">
+                    <span className="inline-block px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full font-bold text-xs">20%</span>
+                  </td>
+                  <td className="py-3 px-3 text-gray-600 hidden md:table-cell">Builds trust, authenticity, and conviction in conversations</td>
+                </tr>
+                <tr className="border-b border-gray-100 bg-blue-50">
+                  <td className="py-3 px-3 font-bold text-blue-700">3</td>
+                  <td className="py-3 px-3 font-medium text-gray-800">Objection Handling</td>
+                  <td className="py-3 px-3 text-center">
+                    <span className="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded-full font-bold text-xs">15%</span>
+                  </td>
+                  <td className="py-3 px-3 text-gray-600 hidden md:table-cell">Critical for conversion, but relies on 1 & 2 being solid</td>
+                </tr>
+                <tr className="border-b border-gray-100 bg-blue-50/50">
+                  <td className="py-3 px-3 font-bold text-blue-600">4</td>
+                  <td className="py-3 px-3 font-medium text-gray-800">End to End Sales Process</td>
+                  <td className="py-3 px-3 text-center">
+                    <span className="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded-full font-bold text-xs">15%</span>
+                  </td>
+                  <td className="py-3 px-3 text-gray-600 hidden md:table-cell">Execution framework — knowing the steps to close</td>
+                </tr>
+                <tr className="border-b border-gray-100 bg-gray-50">
+                  <td className="py-3 px-3 font-bold text-gray-600">5</td>
+                  <td className="py-3 px-3 font-medium text-gray-800">Customer Service Team</td>
+                  <td className="py-3 px-3 text-center">
+                    <span className="inline-block px-2 py-1 bg-gray-200 text-gray-700 rounded-full font-bold text-xs">10%</span>
+                  </td>
+                  <td className="py-3 px-3 text-gray-600 hidden md:table-cell">Enhances conviction — knowing clients are in the best hands post-sale gives confidence to sell</td>
+                </tr>
+                <tr className="border-b border-gray-100 bg-gray-50/50">
+                  <td className="py-3 px-3 font-bold text-gray-500">6</td>
+                  <td className="py-3 px-3 font-medium text-gray-800">Softwares</td>
+                  <td className="py-3 px-3 text-center">
+                    <span className="inline-block px-2 py-1 bg-gray-200 text-gray-700 rounded-full font-bold text-xs">8%</span>
+                  </td>
+                  <td className="py-3 px-3 text-gray-600 hidden md:table-cell">Tools to enhance credibility, learnable on the job</td>
+                </tr>
+                <tr className="bg-gray-50/30">
+                  <td className="py-3 px-3 font-bold text-gray-400">7</td>
+                  <td className="py-3 px-3 font-medium text-gray-800">Booking & Deal Admin</td>
+                  <td className="py-3 px-3 text-center">
+                    <span className="inline-block px-2 py-1 bg-gray-200 text-gray-700 rounded-full font-bold text-xs">7%</span>
+                  </td>
+                  <td className="py-3 px-3 text-gray-600 hidden md:table-cell">Procedural competency — important but trainable quickly</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-4 pt-4 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div className="flex items-center gap-2 p-2 bg-emerald-50 rounded-lg">
+              <span className="font-bold text-emerald-700">45%</span>
+              <span className="text-gray-600">Foundation — Product & Culture</span>
+            </div>
+            <div className="flex items-center gap-2 p-2 bg-blue-50 rounded-lg">
+              <span className="font-bold text-blue-700">30%</span>
+              <span className="text-gray-600">Execution — Objections & Process</span>
+            </div>
+            <div className="flex items-center gap-2 p-2 bg-gray-100 rounded-lg">
+              <span className="font-bold text-gray-700">25%</span>
+              <span className="text-gray-600">Support — Service, Tools & Admin</span>
+            </div>
+          </div>
+        </div>
+
         {/* Module Preview */}
         <div className="mt-12 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
