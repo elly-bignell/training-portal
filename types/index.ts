@@ -46,3 +46,6 @@ export interface TraineeProgress {
   notes: Record<string, string>;
   lastUpdated: string;
 }
+
+// Re-export exam types
+export * from "./exam";
