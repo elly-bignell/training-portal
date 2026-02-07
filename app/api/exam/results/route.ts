@@ -30,8 +30,11 @@ export async function GET(request: NextRequest) {
       )}`;
     }
 
+    const sortParams = "sort%5B0%5D%5Bfield%5D=submitted_at&sort%5B0%5D%5Bdirection%5D=desc";
+    const separator = filterFormula ? "&" : "?";
+    
     const response = await fetch(
-      `${AIRTABLE_URL}${filterFormula}&sort%5B0%5D%5Bfield%5D=submitted_at&sort%5B0%5D%5Bdirection%5D=desc`,
+      `${AIRTABLE_URL}${filterFormula}${separator}${sortParams}`,
       {
         headers: {
           Authorization: `Bearer ${AIRTABLE_API_KEY}`,
