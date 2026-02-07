@@ -17,6 +17,14 @@ interface TraineeProgressData {
   first_activity?: string;
 }
 
+interface ExamSubmission {
+  examId: string;
+  traineeSlug: string;
+  percentage: number;
+  passed: boolean;
+  submittedAt: string;
+}
+
 // Circular Progress Component
 function CircularProgress({ percentage }: { percentage: number }) {
   const radius = 28;
@@ -86,31 +94,47 @@ function formatAdelaideDate(dateString: string | undefined, includeTime: boolean
 
 function HomeContent() {
   const [progressData, setProgressData] = useState<TraineeProgressData[]>([]);
+  const [examResults, setExamResults] = useState<ExamSubmission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
   const totalItems = getTotalChecklistItems();
   const totalModules = trainingProgram.length;
 
   useEffect(() => {
-    const fetchProgress = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch("/api/progress/all");
-        const data = await response.json();
-        if (data.records) {
-          setProgressData(data.records);
+        // Fetch progress data
+        const progressResponse = await fetch("/api/progress/all");
+        const progressData = await progressResponse.json();
+        if (progressData.records) {
+          setProgressData(progressData.records);
+        }
+
+        // Fetch exam results
+        const examResponse = await fetch("/api/exam/results");
+        const examData = await examResponse.json();
+        if (examData.submissions) {
+          setExamResults(examData.submissions);
         }
       } catch (error) {
-        console.error("Failed to fetch progress:", error);
+        console.error("Failed to fetch data:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchProgress();
+    fetchData();
   }, []);
 
   const getTraineeProgress = (slug: string): TraineeProgressData | undefined => {
     return progressData.find((p) => p.trainee_slug === slug);
+  };
+
+  // Get exam attempts for a trainee
+  const getTraineeExamAttempts = (traineeSlug: string, examId: string) => {
+    return examResults
+      .filter((s) => s.traineeSlug === traineeSlug && s.examId === examId)
+      .sort((a, b) => new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime());
   };
 
   return (
@@ -230,7 +254,14 @@ function HomeContent() {
             📋 Trainee Quick Access
           </h2>
           <div className="space-y-4">
-            {trainees.map((trainee) => (
+            {trainees.map((trainee) => {
+              const module1Attempts = getTraineeExamAttempts(trainee.slug, "exam-module-1");
+              const module1Passed = module1Attempts.some((a) => a.passed);
+              const module1BestScore = module1Attempts.length > 0
+                ? Math.max(...module1Attempts.map((a) => a.percentage))
+                : null;
+
+              return (
               <div key={trainee.slug} className="border border-gray-200 rounded-lg p-4">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 rounded-full bg-[#E6017D] flex items-center justify-center text-white font-bold text-sm">
@@ -263,13 +294,36 @@ function HomeContent() {
                   </div>
                   
                   {/* Module 1 Exam */}
-                  <div className="flex items-center justify-between p-2 bg-emerald-50 rounded">
-                    <span className="text-gray-600">Module 1 Exam</span>
+                  <div className={`flex items-center justify-between p-2 rounded ${
+                    module1Passed 
+                      ? "bg-green-50" 
+                      : module1Attempts.length > 0 
+                        ? "bg-amber-50" 
+                        : "bg-emerald-50"
+                  }`}>
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-600">Module 1 Exam</span>
+                      {module1BestScore !== null && (
+                        <span className={`text-xs font-semibold px-1.5 py-0.5 rounded ${
+                          module1Passed 
+                            ? "bg-green-100 text-green-700" 
+                            : "bg-amber-100 text-amber-700"
+                        }`}>
+                          {module1Passed ? "✓" : ""} {module1BestScore}%
+                        </span>
+                      )}
+                    </div>
                     <Link
                       href={`/exam/module-1/${trainee.slug}`}
-                      className="text-emerald-600 hover:underline"
+                      className={`hover:underline ${
+                        module1Passed 
+                          ? "text-green-600" 
+                          : module1Attempts.length > 0 
+                            ? "text-amber-600" 
+                            : "text-emerald-600"
+                      }`}
                     >
-                      Open →
+                      {module1Passed ? "View →" : module1Attempts.length > 0 ? `Retry (${3 - module1Attempts.length} left) →` : "Open →"}
                     </Link>
                   </div>
                   
@@ -280,7 +334,8 @@ function HomeContent() {
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
