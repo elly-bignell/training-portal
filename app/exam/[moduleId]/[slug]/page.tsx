@@ -54,14 +54,14 @@ function QuestionCard({
       <div className="space-y-2">
         {question.options.map((option, index) => {
           const isSelected = selectedAnswer === index;
-          const isCorrect = index === question.correctAnswer;
           
           let optionClass = "border-gray-200 hover:border-gray-300 hover:bg-gray-50";
           if (showResults) {
-            if (isCorrect) {
-              optionClass = "border-green-500 bg-green-50";
-            } else if (isSelected && !isCorrect) {
-              optionClass = "border-red-500 bg-red-50";
+            // After submission, just show what they selected - no correct/incorrect indication
+            if (isSelected) {
+              optionClass = "border-gray-400 bg-gray-100";
+            } else {
+              optionClass = "border-gray-200 bg-gray-50 opacity-60";
             }
           } else if (isSelected) {
             optionClass = "border-[#E6017D] bg-pink-50";
@@ -81,9 +81,7 @@ function QuestionCard({
                   className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                     isSelected
                       ? showResults
-                        ? isCorrect
-                          ? "border-green-500 bg-green-500"
-                          : "border-red-500 bg-red-500"
+                        ? "border-gray-500 bg-gray-500"
                         : "border-[#E6017D] bg-[#E6017D]"
                       : "border-gray-300"
                   }`}
@@ -94,12 +92,9 @@ function QuestionCard({
                     </svg>
                   )}
                 </div>
-                <span className={`text-sm ${showResults && isCorrect ? "font-semibold text-green-700" : "text-gray-700"}`}>
+                <span className="text-sm text-gray-700">
                   {option}
                 </span>
-                {showResults && isCorrect && (
-                  <span className="ml-auto text-xs text-green-600 font-medium">Correct Answer</span>
-                )}
               </div>
             </button>
           );
@@ -118,6 +113,14 @@ function ExamContent() {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [previousAttempts, setPreviousAttempts] = useState<Array<{
+    score: number;
+    totalPoints: number;
+    percentage: number;
+    passed: boolean;
+    submittedAt: string;
+  }>>([]);
   const [results, setResults] = useState<{
     score: number;
     totalPoints: number;
@@ -127,6 +130,28 @@ function ExamContent() {
 
   const examData = getExamData(moduleId);
   const trainee = trainees.find((t) => t.slug === slug);
+  const MAX_ATTEMPTS = 3;
+
+  // Fetch previous attempts on load
+  useEffect(() => {
+    const fetchAttempts = async () => {
+      if (!examData || !trainee) return;
+      
+      try {
+        const response = await fetch(
+          `/api/exam/results?trainee_slug=${slug}&exam_id=${examData.exam.id}`
+        );
+        const data = await response.json();
+        setPreviousAttempts(data.submissions || []);
+      } catch (error) {
+        console.error("Error fetching attempts:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAttempts();
+  }, [slug, examData, trainee]);
 
   if (!examData || !trainee) {
     return (
@@ -145,6 +170,10 @@ function ExamContent() {
   const { exam, totalPoints } = examData;
   const answeredCount = Object.keys(answers).length;
   const allAnswered = answeredCount === exam.questions.length;
+  const attemptNumber = previousAttempts.length + 1;
+  const hasPassed = previousAttempts.some((a) => a.passed);
+  const attemptsRemaining = MAX_ATTEMPTS - previousAttempts.length;
+  const canAttempt = attemptsRemaining > 0 && !hasPassed;
 
   const handleSelect = (questionId: string, answerIndex: number) => {
     setAnswers((prev) => ({ ...prev, [questionId]: answerIndex }));
@@ -190,6 +219,123 @@ function ExamContent() {
     }
   };
 
+  // Loading state
+  if (isLoading) {
+    return (
+      <main className="min-h-screen bg-slate-100 flex items-center justify-center">
+        <div className="flex items-center gap-2 text-gray-500">
+          <div className="w-6 h-6 border-2 border-gray-300 border-t-[#E6017D] rounded-full animate-spin" />
+          Loading exam...
+        </div>
+      </main>
+    );
+  }
+
+  // Already passed - show success message
+  if (hasPassed && !isSubmitted) {
+    const passingAttempt = previousAttempts.find((a) => a.passed)!;
+    return (
+      <main className="min-h-screen bg-slate-100">
+        <header className="bg-slate-900 text-white">
+          <div className="max-w-4xl mx-auto px-6 py-4">
+            <div className="flex items-center gap-4">
+              <Link href={`/trainees/${slug}`} className="text-slate-400 hover:text-white transition-colors">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+              </Link>
+              <div>
+                <h1 className="text-lg font-bold">{exam.title}</h1>
+                <p className="text-slate-400 text-sm">{trainee.name}</p>
+              </div>
+            </div>
+          </div>
+        </header>
+        <div className="max-w-4xl mx-auto px-6 py-8">
+          <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl p-8 text-white text-center">
+            <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h2 className="text-2xl font-bold mb-2">You&apos;ve Already Passed!</h2>
+            <p className="text-white/80 mb-4">
+              You passed this exam with a score of {passingAttempt.percentage}% on{" "}
+              {new Date(passingAttempt.submittedAt).toLocaleDateString("en-AU")}.
+            </p>
+            <Link
+              href={`/trainees/${slug}`}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-green-600 rounded-lg font-semibold hover:bg-white/90 transition-colors"
+            >
+              Back to Training Dashboard
+            </Link>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // No attempts remaining
+  if (!canAttempt && !isSubmitted) {
+    const bestAttempt = previousAttempts.reduce((best, current) => 
+      current.percentage > best.percentage ? current : best
+    , previousAttempts[0]);
+    
+    return (
+      <main className="min-h-screen bg-slate-100">
+        <header className="bg-slate-900 text-white">
+          <div className="max-w-4xl mx-auto px-6 py-4">
+            <div className="flex items-center gap-4">
+              <Link href={`/trainees/${slug}`} className="text-slate-400 hover:text-white transition-colors">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+              </Link>
+              <div>
+                <h1 className="text-lg font-bold">{exam.title}</h1>
+                <p className="text-slate-400 text-sm">{trainee.name}</p>
+              </div>
+            </div>
+          </div>
+        </header>
+        <div className="max-w-4xl mx-auto px-6 py-8">
+          <div className="bg-gradient-to-r from-red-500 to-rose-500 rounded-xl p-8 text-white text-center">
+            <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <h2 className="text-2xl font-bold mb-2">No Attempts Remaining</h2>
+            <p className="text-white/80 mb-4">
+              You&apos;ve used all {MAX_ATTEMPTS} attempts. Your best score was {bestAttempt?.percentage || 0}%.
+              <br />Please speak with your manager about next steps.
+            </p>
+            <Link
+              href={`/trainees/${slug}`}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-red-600 rounded-lg font-semibold hover:bg-white/90 transition-colors"
+            >
+              Back to Training Dashboard
+            </Link>
+          </div>
+          
+          {/* Previous Attempts */}
+          <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 className="text-lg font-bold text-gray-800 mb-4">Your Attempts</h3>
+            <div className="space-y-3">
+              {previousAttempts.map((attempt, index) => (
+                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <span className="font-medium text-gray-700">Attempt {index + 1}</span>
+                  <div className="flex items-center gap-4">
+                    <span className="text-gray-600">{attempt.percentage}%</span>
+                    <span className="text-sm text-gray-400">
+                      {new Date(attempt.submittedAt).toLocaleDateString("en-AU")}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-slate-100">
       {/* Header */}
@@ -207,7 +353,7 @@ function ExamContent() {
               </Link>
               <div>
                 <h1 className="text-lg font-bold">{exam.title}</h1>
-                <p className="text-slate-400 text-sm">{trainee.name}</p>
+                <p className="text-slate-400 text-sm">{trainee.name} • Attempt {attemptNumber} of {MAX_ATTEMPTS}</p>
               </div>
             </div>
             {!isSubmitted && (
@@ -223,6 +369,30 @@ function ExamContent() {
       </header>
 
       <div className="max-w-4xl mx-auto px-6 py-8">
+        {/* Previous Attempts Banner */}
+        {previousAttempts.length > 0 && !isSubmitted && (
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-amber-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <div>
+                <h4 className="font-semibold text-amber-800">Previous Attempts</h4>
+                <div className="text-sm text-amber-700 mt-1">
+                  {previousAttempts.map((attempt, index) => (
+                    <span key={index} className="mr-4">
+                      Attempt {index + 1}: {attempt.percentage}%
+                    </span>
+                  ))}
+                </div>
+                <p className="text-sm text-amber-600 mt-1">
+                  You have {attemptsRemaining} attempt{attemptsRemaining !== 1 ? "s" : ""} remaining.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Results Banner */}
         {isSubmitted && results && (
           <div

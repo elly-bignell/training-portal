@@ -188,6 +188,66 @@ function HomeContent() {
           </Link>
         </div>
 
+        {/* Trainee Admin Panel */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">
+            📋 Trainee Quick Access
+          </h2>
+          <div className="space-y-4">
+            {trainees.map((trainee) => (
+              <div key={trainee.slug} className="border border-gray-200 rounded-lg p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-[#E6017D] flex items-center justify-center text-white font-bold text-sm">
+                    {trainee.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                  </div>
+                  <h3 className="font-semibold text-gray-800">{trainee.name}</h3>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                  {/* Dashboard Link */}
+                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                    <span className="text-gray-600">Training Dashboard</span>
+                    <Link
+                      href={`/trainees/${trainee.slug}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Open →
+                    </Link>
+                  </div>
+                  
+                  {/* Scorecard Link */}
+                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                    <span className="text-gray-600">Activity Scorecard</span>
+                    <Link
+                      href={`/scorecard/${trainee.slug}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Open →
+                    </Link>
+                  </div>
+                  
+                  {/* Module 1 Exam */}
+                  <div className="flex items-center justify-between p-2 bg-emerald-50 rounded">
+                    <span className="text-gray-600">Module 1 Exam</span>
+                    <Link
+                      href={`/exam/module-1/${trainee.slug}`}
+                      className="text-emerald-600 hover:underline"
+                    >
+                      Open →
+                    </Link>
+                  </div>
+                  
+                  {/* Placeholder for future exams */}
+                  <div className="flex items-center justify-between p-2 bg-gray-100 rounded opacity-50">
+                    <span className="text-gray-500">Module 2 & 3 Exams</span>
+                    <span className="text-gray-400 text-xs">Coming soon</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Program Overview */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">

@@ -21,13 +21,14 @@ interface ExamSubmission {
 }
 
 const exams = [
-  { id: "exam-module-1", title: "Module 1: Company & Culture", exam: module1Exam },
+  { id: "exam-module-1", title: "Module 1: Company & Culture", passingScore: 100 },
 ];
+
+const MAX_ATTEMPTS = 3;
 
 function ExamResultsContent() {
   const [submissions, setSubmissions] = useState<ExamSubmission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedExam, setSelectedExam] = useState<string>("all");
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -46,19 +47,12 @@ function ExamResultsContent() {
     fetchResults();
   }, []);
 
-  const filteredSubmissions =
-    selectedExam === "all"
-      ? submissions
-      : submissions.filter((s) => s.examId === selectedExam);
-
-  // Get latest submission per trainee per exam
-  const latestSubmissions = new Map<string, ExamSubmission>();
-  for (const sub of filteredSubmissions) {
-    const key = `${sub.traineeSlug}-${sub.examId}`;
-    if (!latestSubmissions.has(key)) {
-      latestSubmissions.set(key, sub);
-    }
-  }
+  // Group submissions by trainee and exam
+  const getTraineeExamAttempts = (traineeSlug: string, examId: string) => {
+    return submissions
+      .filter((s) => s.traineeSlug === traineeSlug && s.examId === examId)
+      .sort((a, b) => new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime());
+  };
 
   if (isLoading) {
     return (
@@ -102,7 +96,7 @@ function ExamResultsContent() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
             <div className="text-3xl font-bold text-gray-800">{submissions.length}</div>
-            <div className="text-sm text-gray-500">Total Submissions</div>
+            <div className="text-sm text-gray-500">Total Attempts</div>
           </div>
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
             <div className="text-3xl font-bold text-green-600">
@@ -114,7 +108,7 @@ function ExamResultsContent() {
             <div className="text-3xl font-bold text-amber-600">
               {submissions.filter((s) => !s.passed).length}
             </div>
-            <div className="text-sm text-gray-500">Need Review</div>
+            <div className="text-sm text-gray-500">Not Passed</div>
           </div>
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
             <div className="text-3xl font-bold text-gray-800">
@@ -127,172 +121,150 @@ function ExamResultsContent() {
           </div>
         </div>
 
-        {/* Trainee Exam Status */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-8">
-          <div className="p-4 border-b border-gray-100">
-            <h2 className="text-lg font-bold text-gray-800">Trainee Status</h2>
-          </div>
-          <div className="divide-y divide-gray-100">
-            {trainees.map((trainee) => {
-              const traineeSubmissions = submissions.filter(
-                (s) => s.traineeSlug === trainee.slug
-              );
-              const latestByExam = new Map<string, ExamSubmission>();
-              for (const sub of traineeSubmissions) {
-                if (!latestByExam.has(sub.examId)) {
-                  latestByExam.set(sub.examId, sub);
-                }
-              }
+        {/* Trainee Results by Exam */}
+        {exams.map((exam) => (
+          <div key={exam.id} className="bg-white rounded-xl shadow-sm border border-gray-200 mb-8">
+            <div className="p-4 border-b border-gray-100 bg-gray-50 rounded-t-xl">
+              <h2 className="text-lg font-bold text-gray-800">{exam.title}</h2>
+              <p className="text-sm text-gray-500">Pass mark: {exam.passingScore}% • Max attempts: {MAX_ATTEMPTS}</p>
+            </div>
+            
+            <div className="divide-y divide-gray-100">
+              {trainees.map((trainee) => {
+                const attempts = getTraineeExamAttempts(trainee.slug, exam.id);
+                const hasPassed = attempts.some((a) => a.passed);
+                const bestScore = attempts.length > 0 
+                  ? Math.max(...attempts.map((a) => a.percentage))
+                  : null;
+                const attemptsRemaining = MAX_ATTEMPTS - attempts.length;
 
-              return (
-                <div key={trainee.slug} className="p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#E6017D] flex items-center justify-center text-white font-bold">
-                        {trainee.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                return (
+                  <div key={trainee.slug} className="p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-[#E6017D] flex items-center justify-center text-white font-bold text-sm">
+                          {trainee.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                        </div>
+                        <div>
+                          <span className="font-semibold text-gray-800">{trainee.name}</span>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            {hasPassed ? (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                ✓ Passed
+                              </span>
+                            ) : attempts.length > 0 ? (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                                Best: {bestScore}%
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                                Not attempted
+                              </span>
+                            )}
+                            {!hasPassed && (
+                              <span className="text-xs text-gray-400">
+                                {attemptsRemaining} attempt{attemptsRemaining !== 1 ? "s" : ""} remaining
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                      <span className="font-semibold text-gray-800">{trainee.name}</span>
+                      <Link
+                        href={`/exam/module-1/${trainee.slug}`}
+                        className="text-sm text-[#E6017D] hover:underline"
+                      >
+                        Exam link →
+                      </Link>
                     </div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 ml-13">
-                    {exams.map((exam) => {
-                      const sub = latestByExam.get(exam.id);
-                      return (
-                        <div
-                          key={exam.id}
-                          className={`p-3 rounded-lg border ${
-                            sub
-                              ? sub.passed
+
+                    {/* Attempts */}
+                    {attempts.length > 0 && (
+                      <div className="ml-13 grid grid-cols-3 gap-2">
+                        {attempts.map((attempt, index) => (
+                          <div
+                            key={attempt.id}
+                            className={`p-3 rounded-lg border ${
+                              attempt.passed
                                 ? "bg-green-50 border-green-200"
-                                : "bg-amber-50 border-amber-200"
-                              : "bg-gray-50 border-gray-200"
-                          }`}
-                        >
-                          <div className="text-xs text-gray-500 mb-1">{exam.title}</div>
-                          {sub ? (
+                                : "bg-gray-50 border-gray-200"
+                            }`}
+                          >
                             <div className="flex items-center justify-between">
+                              <span className="text-xs font-medium text-gray-500">
+                                Attempt {index + 1}
+                              </span>
                               <span
-                                className={`text-sm font-semibold ${
-                                  sub.passed ? "text-green-700" : "text-amber-700"
+                                className={`text-sm font-bold ${
+                                  attempt.passed ? "text-green-600" : "text-gray-700"
                                 }`}
                               >
-                                {sub.percentage}% {sub.passed ? "✓" : ""}
-                              </span>
-                              <span className="text-xs text-gray-400">
-                                {new Date(sub.submittedAt).toLocaleDateString("en-AU")}
+                                {attempt.percentage}%
                               </span>
                             </div>
-                          ) : (
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm text-gray-400">Not submitted</span>
-                              <Link
-                                href={`/exam/${exam.id.replace("exam-", "")}/${trainee.slug}`}
-                                className="text-xs text-[#E6017D] hover:underline"
-                              >
-                                Send link
-                              </Link>
+                            <div className="text-xs text-gray-400 mt-1">
+                              {new Date(attempt.submittedAt).toLocaleString("en-AU", {
+                                day: "numeric",
+                                month: "short",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
                             </div>
-                          )}
-                        </div>
-                      );
-                    })}
+                            <div className="text-xs text-gray-500 mt-0.5">
+                              {attempt.score}/{attempt.totalPoints} pts
+                            </div>
+                          </div>
+                        ))}
+                        {/* Empty slots for remaining attempts */}
+                        {!hasPassed && Array.from({ length: attemptsRemaining }).map((_, i) => (
+                          <div
+                            key={`empty-${i}`}
+                            className="p-3 rounded-lg border border-dashed border-gray-200 bg-gray-50/50"
+                          >
+                            <div className="text-xs text-gray-400 text-center">
+                              Attempt {attempts.length + i + 1}
+                              <br />
+                              <span className="text-gray-300">—</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {attempts.length === 0 && (
+                      <div className="ml-13 text-sm text-gray-400 italic">
+                        No attempts yet
+                      </div>
+                    )}
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Filter */}
-        <div className="flex items-center gap-4 mb-4">
-          <label className="text-sm font-medium text-gray-700">Filter:</label>
-          <select
-            value={selectedExam}
-            onChange={(e) => setSelectedExam(e.target.value)}
-            className="px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-800 font-medium"
-          >
-            <option value="all">All Exams</option>
-            {exams.map((exam) => (
-              <option key={exam.id} value={exam.id}>
-                {exam.title}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Submissions Table */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="p-4 border-b border-gray-100">
-            <h2 className="text-lg font-bold text-gray-800">All Submissions</h2>
-          </div>
-          {filteredSubmissions.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              No exam submissions yet
+                );
+              })}
             </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50 text-xs text-gray-500 uppercase">
-                  <tr>
-                    <th className="text-left p-4">Trainee</th>
-                    <th className="text-left p-4">Exam</th>
-                    <th className="text-center p-4">Score</th>
-                    <th className="text-center p-4">Status</th>
-                    <th className="text-left p-4">Submitted</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {filteredSubmissions.map((sub) => (
-                    <tr key={sub.id} className="hover:bg-gray-50">
-                      <td className="p-4">
-                        <span className="font-medium text-gray-800">{sub.traineeName}</span>
-                      </td>
-                      <td className="p-4 text-sm text-gray-600">
-                        {exams.find((e) => e.id === sub.examId)?.title || sub.examId}
-                      </td>
-                      <td className="p-4 text-center">
-                        <span className="font-semibold text-gray-800">
-                          {sub.score}/{sub.totalPoints}
-                        </span>
-                        <span className="text-gray-400 ml-1">({sub.percentage}%)</span>
-                      </td>
-                      <td className="p-4 text-center">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            sub.passed
-                              ? "bg-green-100 text-green-800"
-                              : "bg-amber-100 text-amber-800"
-                          }`}
-                        >
-                          {sub.passed ? "Passed" : "Needs Review"}
-                        </span>
-                      </td>
-                      <td className="p-4 text-sm text-gray-500">
-                        {new Date(sub.submittedAt).toLocaleString("en-AU", {
-                          timeZone: "Australia/Adelaide",
-                        })}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
+          </div>
+        ))}
 
-        {/* Exam Links */}
-        <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-bold text-gray-800 mb-4">Exam Links</h2>
+        {/* Exam Links Reference */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h2 className="text-lg font-bold text-gray-800 mb-4">📎 Shareable Exam Links</h2>
           <p className="text-sm text-gray-600 mb-4">
-            Share these links with trainees when they&apos;re ready to take their exams:
+            Copy these links to share with trainees when they&apos;re ready:
           </p>
           <div className="space-y-3">
             {trainees.map((trainee) => (
-              <div key={trainee.slug} className="flex items-center gap-4">
+              <div key={trainee.slug} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
                 <span className="font-medium text-gray-700 w-48">{trainee.name}</span>
-                <code className="flex-1 px-3 py-2 bg-gray-100 rounded text-sm text-gray-600 overflow-x-auto">
+                <code className="flex-1 px-3 py-2 bg-white border border-gray-200 rounded text-xs text-gray-600 overflow-x-auto">
                   https://training-portal-mauve.vercel.app/exam/module-1/{trainee.slug}
                 </code>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      `https://training-portal-mauve.vercel.app/exam/module-1/${trainee.slug}`
+                    );
+                  }}
+                  className="px-3 py-1 text-sm text-[#E6017D] hover:bg-pink-50 rounded transition-colors"
+                >
+                  Copy
+                </button>
               </div>
             ))}
           </div>
