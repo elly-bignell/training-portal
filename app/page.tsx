@@ -188,6 +188,42 @@ function HomeContent() {
           </Link>
         </div>
 
+        {/* Training Program Overview */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">
+            Training Program Overview
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="text-center p-4 bg-blue-50 rounded-lg">
+              <div className="text-3xl font-bold text-blue-600">
+                {totalModules}
+              </div>
+              <div className="text-sm text-gray-600">Modules</div>
+            </div>
+            <div className="text-center p-4 bg-green-50 rounded-lg">
+              <div className="text-3xl font-bold text-green-600">
+                {totalItems}
+              </div>
+              <div className="text-sm text-gray-600">Tasks</div>
+            </div>
+            <div className="text-center p-4 bg-purple-50 rounded-lg">
+              <div className="text-3xl font-bold text-purple-600">
+                {trainees.length}
+              </div>
+              <div className="text-sm text-gray-600">Trainees</div>
+            </div>
+            <div className="text-center p-4 bg-orange-50 rounded-lg">
+              <div className="text-3xl font-bold text-orange-600">3</div>
+              <div className="text-sm text-gray-600">Deliverables</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Performance vs Standards Summary */}
+        <div className="mb-8">
+          <PerformanceSummary />
+        </div>
+
         {/* Trainee Admin Panel */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
@@ -245,37 +281,6 @@ function HomeContent() {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* Program Overview */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">
-            Program Overview
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="text-3xl font-bold text-blue-600">
-                {totalModules}
-              </div>
-              <div className="text-sm text-gray-600">Modules</div>
-            </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <div className="text-3xl font-bold text-green-600">
-                {totalItems}
-              </div>
-              <div className="text-sm text-gray-600">Tasks</div>
-            </div>
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <div className="text-3xl font-bold text-purple-600">
-                {trainees.length}
-              </div>
-              <div className="text-sm text-gray-600">Trainees</div>
-            </div>
-            <div className="text-center p-4 bg-orange-50 rounded-lg">
-              <div className="text-3xl font-bold text-orange-600">3</div>
-              <div className="text-sm text-gray-600">Deliverables</div>
-            </div>
           </div>
         </div>
 
@@ -345,11 +350,6 @@ function HomeContent() {
               </Link>
             );
           })}
-        </div>
-
-        {/* Performance vs Standards Summary */}
-        <div className="mt-8">
-          <PerformanceSummary />
         </div>
 
         {/* Module Preview */}
