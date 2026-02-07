@@ -65,7 +65,7 @@ async function sendEmailNotification(submission: ExamSubmission, examTitle: stri
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Training Portal <notifications@yourdomain.com>",
+        from: "Training Portal <onboarding@resend.dev>",
         to: [NOTIFICATION_EMAIL],
         subject: `${statusEmoji} Exam Submission: ${submission.traineeName} - ${examTitle}`,
         html: `
