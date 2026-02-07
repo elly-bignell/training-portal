@@ -1,7 +1,7 @@
 // data/passwords.ts
 
 // Master password for full site access (admin, all trainee pages)
-export const MASTER_PASSWORD = "ProTrain2026!";
+export const MASTER_PASSWORD = "0202";
 
 // Individual trainee passwords (only access their own dashboard)
 export const TRAINEE_PASSWORDS: Record<string, string> = {
