@@ -5,7 +5,6 @@ export const MASTER_PASSWORD = "ProTrain2026!";
 
 // Individual trainee passwords (only access their own dashboard)
 export const TRAINEE_PASSWORDS: Record<string, string> = {
-  "maria-silby": "MSilby0226!",
   "cindy-rose-rondez-manrique": "CManrique0226!",
   "krishna-patel": "KPatel0226!",
 };

@@ -4,12 +4,6 @@ import { Trainee } from "@/types";
 
 export const trainees: Trainee[] = [
   {
-    id: "maria-silby",
-    name: "Maria Silby",
-    slug: "maria-silby",
-    startDate: "2024-01-15",
-  },
-  {
     id: "cindy-rose-rondez-manrique",
     name: "Cindy Rose Rondez Manrique",
     slug: "cindy-rose-rondez-manrique",
