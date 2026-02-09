@@ -8,8 +8,6 @@ export const module1Exam: Exam = {
   title: "Module 1 Exam: Company & Culture",
   description: "Test your understanding of Marketing Sweet, Quodo, our leadership, our people, and what makes us different.",
   passingScore: 100, // 100% to pass - must get all questions correct
-  willoLink: "", // Add Willo link when ready
-  willoDescription: "After completing the multiple choice questions below, you'll also need to complete a short video questionnaire on Willo to demonstrate your understanding in your own words.",
   questions: [
     {
       id: "m1-q1",
