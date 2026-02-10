@@ -6,6 +6,8 @@ export const MASTER_PASSWORD = "0202";
 // Individual trainee passwords (only access their own dashboard)
 export const TRAINEE_PASSWORDS: Record<string, string> = {
   "trainee-test": "0202",
+  "connie-matthews": "CMatthews0226!",
+  "becks-hatzis": "BHatzis0226!",
   "cindy-rose-rondez-manrique": "CManrique0226!",
   "krishna-patel": "KPatel0226!",
 };
