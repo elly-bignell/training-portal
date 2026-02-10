@@ -11,7 +11,7 @@ export const trainingProgram: Module[] = [
     proficiency: [
       "Explain who Marketing Sweet and Quodo are",
       "Articulate why clients trust us",
-      "Summarize key points from reviews, core strengths, and company direction video",
+      "Summarise key points from reviews, core strengths, and company direction video",
     ],
     deliverable:
       "Write a '60-second company explanation' in the notes section below. This should be a brief pitch you could give to a potential client or colleague explaining who we are and what makes us different.",

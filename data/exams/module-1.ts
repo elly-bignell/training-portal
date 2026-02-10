@@ -66,7 +66,7 @@ export const module1Exam: Exam = {
       question: "Why is reading our Google Reviews included as part of the training program?",
       options: [
         "A. To learn the standard templates for responding to negative feedback",
-        "B. To memorize specific phrases that can be used during sales calls",
+        "B. To memorise specific phrases that can be used during sales calls",
         "C. To understand real client experiences and what they value about us",
         "D. To identify which competitors are mentioned most frequently by clients"
       ],
@@ -91,8 +91,8 @@ export const module1Exam: Exam = {
       id: "m1-q7",
       question: "Which statement best describes our approach to client success?",
       options: [
-        "A. We prioritize delivering services at the lowest possible cost point",
-        "B. We use standardized templates and processes for maximum efficiency",
+        "A. We prioritise delivering services at the lowest possible cost point",
+        "B. We use standardised templates and processes for maximum efficiency",
         "C. We focus primarily on quick turnaround times over final quality",
         "D. We take a partnership approach and invest in understanding each client"
       ],
