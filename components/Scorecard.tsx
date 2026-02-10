@@ -50,30 +50,30 @@ function MetricCard({
   };
 
   return (
-    <div className={`rounded-xl p-4 ${color} relative overflow-hidden`}>
+    <div className={`rounded-xl p-3 sm:p-4 ${color} relative overflow-hidden`}>
       {/* Background icon */}
-      <div className="absolute top-2 right-2 text-4xl opacity-20">{icon}</div>
+      <div className="absolute top-2 right-2 text-2xl sm:text-4xl opacity-20">{icon}</div>
       
-      {/* Status indicator - moved to not overlap */}
+      {/* Status indicator */}
       {isOnTrack && (
-        <div className="mb-2">
-          <span className="text-[10px] bg-white/30 text-white px-2 py-0.5 rounded-full font-semibold">✓ On track</span>
+        <div className="mb-1 sm:mb-2">
+          <span className="text-[9px] sm:text-[10px] bg-white/30 text-white px-1.5 sm:px-2 py-0.5 rounded-full font-semibold">✓ On track</span>
         </div>
       )}
       
       {/* Label */}
-      <div className="text-xs font-semibold text-white/80 uppercase tracking-wide mb-1">
+      <div className="text-[10px] sm:text-xs font-semibold text-white/80 uppercase tracking-wide mb-0.5 sm:mb-1">
         {label}
       </div>
       
       {/* Today's value */}
-      <div className="flex items-end gap-2 mb-2">
-        <span className="text-3xl font-bold text-white">{formatValue(value)}</span>
-        <span className="text-sm text-white/60 mb-1">/ {formatValue(target)} today</span>
+      <div className="flex items-end gap-1 sm:gap-2 mb-1 sm:mb-2">
+        <span className="text-2xl sm:text-3xl font-bold text-white">{formatValue(value)}</span>
+        <span className="text-[10px] sm:text-sm text-white/60 mb-0.5 sm:mb-1">/ {formatValue(target)}</span>
       </div>
       
       {/* Daily progress bar */}
-      <div className="h-2 bg-white/20 rounded-full overflow-hidden mb-3">
+      <div className="h-1.5 sm:h-2 bg-white/20 rounded-full overflow-hidden mb-2 sm:mb-3">
         <div
           className="h-full bg-white rounded-full transition-all duration-300"
           style={{ width: `${dailyPct}%` }}
@@ -81,26 +81,26 @@ function MetricCard({
       </div>
       
       {/* Weekly progress */}
-      <div className="flex items-center justify-between text-xs text-white/70 mb-3">
-        <span>WTD: {formatValue(weeklyValue)} / {formatValue(weeklyTarget)}</span>
+      <div className="flex items-center justify-between text-[10px] sm:text-xs text-white/70 mb-2 sm:mb-3">
+        <span>WTD: {formatValue(weeklyValue)}/{formatValue(weeklyTarget)}</span>
         <span className={weeklyPct >= 100 && weeklyTarget > 0 ? "text-white font-semibold" : ""}>
           {weeklyTarget > 0 ? `${Math.round(weeklyPct)}%` : "—"}
         </span>
       </div>
       
       {/* Increment/Decrement buttons */}
-      <div className="flex gap-2">
+      <div className="flex gap-1.5 sm:gap-2">
         <button
           onClick={onDecrement}
           disabled={value <= 0 || isSaving}
-          className="flex-1 py-2 rounded-lg bg-white/20 text-white font-semibold hover:bg-white/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 py-1.5 sm:py-2 rounded-lg bg-white/20 text-white text-sm sm:text-base font-semibold hover:bg-white/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           −1
         </button>
         <button
           onClick={onIncrement}
           disabled={isSaving}
-          className="flex-1 py-2 rounded-lg bg-white text-gray-800 font-semibold hover:bg-white/90 transition-colors disabled:opacity-50"
+          className="flex-1 py-1.5 sm:py-2 rounded-lg bg-white text-gray-800 text-sm sm:text-base font-semibold hover:bg-white/90 transition-colors disabled:opacity-50"
         >
           +1
         </button>
@@ -135,56 +135,56 @@ function RevenueInput({
   };
 
   return (
-    <div className="rounded-xl p-4 bg-gradient-to-br from-emerald-500 to-emerald-600 relative overflow-hidden">
-      <div className="absolute top-2 right-2 text-4xl opacity-20">💰</div>
+    <div className="rounded-xl p-3 sm:p-4 bg-gradient-to-br from-emerald-500 to-emerald-600 relative overflow-hidden">
+      <div className="absolute top-2 right-2 text-2xl sm:text-4xl opacity-20">💰</div>
       
       {isOnTrack && (
-        <div className="mb-2">
-          <span className="text-[10px] bg-white/30 text-white px-2 py-0.5 rounded-full font-semibold">✓ On track</span>
+        <div className="mb-1 sm:mb-2">
+          <span className="text-[9px] sm:text-[10px] bg-white/30 text-white px-1.5 sm:px-2 py-0.5 rounded-full font-semibold">✓ On track</span>
         </div>
       )}
       
-      <div className="text-xs font-semibold text-white/80 uppercase tracking-wide mb-1">
+      <div className="text-[10px] sm:text-xs font-semibold text-white/80 uppercase tracking-wide mb-0.5 sm:mb-1">
         Sales Revenue ($)
       </div>
       
-      <div className="flex items-end gap-2 mb-2">
-        <span className="text-3xl font-bold text-white">${value.toLocaleString()}</span>
-        <span className="text-sm text-white/60 mb-1">/ ${target} today</span>
+      <div className="flex items-end gap-1 sm:gap-2 mb-1 sm:mb-2">
+        <span className="text-2xl sm:text-3xl font-bold text-white">${value.toLocaleString()}</span>
+        <span className="text-[10px] sm:text-sm text-white/60 mb-0.5 sm:mb-1">/ ${target}</span>
       </div>
       
-      <div className="h-2 bg-white/20 rounded-full overflow-hidden mb-3">
+      <div className="h-1.5 sm:h-2 bg-white/20 rounded-full overflow-hidden mb-2 sm:mb-3">
         <div
           className="h-full bg-white rounded-full transition-all duration-300"
           style={{ width: `${dailyPct}%` }}
         />
       </div>
       
-      <div className="flex items-center justify-between text-xs text-white/70 mb-3">
-        <span>WTD: ${weeklyValue.toLocaleString()} / ${weeklyTarget.toLocaleString()}</span>
+      <div className="flex items-center justify-between text-[10px] sm:text-xs text-white/70 mb-2 sm:mb-3">
+        <span>WTD: ${weeklyValue.toLocaleString()}/${weeklyTarget.toLocaleString()}</span>
         <span className={weeklyPct >= 100 && weeklyTarget > 0 ? "text-white font-semibold" : ""}>
           {weeklyTarget > 0 ? `${Math.round(weeklyPct)}%` : "—"}
         </span>
       </div>
       
       {/* Revenue input */}
-      <div className="flex gap-2">
+      <div className="flex gap-1.5 sm:gap-2">
         <div className="flex-1 relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+          <span className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm sm:text-base">$</span>
           <input
             type="number"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onBlur={handleSubmit}
             onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-            className="w-full py-2 pl-7 pr-3 rounded-lg text-gray-800 font-semibold"
+            className="w-full py-1.5 sm:py-2 pl-5 sm:pl-7 pr-2 sm:pr-3 rounded-lg text-gray-800 text-sm sm:text-base font-semibold"
             placeholder="0"
           />
         </div>
         <button
           onClick={handleSubmit}
           disabled={isSaving}
-          className="px-4 py-2 rounded-lg bg-white text-emerald-600 font-semibold hover:bg-white/90 transition-colors disabled:opacity-50"
+          className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-white text-emerald-600 text-sm sm:text-base font-semibold hover:bg-white/90 transition-colors disabled:opacity-50"
         >
           Save
         </button>
@@ -245,20 +245,20 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-r from-slate-800 to-slate-900 p-4 text-white">
-        <div className="flex items-center justify-between mb-2">
+      <div className="bg-gradient-to-r from-slate-800 to-slate-900 p-3 sm:p-4 text-white">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-2">
           <div>
-            <h2 className="text-lg font-bold">Today&apos;s Scorecard</h2>
-            <p className="text-slate-300 text-sm">{todayName} • {getWeekLabel()}</p>
+            <h2 className="text-base sm:text-lg font-bold">Today&apos;s Scorecard</h2>
+            <p className="text-slate-300 text-xs sm:text-sm">{todayName} • {getWeekLabel()}</p>
           </div>
-          <div className="text-right">
-            <div className="text-3xl font-bold">{overallDailyPct}%</div>
-            <div className="text-xs text-slate-400">to daily target</div>
+          <div className="flex items-center gap-3 sm:block sm:text-right">
+            <div className="text-2xl sm:text-3xl font-bold">{overallDailyPct}%</div>
+            <div className="text-[10px] sm:text-xs text-slate-400">to daily target</div>
           </div>
         </div>
         
         {/* Overall progress bar */}
-        <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+        <div className="h-1.5 sm:h-2 bg-white/20 rounded-full overflow-hidden">
           <div
             className="h-full rounded-full transition-all duration-500"
             style={{
@@ -279,8 +279,8 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
       </div>
 
       {/* Metric Cards Grid */}
-      <div className="p-4">
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="p-3 sm:p-4">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
           {/* Calls Connected */}
           <MetricCard
             label="Calls Connected"
@@ -311,7 +311,7 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
           
           {/* Attended Meetings */}
           <MetricCard
-            label="Attended Meetings"
+            label="Meetings"
             value={todayActivity.meetings}
             target={dailyStandard.meetings}
             weeklyValue={weeklyTotals.meetings}
@@ -339,7 +339,7 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
           />
           
           {/* Revenue */}
-          <div className="col-span-2 lg:col-span-2">
+          <div className="col-span-2">
             <RevenueInput
               value={todayActivity.revenue}
               target={dailyStandard.revenue}
@@ -353,9 +353,9 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
       </div>
 
       {/* Quick stats footer */}
-      <div className="border-t border-gray-100 px-4 py-3 bg-gray-50 flex flex-wrap gap-4 text-xs text-gray-500">
+      <div className="border-t border-gray-100 px-3 sm:px-4 py-2 sm:py-3 bg-gray-50 flex flex-wrap gap-2 sm:gap-4 text-[10px] sm:text-xs text-gray-500">
         <span>
-          📊 Week {currentWeek} of 8
+          📊 Week {currentWeek}/8
         </span>
         {weeklyTotals.calls > 0 && (
           <span>
@@ -369,7 +369,7 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
         )}
         {weeklyTotals.meetings > 0 && (
           <span>
-            Close Rate: {weeklyTotals.units > 0 ? Math.round((weeklyTotals.units / weeklyTotals.meetings) * 100) : 0}%
+            Close: {weeklyTotals.units > 0 ? Math.round((weeklyTotals.units / weeklyTotals.meetings) * 100) : 0}%
           </span>
         )}
       </div>
