@@ -34,7 +34,7 @@ function SchedulePageContent() {
         {/* Individual Schedule Links */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { name: "Cindy", slug: "cindy", from: "Perth" },
+            { name: "Cindy", slug: "cindy", from: "Sydney" },
             { name: "Becks", slug: "becks", from: "Brisbane" },
             { name: "Krishna", slug: "krishna", from: "Local" },
             { name: "Connie", slug: "connie", from: "Local" },
@@ -52,7 +52,7 @@ function SchedulePageContent() {
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="bg-slate-800 text-white">
-                  <th className="p-2 text-left font-semibold w-28 border border-slate-700 text-xs">Time</th>
+                  <th className="p-2 text-left font-semibold w-24 border border-slate-700 text-xs">Time</th>
                   <th className="p-2 text-center font-semibold border border-slate-700">Mon 16 Feb</th>
                   <th className="p-2 text-center font-semibold border border-slate-700">Tue 17 Feb</th>
                   <th className="p-2 text-center font-semibold border border-slate-700">Wed 18 Feb</th>
@@ -64,17 +64,17 @@ function SchedulePageContent() {
 
                 {/* ── Arrivals ── */}
                 <tr className="bg-blue-50">
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200 text-xs">✈️ Arrivals</td>
+                  <td className="p-2 font-medium text-gray-700 border border-gray-200 text-xs whitespace-nowrap">✈️ Arrivals</td>
                   <td className="p-2 text-center border border-gray-200 text-xs">
                     <div className="space-y-1.5">
                       <div>
                         <span className="font-semibold text-blue-700">Cindy</span>
-                        <span className="text-gray-500"> · Perth → Adelaide</span>
+                        <div className="text-gray-500">Sydney → Adelaide</div>
                         <div className="text-gray-500">Departs 5:30am · Lands 7:35am</div>
                       </div>
                       <div className="border-t border-blue-100 pt-1.5">
                         <span className="font-semibold text-blue-700">Becks</span>
-                        <span className="text-gray-500"> · Brisbane → Adelaide</span>
+                        <div className="text-gray-500">Brisbane → Adelaide</div>
                         <div className="text-gray-500">Departs 6:35am · Lands 9:50am</div>
                       </div>
                     </div>
@@ -85,141 +85,171 @@ function SchedulePageContent() {
                   <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
 
-                {/* ═══ 8:30–9:30 ═══ */}
+                {/* ═══ 8:30 ═══ */}
                 <tr>
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs">8:30–9:30am</td>
+                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">8:30am</td>
                   <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1 text-xs font-semibold">Complete Resource Modules</div>
-                    <div className="text-[10px] text-gray-500 mt-1">All trainees · 1hr</div>
+                  <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-purple-50">
+                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1.5 text-xs font-semibold">Complete Resource Modules</div>
+                    <div className="text-[10px] text-gray-500 mt-1">8:30–9:30am · 1hr</div>
                   </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1 text-xs font-semibold">Complete Resource Modules</div>
-                    <div className="text-[10px] text-gray-500 mt-1">All trainees · 1hr</div>
+                  <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-purple-50">
+                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1.5 text-xs font-semibold">Complete Resource Modules</div>
+                    <div className="text-[10px] text-gray-500 mt-1">8:30–9:30am · 1hr</div>
                   </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1 text-xs font-semibold">Complete Resource Modules</div>
-                    <div className="text-[10px] text-gray-500 mt-1">All trainees · 1hr</div>
+                  <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-purple-50">
+                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1.5 text-xs font-semibold">Complete Resource Modules</div>
+                    <div className="text-[10px] text-gray-500 mt-1">8:30–9:30am · 1hr</div>
                   </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1 text-xs font-semibold">Complete Resource Modules</div>
-                    <div className="text-[10px] text-gray-500 mt-1">All trainees · 1hr</div>
+                  <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-purple-50">
+                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1.5 text-xs font-semibold">Complete Resource Modules</div>
+                    <div className="text-[10px] text-gray-500 mt-1">8:30–9:30am · 1hr</div>
                   </td>
                 </tr>
 
-                {/* ═══ 9:00–12:30 Welcome (Mon) ═══ */}
+                {/* ═══ 9:00 ═══ */}
                 <tr>
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs">9:00am–<br/>12:30pm</td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1 text-xs font-semibold">Welcome</div>
-                    <div className="text-[10px] text-gray-500 mt-1">Cindy, Krishna, Connie · 9:00am</div>
-                    <div className="text-[10px] text-gray-500">Becks joins · 10:00am</div>
-                    <div className="text-[10px] text-gray-600 mt-1.5">Tech Setup · Schedule · Competencies · Standards · Scorecards</div>
-                  </td>
-                  {/* Tue-Fri: C4C 9:30-11:00 + Supervised 11:00-12:30 */}
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="space-y-1.5">
-                      <div>
-                        <div className="bg-sky-100 text-sky-700 rounded px-2 py-1 text-xs font-semibold">📞 Call for Call (C4C)</div>
-                        <div className="text-[10px] text-gray-500">9:30–11:00am · 1.5hrs</div>
-                      </div>
-                      <div>
-                        <div className="bg-amber-100 text-amber-700 rounded px-2 py-1 text-xs font-semibold">📞 Supervised Calls</div>
-                        <div className="text-[10px] text-gray-500">11:00am–12:30pm · 1.5hrs</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="space-y-1.5">
-                      <div>
-                        <div className="bg-sky-100 text-sky-700 rounded px-2 py-1 text-xs font-semibold">📞 Call for Call (C4C)</div>
-                        <div className="text-[10px] text-gray-500">9:30–11:00am · 1.5hrs</div>
-                      </div>
-                      <div>
-                        <div className="bg-amber-100 text-amber-700 rounded px-2 py-1 text-xs font-semibold">📞 Supervised Calls</div>
-                        <div className="text-[10px] text-gray-500">11:00am–12:30pm · 1.5hrs</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="space-y-1.5">
-                      <div>
-                        <div className="bg-sky-100 text-sky-700 rounded px-2 py-1 text-xs font-semibold">📞 Call for Call (C4C)</div>
-                        <div className="text-[10px] text-gray-500">9:30–11:00am · 1.5hrs</div>
-                      </div>
-                      <div>
-                        <div className="bg-amber-100 text-amber-700 rounded px-2 py-1 text-xs font-semibold">📞 Supervised Calls</div>
-                        <div className="text-[10px] text-gray-500">11:00am–12:30pm · 1.5hrs</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="space-y-1.5">
-                      <div>
-                        <div className="bg-sky-100 text-sky-700 rounded px-2 py-1 text-xs font-semibold">📞 Call for Call (C4C)</div>
-                        <div className="text-[10px] text-gray-500">9:30–11:00am · 1.5hrs</div>
-                      </div>
-                      <div>
-                        <div className="bg-amber-100 text-amber-700 rounded px-2 py-1 text-xs font-semibold">📞 Supervised Calls</div>
-                        <div className="text-[10px] text-gray-500">11:00am–12:30pm · 1.5hrs</div>
-                      </div>
+                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">9:00am</td>
+                  <td rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-purple-50">
+                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1.5 text-xs font-semibold">Welcome</div>
+                    <div className="text-[10px] text-gray-500 mt-1">9:00am–12:30pm · 3.5hrs</div>
+                    <div className="text-[10px] text-gray-500 mt-1">Cindy, Krishna, Connie from 9:00am</div>
+                    <div className="text-[10px] text-gray-500">Becks joins from 10:00am</div>
+                    <div className="text-[10px] text-gray-600 mt-2 text-left pl-3 space-y-1">
+                      <div>• Tech Setup</div>
+                      <div>• This Week&apos;s Schedule</div>
+                      <div>• Competencies</div>
+                      <div>• Standards</div>
+                      <div>• Scorecards</div>
                     </div>
                   </td>
                 </tr>
 
-                {/* ═══ 12:30–1:30 LUNCH ═══ */}
-                <tr className="bg-yellow-50">
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200 text-xs">12:30–1:30pm</td>
-                  <td className="p-2 text-center border border-gray-200"><span className="text-yellow-700 font-medium">🍽️ Lunch</span></td>
-                  <td className="p-2 text-center border border-gray-200"><span className="text-yellow-700 font-medium">🍽️ Lunch</span></td>
-                  <td className="p-2 text-center border border-gray-200"><span className="text-yellow-700 font-medium">🍽️ Lunch</span></td>
-                  <td className="p-2 text-center border border-gray-200"><span className="text-yellow-700 font-medium">🍽️ Lunch</span></td>
-                  <td className="p-2 text-center border border-gray-200"><span className="text-yellow-700 font-medium">🍽️ Lunch</span></td>
-                </tr>
-
-                {/* ═══ 1:30–5:00 Afternoon ═══ */}
+                {/* ═══ 9:30 ═══ */}
                 <tr>
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs">1:30–5:00pm</td>
-                  {/* Mon */}
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-emerald-100 text-emerald-700 rounded px-2 py-1 text-xs font-semibold">Process &amp; Technology</div>
-                    <div className="text-[10px] text-gray-500 mt-1">3.5hrs</div>
-                    <div className="text-[10px] text-gray-600 mt-1">Booking Admin · Deal Admin · Semrush · Slack · Discord · Calendars · Zoom · Wappalyzer</div>
+                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">9:30am</td>
+                  <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
+                    <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Call for Call (C4C)</div>
+                    <div className="text-[10px] text-gray-500 mt-1">9:30–11:00am · 1.5hrs</div>
                   </td>
-                  {/* Tue */}
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="space-y-1.5">
-                      <div>
-                        <div className="bg-teal-100 text-teal-700 rounded px-2 py-1 text-xs font-semibold">Customer Service Team</div>
-                        <div className="text-[10px] text-gray-500">1:30–2:30pm · Training w/ Trent</div>
-                      </div>
-                      <div>
-                        <div className="bg-violet-100 text-violet-700 rounded px-2 py-1 text-xs font-semibold">Quodo Production</div>
-                        <div className="text-[10px] text-gray-500">2:30–5:00pm · Training w/ Taylor</div>
-                      </div>
+                  <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
+                    <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Call for Call (C4C)</div>
+                    <div className="text-[10px] text-gray-500 mt-1">9:30–11:00am · 1.5hrs</div>
+                  </td>
+                  <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
+                    <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Call for Call (C4C)</div>
+                    <div className="text-[10px] text-gray-500 mt-1">9:30–11:00am · 1.5hrs</div>
+                  </td>
+                  <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
+                    <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Call for Call (C4C)</div>
+                    <div className="text-[10px] text-gray-500 mt-1">9:30–11:00am · 1.5hrs</div>
+                  </td>
+                </tr>
+
+                {/* ═══ 10:00 ═══ */}
+                <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">10:00am</td></tr>
+                {/* ═══ 10:30 ═══ */}
+                <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">10:30am</td></tr>
+
+                {/* ═══ 11:00 ═══ */}
+                <tr>
+                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:00am</td>
+                  <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
+                    <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Supervised Calls</div>
+                    <div className="text-[10px] text-gray-500 mt-1">11:00am–12:30pm · 1.5hrs</div>
+                  </td>
+                  <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
+                    <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Supervised Calls</div>
+                    <div className="text-[10px] text-gray-500 mt-1">11:00am–12:30pm · 1.5hrs</div>
+                  </td>
+                  <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
+                    <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Supervised Calls</div>
+                    <div className="text-[10px] text-gray-500 mt-1">11:00am–12:30pm · 1.5hrs</div>
+                  </td>
+                  <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
+                    <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Supervised Calls</div>
+                    <div className="text-[10px] text-gray-500 mt-1">11:00am–12:30pm · 1.5hrs</div>
+                  </td>
+                </tr>
+
+                {/* ═══ 11:30 ═══ */}
+                <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:30am</td></tr>
+                {/* ═══ 12:00 ═══ */}
+                <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:00pm</td></tr>
+
+                {/* ═══ 12:30 LUNCH ═══ */}
+                <tr>
+                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:30pm</td>
+                  <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-yellow-50"><span className="text-yellow-700 font-medium">🍽️ Lunch</span><div className="text-[10px] text-gray-500 mt-1">12:30–1:30pm</div></td>
+                  <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-yellow-50"><span className="text-yellow-700 font-medium">🍽️ Lunch</span><div className="text-[10px] text-gray-500 mt-1">12:30–1:30pm</div></td>
+                  <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-yellow-50"><span className="text-yellow-700 font-medium">🍽️ Lunch</span><div className="text-[10px] text-gray-500 mt-1">12:30–1:30pm</div></td>
+                  <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-yellow-50"><span className="text-yellow-700 font-medium">🍽️ Lunch</span><div className="text-[10px] text-gray-500 mt-1">12:30–1:30pm</div></td>
+                  <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-yellow-50"><span className="text-yellow-700 font-medium">🍽️ Lunch</span><div className="text-[10px] text-gray-500 mt-1">12:30–1:30pm</div></td>
+                </tr>
+                {/* ═══ 1:00 ═══ */}
+                <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:00pm</td></tr>
+
+                {/* ═══ 1:30 ═══ */}
+                <tr>
+                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:30pm</td>
+                  <td rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-emerald-50">
+                    <div className="bg-emerald-100 text-emerald-700 rounded px-2 py-1.5 text-xs font-semibold">Process &amp; Technology</div>
+                    <div className="text-[10px] text-gray-500 mt-1">1:30–5:00pm · 3.5hrs</div>
+                    <div className="text-[10px] text-gray-600 mt-2 text-left pl-3 space-y-1">
+                      <div>• Booking Admin</div>
+                      <div>• Deal Admin</div>
+                      <div>• Semrush</div>
+                      <div>• Slack</div>
+                      <div>• Discord</div>
+                      <div>• Google Calendars</div>
+                      <div>• Zoom</div>
+                      <div>• Wappalyzer</div>
                     </div>
                   </td>
-                  {/* Wed */}
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-violet-100 text-violet-700 rounded px-2 py-1 text-xs font-semibold">Quodo Production</div>
+                  <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-teal-50">
+                    <div className="bg-teal-100 text-teal-700 rounded px-2 py-1.5 text-xs font-semibold">Customer Service Team</div>
+                    <div className="text-[10px] text-gray-500 mt-1">1:30–2:30pm · 1hr</div>
+                    <div className="text-[10px] text-gray-500">Training w/ Trent</div>
+                  </td>
+                  <td rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-violet-50">
+                    <div className="bg-violet-100 text-violet-700 rounded px-2 py-1.5 text-xs font-semibold">Quodo Production</div>
                     <div className="text-[10px] text-gray-500 mt-1">1:30–5:00pm · 3.5hrs</div>
                     <div className="text-[10px] text-gray-500">Training w/ Taylor</div>
                   </td>
-                  {/* Thu */}
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-rose-100 text-rose-700 rounded px-2 py-1 text-xs font-semibold">Objection Handling</div>
+                  <td rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-rose-50">
+                    <div className="bg-rose-100 text-rose-700 rounded px-2 py-1.5 text-xs font-semibold">Objection Handling</div>
                     <div className="text-[10px] text-gray-500 mt-1">1:30–5:00pm · 3.5hrs</div>
                   </td>
-                  {/* Fri */}
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-orange-100 text-orange-700 rounded px-2 py-1 text-xs font-semibold">Role Playing</div>
+                  <td rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-orange-50">
+                    <div className="bg-orange-100 text-orange-700 rounded px-2 py-1.5 text-xs font-semibold">Role Playing</div>
                     <div className="text-[10px] text-gray-500 mt-1">1:30–5:00pm · 3.5hrs</div>
                   </td>
                 </tr>
+                {/* ═══ 2:00 ═══ */}
+                <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:00pm</td></tr>
+
+                {/* ═══ 2:30 ═══ */}
+                <tr>
+                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:30pm</td>
+                  <td rowSpan={5} className="p-2 text-center border border-gray-200 align-middle bg-violet-50">
+                    <div className="bg-violet-100 text-violet-700 rounded px-2 py-1.5 text-xs font-semibold">Quodo Production</div>
+                    <div className="text-[10px] text-gray-500 mt-1">2:30–5:00pm · 2.5hrs</div>
+                    <div className="text-[10px] text-gray-500">Training w/ Taylor</div>
+                  </td>
+                </tr>
+
+                {/* ═══ 3:00 ═══ */}
+                <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:00pm</td></tr>
+                {/* ═══ 3:30 ═══ */}
+                <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:30pm</td></tr>
+                {/* ═══ 4:00 ═══ */}
+                <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:00pm</td></tr>
+                {/* ═══ 4:30 ═══ */}
+                <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:30pm</td></tr>
 
                 {/* ── Departures ── */}
                 <tr className="bg-blue-50">
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200 text-xs">✈️ Departures</td>
+                  <td className="p-2 font-medium text-gray-700 border border-gray-200 text-xs whitespace-nowrap">✈️ Departures</td>
                   <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
@@ -229,16 +259,26 @@ function SchedulePageContent() {
                     <div className="space-y-1.5">
                       <div>
                         <span className="font-semibold text-blue-700">Cindy</span>
-                        <span className="text-gray-500"> · Adelaide → Perth</span>
+                        <div className="text-gray-500">Adelaide → Sydney</div>
                         <div className="text-gray-500">Departs 7:00am · Arrives 9:30am</div>
                       </div>
                       <div className="border-t border-blue-100 pt-1.5">
                         <span className="font-semibold text-blue-700">Becks</span>
-                        <span className="text-gray-500"> · Adelaide → Brisbane</span>
+                        <div className="text-gray-500">Adelaide → Brisbane</div>
                         <div className="text-gray-500">Departs 10:55am · Arrives 12:55pm</div>
                       </div>
                     </div>
                   </td>
+                </tr>
+
+                {/* ── Evening ── */}
+                <tr className="bg-indigo-50">
+                  <td className="p-2 font-medium text-gray-700 border border-gray-200 text-xs whitespace-nowrap">🌙 Evening</td>
+                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
 
               </tbody>
