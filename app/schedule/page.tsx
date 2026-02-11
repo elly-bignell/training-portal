@@ -51,7 +51,7 @@ function SchedulePageContent() {
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="bg-slate-800 text-white">
-                  <th className="p-3 text-left font-semibold w-28 border border-slate-700">Time</th>
+                  <th className="p-3 text-left font-semibold w-24 border border-slate-700">Time</th>
                   <th className="p-3 text-center font-semibold border border-slate-700">Mon 16 Feb</th>
                   <th className="p-3 text-center font-semibold border border-slate-700">Tue 17 Feb</th>
                   <th className="p-3 text-center font-semibold border border-slate-700">Wed 18 Feb</th>
@@ -63,7 +63,7 @@ function SchedulePageContent() {
               <tbody>
                 {/* Flight arrivals row */}
                 <tr className="bg-blue-50">
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200">✈️ Arrivals</td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 text-xs whitespace-nowrap">✈️ Arrivals</td>
                   <td className="p-3 text-center border border-gray-200 text-xs">
                     <div className="font-semibold text-blue-700">Cindy</div>
                     <div className="text-gray-500">Sydney → Adelaide</div>
@@ -81,8 +81,11 @@ function SchedulePageContent() {
                 
                 {/* 8:30-9:30 */}
                 <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50">8:30–9:30am</td>
-                  <td className="p-3 text-center border border-gray-200 text-gray-400 italic">Travel to office</td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">8:30–9:30am</td>
+                  <td className="p-3 text-center border border-gray-200">
+                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1 text-xs font-semibold">Office Tour</div>
+                    <div className="text-[10px] text-gray-500 mt-1">9:00am · Cindy, Krishna, Connie</div>
+                  </td>
                   <td className="p-3 text-center border border-gray-200">
                     <div className="bg-red-100 text-red-700 rounded px-2 py-1 text-xs font-semibold">📝 EXAMS</div>
                     <div className="text-[10px] text-gray-500 mt-1">Module 1</div>
@@ -101,8 +104,11 @@ function SchedulePageContent() {
                 
                 {/* 9:30-10:30 */}
                 <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50">9:30–10:30am</td>
-                  <td className="p-3 text-center border border-gray-200 text-gray-400 italic">Travel to office</td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">9:30–10:30am</td>
+                  <td className="p-3 text-center border border-gray-200">
+                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1 text-xs font-semibold">Info Session</div>
+                    <div className="text-[10px] text-gray-500 mt-1">Training Week Overview</div>
+                  </td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
@@ -112,10 +118,16 @@ function SchedulePageContent() {
                 
                 {/* 10:30-11:30 */}
                 <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50">10:30–11:30am</td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1 text-xs font-semibold">Quodo Red Process</div>
-                    <div className="text-[10px] text-gray-500 mt-1">Training w/ Ely</div>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">10:30–11:30am</td>
+                  <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-purple-50">
+                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1.5 text-xs font-semibold">Reviewing Training Modules</div>
+                    <div className="text-[10px] text-gray-500 mt-1.5 italic">Becks arrives ~10:30am</div>
+                    <div className="text-[10px] text-gray-600 mt-1.5 text-left pl-2 space-y-0.5">
+                      <div>1. Company & Culture</div>
+                      <div>2. Marketing Sweet Products</div>
+                      <div>3. Quodo Products</div>
+                    </div>
+                    <div className="text-[10px] text-gray-500 mt-1.5">Corie, Trent, Elly</div>
                   </td>
                   <td className="p-3 text-center border border-gray-200">
                     <div className="bg-teal-100 text-teal-700 rounded px-2 py-1 text-xs font-semibold">Customer Service</div>
@@ -132,8 +144,8 @@ function SchedulePageContent() {
                 
                 {/* 11:30-12:30 */}
                 <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50">11:30–12:30pm</td>
-                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:30–12:30pm</td>
+                  {/* Monday cell covered by rowSpan above */}
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
@@ -142,33 +154,33 @@ function SchedulePageContent() {
                 </tr>
                 
                 {/* 12:30-1:30 LUNCH */}
-                <tr className="bg-yellow-50">
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200">12:30–1:30pm</td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <span className="text-yellow-700 font-medium">🍽️ LUNCH</span>
+                <tr>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-yellow-50 text-xs whitespace-nowrap">12:30–1:30pm</td>
+                  <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-green-50">
+                    <div className="bg-green-100 text-green-700 rounded px-2 py-1.5 text-xs font-semibold">🍽️ Lunch + Check-in</div>
+                    <div className="text-[10px] text-gray-500 mt-1.5">1:00–2:30pm</div>
+                    <div className="text-[10px] text-gray-500">Accommodation check-in</div>
+                    <div className="text-[10px] text-gray-500">w/ Cindy & Becks</div>
                   </td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <span className="text-yellow-700 font-medium">🍽️ LUNCH</span>
+                  <td className="p-3 text-center border border-gray-200 bg-yellow-50">
+                    <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
                   </td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <span className="text-yellow-700 font-medium">🍽️ LUNCH</span>
+                  <td className="p-3 text-center border border-gray-200 bg-yellow-50">
+                    <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
                   </td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <span className="text-yellow-700 font-medium">🍽️ LUNCH</span>
+                  <td className="p-3 text-center border border-gray-200 bg-yellow-50">
+                    <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
                   </td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <span className="text-yellow-700 font-medium">🍽️ LUNCH</span>
+                  <td className="p-3 text-center border border-gray-200 bg-yellow-50">
+                    <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
                   </td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
                 
                 {/* 1:30-2:30 */}
                 <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50">1:30–2:30pm</td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <div className="bg-blue-100 text-blue-700 rounded px-2 py-1 text-xs font-semibold">📞 Booking Calls</div>
-                    <div className="text-[10px] text-gray-500 mt-1">Block 1 (CG)</div>
-                  </td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:30–2:30pm</td>
+                  {/* Monday cell covered by rowSpan above */}
                   <td className="p-3 text-center border border-gray-200">
                     <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold">🤝 Att. Meeting</div>
                     <div className="text-[10px] text-gray-500 mt-1">App Meeting Room CT</div>
@@ -189,7 +201,7 @@ function SchedulePageContent() {
                 
                 {/* 2:30-3:30 */}
                 <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50">2:30–3:30pm</td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:30–3:30pm</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200">
@@ -203,10 +215,8 @@ function SchedulePageContent() {
                 
                 {/* 3:30-4:30 */}
                 <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50">3:30–4:30pm</td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <div className="bg-slate-100 text-slate-700 rounded px-2 py-1 text-xs font-semibold">❓ Q&A</div>
-                  </td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:30–4:30pm</td>
+                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200">
                     <div className="bg-slate-100 text-slate-700 rounded px-2 py-1 text-xs font-semibold">❓ Q&A</div>
                   </td>
@@ -224,7 +234,7 @@ function SchedulePageContent() {
                 
                 {/* 4:30-5:30 */}
                 <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50">4:30–5:30pm</td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:30–5:30pm</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
@@ -235,7 +245,7 @@ function SchedulePageContent() {
                 
                 {/* 5:30-6:30 */}
                 <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50">5:30–6:30pm</td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">5:30–6:30pm</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
@@ -246,7 +256,7 @@ function SchedulePageContent() {
                 
                 {/* Departures row */}
                 <tr className="bg-blue-50">
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200">✈️ Departures</td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 text-xs whitespace-nowrap">✈️ Departures</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
@@ -264,7 +274,7 @@ function SchedulePageContent() {
                 
                 {/* Evening */}
                 <tr className="bg-indigo-50">
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200">🌙 Evening</td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 text-xs whitespace-nowrap">🌙 Evening</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
@@ -275,7 +285,7 @@ function SchedulePageContent() {
                 
                 {/* Daily Deliverables */}
                 <tr className="bg-pink-50">
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200">📋 Deliverables</td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 text-xs whitespace-nowrap">📋 Deliverables</td>
                   <td className="p-3 text-center border border-gray-200 text-xs">
                     <div className="text-[#E6017D] font-medium">Complete Module 1</div>
                   </td>
