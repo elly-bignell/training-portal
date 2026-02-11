@@ -222,9 +222,20 @@ function CindyScheduleContent() {
                   {/* ═══ 1:30 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:30pm</td>
-                    {/* MON: Booking Admin 1:30-2:00 = 1 row */}
-                    <td className="p-2 text-center border border-gray-200 align-middle">
-                      <div className="bg-emerald-100 text-emerald-700 rounded px-2 py-1 text-xs font-semibold">Booking Admin</div>
+                    {/* MON: Process & Technology 1:30-5:00 = 7 rows */}
+                    <td rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-emerald-50">
+                      <div className="bg-emerald-100 text-emerald-700 rounded px-2 py-1.5 text-xs font-semibold">Process &amp; Technology</div>
+                      <div className="text-[10px] text-gray-500 mt-1">1:30–5:00pm · 3.5hrs</div>
+                      <div className="text-[10px] text-gray-600 mt-2 text-left pl-3 space-y-1">
+                        <div>• Booking Admin</div>
+                        <div>• Deal Admin</div>
+                        <div>• Semrush</div>
+                        <div>• Slack</div>
+                        <div>• Discord</div>
+                        <div>• Google Calendars</div>
+                        <div>• Zoom</div>
+                        <div>• Wappalyzer</div>
+                      </div>
                     </td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
@@ -235,10 +246,6 @@ function CindyScheduleContent() {
                   {/* ═══ 2:00 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:00pm</td>
-                    {/* MON: Deal Admin 2:00-2:30 = 1 row */}
-                    <td className="p-2 text-center border border-gray-200 align-middle">
-                      <div className="bg-emerald-100 text-emerald-700 rounded px-2 py-1 text-xs font-semibold">Deal Admin</div>
-                    </td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
@@ -248,11 +255,6 @@ function CindyScheduleContent() {
                   {/* ═══ 2:30 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:30pm</td>
-                    {/* MON: CS Team Training 2:30-3:30 = 2 rows */}
-                    <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-teal-50">
-                      <div className="bg-teal-100 text-teal-700 rounded px-2 py-1.5 text-xs font-semibold">Customer Service Team</div>
-                      <div className="text-[10px] text-gray-500 mt-1">Training w/ Trent</div>
-                    </td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
@@ -262,7 +264,6 @@ function CindyScheduleContent() {
                   {/* ═══ 3:00 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:00pm</td>
-                    {/* MON: covered by CS Team */}
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
@@ -276,7 +277,6 @@ function CindyScheduleContent() {
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                   </tr>
 
                   {/* ═══ 4:00 ═══ */}
@@ -286,13 +286,11 @@ function CindyScheduleContent() {
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                   </tr>
 
                   {/* ═══ 4:30 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:30pm</td>
-                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
@@ -342,11 +340,7 @@ function CindyScheduleContent() {
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-4 h-4 rounded bg-emerald-100 border border-emerald-200"></span>
-                <span className="text-gray-600">Admin Training</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-4 h-4 rounded bg-teal-100 border border-teal-200"></span>
-                <span className="text-gray-600">Customer Service</span>
+                <span className="text-gray-600">Process &amp; Technology</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-4 h-4 rounded bg-yellow-100 border border-yellow-200"></span>
@@ -403,7 +397,7 @@ function CindyScheduleContent() {
                 Additional Resources
               </h2>
               <Link
-                href="/"
+                href="/dashboard/cindy"
                 className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all group"
               >
                 <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 group-hover:bg-blue-200 transition-colors">
