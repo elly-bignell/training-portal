@@ -210,6 +210,25 @@ function HomeContent() {
             </svg>
             Exam Results
           </Link>
+          <Link
+            href="/schedule"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors text-sm"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+            Schedule
+          </Link>
         </div>
 
         {/* Training Program Overview */}
@@ -239,258 +258,6 @@ function HomeContent() {
             <div className="text-center p-4 bg-orange-50 rounded-lg">
               <div className="text-3xl font-bold text-orange-600">3</div>
               <div className="text-sm text-gray-600">Deliverables</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Training Week Schedule */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8 overflow-x-auto">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-lg font-semibold text-gray-800">
-                📅 Training Week Schedule
-              </h2>
-              <p className="text-sm text-gray-500">Mon 16 Feb – Fri 20 Feb 2026</p>
-            </div>
-            <span className="px-3 py-1 bg-pink-100 text-[#E6017D] text-xs font-semibold rounded-full">
-              Week 0 — Training
-            </span>
-          </div>
-          
-          <div className="min-w-[900px]">
-            <table className="w-full text-sm border-collapse">
-              <thead>
-                <tr className="bg-slate-800 text-white">
-                  <th className="p-2 text-left font-semibold w-24 border border-slate-700">Time</th>
-                  <th className="p-2 text-center font-semibold border border-slate-700">Mon 16 Feb</th>
-                  <th className="p-2 text-center font-semibold border border-slate-700">Tue 17 Feb</th>
-                  <th className="p-2 text-center font-semibold border border-slate-700">Wed 18 Feb</th>
-                  <th className="p-2 text-center font-semibold border border-slate-700">Thu 19 Feb</th>
-                  <th className="p-2 text-center font-semibold border border-slate-700">Fri 20 Feb</th>
-                </tr>
-              </thead>
-              <tbody>
-                {/* Flight arrivals row */}
-                <tr className="bg-blue-50">
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200">✈️ Arrivals</td>
-                  <td className="p-2 text-center border border-gray-200 text-xs">
-                    <div className="font-semibold text-blue-700">Connie & Becks</div>
-                    <div className="text-gray-500">Sydney → Adelaide</div>
-                    <div className="text-gray-500">Lands 8:15am</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                </tr>
-                
-                {/* 8:30-9:30 */}
-                <tr>
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50">8:30–9:30am</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400 italic">Travel to office</td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-red-100 text-red-700 rounded px-2 py-1 text-xs font-semibold">📝 EXAMS</div>
-                    <div className="text-[10px] text-gray-500 mt-1">Module 1</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-red-100 text-red-700 rounded px-2 py-1 text-xs font-semibold">📝 EXAMS</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-red-100 text-red-700 rounded px-2 py-1 text-xs font-semibold">📝 EXAMS</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-red-100 text-red-700 rounded px-2 py-1 text-xs font-semibold">📝 EXAMS</div>
-                  </td>
-                </tr>
-                
-                {/* 9:30-10:30 */}
-                <tr>
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50">9:30–10:30am</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400 italic">Travel to office</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                </tr>
-                
-                {/* 10:30-11:30 */}
-                <tr>
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50">10:30–11:30am</td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1 text-xs font-semibold">Quodo Red Process</div>
-                    <div className="text-[10px] text-gray-500 mt-1">Training w/ Ely</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-teal-100 text-teal-700 rounded px-2 py-1 text-xs font-semibold">Customer Service</div>
-                    <div className="text-[10px] text-gray-500 mt-1">Team Pres w/ Ely, Trev & Troy</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-amber-100 text-amber-700 rounded px-2 py-1 text-xs font-semibold">Objection Handling</div>
-                    <div className="text-[10px] text-gray-500 mt-1">Softwares, Semrush, etc</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                </tr>
-                
-                {/* 11:30-12:30 */}
-                <tr>
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50">11:30–12:30pm</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                </tr>
-                
-                {/* 12:30-1:30 LUNCH */}
-                <tr className="bg-yellow-50">
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200">12:30–1:30pm</td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <span className="text-yellow-700 font-medium">🍽️ LUNCH</span>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <span className="text-yellow-700 font-medium">🍽️ LUNCH</span>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <span className="text-yellow-700 font-medium">🍽️ LUNCH</span>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <span className="text-yellow-700 font-medium">🍽️ LUNCH</span>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <span className="text-yellow-700 font-medium">🍽️ LUNCH</span>
-                  </td>
-                </tr>
-                
-                {/* 1:30-2:30 */}
-                <tr>
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50">1:30–2:30pm</td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-blue-100 text-blue-700 rounded px-2 py-1 text-xs font-semibold">📞 Booking Calls</div>
-                    <div className="text-[10px] text-gray-500 mt-1">Block 1 (CG)</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold">🤝 Att. Meeting</div>
-                    <div className="text-[10px] text-gray-500 mt-1">App Meeting Room CT</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold">🤝 Att. Meeting</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold">🤝 Att. Meeting</div>
-                    <div className="text-[10px] text-gray-500 mt-1">CT</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold">🤝 Att. Meeting</div>
-                    <div className="text-[10px] text-gray-500 mt-1">CT</div>
-                  </td>
-                </tr>
-                
-                {/* 2:30-3:30 */}
-                <tr>
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50">2:30–3:30pm</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold">🤝 Att. Meeting</div>
-                    <div className="text-[10px] text-gray-500 mt-1">CT</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                </tr>
-                
-                {/* 3:30-4:30 */}
-                <tr>
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50">3:30–4:30pm</td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-slate-100 text-slate-700 rounded px-2 py-1 text-xs font-semibold">❓ Q&A</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-slate-100 text-slate-700 rounded px-2 py-1 text-xs font-semibold">❓ Q&A</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-slate-100 text-slate-700 rounded px-2 py-1 text-xs font-semibold">❓ Q&A</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-orange-100 text-orange-700 rounded px-2 py-1 text-xs font-semibold">Catch Up</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200">
-                    <div className="bg-slate-100 text-slate-700 rounded px-2 py-1 text-xs font-semibold">❓ Q&A</div>
-                  </td>
-                </tr>
-                
-                {/* 4:30-5:30 */}
-                <tr>
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50">4:30–5:30pm</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                </tr>
-                
-                {/* Departures row */}
-                <tr className="bg-blue-50">
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200">✈️ Departures</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-2 text-center border border-gray-200 text-xs">
-                    <div className="font-semibold text-blue-700">Connie & Becks</div>
-                    <div className="text-gray-500">Adelaide → Sydney</div>
-                    <div className="text-gray-500">TBC</div>
-                  </td>
-                </tr>
-                
-                {/* Daily Deliverables */}
-                <tr className="bg-pink-50">
-                  <td className="p-2 font-medium text-gray-700 border border-gray-200">📋 Deliverables</td>
-                  <td className="p-2 text-center border border-gray-200 text-xs">
-                    <div className="text-[#E6017D] font-medium">Complete Module 1</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200 text-xs">
-                    <div className="text-[#E6017D] font-medium">Pass Module 1 Exam</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200 text-xs">
-                    <div className="text-[#E6017D] font-medium">Complete Module 2</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200 text-xs">
-                    <div className="text-[#E6017D] font-medium">Complete Module 3</div>
-                  </td>
-                  <td className="p-2 text-center border border-gray-200 text-xs">
-                    <div className="text-[#E6017D] font-medium">All Exams Passed</div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          
-          {/* Legend */}
-          <div className="mt-4 pt-4 border-t border-gray-100 flex flex-wrap gap-3 text-xs">
-            <div className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded bg-red-100 border border-red-200"></span>
-              <span className="text-gray-600">Exams</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded bg-purple-100 border border-purple-200"></span>
-              <span className="text-gray-600">Training Sessions</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded bg-blue-100 border border-blue-200"></span>
-              <span className="text-gray-600">Booking Calls</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded bg-green-100 border border-green-200"></span>
-              <span className="text-gray-600">Attended Meetings</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded bg-yellow-100 border border-yellow-200"></span>
-              <span className="text-gray-600">Lunch</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded bg-slate-100 border border-slate-200"></span>
-              <span className="text-gray-600">Q&A</span>
             </div>
           </div>
         </div>
