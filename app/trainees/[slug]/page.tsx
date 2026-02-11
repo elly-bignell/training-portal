@@ -119,7 +119,7 @@ function TraineeDashboardContent() {
                 <h1 className="text-xl font-bold text-gray-900">
                   {trainee.name}
                 </h1>
-                <p className="text-sm text-gray-500">Training Dashboard</p>
+                <p className="text-sm text-gray-500">Resource Modules</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -160,7 +160,7 @@ function TraineeDashboardContent() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-800">
-              Training Progress
+              Progress
             </h2>
             <span className="text-3xl font-bold text-blue-600">
               {overallProgress}%
