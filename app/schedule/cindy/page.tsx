@@ -30,18 +30,8 @@ function CindyScheduleContent() {
                 className="text-slate-400 hover:text-white transition-colors"
                 title="Back to Portal"
               >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                  />
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
               </Link>
               <div>
@@ -57,10 +47,6 @@ function CindyScheduleContent() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 py-6 space-y-8">
-
-        {/* ═══════════════════════════════════════════ */}
-        {/* SCHEDULE + COMPETENCIES SIDE BY SIDE       */}
-        {/* ═══════════════════════════════════════════ */}
         <div className="flex gap-6">
 
           {/* ── Schedule Table ── */}
@@ -69,56 +55,57 @@ function CindyScheduleContent() {
               <table className="w-full text-sm border-collapse">
                 <thead>
                   <tr className="bg-slate-800 text-white">
-                    <th className="p-3 text-left font-semibold w-24 border border-slate-700 text-xs">Time</th>
-                    <th className="p-3 text-center font-semibold border border-slate-700">Mon 16 Feb</th>
-                    <th className="p-3 text-center font-semibold border border-slate-700">Tue 17 Feb</th>
-                    <th className="p-3 text-center font-semibold border border-slate-700">Wed 18 Feb</th>
-                    <th className="p-3 text-center font-semibold border border-slate-700">Thu 19 Feb</th>
-                    <th className="p-3 text-center font-semibold border border-slate-700">Fri 20 Feb</th>
+                    <th className="p-2 text-left font-semibold w-24 border border-slate-700 text-xs">Time</th>
+                    <th className="p-2 text-center font-semibold border border-slate-700">Mon 16 Feb</th>
+                    <th className="p-2 text-center font-semibold border border-slate-700">Tue 17 Feb</th>
+                    <th className="p-2 text-center font-semibold border border-slate-700">Wed 18 Feb</th>
+                    <th className="p-2 text-center font-semibold border border-slate-700">Thu 19 Feb</th>
+                    <th className="p-2 text-center font-semibold border border-slate-700">Fri 20 Feb</th>
                   </tr>
                 </thead>
                 <tbody>
                   {/* ── Arrivals ── */}
                   <tr className="bg-blue-50">
-                    <td className="p-3 font-medium text-gray-700 border border-gray-200 text-xs whitespace-nowrap">✈️ Arrival</td>
-                    <td className="p-3 text-center border border-gray-200 text-xs">
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 text-xs whitespace-nowrap">✈️ Arrival</td>
+                    <td className="p-2 text-center border border-gray-200 text-xs">
                       <div className="font-semibold text-blue-700">Cindy</div>
                       <div className="text-gray-500">Sydney → Adelaide</div>
                       <div className="text-gray-500">QF731 · Lands 8:15am</div>
                     </td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                   </tr>
 
-                  {/* ── 8:30–9:00 ── */}
+                  {/* ═══ 8:30 ═══ */}
                   <tr>
-                    <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">8:30–9:00am</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-purple-50">
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">8:30am</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    {/* TUE-FRI: Specialised Training 8:30-9:30 = 2 rows */}
+                    <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-purple-50">
                       <div className="bg-purple-100 text-purple-700 rounded px-2 py-1.5 text-xs font-semibold">Specialised Training</div>
-                      <div className="text-[10px] text-gray-500 mt-1.5">8:30–10:00am · 1.5hrs</div>
+                      <div className="text-[10px] text-gray-500 mt-1">8:30–9:30am · 1hr</div>
                     </td>
-                    <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-purple-50">
+                    <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-purple-50">
                       <div className="bg-purple-100 text-purple-700 rounded px-2 py-1.5 text-xs font-semibold">Specialised Training</div>
-                      <div className="text-[10px] text-gray-500 mt-1.5">8:30–10:00am · 1.5hrs</div>
+                      <div className="text-[10px] text-gray-500 mt-1">8:30–9:30am · 1hr</div>
                     </td>
-                    <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-purple-50">
+                    <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-purple-50">
                       <div className="bg-purple-100 text-purple-700 rounded px-2 py-1.5 text-xs font-semibold">Specialised Training</div>
-                      <div className="text-[10px] text-gray-500 mt-1.5">8:30–10:00am · 1.5hrs</div>
+                      <div className="text-[10px] text-gray-500 mt-1">8:30–9:30am · 1hr</div>
                     </td>
-                    <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-purple-50">
+                    <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-purple-50">
                       <div className="bg-purple-100 text-purple-700 rounded px-2 py-1.5 text-xs font-semibold">Specialised Training</div>
-                      <div className="text-[10px] text-gray-500 mt-1.5">8:30–10:00am · 1.5hrs</div>
+                      <div className="text-[10px] text-gray-500 mt-1">8:30–9:30am · 1hr</div>
                     </td>
                   </tr>
 
-                  {/* ── 9:00–10:00 ── */}
+                  {/* ═══ 9:00 ═══ */}
                   <tr>
-                    <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">9:00–10:00am</td>
-                    {/* MON */}
-                    <td className="p-3 text-center border border-gray-200">
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">9:00am</td>
+                    {/* MON: Welcome 9:00-10:00 = 2 rows */}
+                    <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle">
                       <div className="bg-purple-100 text-purple-700 rounded px-2 py-1 text-xs font-semibold">Welcome</div>
                       <div className="text-[10px] text-gray-600 mt-1.5 text-left pl-2 space-y-0.5">
                         <div>• Tech Setup</div>
@@ -126,125 +113,207 @@ function CindyScheduleContent() {
                         <div>• Competencies</div>
                       </div>
                     </td>
-                    {/* TUE-FRI: covered by Specialised Training rowSpan from 8:30 */}
+                    {/* TUE-FRI: covered by Specialised Training */}
                   </tr>
 
-                  {/* ── 10:00–11:00 ── */}
+                  {/* ═══ 9:30 ═══ */}
                   <tr>
-                    <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">10:00–11:00am</td>
-                    {/* MON */}
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    {/* TUE-FRI: C4C */}
-                    <td className="p-3 text-center border border-gray-200">
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">9:30am</td>
+                    {/* MON: covered by Welcome */}
+                    {/* TUE-FRI: C4C 9:30-11:00 = 3 rows */}
+                    <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
                       <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Call for Call (C4C)</div>
+                      <div className="text-[10px] text-gray-500 mt-1">9:30–11:00am · 1.5hrs</div>
                     </td>
-                    <td className="p-3 text-center border border-gray-200">
+                    <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
                       <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Call for Call (C4C)</div>
+                      <div className="text-[10px] text-gray-500 mt-1">9:30–11:00am · 1.5hrs</div>
                     </td>
-                    <td className="p-3 text-center border border-gray-200">
+                    <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
                       <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Call for Call (C4C)</div>
+                      <div className="text-[10px] text-gray-500 mt-1">9:30–11:00am · 1.5hrs</div>
                     </td>
-                    <td className="p-3 text-center border border-gray-200">
+                    <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
                       <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Call for Call (C4C)</div>
+                      <div className="text-[10px] text-gray-500 mt-1">9:30–11:00am · 1.5hrs</div>
                     </td>
                   </tr>
 
-                  {/* ── 11:00–12:00 ── */}
+                  {/* ═══ 10:00 ═══ */}
                   <tr>
-                    <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:00–12:00pm</td>
-                    {/* MON */}
-                    <td className="p-3 text-center border border-gray-200">
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">10:00am</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    {/* TUE-FRI: covered by C4C */}
+                  </tr>
+
+                  {/* ═══ 10:30 ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">10:30am</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    {/* TUE-FRI: covered by C4C */}
+                  </tr>
+
+                  {/* ═══ 11:00 ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:00am</td>
+                    {/* MON: Standards & Scorecards 11:00-12:00 = 2 rows */}
+                    <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle">
                       <div className="bg-slate-100 text-slate-700 rounded px-2 py-1.5 text-xs font-semibold">Standards &amp; Scorecards</div>
+                      <div className="text-[10px] text-gray-500 mt-1">11:00am–12:00pm · 1hr</div>
                     </td>
-                    {/* TUE-FRI: Unsupervised Calls */}
-                    <td className="p-3 text-center border border-gray-200">
-                      <div className="bg-orange-100 text-orange-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Unsupervised Calls</div>
-                    </td>
-                    <td className="p-3 text-center border border-gray-200">
-                      <div className="bg-orange-100 text-orange-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Unsupervised Calls</div>
-                    </td>
-                    <td className="p-3 text-center border border-gray-200">
-                      <div className="bg-orange-100 text-orange-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Unsupervised Calls</div>
-                    </td>
-                    <td className="p-3 text-center border border-gray-200">
-                      <div className="bg-orange-100 text-orange-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Unsupervised Calls</div>
-                    </td>
-                  </tr>
-
-                  {/* ── 12:00–1:00 LUNCH ── */}
-                  <tr>
-                    <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-yellow-50 text-xs whitespace-nowrap">12:00–1:00pm</td>
-                    <td className="p-3 text-center border border-gray-200 bg-yellow-50">
-                      <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
-                    </td>
-                    <td className="p-3 text-center border border-gray-200 bg-yellow-50">
-                      <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
-                    </td>
-                    <td className="p-3 text-center border border-gray-200 bg-yellow-50">
-                      <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
-                    </td>
-                    <td className="p-3 text-center border border-gray-200 bg-yellow-50">
-                      <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
-                    </td>
-                    <td className="p-3 text-center border border-gray-200 bg-yellow-50">
-                      <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
-                    </td>
-                  </tr>
-
-                  {/* ── 1:00–2:00 ── */}
-                  <tr>
-                    <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:00–2:00pm</td>
-                    {/* MON */}
-                    <td className="p-3 text-center border border-gray-200">
-                      <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Call for Call (C4C)</div>
-                    </td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                  </tr>
-
-                  {/* ── 2:00–3:00 ── */}
-                  <tr>
-                    <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:00–3:00pm</td>
-                    {/* MON */}
-                    <td className="p-3 text-center border border-gray-200">
+                    {/* TUE-FRI: Supervised Calls 11:00-12:30 = 3 rows */}
+                    <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
                       <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Supervised Calls</div>
+                      <div className="text-[10px] text-gray-500 mt-1">11:00am–12:30pm · 1.5hrs</div>
                     </td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
+                    <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
+                      <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Supervised Calls</div>
+                      <div className="text-[10px] text-gray-500 mt-1">11:00am–12:30pm · 1.5hrs</div>
+                    </td>
+                    <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
+                      <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Supervised Calls</div>
+                      <div className="text-[10px] text-gray-500 mt-1">11:00am–12:30pm · 1.5hrs</div>
+                    </td>
+                    <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
+                      <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Supervised Calls</div>
+                      <div className="text-[10px] text-gray-500 mt-1">11:00am–12:30pm · 1.5hrs</div>
+                    </td>
                   </tr>
 
-                  {/* ── 3:00–4:00 ── */}
+                  {/* ═══ 11:30 ═══ */}
                   <tr>
-                    <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:00–4:00pm</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:30am</td>
+                    {/* MON: covered by Standards */}
+                    {/* TUE-FRI: covered by Supervised */}
                   </tr>
 
-                  {/* ── 4:00–5:00 ── */}
+                  {/* ═══ 12:00 ═══ */}
                   <tr>
-                    <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:00–5:00pm</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:00pm</td>
+                    {/* MON: Lunch 12:00-1:00 = 2 rows */}
+                    <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-yellow-50">
+                      <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
+                      <div className="text-[10px] text-gray-500 mt-1">12:00–1:00pm</div>
+                    </td>
+                    {/* TUE-FRI: covered by Supervised */}
+                  </tr>
+
+                  {/* ═══ 12:30 ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:30pm</td>
+                    {/* MON: covered by Lunch */}
+                    {/* TUE-FRI: Lunch 12:30-1:30 = 2 rows */}
+                    <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-yellow-50">
+                      <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
+                      <div className="text-[10px] text-gray-500 mt-1">12:30–1:30pm</div>
+                    </td>
+                    <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-yellow-50">
+                      <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
+                      <div className="text-[10px] text-gray-500 mt-1">12:30–1:30pm</div>
+                    </td>
+                    <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-yellow-50">
+                      <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
+                      <div className="text-[10px] text-gray-500 mt-1">12:30–1:30pm</div>
+                    </td>
+                    <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-yellow-50">
+                      <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
+                      <div className="text-[10px] text-gray-500 mt-1">12:30–1:30pm</div>
+                    </td>
+                  </tr>
+
+                  {/* ═══ 1:00 ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:00pm</td>
+                    {/* MON: C4C 1:00-2:00 = 2 rows */}
+                    <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle">
+                      <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Call for Call (C4C)</div>
+                      <div className="text-[10px] text-gray-500 mt-1">1:00–2:00pm · 1hr</div>
+                    </td>
+                    {/* TUE-FRI: covered by Lunch */}
+                  </tr>
+
+                  {/* ═══ 1:30 ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:30pm</td>
+                    {/* MON: covered by C4C */}
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                  </tr>
+
+                  {/* ═══ 2:00 ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:00pm</td>
+                    {/* MON: Supervised 2:00-3:00 = 2 rows */}
+                    <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle">
+                      <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Supervised Calls</div>
+                      <div className="text-[10px] text-gray-500 mt-1">2:00–3:00pm · 1hr</div>
+                    </td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                  </tr>
+
+                  {/* ═══ 2:30 ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:30pm</td>
+                    {/* MON: covered by Supervised */}
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                  </tr>
+
+                  {/* ═══ 3:00 ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:00pm</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                  </tr>
+
+                  {/* ═══ 3:30 ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:30pm</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                  </tr>
+
+                  {/* ═══ 4:00 ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:00pm</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                  </tr>
+
+                  {/* ═══ 4:30 ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:30pm</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                   </tr>
 
                   {/* ── Departure ── */}
                   <tr className="bg-blue-50">
-                    <td className="p-3 font-medium text-gray-700 border border-gray-200 text-xs whitespace-nowrap">✈️ Departure</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-xs">
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 text-xs whitespace-nowrap">✈️ Departure</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-xs">
                       <div className="text-gray-500 italic">Sat 21 Feb</div>
                       <div className="text-gray-500">Adelaide → Sydney</div>
                       <div className="text-gray-500">QF740 · Departs 12:35pm</div>
@@ -253,12 +322,12 @@ function CindyScheduleContent() {
 
                   {/* ── Evening ── */}
                   <tr className="bg-indigo-50">
-                    <td className="p-3 font-medium text-gray-700 border border-gray-200 text-xs whitespace-nowrap">🌙 Evening</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 text-xs whitespace-nowrap">🌙 Evening</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-2 text-center border border-gray-200 text-gray-400">—</td>
                   </tr>
                 </tbody>
               </table>
@@ -268,7 +337,7 @@ function CindyScheduleContent() {
             <div className="mt-6 pt-4 border-t border-gray-100 flex flex-wrap gap-4 text-xs">
               <div className="flex items-center gap-1.5">
                 <span className="w-4 h-4 rounded bg-purple-100 border border-purple-200"></span>
-                <span className="text-gray-600">Training</span>
+                <span className="text-gray-600">Specialised Training</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-4 h-4 rounded bg-sky-100 border border-sky-200"></span>
@@ -277,10 +346,6 @@ function CindyScheduleContent() {
               <div className="flex items-center gap-1.5">
                 <span className="w-4 h-4 rounded bg-amber-100 border border-amber-200"></span>
                 <span className="text-gray-600">Supervised Calls</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-4 h-4 rounded bg-orange-100 border border-orange-200"></span>
-                <span className="text-gray-600">Unsupervised Calls</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-4 h-4 rounded bg-yellow-100 border border-yellow-200"></span>
