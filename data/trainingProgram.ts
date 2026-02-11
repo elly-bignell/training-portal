@@ -634,7 +634,7 @@ export const trainingProgram: Module[] = [
   },
   {
     id: "module-4",
-    title: "MODULE 4 — Call Scripts & Additional Resources (Estimated: 20 mins)",
+    title: "MODULE 4 — Call Scripts & Additional Resources (Estimated: 10 mins)",
     purpose:
       "Familiarise yourself with the cold call script and additional sales resources to build confidence and consistency on calls.",
     proficiency: [
@@ -651,7 +651,6 @@ export const trainingProgram: Module[] = [
         link: "https://docs.google.com/document/d/1AbGxVtE5N0nMQFQCBrXzm3vYoUs337UE47UTOdU43FY/edit?usp=sharing",
         estimatedTime: "10 mins",
       },
-      {
     ],
     resources: [
       { label: "Cold Call Script", url: "https://docs.google.com/document/d/1AbGxVtE5N0nMQFQCBrXzm3vYoUs337UE47UTOdU43FY/edit?usp=sharing" },
