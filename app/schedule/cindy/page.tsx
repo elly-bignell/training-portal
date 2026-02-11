@@ -7,15 +7,42 @@ import PasswordGate from "@/components/PasswordGate";
 
 function CindyScheduleContent() {
   const competencies = [
-    "Technology Set Up",
-    "How to Book a Lead",
-    "How to Close a Deal",
-    "5 Hours Call for Call",
-    "5 Hours Supervised Calls",
-    "Call Scripts",
-    "Understanding the Quodo Production Process",
-    "Understanding the strength of our Customer Service Team",
-    "Objection Handling",
+    {
+      label: "Technology Set Up",
+      link: "https://docs.google.com/spreadsheets/d/1d6gVEjsHb640ZCa_cesU3j7bUmAyE4H7yulz3CRPCBU/edit?usp=sharing",
+    },
+    {
+      label: "How to Book a Lead",
+      link: null,
+    },
+    {
+      label: "How to Close a Deal",
+      link: null,
+    },
+    {
+      label: "5 Hours Call for Call",
+      link: null,
+    },
+    {
+      label: "5 Hours Supervised Calls",
+      link: null,
+    },
+    {
+      label: "Call Scripts",
+      link: "https://docs.google.com/document/d/1AbGxVtE5N0nMQFQCBrXzm3vYoUs337UE47UTOdU43FY/edit?tab=t.0#heading=h.bjodttb42hpy",
+    },
+    {
+      label: "Understanding the Quodo Production Process",
+      link: "https://docs.google.com/presentation/d/1_mOeJlBjMMWLbGa3Kb2lcXl8HSwY0Hi_dyAHPckfC5g/edit",
+    },
+    {
+      label: "Understanding the strength of our Customer Service Team",
+      link: "https://docs.google.com/presentation/d/1gyLJ6Kfrbc8rNKJDluBvkleKLJznmeTY--FFgHclbFQ/edit?usp=sharing",
+    },
+    {
+      label: "Objection Handling",
+      link: null,
+    },
   ];
 
   return (
@@ -116,13 +143,11 @@ function CindyScheduleContent() {
                         <div>• Scorecards</div>
                       </div>
                     </td>
-                    {/* TUE-FRI: covered by Complete Resource Modules */}
                   </tr>
 
                   {/* ═══ 9:30 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">9:30am</td>
-                    {/* MON: covered by Welcome */}
                     {/* TUE-FRI: C4C 9:30-11:00 = 3 rows */}
                     <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
                       <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Call for Call (C4C)</div>
@@ -155,7 +180,6 @@ function CindyScheduleContent() {
                   {/* ═══ 11:00 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:00am</td>
-                    {/* MON: covered by Welcome */}
                     {/* TUE-FRI: Supervised Calls 11:00-12:30 = 3 rows */}
                     <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
                       <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Supervised Calls</div>
@@ -178,24 +202,20 @@ function CindyScheduleContent() {
                   {/* ═══ 11:30 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:30am</td>
-                    {/* MON: covered by Welcome */}
                   </tr>
 
                   {/* ═══ 12:00 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:00pm</td>
-                    {/* MON: covered by Welcome (now extends to 12:30) */}
                   </tr>
 
                   {/* ═══ 12:30 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:30pm</td>
-                    {/* MON: Lunch 12:30-1:30 = 2 rows */}
                     <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-yellow-50">
                       <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
                       <div className="text-[10px] text-gray-500 mt-1">12:30–1:30pm</div>
                     </td>
-                    {/* TUE-FRI: Lunch 12:30-1:30 = 2 rows */}
                     <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-yellow-50">
                       <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
                       <div className="text-[10px] text-gray-500 mt-1">12:30–1:30pm</div>
@@ -222,7 +242,6 @@ function CindyScheduleContent() {
                   {/* ═══ 1:30 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:30pm</td>
-                    {/* MON: Process & Technology 1:30-5:00 = 7 rows */}
                     <td rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-emerald-50">
                       <div className="bg-emerald-100 text-emerald-700 rounded px-2 py-1.5 text-xs font-semibold">Process &amp; Technology</div>
                       <div className="text-[10px] text-gray-500 mt-1">1:30–5:00pm · 3.5hrs</div>
@@ -237,24 +256,20 @@ function CindyScheduleContent() {
                         <div>• Wappalyzer</div>
                       </div>
                     </td>
-                    {/* TUE: CS Team Training 1:30-2:30 = 2 rows */}
                     <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-teal-50">
                       <div className="bg-teal-100 text-teal-700 rounded px-2 py-1.5 text-xs font-semibold">Customer Service Team</div>
                       <div className="text-[10px] text-gray-500 mt-1">1:30–2:30pm · 1hr</div>
                       <div className="text-[10px] text-gray-500">Training w/ Trent</div>
                     </td>
-                    {/* WED: Quodo Production 1:30-5:00 = 7 rows */}
                     <td rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-violet-50">
                       <div className="bg-violet-100 text-violet-700 rounded px-2 py-1.5 text-xs font-semibold">Quodo Production</div>
                       <div className="text-[10px] text-gray-500 mt-1">1:30–5:00pm · 3.5hrs</div>
                       <div className="text-[10px] text-gray-500">Training w/ Taylor</div>
                     </td>
-                    {/* THU: Objection Handling 1:30-5:00 = 7 rows */}
                     <td rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-rose-50">
                       <div className="bg-rose-100 text-rose-700 rounded px-2 py-1.5 text-xs font-semibold">Objection Handling</div>
                       <div className="text-[10px] text-gray-500 mt-1">1:30–5:00pm · 3.5hrs</div>
                     </td>
-                    {/* FRI: Role Playing 1:30-5:00 = 7 rows */}
                     <td rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-orange-50">
                       <div className="bg-orange-100 text-orange-700 rounded px-2 py-1.5 text-xs font-semibold">Role Playing</div>
                       <div className="text-[10px] text-gray-500 mt-1">1:30–5:00pm · 3.5hrs</div>
@@ -264,60 +279,36 @@ function CindyScheduleContent() {
                   {/* ═══ 2:00 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:00pm</td>
-                    {/* TUE: covered by CS Team */}
-                    {/* WED: covered by Quodo */}
-                    {/* THU: covered by Objection Handling */}
-                    {/* FRI: covered by Role Playing */}
                   </tr>
 
                   {/* ═══ 2:30 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:30pm</td>
-                    {/* TUE: Quodo Production 2:30-5:00 = 5 rows */}
                     <td rowSpan={5} className="p-2 text-center border border-gray-200 align-middle bg-violet-50">
                       <div className="bg-violet-100 text-violet-700 rounded px-2 py-1.5 text-xs font-semibold">Quodo Production</div>
                       <div className="text-[10px] text-gray-500 mt-1">2:30–5:00pm · 2.5hrs</div>
                       <div className="text-[10px] text-gray-500">Training w/ Taylor</div>
                     </td>
-                    {/* WED: covered by Quodo */}
-                    {/* THU: covered by Objection Handling */}
-                    {/* FRI: covered by Role Playing */}
                   </tr>
 
                   {/* ═══ 3:00 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:00pm</td>
-                    {/* TUE: covered by Quodo */}
-                    {/* WED: covered by Quodo */}
-                    {/* THU: covered by Objection Handling */}
-                    {/* FRI: covered by Role Playing */}
                   </tr>
 
                   {/* ═══ 3:30 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:30pm</td>
-                    {/* TUE: covered by Quodo */}
-                    {/* WED: covered by Quodo */}
-                    {/* THU: covered by Objection Handling */}
-                    {/* FRI: covered by Role Playing */}
                   </tr>
 
                   {/* ═══ 4:00 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:00pm</td>
-                    {/* TUE: covered by Quodo */}
-                    {/* WED: covered by Quodo */}
-                    {/* THU: covered by Objection Handling */}
-                    {/* FRI: covered by Role Playing */}
                   </tr>
 
                   {/* ═══ 4:30 ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:30pm</td>
-                    {/* TUE: covered by Quodo */}
-                    {/* WED: covered by Quodo */}
-                    {/* THU: covered by Objection Handling */}
-                    {/* FRI: covered by Role Playing */}
                   </tr>
 
                   {/* ── Departure ── */}
@@ -398,8 +389,10 @@ function CindyScheduleContent() {
                         <div className="w-4 h-4 rounded border-2 border-gray-300 flex items-center justify-center cursor-pointer hover:border-pink-400 transition-colors"></div>
                       </td>
                       <td className="py-2 pr-1">
-                        <div className="text-gray-700 font-medium leading-tight">{i + 1}. {item}</div>
-                        <a href="https://docs.google.com/spreadsheets/d/1d6gVEjsHb640ZCa_cesU3j7bUmAyE4H7yulz3CRPCBU/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="text-[9px] text-blue-500 hover:text-blue-700 hover:underline mt-0.5 inline-block">📎 View Resources</a>
+                        <div className="text-gray-700 font-medium leading-tight">{i + 1}. {item.label}</div>
+                        {item.link && (
+                          <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-[9px] text-blue-500 hover:text-blue-700 hover:underline mt-0.5 inline-block">📎 View Resources</a>
+                        )}
                       </td>
                       <td className="py-2 px-0.5">
                         <div className="h-6 rounded border border-gray-300 bg-gray-50/50"></div>
