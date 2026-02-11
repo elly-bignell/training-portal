@@ -632,6 +632,35 @@ export const trainingProgram: Module[] = [
       { label: "Q-Quote Login", url: "https://www.app.quodo.com.au/plans" },
     ],
   },
+  {
+    id: "module-4",
+    title: "MODULE 4 — Call Scripts & Additional Resources (Estimated: 20 mins)",
+    purpose:
+      "Familiarise yourself with the cold call script and additional sales resources to build confidence and consistency on calls.",
+    proficiency: [
+      "Follow the cold call script structure confidently",
+      "Adapt the script to different client scenarios",
+      "Handle common objections using the script framework",
+    ],
+    deliverable:
+      "Practice reading the cold call script aloud at least twice. Write any questions or notes in the section below.",
+    checklist: [
+      {
+        id: "m4-item1",
+        label: "Read: Cold Call Script",
+        link: "https://docs.google.com/document/d/1AbGxVtE5N0nMQFQCBrXzm3vYoUs337UE47UTOdU43FY/edit?usp=sharing",
+        estimatedTime: "10 mins",
+      },
+      {
+        id: "m4-item2",
+        label: "Practice: Read the script aloud twice",
+        estimatedTime: "10 mins",
+      },
+    ],
+    resources: [
+      { label: "Cold Call Script", url: "https://docs.google.com/document/d/1AbGxVtE5N0nMQFQCBrXzm3vYoUs337UE47UTOdU43FY/edit?usp=sharing" },
+    ],
+  },
 ];
 
 export function getTotalChecklistItems(): number {
