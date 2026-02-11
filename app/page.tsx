@@ -280,6 +280,14 @@ function HomeContent() {
                 ? Math.max(...module1Attempts.map((a) => a.percentage))
                 : null;
 
+              const scheduleSlug: Record<string, string> = {
+                "cindy-rose-rondez-manrique": "cindy",
+                "becks-hatzis": "becks",
+                "krishna-patel": "krishna",
+                "connie-matthews": "connie",
+              };
+              const hasSchedule = trainee.slug in scheduleSlug;
+
               return (
               <div key={trainee.slug} className="border border-gray-200 rounded-lg p-4">
                 <div className="flex items-center gap-3 mb-3">
@@ -311,6 +319,19 @@ function HomeContent() {
                       Open →
                     </Link>
                   </div>
+                  
+                  {/* Schedule Link */}
+                  {hasSchedule && (
+                  <div className="flex items-center justify-between p-2 bg-blue-50 rounded">
+                    <span className="text-gray-600">📅 Schedule</span>
+                    <Link
+                      href={`/schedule/${scheduleSlug[trainee.slug]}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Open →
+                    </Link>
+                  </div>
+                  )}
                   
                   {/* Module 1 Exam */}
                   <div className={`flex items-center justify-between p-2 rounded ${
