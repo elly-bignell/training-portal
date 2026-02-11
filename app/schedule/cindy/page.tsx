@@ -7,23 +7,16 @@ import PasswordGate from "@/components/PasswordGate";
 
 function CindyScheduleContent() {
   const competencies = [
-    { name: "Technology Set Up", day: "Monday" },
-    { name: "Call Scripts", day: "Tuesday" },
-    { name: "Understanding the strength of our Customer Service Team", day: "Tuesday" },
-    { name: "Understanding the Quodo Production Process", day: "Wednesday" },
-    { name: "How to Book a Lead", day: "Thursday" },
-    { name: "How to Close a Deal", day: "Thursday" },
-    { name: "Objection Handling", day: "Thursday" },
-    { name: "5 Hours Call for Call", day: "Friday" },
-    { name: "5 Hours Supervised Calls", day: "Friday" },
+    "Technology Set Up",
+    "How to Book a Lead",
+    "How to Close a Deal",
+    "5 Hours Call for Call",
+    "5 Hours Supervised Calls",
+    "Call Scripts",
+    "Understanding the Quodo Production Process",
+    "Understanding the strength of our Customer Service Team",
+    "Objection Handling",
   ];
-
-  // Group by day for rendering
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-  const grouped = days.map(d => ({
-    day: d,
-    items: competencies.filter(c => c.day === d),
-  })).filter(g => g.items.length > 0);
 
   return (
     <main className="min-h-screen bg-slate-100">
@@ -382,32 +375,22 @@ function CindyScheduleContent() {
                   </tr>
                 </thead>
                 <tbody>
-                  {grouped.map((group) => (
-                    <>
-                      {/* Day header */}
-                      <tr key={`day-${group.day}`}>
-                        <td colSpan={5} className="pt-3 pb-1.5 px-1">
-                          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{group.day}</div>
-                        </td>
-                      </tr>
-                      {group.items.map((item, i) => (
-                        <tr key={`${group.day}-${i}`} className="border-b border-gray-100">
-                          <td className="py-2 text-center">
-                            <div className="w-4 h-4 rounded border-2 border-gray-300 flex items-center justify-center cursor-pointer hover:border-pink-400 transition-colors"></div>
-                          </td>
-                          <td className="py-2 text-gray-700 font-medium pr-1 leading-tight">{item.name}</td>
-                          <td className="py-2 px-0.5">
-                            <div className="h-6 rounded border border-gray-300 bg-gray-50/50"></div>
-                          </td>
-                          <td className="py-2 px-0.5">
-                            <div className="h-6 rounded border border-gray-300 bg-gray-50/50"></div>
-                          </td>
-                          <td className="py-2 px-0.5">
-                            <div className="h-6 rounded border border-gray-300 bg-gray-50/50"></div>
-                          </td>
-                        </tr>
-                      ))}
-                    </>
+                  {competencies.map((item, i) => (
+                    <tr key={i} className="border-b border-gray-100">
+                      <td className="py-2 text-center">
+                        <div className="w-4 h-4 rounded border-2 border-gray-300 flex items-center justify-center cursor-pointer hover:border-pink-400 transition-colors"></div>
+                      </td>
+                      <td className="py-2 text-gray-700 font-medium pr-1 leading-tight">{item}</td>
+                      <td className="py-2 px-0.5">
+                        <div className="h-6 rounded border border-gray-300 bg-gray-50/50"></div>
+                      </td>
+                      <td className="py-2 px-0.5">
+                        <div className="h-6 rounded border border-gray-300 bg-gray-50/50"></div>
+                      </td>
+                      <td className="py-2 px-0.5">
+                        <div className="h-6 rounded border border-gray-300 bg-gray-50/50"></div>
+                      </td>
+                    </tr>
                   ))}
                 </tbody>
               </table>
