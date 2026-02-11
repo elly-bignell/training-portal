@@ -70,7 +70,7 @@ function SchedulePageContent() {
                       <div>
                         <span className="font-semibold text-blue-700">Cindy</span>
                         <div className="text-gray-500">Sydney → Adelaide</div>
-                        <div className="text-gray-500">Departs 5:30am · Lands 7:35am</div>
+                        <div className="text-gray-500">Departs 6:40am · Lands 8:15am</div>
                       </div>
                       <div className="border-t border-blue-100 pt-1.5">
                         <span className="font-semibold text-blue-700">Becks</span>
@@ -260,7 +260,7 @@ function SchedulePageContent() {
                       <div>
                         <span className="font-semibold text-blue-700">Cindy</span>
                         <div className="text-gray-500">Adelaide → Sydney</div>
-                        <div className="text-gray-500">Departs 7:00am · Arrives 9:30am</div>
+                        <div className="text-gray-500">Departs 12:35pm · Arrives 3:00pm</div>
                       </div>
                       <div className="border-t border-blue-100 pt-1.5">
                         <span className="font-semibold text-blue-700">Becks</span>
