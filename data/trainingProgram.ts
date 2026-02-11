@@ -58,6 +58,12 @@ export const trainingProgram: Module[] = [
         link: "https://sweetgroup.marketingsweet.com.au/google-reviews",
         estimatedTime: "15 mins",
       },
+      {
+        id: "m1-item6",
+        label: "Read: Customer Service - Our Unfair Advantage",
+        link: "https://docs.google.com/presentation/d/1gyLJ6Kfrbc8rNKJDluBvkleKLJznmeTY--FFgHclbFQ/edit?usp=sharing",
+        estimatedTime: "10 mins",
+      },
     ],
     resources: [
       { label: "Marketing Sweet Website", url: "https://marketingsweet.com.au/" },
@@ -490,6 +496,12 @@ export const trainingProgram: Module[] = [
     deliverable:
       "Write a brief summary in the notes section explaining the key differences between Bronze, Silver, Gold, Platinum, and Diamond plans. When would you recommend each?",
     checklist: [
+      {
+        id: "m3-item0",
+        label: "Read: Sales Training Guide",
+        link: "https://docs.google.com/presentation/d/1_mOeJlBjMMWLbGa3Kb2lcXl8HSwY0Hi_dyAHPckfC5g/edit?usp=sharing",
+        estimatedTime: "15 mins",
+      },
       {
         id: "m3-item1",
         label: "🔐 Launch Q-Quote to complete this module (Password: QQuote0101)",
