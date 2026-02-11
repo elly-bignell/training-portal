@@ -416,7 +416,7 @@ function CindyScheduleContent() {
                 Additional Resources
               </h2>
               <Link
-                href="/dashboard/cindy"
+                href="/trainees/cindy-rose-rondez-manrique"
                 className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all group"
               >
                 <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 group-hover:bg-blue-200 transition-colors">
