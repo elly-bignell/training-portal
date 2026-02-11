@@ -10,7 +10,7 @@ function SchedulePageContent() {
     <main className="min-h-screen bg-slate-100">
       {/* Header */}
       <header className="bg-slate-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link
@@ -34,7 +34,7 @@ function SchedulePageContent() {
               </Link>
               <div>
                 <h1 className="text-xl font-bold">Training Week Schedule</h1>
-                <p className="text-sm text-slate-400">Mon 16 Feb – Fri 20 Feb 2026</p>
+                <p className="text-sm text-slate-400">Mon 16 Feb – Sat 21 Feb 2026</p>
               </div>
             </div>
             <span className="px-3 py-1 bg-pink-500/20 text-pink-300 text-xs font-semibold rounded-full">
@@ -45,9 +45,9 @@ function SchedulePageContent() {
       </header>
 
       {/* Schedule Content */}
-      <div className="max-w-6xl mx-auto px-4 py-6">
+      <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 overflow-x-auto">
-          <div className="min-w-[900px]">
+          <div className="min-w-[1050px]">
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="bg-slate-800 text-white">
@@ -57,6 +57,7 @@ function SchedulePageContent() {
                   <th className="p-3 text-center font-semibold border border-slate-700">Wed 18 Feb</th>
                   <th className="p-3 text-center font-semibold border border-slate-700">Thu 19 Feb</th>
                   <th className="p-3 text-center font-semibold border border-slate-700">Fri 20 Feb</th>
+                  <th className="p-3 text-center font-semibold border border-slate-700">Sat 21 Feb</th>
                 </tr>
               </thead>
               <tbody>
@@ -64,10 +65,14 @@ function SchedulePageContent() {
                 <tr className="bg-blue-50">
                   <td className="p-3 font-medium text-gray-700 border border-gray-200">✈️ Arrivals</td>
                   <td className="p-3 text-center border border-gray-200 text-xs">
-                    <div className="font-semibold text-blue-700">Connie & Becks</div>
+                    <div className="font-semibold text-blue-700">Cindy</div>
                     <div className="text-gray-500">Sydney → Adelaide</div>
-                    <div className="text-gray-500">Lands 8:15am</div>
+                    <div className="text-gray-500">QF731 · Lands 8:15am</div>
+                    <div className="mt-1.5 font-semibold text-blue-700">Becks</div>
+                    <div className="text-gray-500">Brisbane → Adelaide</div>
+                    <div className="text-gray-500">QF1927 · Lands 9:50am</div>
                   </td>
+                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
@@ -91,12 +96,14 @@ function SchedulePageContent() {
                   <td className="p-3 text-center border border-gray-200">
                     <div className="bg-red-100 text-red-700 rounded px-2 py-1 text-xs font-semibold">📝 EXAMS</div>
                   </td>
+                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
                 
                 {/* 9:30-10:30 */}
                 <tr>
                   <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50">9:30–10:30am</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400 italic">Travel to office</td>
+                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
@@ -120,11 +127,13 @@ function SchedulePageContent() {
                   </td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
+                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
                 
                 {/* 11:30-12:30 */}
                 <tr>
                   <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50">11:30–12:30pm</td>
+                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
@@ -150,6 +159,7 @@ function SchedulePageContent() {
                   <td className="p-3 text-center border border-gray-200">
                     <span className="text-yellow-700 font-medium">🍽️ LUNCH</span>
                   </td>
+                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
                 
                 {/* 1:30-2:30 */}
@@ -174,6 +184,7 @@ function SchedulePageContent() {
                     <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold">🤝 Att. Meeting</div>
                     <div className="text-[10px] text-gray-500 mt-1">CT</div>
                   </td>
+                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
                 
                 {/* 2:30-3:30 */}
@@ -185,6 +196,7 @@ function SchedulePageContent() {
                     <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold">🤝 Att. Meeting</div>
                     <div className="text-[10px] text-gray-500 mt-1">CT</div>
                   </td>
+                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
@@ -207,11 +219,13 @@ function SchedulePageContent() {
                   <td className="p-3 text-center border border-gray-200">
                     <div className="bg-slate-100 text-slate-700 rounded px-2 py-1 text-xs font-semibold">❓ Q&A</div>
                   </td>
+                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
                 
                 {/* 4:30-5:30 */}
                 <tr>
                   <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50">4:30–5:30pm</td>
+                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
@@ -227,6 +241,7 @@ function SchedulePageContent() {
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
+                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
                 
                 {/* Departures row */}
@@ -236,16 +251,21 @@ function SchedulePageContent() {
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
+                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-xs">
-                    <div className="font-semibold text-blue-700">Connie & Becks</div>
+                    <div className="font-semibold text-blue-700">Becks</div>
+                    <div className="text-gray-500">Adelaide → Brisbane</div>
+                    <div className="text-gray-500">JQ801 · Departs 10:55am</div>
+                    <div className="mt-1.5 font-semibold text-blue-700">Cindy</div>
                     <div className="text-gray-500">Adelaide → Sydney</div>
-                    <div className="text-gray-500">TBC</div>
+                    <div className="text-gray-500">QF740 · Departs 12:35pm</div>
                   </td>
                 </tr>
                 
                 {/* Evening */}
                 <tr className="bg-indigo-50">
                   <td className="p-3 font-medium text-gray-700 border border-gray-200">🌙 Evening</td>
+                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
@@ -271,6 +291,7 @@ function SchedulePageContent() {
                   <td className="p-3 text-center border border-gray-200 text-xs">
                     <div className="text-[#E6017D] font-medium">All Exams Passed</div>
                   </td>
+                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
               </tbody>
             </table>
