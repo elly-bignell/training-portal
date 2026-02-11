@@ -652,10 +652,6 @@ export const trainingProgram: Module[] = [
         estimatedTime: "10 mins",
       },
       {
-        id: "m4-item2",
-        label: "Practice: Read the script aloud twice",
-        estimatedTime: "10 mins",
-      },
     ],
     resources: [
       { label: "Cold Call Script", url: "https://docs.google.com/document/d/1AbGxVtE5N0nMQFQCBrXzm3vYoUs337UE47UTOdU43FY/edit?usp=sharing" },
