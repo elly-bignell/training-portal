@@ -374,7 +374,10 @@ function CindyScheduleContent() {
                       <td className="py-2 text-center">
                         <div className="w-4 h-4 rounded border-2 border-gray-300 flex items-center justify-center cursor-pointer hover:border-pink-400 transition-colors"></div>
                       </td>
-                      <td className="py-2 text-gray-700 font-medium pr-1 leading-tight">{item}</td>
+                      <td className="py-2 pr-1">
+                        <div className="text-gray-700 font-medium leading-tight">{i + 1}. {item}</div>
+                        <a href="https://docs.google.com/spreadsheets/d/1d6gVEjsHb640ZCa_cesU3j7bUmAyE4H7yulz3CRPCBU/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="text-[9px] text-blue-500 hover:text-blue-700 hover:underline mt-0.5 inline-block">📎 View Resources</a>
+                      </td>
                       <td className="py-2 px-0.5">
                         <div className="h-6 rounded border border-gray-300 bg-gray-50/50"></div>
                       </td>
