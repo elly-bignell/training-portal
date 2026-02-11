@@ -6,6 +6,18 @@ import Link from "next/link";
 import PasswordGate from "@/components/PasswordGate";
 
 function CindyScheduleContent() {
+  const competencies = [
+    "Technology Set Up",
+    "How to Book a Lead",
+    "How to Close a Deal",
+    "5 Hours Call for Call",
+    "5 Hours Supervised Calls",
+    "Call Scripts",
+    "Understanding the Quodo Production Process",
+    "Understanding the strength of our Customer Service Team",
+    "Objection Handling",
+  ];
+
   return (
     <main className="min-h-screen bg-slate-100">
       {/* Header */}
@@ -84,7 +96,7 @@ function CindyScheduleContent() {
                   <tr>
                     <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">8:30–9:00am</td>
                     <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    <td rowSpan={1} className="p-3 text-center border border-gray-200 text-gray-400">—</td>
+                    <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
@@ -102,7 +114,7 @@ function CindyScheduleContent() {
                         <div>• Competencies</div>
                       </div>
                     </td>
-                    {/* TUE-FRI: Specialised Training */}
+                    {/* TUE-FRI: Specialised Training 8:30-10 spans 2 rows */}
                     <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-purple-50">
                       <div className="bg-purple-100 text-purple-700 rounded px-2 py-1.5 text-xs font-semibold">Specialised Training</div>
                       <div className="text-[10px] text-gray-500 mt-1.5">8:30–10:00am · 1.5hrs</div>
@@ -126,7 +138,7 @@ function CindyScheduleContent() {
                     <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">10:00–11:00am</td>
                     {/* MON */}
                     <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                    {/* TUE-FRI: Specialised Training covered by rowSpan */}
+                    {/* TUE-FRI covered by Specialised Training rowSpan */}
                   </tr>
 
                   {/* ── 11:00–12:00 ── */}
@@ -136,25 +148,18 @@ function CindyScheduleContent() {
                     <td className="p-3 text-center border border-gray-200">
                       <div className="bg-slate-100 text-slate-700 rounded px-2 py-1.5 text-xs font-semibold">Standards &amp; Scorecards</div>
                     </td>
-                    {/* TUE: Supervised Calls */}
+                    {/* TUE-FRI: Unsupervised Calls */}
                     <td className="p-3 text-center border border-gray-200">
-                      <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Supervised Calls</div>
-                      <div className="text-[10px] text-gray-500 mt-1">11:00am – 12:00pm · 1hr</div>
+                      <div className="bg-orange-100 text-orange-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Unsupervised Calls</div>
                     </td>
-                    {/* WED */}
                     <td className="p-3 text-center border border-gray-200">
-                      <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Supervised Calls</div>
-                      <div className="text-[10px] text-gray-500 mt-1">11:00am – 12:00pm · 1hr</div>
+                      <div className="bg-orange-100 text-orange-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Unsupervised Calls</div>
                     </td>
-                    {/* THU */}
                     <td className="p-3 text-center border border-gray-200">
-                      <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Supervised Calls</div>
-                      <div className="text-[10px] text-gray-500 mt-1">11:00am – 12:00pm · 1hr</div>
+                      <div className="bg-orange-100 text-orange-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Unsupervised Calls</div>
                     </td>
-                    {/* FRI */}
                     <td className="p-3 text-center border border-gray-200">
-                      <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Supervised Calls</div>
-                      <div className="text-[10px] text-gray-500 mt-1">11:00am – 12:00pm · 1hr</div>
+                      <div className="bg-orange-100 text-orange-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Unsupervised Calls</div>
                     </td>
                   </tr>
 
@@ -185,7 +190,6 @@ function CindyScheduleContent() {
                     <td className="p-3 text-center border border-gray-200">
                       <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Call for Call (C4C)</div>
                     </td>
-                    {/* TUE-FRI: will be filled in later */}
                     <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
@@ -199,7 +203,6 @@ function CindyScheduleContent() {
                     <td className="p-3 text-center border border-gray-200">
                       <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Supervised Calls</div>
                     </td>
-                    {/* TUE-FRI */}
                     <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                     <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
@@ -268,6 +271,10 @@ function CindyScheduleContent() {
                 <span className="text-gray-600">Supervised Calls</span>
               </div>
               <div className="flex items-center gap-1.5">
+                <span className="w-4 h-4 rounded bg-orange-100 border border-orange-200"></span>
+                <span className="text-gray-600">Unsupervised Calls</span>
+              </div>
+              <div className="flex items-center gap-1.5">
                 <span className="w-4 h-4 rounded bg-yellow-100 border border-yellow-200"></span>
                 <span className="text-gray-600">Lunch</span>
               </div>
@@ -275,7 +282,7 @@ function CindyScheduleContent() {
           </div>
 
           {/* ── Competencies & Resources Panel ── */}
-          <div className="w-80 flex-shrink-0 space-y-6">
+          <div className="w-96 flex-shrink-0 space-y-6">
 
             {/* Competencies */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -285,50 +292,28 @@ function CindyScheduleContent() {
               </h2>
               <table className="w-full text-xs border-collapse">
                 <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="pb-2 text-left font-semibold text-gray-500 w-8"></th>
+                  <tr className="border-b-2 border-gray-200">
+                    <th className="pb-2 text-left font-semibold text-gray-500 w-6"></th>
                     <th className="pb-2 text-left font-semibold text-gray-500">Competency</th>
-                    <th className="pb-2 text-center font-semibold text-gray-500 w-16">Date</th>
-                    <th className="pb-2 text-center font-semibold text-gray-500 w-16">Initials</th>
+                    <th className="pb-2 text-center font-semibold text-gray-500 w-20">Date</th>
+                    <th className="pb-2 text-center font-semibold text-gray-500 w-20">Initials</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-3 text-center">
-                      <div className="w-5 h-5 rounded border-2 border-gray-300 flex items-center justify-center cursor-pointer hover:border-pink-400 transition-colors"></div>
-                    </td>
-                    <td className="py-3 text-gray-700 font-medium">Technology Set Up</td>
-                    <td className="py-3 text-center">
-                      <div className="border-b border-dashed border-gray-300 w-full h-5"></div>
-                    </td>
-                    <td className="py-3 text-center">
-                      <div className="border-b border-dashed border-gray-300 w-full h-5"></div>
-                    </td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-3 text-center">
-                      <div className="w-5 h-5 rounded border-2 border-gray-300 flex items-center justify-center cursor-pointer hover:border-pink-400 transition-colors"></div>
-                    </td>
-                    <td className="py-3 text-gray-700 font-medium">How to Book a Lead</td>
-                    <td className="py-3 text-center">
-                      <div className="border-b border-dashed border-gray-300 w-full h-5"></div>
-                    </td>
-                    <td className="py-3 text-center">
-                      <div className="border-b border-dashed border-gray-300 w-full h-5"></div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 text-center">
-                      <div className="w-5 h-5 rounded border-2 border-gray-300 flex items-center justify-center cursor-pointer hover:border-pink-400 transition-colors"></div>
-                    </td>
-                    <td className="py-3 text-gray-700 font-medium">How to Close a Deal</td>
-                    <td className="py-3 text-center">
-                      <div className="border-b border-dashed border-gray-300 w-full h-5"></div>
-                    </td>
-                    <td className="py-3 text-center">
-                      <div className="border-b border-dashed border-gray-300 w-full h-5"></div>
-                    </td>
-                  </tr>
+                  {competencies.map((item, i) => (
+                    <tr key={i} className="border-b border-gray-100">
+                      <td className="py-2.5 text-center">
+                        <div className="w-5 h-5 rounded border-2 border-gray-300 flex items-center justify-center cursor-pointer hover:border-pink-400 transition-colors"></div>
+                      </td>
+                      <td className="py-2.5 text-gray-700 font-medium pr-2">{item}</td>
+                      <td className="py-2.5 px-1">
+                        <div className="h-7 rounded border border-gray-300 bg-gray-50/50"></div>
+                      </td>
+                      <td className="py-2.5 px-1">
+                        <div className="h-7 rounded border border-gray-300 bg-gray-50/50"></div>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
