@@ -79,63 +79,124 @@ function SchedulePageContent() {
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
 
-                {/* ── 8:30–9:30 ── */}
+                {/* ── 9:00–10:00 ── */}
                 <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">8:30–9:30am</td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">9:00–10:00am</td>
+                  {/* MON */}
                   <td className="p-3 text-center border border-gray-200">
                     <div className="bg-purple-100 text-purple-700 rounded px-2 py-1 text-xs font-semibold">Office Tour</div>
                     <div className="text-[10px] text-gray-500 mt-1">9:00am · Cindy, Krishna, Connie</div>
+                    <div className="mt-1.5 bg-purple-100 text-purple-700 rounded px-2 py-1 text-xs font-semibold">Info Session</div>
+                    <div className="text-[10px] text-gray-500 mt-1">9:30am · Training Week Overview</div>
                   </td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <div className="bg-red-100 text-red-700 rounded px-2 py-1 text-xs font-semibold">📝 Exams</div>
-                    <div className="text-[10px] text-gray-500 mt-1">Module 1</div>
+                  {/* TUE: Felipe Rotation 3hr block */}
+                  <td rowSpan={3} className="p-3 text-center border border-gray-200 align-top bg-sky-50">
+                    <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Felipe Call Training</div>
+                    <div className="text-[10px] text-gray-500 mt-1">9:00am – 12:00pm · 3hr rotation</div>
+                    <div className="mt-2 text-[10px] text-left space-y-1.5 px-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                        <span className="text-gray-700"><span className="font-semibold">9:00</span> – Cindy w/ Felipe</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                        <span className="text-gray-700"><span className="font-semibold">9:30</span> – Krishna w/ Felipe</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                        <span className="text-gray-700"><span className="font-semibold">10:00</span> – Becks w/ Felipe</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                        <span className="text-gray-700"><span className="font-semibold">10:30</span> – Connie w/ Felipe</span>
+                      </div>
+                    </div>
+                    <div className="mt-2 text-[10px] text-gray-500 italic border-t border-sky-200 pt-1.5">30min 1-on-1 → 1hr solo calls</div>
+                    <div className="text-[10px] text-gray-500 italic">Others on Training Modules</div>
                   </td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <div className="bg-red-100 text-red-700 rounded px-2 py-1 text-xs font-semibold">📝 Exams</div>
+                  {/* WED: Felipe Rotation 3hr block */}
+                  <td rowSpan={3} className="p-3 text-center border border-gray-200 align-top bg-sky-50">
+                    <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Felipe Call Training</div>
+                    <div className="text-[10px] text-gray-500 mt-1">9:00am – 12:00pm · 3hr rotation</div>
+                    <div className="mt-2 text-[10px] text-left space-y-1.5 px-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                        <span className="text-gray-700"><span className="font-semibold">9:00</span> – Cindy w/ Felipe</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                        <span className="text-gray-700"><span className="font-semibold">9:30</span> – Krishna w/ Felipe</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                        <span className="text-gray-700"><span className="font-semibold">10:00</span> – Becks w/ Felipe</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                        <span className="text-gray-700"><span className="font-semibold">10:30</span> – Connie w/ Felipe</span>
+                      </div>
+                    </div>
+                    <div className="mt-2 text-[10px] text-gray-500 italic border-t border-sky-200 pt-1.5">30min 1-on-1 → 1hr solo calls</div>
+                    <div className="text-[10px] text-gray-500 italic">Others on Training Modules</div>
                   </td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <div className="bg-red-100 text-red-700 rounded px-2 py-1 text-xs font-semibold">📝 Exams</div>
+                  {/* THU: Felipe Rotation 3hr block */}
+                  <td rowSpan={3} className="p-3 text-center border border-gray-200 align-top bg-sky-50">
+                    <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Felipe Call Training</div>
+                    <div className="text-[10px] text-gray-500 mt-1">9:00am – 12:00pm · 3hr rotation</div>
+                    <div className="mt-2 text-[10px] text-left space-y-1.5 px-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                        <span className="text-gray-700"><span className="font-semibold">9:00</span> – Cindy w/ Felipe</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                        <span className="text-gray-700"><span className="font-semibold">9:30</span> – Krishna w/ Felipe</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                        <span className="text-gray-700"><span className="font-semibold">10:00</span> – Becks w/ Felipe</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                        <span className="text-gray-700"><span className="font-semibold">10:30</span> – Connie w/ Felipe</span>
+                      </div>
+                    </div>
+                    <div className="mt-2 text-[10px] text-gray-500 italic border-t border-sky-200 pt-1.5">30min 1-on-1 → 1hr solo calls</div>
+                    <div className="text-[10px] text-gray-500 italic">Others on Training Modules</div>
                   </td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <div className="bg-red-100 text-red-700 rounded px-2 py-1 text-xs font-semibold">📝 Exams</div>
+                  {/* FRI: Felipe Rotation 3hr block */}
+                  <td rowSpan={3} className="p-3 text-center border border-gray-200 align-top bg-sky-50">
+                    <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Felipe Call Training</div>
+                    <div className="text-[10px] text-gray-500 mt-1">9:00am – 12:00pm · 3hr rotation</div>
+                    <div className="mt-2 text-[10px] text-left space-y-1.5 px-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                        <span className="text-gray-700"><span className="font-semibold">9:00</span> – Cindy w/ Felipe</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                        <span className="text-gray-700"><span className="font-semibold">9:30</span> – Krishna w/ Felipe</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                        <span className="text-gray-700"><span className="font-semibold">10:00</span> – Becks w/ Felipe</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                        <span className="text-gray-700"><span className="font-semibold">10:30</span> – Connie w/ Felipe</span>
+                      </div>
+                    </div>
+                    <div className="mt-2 text-[10px] text-gray-500 italic border-t border-sky-200 pt-1.5">30min 1-on-1 → 1hr solo calls</div>
+                    <div className="text-[10px] text-gray-500 italic">Others on Training Modules</div>
                   </td>
+                  {/* SAT */}
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
 
-                {/* ── 9:30–10:30 ── */}
+                {/* ── 10:00–11:00 ── */}
                 <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">9:30–10:30am</td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1 text-xs font-semibold">Info Session</div>
-                    <div className="text-[10px] text-gray-500 mt-1">Training Week Overview</div>
-                  </td>
-                  <td rowSpan={3} className="p-3 text-center border border-gray-200 align-middle bg-purple-50">
-                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1.5 text-xs font-semibold">Quodo Production Process</div>
-                    <div className="text-[10px] text-gray-500 mt-1.5">9:30am – 12:30pm · 3hrs</div>
-                    <div className="text-[10px] text-gray-600 mt-1.5 text-left pl-3 space-y-0.5">
-                      <div>Understanding the depth &amp; quality</div>
-                      <div>of our product delivery</div>
-                    </div>
-                  </td>
-                  <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-teal-50">
-                    <div className="bg-teal-100 text-teal-700 rounded px-2 py-1.5 text-xs font-semibold">Customer Service Training</div>
-                    <div className="text-[10px] text-gray-500 mt-1.5">9:30am – 11:30am · 2hrs</div>
-                    <div className="text-[10px] text-gray-600 mt-1.5 text-left pl-3 space-y-0.5">
-                      <div>Building faith in how we</div>
-                      <div>manage client relationships</div>
-                    </div>
-                  </td>
-                  <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-indigo-50">
-                    <div className="bg-indigo-100 text-indigo-700 rounded px-2 py-1.5 text-xs font-semibold">🎭 Role Play Training</div>
-                    <div className="text-[10px] text-gray-500 mt-1.5">9:30am – 11:30am · 2hrs</div>
-                  </td>
-                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                </tr>
-
-                {/* ── 10:30–11:30 ── */}
-                <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">10:30–11:30am</td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">10:00–11:00am</td>
+                  {/* MON: Reviewing Training Modules 2hr block */}
                   <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-purple-50">
                     <div className="bg-purple-100 text-purple-700 rounded px-2 py-1.5 text-xs font-semibold">Reviewing Training Modules</div>
                     <div className="text-[10px] text-gray-500 mt-1.5 italic">Becks arrives ~10:30am</div>
@@ -146,123 +207,164 @@ function SchedulePageContent() {
                     </div>
                     <div className="text-[10px] text-gray-500 mt-1.5">Corie, Trent, Elly</div>
                   </td>
-                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                </tr>
-
-                {/* ── 11:30–12:30 ── */}
-                <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:30–12:30pm</td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold">🤝 Meeting Attendance</div>
-                    <div className="text-[10px] text-gray-500 mt-1">1hr</div>
-                  </td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold">🤝 Meeting Attendance</div>
-                    <div className="text-[10px] text-gray-500 mt-1">1hr</div>
-                  </td>
-                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
+                  {/* TUE-FRI covered by Felipe rowSpan */}
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
 
-                {/* ── 12:30–1:30 LUNCH ── */}
+                {/* ── 11:00–12:00 ── */}
                 <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-yellow-50 text-xs whitespace-nowrap">12:30–1:30pm</td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:00–12:00pm</td>
+                  {/* MON covered by Reviewing Modules rowSpan */}
+                  {/* TUE-FRI covered by Felipe rowSpan */}
+                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
+                </tr>
+
+                {/* ── 12:00–1:00 LUNCH ── */}
+                <tr>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-yellow-50 text-xs whitespace-nowrap">12:00–1:00pm</td>
+                  {/* MON */}
                   <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-green-50">
                     <div className="bg-green-100 text-green-700 rounded px-2 py-1.5 text-xs font-semibold">🍽️ Lunch + Check-in</div>
                     <div className="text-[10px] text-gray-500 mt-1.5">1:00–2:30pm</div>
                     <div className="text-[10px] text-gray-500">Accommodation check-in</div>
                     <div className="text-[10px] text-gray-500">w/ Cindy &amp; Becks</div>
                   </td>
+                  {/* TUE */}
                   <td className="p-3 text-center border border-gray-200 bg-yellow-50">
                     <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
                   </td>
+                  {/* WED */}
                   <td className="p-3 text-center border border-gray-200 bg-yellow-50">
                     <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
                   </td>
+                  {/* THU */}
                   <td className="p-3 text-center border border-gray-200 bg-yellow-50">
                     <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
                   </td>
+                  {/* FRI */}
                   <td className="p-3 text-center border border-gray-200 bg-yellow-50">
                     <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
                   </td>
+                  {/* SAT */}
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
 
-                {/* ── 1:30–2:30 ── */}
+                {/* ── 1:00–2:00 ── */}
                 <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:30–2:30pm</td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold">🤝 Meeting Attendance</div>
-                    <div className="text-[10px] text-gray-500 mt-1">1hr</div>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:00–2:00pm</td>
+                  {/* MON covered by Lunch+Checkin rowSpan */}
+                  {/* TUE: Content Training 2hr block — Quodo */}
+                  <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-purple-50">
+                    <div className="bg-purple-100 text-purple-700 rounded px-2 py-1.5 text-xs font-semibold">Quodo Production Process</div>
+                    <div className="text-[10px] text-gray-500 mt-1.5">1:00–3:00pm · 2hrs</div>
+                    <div className="text-[10px] text-gray-600 mt-1">All group · Understanding depth</div>
+                    <div className="text-[10px] text-gray-600">&amp; quality of product delivery</div>
                   </td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold">🤝 Meeting Attendance</div>
-                    <div className="text-[10px] text-gray-500 mt-1">1hr</div>
+                  {/* WED: Content Training 2hr block — Customer Service */}
+                  <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-teal-50">
+                    <div className="bg-teal-100 text-teal-700 rounded px-2 py-1.5 text-xs font-semibold">Customer Service Training</div>
+                    <div className="text-[10px] text-gray-500 mt-1.5">1:00–3:00pm · 2hrs</div>
+                    <div className="text-[10px] text-gray-600 mt-1">All group · Building faith in</div>
+                    <div className="text-[10px] text-gray-600">client relationship management</div>
                   </td>
-                  <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-sky-50">
-                    <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 1-for-1 Call Training</div>
-                    <div className="text-[10px] text-gray-500 mt-1.5">1:30–3:00pm · 1.5hrs</div>
+                  {/* THU: Content Training 2hr block — Objection Handling */}
+                  <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-amber-50">
+                    <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">Objection Handling</div>
+                    <div className="text-[10px] text-gray-500 mt-1.5">1:00–3:00pm · 2hrs</div>
+                    <div className="text-[10px] text-gray-600 mt-1">All group · Softwares,</div>
+                    <div className="text-[10px] text-gray-600">Semrush, etc</div>
                   </td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold">🤝 Att. Meeting</div>
-                    <div className="text-[10px] text-gray-500 mt-1">CT</div>
+                  {/* FRI: Content Training 2hr block — Review / Wrap-up */}
+                  <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-rose-50">
+                    <div className="bg-rose-100 text-rose-700 rounded px-2 py-1.5 text-xs font-semibold">Review &amp; Wrap-up</div>
+                    <div className="text-[10px] text-gray-500 mt-1.5">1:00–3:00pm · 2hrs</div>
+                    <div className="text-[10px] text-gray-600 mt-1">All group · Consolidation</div>
+                    <div className="text-[10px] text-gray-600">&amp; final Q&amp;A</div>
                   </td>
+                  {/* SAT */}
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
 
-                {/* ── 2:30–3:30 ── */}
+                {/* ── 2:00–3:00 ── */}
                 <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:30–3:30pm</td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:00–3:00pm</td>
+                  {/* MON */}
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                  <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-indigo-50">
-                    <div className="bg-indigo-100 text-indigo-700 rounded px-2 py-1.5 text-xs font-semibold">🎭 Role Play Training</div>
-                    <div className="text-[10px] text-gray-500 mt-1.5">2:30–4:30pm · 2hrs</div>
-                  </td>
-                  <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-indigo-50">
-                    <div className="bg-indigo-100 text-indigo-700 rounded px-2 py-1.5 text-xs font-semibold">🎭 Role Play Training</div>
-                    <div className="text-[10px] text-gray-500 mt-1.5">2:30–4:30pm · 2hrs</div>
-                  </td>
-                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
+                  {/* TUE-FRI covered by Content Training rowSpan */}
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
 
-                {/* ── 3:30–4:30 ── */}
+                {/* ── 3:00–4:00 ── */}
                 <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:30–4:30pm</td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:00–4:00pm</td>
+                  {/* MON */}
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <div className="bg-orange-100 text-orange-700 rounded px-2 py-1 text-xs font-semibold">Catch Up</div>
+                  {/* TUE */}
+                  <td className="p-3 text-center border border-gray-200 text-xs">
+                    <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold mb-1">🤝 Meeting w/ Lucas</div>
+                    <div className="text-[10px] text-gray-600">Cindy &amp; Krishna</div>
+                    <div className="mt-1.5 bg-indigo-100 text-indigo-700 rounded px-2 py-1 text-xs font-semibold mb-1">🎭 Role Play</div>
+                    <div className="text-[10px] text-gray-600">Becks &amp; Connie</div>
                   </td>
-                  <td className="p-3 text-center border border-gray-200">
-                    <div className="bg-slate-100 text-slate-700 rounded px-2 py-1 text-xs font-semibold">❓ Q&A</div>
+                  {/* WED */}
+                  <td className="p-3 text-center border border-gray-200 text-xs">
+                    <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold mb-1">🤝 Meeting w/ Lucas</div>
+                    <div className="text-[10px] text-gray-600">Cindy &amp; Becks</div>
+                    <div className="mt-1.5 bg-indigo-100 text-indigo-700 rounded px-2 py-1 text-xs font-semibold mb-1">🎭 Role Play</div>
+                    <div className="text-[10px] text-gray-600">Krishna &amp; Connie</div>
                   </td>
+                  {/* THU */}
+                  <td className="p-3 text-center border border-gray-200 text-xs">
+                    <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold mb-1">🤝 Meeting w/ Lucas</div>
+                    <div className="text-[10px] text-gray-600">Cindy &amp; Connie</div>
+                    <div className="mt-1.5 bg-indigo-100 text-indigo-700 rounded px-2 py-1 text-xs font-semibold mb-1">🎭 Role Play</div>
+                    <div className="text-[10px] text-gray-600">Krishna &amp; Becks</div>
+                  </td>
+                  {/* FRI */}
+                  <td className="p-3 text-center border border-gray-200 text-xs">
+                    <div className="bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold mb-1">🤝 Meeting w/ Lucas</div>
+                    <div className="text-[10px] text-gray-600">Krishna &amp; Connie</div>
+                    <div className="mt-1.5 bg-indigo-100 text-indigo-700 rounded px-2 py-1 text-xs font-semibold mb-1">🎭 Role Play</div>
+                    <div className="text-[10px] text-gray-600">Cindy &amp; Becks</div>
+                  </td>
+                  {/* SAT */}
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
 
-                {/* ── 4:30–5:30 ── */}
+                {/* ── 4:00–5:00 ── */}
                 <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:30–5:30pm</td>
+                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:00–5:00pm</td>
+                  {/* MON */}
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                  <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-sky-50">
-                    <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 1-for-1 Call Training</div>
-                    <div className="text-[10px] text-gray-500 mt-1.5">4:30–6:00pm · 1.5hrs</div>
+                  {/* TUE */}
+                  <td className="p-3 text-center border border-gray-200 text-xs">
+                    <div className="bg-indigo-100 text-indigo-700 rounded px-2 py-1 text-xs font-semibold mb-1">🎭 Role Play</div>
+                    <div className="text-[10px] text-gray-600">Cindy &amp; Krishna</div>
+                    <div className="mt-1.5 bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold mb-1">🤝 Meeting w/ Lucas</div>
+                    <div className="text-[10px] text-gray-600">Becks &amp; Connie</div>
                   </td>
-                  <td rowSpan={2} className="p-3 text-center border border-gray-200 align-middle bg-sky-50">
-                    <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 1-for-1 Call Training</div>
-                    <div className="text-[10px] text-gray-500 mt-1.5">3:30–5:00pm · 1.5hrs</div>
+                  {/* WED */}
+                  <td className="p-3 text-center border border-gray-200 text-xs">
+                    <div className="bg-indigo-100 text-indigo-700 rounded px-2 py-1 text-xs font-semibold mb-1">🎭 Role Play</div>
+                    <div className="text-[10px] text-gray-600">Cindy &amp; Becks</div>
+                    <div className="mt-1.5 bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold mb-1">🤝 Meeting w/ Lucas</div>
+                    <div className="text-[10px] text-gray-600">Krishna &amp; Connie</div>
                   </td>
-                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                </tr>
-
-                {/* ── 5:30–6:30 ── */}
-                <tr>
-                  <td className="p-3 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">5:30–6:30pm</td>
-                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
-                  <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
+                  {/* THU */}
+                  <td className="p-3 text-center border border-gray-200 text-xs">
+                    <div className="bg-indigo-100 text-indigo-700 rounded px-2 py-1 text-xs font-semibold mb-1">🎭 Role Play</div>
+                    <div className="text-[10px] text-gray-600">Cindy &amp; Connie</div>
+                    <div className="mt-1.5 bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold mb-1">🤝 Meeting w/ Lucas</div>
+                    <div className="text-[10px] text-gray-600">Krishna &amp; Becks</div>
+                  </td>
+                  {/* FRI */}
+                  <td className="p-3 text-center border border-gray-200 text-xs">
+                    <div className="bg-indigo-100 text-indigo-700 rounded px-2 py-1 text-xs font-semibold mb-1">🎭 Role Play</div>
+                    <div className="text-[10px] text-gray-600">Krishna &amp; Connie</div>
+                    <div className="mt-1.5 bg-green-100 text-green-700 rounded px-2 py-1 text-xs font-semibold mb-1">🤝 Meeting w/ Lucas</div>
+                    <div className="text-[10px] text-gray-600">Cindy &amp; Becks</div>
+                  </td>
+                  {/* SAT */}
                   <td className="p-3 text-center border border-gray-200 text-gray-400">—</td>
                 </tr>
 
@@ -322,32 +424,59 @@ function SchedulePageContent() {
           {/* Legend */}
           <div className="mt-6 pt-4 border-t border-gray-100 flex flex-wrap gap-4 text-xs">
             <div className="flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded bg-red-100 border border-red-200"></span>
-              <span className="text-gray-600">Exams</span>
+              <span className="w-4 h-4 rounded bg-sky-100 border border-sky-200"></span>
+              <span className="text-gray-600">Felipe Call Training</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-4 h-4 rounded bg-purple-100 border border-purple-200"></span>
-              <span className="text-gray-600">Training Sessions</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded bg-indigo-100 border border-indigo-200"></span>
-              <span className="text-gray-600">Role Play</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded bg-sky-100 border border-sky-200"></span>
-              <span className="text-gray-600">1-for-1 Calls</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded bg-green-100 border border-green-200"></span>
-              <span className="text-gray-600">Meeting Attendance</span>
+              <span className="text-gray-600">Content Training</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-4 h-4 rounded bg-teal-100 border border-teal-200"></span>
               <span className="text-gray-600">Customer Service</span>
             </div>
             <div className="flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded bg-amber-100 border border-amber-200"></span>
+              <span className="text-gray-600">Objection Handling</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded bg-indigo-100 border border-indigo-200"></span>
+              <span className="text-gray-600">Role Play</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded bg-green-100 border border-green-200"></span>
+              <span className="text-gray-600">Meeting w/ Lucas</span>
+            </div>
+            <div className="flex items-center gap-1.5">
               <span className="w-4 h-4 rounded bg-yellow-100 border border-yellow-200"></span>
               <span className="text-gray-600">Lunch</span>
+            </div>
+          </div>
+
+          {/* Pair Rotation Key */}
+          <div className="mt-4 pt-3 border-t border-gray-100">
+            <p className="text-[11px] font-semibold text-gray-500 mb-2">PAIR ROTATION (3:00–5:00pm)</p>
+            <div className="grid grid-cols-4 gap-3 text-[10px]">
+              <div className="bg-gray-50 rounded p-2">
+                <div className="font-semibold text-gray-700 mb-1">Tuesday</div>
+                <div className="text-gray-500">Pair A: Cindy &amp; Krishna</div>
+                <div className="text-gray-500">Pair B: Becks &amp; Connie</div>
+              </div>
+              <div className="bg-gray-50 rounded p-2">
+                <div className="font-semibold text-gray-700 mb-1">Wednesday</div>
+                <div className="text-gray-500">Pair A: Cindy &amp; Becks</div>
+                <div className="text-gray-500">Pair B: Krishna &amp; Connie</div>
+              </div>
+              <div className="bg-gray-50 rounded p-2">
+                <div className="font-semibold text-gray-700 mb-1">Thursday</div>
+                <div className="text-gray-500">Pair A: Cindy &amp; Connie</div>
+                <div className="text-gray-500">Pair B: Krishna &amp; Becks</div>
+              </div>
+              <div className="bg-gray-50 rounded p-2">
+                <div className="font-semibold text-gray-700 mb-1">Friday</div>
+                <div className="text-gray-500">Pair A: Krishna &amp; Connie</div>
+                <div className="text-gray-500">Pair B: Cindy &amp; Becks</div>
+              </div>
             </div>
           </div>
         </div>
