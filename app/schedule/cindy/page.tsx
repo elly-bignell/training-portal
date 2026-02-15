@@ -49,7 +49,7 @@ function CindyScheduleContent() {
     <main className="min-h-screen bg-slate-100">
       {/* Header */}
       <header className="bg-slate-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="max-w-[1600px] mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link
@@ -73,7 +73,7 @@ function CindyScheduleContent() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 py-6 space-y-8">
+      <div className="max-w-[1600px] mx-auto px-4 py-6 space-y-8">
         <div className="flex gap-6">
 
           {/* ── Schedule Table ── */}

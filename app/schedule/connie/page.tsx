@@ -21,7 +21,7 @@ function ConnieScheduleContent() {
   return (
     <main className="min-h-screen bg-slate-100">
       <header className="bg-slate-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="max-w-[1600px] mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link href="/" className="text-slate-400 hover:text-white transition-colors" title="Back to Portal">
@@ -41,7 +41,7 @@ function ConnieScheduleContent() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 py-6 space-y-8">
+      <div className="max-w-[1600px] mx-auto px-4 py-6 space-y-8">
         <div className="flex gap-6">
           <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-200 p-6 overflow-x-auto">
             <div className="min-w-[800px]">
