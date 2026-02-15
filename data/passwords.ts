@@ -4,13 +4,13 @@
 export const MASTER_PASSWORD = "0202";
 
 // Individual trainee passwords (only access their own dashboard)
-export const TRAINEE_PASSWORDS: Record<string, string> = {
+export const TRAINEE_PASSWORDS: Record<string, string | string[]> = {
   "trainee-test": "0202",
   "dylan-munro": "DMunro0202!",
   "thomas-rennie": "TRennie0202!",
   "lucas-tirri": "LTirri0202!",
   "felipe-garcia": "FGarcia0202!",
-  "connie-matthews": "CMatthews0226!",
+  "connie-matthews": ["CMatthews0226!", "Connie"],
   "becks-hatzis": "BHatzis0226!",
   "cindy-rose-rondez-manrique": "CManrique0226!",
   "krishna-patel": "KPatel0226!",
@@ -24,7 +24,7 @@ export function isValidPassword(password: string, traineeSlug?: string): boolean
   }
   
   // If checking for a specific trainee page, check their individual password
-  if (traineeSlug && TRAINEE_PASSWORDS[traineeSlug] === password) {
+  if (traineeSlug && Array.isArray(TRAINEE_PASSWORDS[traineeSlug]) ? TRAINEE_PASSWORDS[traineeSlug].includes(password) : TRAINEE_PASSWORDS[traineeSlug] === password) {
     return true;
   }
   
