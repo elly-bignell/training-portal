@@ -378,7 +378,7 @@ function CindyScheduleContent() {
                     <th className="pb-2 text-left font-semibold text-gray-500 w-5"></th>
                     <th className="pb-2 text-left font-semibold text-gray-500">Competency</th>
                     <th className="pb-2 text-center font-semibold text-gray-500 w-16">Date</th>
-                    <th className="pb-2 text-center font-semibold text-gray-500 w-14">Trainee</th>
+                    <th className="pb-2 text-center font-semibold text-gray-500 w-14">Staff</th>
                     <th className="pb-2 text-center font-semibold text-gray-500 w-14">Manager</th>
                   </tr>
                 </thead>
