@@ -13,6 +13,7 @@ interface TraineeProgressData {
   trainee_slug: string;
   trainee_name: string;
   overall_progress: number;
+  checked_items: Record<string, boolean>;
   last_updated: string;
   first_activity?: string;
 }
