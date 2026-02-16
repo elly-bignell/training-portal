@@ -53,7 +53,7 @@ function CindyScheduleContent() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link
-                href="/"
+                href="/schedule/cindy"
                 className="text-slate-400 hover:text-white transition-colors"
                 title="Back to Portal"
               >
@@ -440,10 +440,10 @@ function CindyScheduleContent() {
         {/* Back link */}
         <div className="mt-6 text-center">
           <Link
-            href="/"
+            href="/schedule/cindy"
             className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 transition-colors"
           >
-            ← Back to Training Portal
+            ← Back
           </Link>
         </div>
       </div>
@@ -453,7 +453,7 @@ function CindyScheduleContent() {
 
 export default function CindySchedulePage() {
   return (
-    <PasswordGate requireMaster>
+    <PasswordGate traineeSlug="cindy-rose-rondez-manrique">
       <CindyScheduleContent />
     </PasswordGate>
   );

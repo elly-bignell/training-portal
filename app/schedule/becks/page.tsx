@@ -36,7 +36,7 @@ function BecksScheduleContent() {
         <div className="max-w-[1600px] mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link href="/" className="text-slate-400 hover:text-white transition-colors" title="Back to Portal">
+              <Link href="/schedule/becks" className="text-slate-400 hover:text-white transition-colors" title="Back to Portal">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
@@ -376,8 +376,8 @@ function BecksScheduleContent() {
         </div>
 
         <div className="mt-6 text-center">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 transition-colors">
-            ← Back to Training Portal
+          <Link href="/schedule/becks" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 transition-colors">
+            ← Back
           </Link>
         </div>
       </div>
@@ -387,7 +387,7 @@ function BecksScheduleContent() {
 
 export default function BecksSchedulePage() {
   return (
-    <PasswordGate requireMaster>
+    <PasswordGate traineeSlug="becks-hatzis">
       <BecksScheduleContent />
     </PasswordGate>
   );
