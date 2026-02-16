@@ -634,7 +634,7 @@ export const trainingProgram: Module[] = [
   },
   {
     id: "module-4",
-    title: "MODULE 4 — Call Scripts & Additional Resources (Estimated: 30 mins)",
+    title: "MODULE 4 — Call Scripts & Additional Resources (Estimated: 50 mins)",
     purpose:
       "Familiarise yourself with the cold call script and additional sales resources to build confidence and consistency on calls.",
     proficiency: [
@@ -663,11 +663,25 @@ export const trainingProgram: Module[] = [
         link: "https://docs.google.com/document/d/1UN2JW1YzJYbyZIQ26uQGT3QUDgb-62D8lJN8IGc09nY/edit?tab=t.0",
         estimatedTime: "10 mins",
       },
+      {
+        id: "m4-item4",
+        label: "Review: Marketing Sweet Sales Presentation",
+        link: "https://www.canva.com/design/DAHAuRxx340/NYSlggrbd4Fve882V-oN5Q/view?utm_content=DAHAuRxx340&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h25154bda8d",
+        estimatedTime: "10 mins",
+      },
+      {
+        id: "m4-item5",
+        label: "Review: Quodo Sales Presentation",
+        link: "https://www.canva.com/design/DAGiUQKtSWA/ZfDxMQbiG1nhS4Ba_27tXQ/view?utm_content=DAGiUQKtSWA&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h7ffea810c1#1",
+        estimatedTime: "10 mins",
+      },
     ],
     resources: [
       { label: "Cold Call Script", url: "https://docs.google.com/document/d/1AbGxVtE5N0nMQFQCBrXzm3vYoUs337UE47UTOdU43FY/edit?usp=sharing" },
       { label: "Sales Templates: Marketing Sweet", url: "https://docs.google.com/document/d/10QAA7F1lJuLfEnxNlKx1pdefzhOyMtlRfU1hq3Irx-0/edit?tab=t.0" },
       { label: "Sales Templates: Quodo", url: "https://docs.google.com/document/d/1UN2JW1YzJYbyZIQ26uQGT3QUDgb-62D8lJN8IGc09nY/edit?tab=t.0" },
+      { label: "MS Sales Presentation", url: "https://www.canva.com/design/DAHAuRxx340/NYSlggrbd4Fve882V-oN5Q/view?utm_content=DAHAuRxx340&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h25154bda8d" },
+      { label: "Quodo Sales Presentation", url: "https://www.canva.com/design/DAGiUQKtSWA/ZfDxMQbiG1nhS4Ba_27tXQ/view?utm_content=DAGiUQKtSWA&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h7ffea810c1#1" },
     ],
   },
 ];
