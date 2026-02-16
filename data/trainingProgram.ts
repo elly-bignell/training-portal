@@ -634,7 +634,7 @@ export const trainingProgram: Module[] = [
   },
   {
     id: "module-4",
-    title: "MODULE 4 — Call Scripts & Additional Resources (Estimated: 10 mins)",
+    title: "MODULE 4 — Call Scripts & Additional Resources (Estimated: 30 mins)",
     purpose:
       "Familiarise yourself with the cold call script and additional sales resources to build confidence and consistency on calls.",
     proficiency: [
@@ -651,9 +651,23 @@ export const trainingProgram: Module[] = [
         link: "https://docs.google.com/document/d/1AbGxVtE5N0nMQFQCBrXzm3vYoUs337UE47UTOdU43FY/edit?usp=sharing",
         estimatedTime: "10 mins",
       },
+      {
+        id: "m4-item2",
+        label: "Read: Sales Process Email & Text Templates: Marketing Sweet",
+        link: "https://docs.google.com/document/d/10QAA7F1lJuLfEnxNlKx1pdefzhOyMtlRfU1hq3Irx-0/edit?tab=t.0",
+        estimatedTime: "10 mins",
+      },
+      {
+        id: "m4-item3",
+        label: "Read: Sales Process Email & Text Templates: Quodo",
+        link: "https://docs.google.com/document/d/1UN2JW1YzJYbyZIQ26uQGT3QUDgb-62D8lJN8IGc09nY/edit?tab=t.0",
+        estimatedTime: "10 mins",
+      },
     ],
     resources: [
       { label: "Cold Call Script", url: "https://docs.google.com/document/d/1AbGxVtE5N0nMQFQCBrXzm3vYoUs337UE47UTOdU43FY/edit?usp=sharing" },
+      { label: "Sales Templates: Marketing Sweet", url: "https://docs.google.com/document/d/10QAA7F1lJuLfEnxNlKx1pdefzhOyMtlRfU1hq3Irx-0/edit?tab=t.0" },
+      { label: "Sales Templates: Quodo", url: "https://docs.google.com/document/d/1UN2JW1YzJYbyZIQ26uQGT3QUDgb-62D8lJN8IGc09nY/edit?tab=t.0" },
     ],
   },
 ];
