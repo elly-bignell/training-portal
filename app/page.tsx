@@ -425,7 +425,7 @@ function HomeContent() {
                         <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
                       </div>
                     ) : (
-                      <CircularProgress percentage={progress?.overall_progress || 0} />
+                      <CircularProgress percentage={progress?.checked_items ? Math.round(Object.values(progress.checked_items).filter(Boolean).length / totalItems * 100) : 0} />
                     )}
                     <svg
                       className="w-6 h-6 text-gray-400"
