@@ -32,6 +32,14 @@ function CindyScheduleContent() {
       link: "https://docs.google.com/document/d/1AbGxVtE5N0nMQFQCBrXzm3vYoUs337UE47UTOdU43FY/edit?tab=t.0#heading=h.bjodttb42hpy",
     },
     {
+      label: "Email & Text Templates: Marketing Sweet",
+      link: "https://docs.google.com/document/d/10QAA7F1lJuLfEnxNlKx1pdefzhOyMtlRfU1hq3Irx-0/edit?tab=t.0",
+    },
+    {
+      label: "Email & Text Templates: Quodo",
+      link: "https://docs.google.com/document/d/1UN2JW1YzJYbyZIQ26uQGT3QUDgb-62D8lJN8IGc09nY/edit?tab=t.0",
+    },
+    {
       label: "Understanding the Quodo Production Process",
       link: "https://docs.google.com/presentation/d/1_mOeJlBjMMWLbGa3Kb2lcXl8HSwY0Hi_dyAHPckfC5g/edit",
     },
