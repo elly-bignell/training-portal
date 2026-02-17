@@ -6,15 +6,26 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { module1Exam, module1TotalPoints } from "@/data/exams/module-1";
+import { module2Exam, module2TotalPoints } from "@/data/exams/module-2";
+import { module3Exam, module3TotalPoints } from "@/data/exams/module-3";
+import { module4Exam, module4TotalPoints } from "@/data/exams/module-4";
 import { trainees } from "@/data/trainees";
 import { Exam, ExamQuestion } from "@/types/exam";
 import PasswordGate from "@/components/PasswordGate";
 
 function getExamData(moduleId: string): { exam: Exam; totalPoints: number } | null {
-  if (moduleId === "module-1") {
-    return { exam: module1Exam, totalPoints: module1TotalPoints };
+  switch (moduleId) {
+    case "module-1":
+      return { exam: module1Exam, totalPoints: module1TotalPoints };
+    case "module-2":
+      return { exam: module2Exam, totalPoints: module2TotalPoints };
+    case "module-3":
+      return { exam: module3Exam, totalPoints: module3TotalPoints };
+    case "module-4":
+      return { exam: module4Exam, totalPoints: module4TotalPoints };
+    default:
+      return null;
   }
-  return null;
 }
 
 function QuestionCard({
