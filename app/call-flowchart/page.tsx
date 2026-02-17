@@ -180,12 +180,12 @@ export default function CallFlowchartPage() {
           <DecisionLabel text="WHICH BRAND ARE YOU PITCHING?" />
 
           {/* ══════════════════════════════════════════════════════════ */}
-          {/* TWO BRAND FLOWS SIDE BY SIDE                              */}
+          {/* TWO BRAND FLOWS                                           */}
           {/* ══════════════════════════════════════════════════════════ */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-10">
 
             {/* ═══════════════════════════════════════════════════════ */}
-            {/* LEFT: QUODO — REPLACING WEBSITES                       */}
+            {/* LEFT: QUODO                                            */}
             {/* ═══════════════════════════════════════════════════════ */}
             <div>
               <div className="bg-violet-100 border border-violet-300 rounded-t-xl px-5 py-3">
@@ -193,7 +193,6 @@ export default function CallFlowchartPage() {
               </div>
               <div className="border border-t-0 border-violet-200 rounded-b-xl bg-white p-6 space-y-0">
 
-                {/* Reason for Call */}
                 <FlowCard
                   node={{ id: "q-reason", type: "script", label: "Reason for Call", script: "The reason for my call is I was just having a look at your website and I noticed that you have been around for [X] years. I'm assuming that most of your work comes through word of mouth and referrals?" }}
                   isActive={activeNode === "q-reason"}
@@ -202,7 +201,6 @@ export default function CallFlowchartPage() {
 
                 <Arrow />
 
-                {/* Website Observation */}
                 <FlowCard
                   node={{ id: "q-website-obs", type: "script", label: "Website Observation", script: "I also know that most of your referrals will be checking your website out and I hope you don't mind me saying but it's starting to look a bit on the tired side. Have you ever considered updating your website or touching it up?" }}
                   isActive={activeNode === "q-website-obs"}
@@ -215,7 +213,6 @@ export default function CallFlowchartPage() {
 
                 <DecisionLabel text="HAVE THEY CONSIDERED UPDATING?" />
 
-                {/* Decision: Considered updating? */}
                 <div className="grid grid-cols-2 gap-5">
                   <div>
                     <div className="bg-slate-100 rounded-t-lg px-4 py-2">
@@ -245,7 +242,6 @@ export default function CallFlowchartPage() {
 
                 <Arrow />
 
-                {/* Confirm Email */}
                 <FlowCard
                   node={{ id: "q-email", type: "script", label: "Send Examples & Confirm Email", script: "I'd love to send you some examples of our work for you to have a look at. Is your best email [xyz@xyz.com.au]?" }}
                   isActive={activeNode === "q-email"}
@@ -254,7 +250,6 @@ export default function CallFlowchartPage() {
 
                 <Arrow />
 
-                {/* Qualify Interest */}
                 <FlowCard
                   node={{ id: "q-qualify", type: "script", label: "Qualify Their Interest", script: "Awesome, and do you mind if I ask you a quick question? Is this something you're genuinely interested in or are you being polite?" }}
                   isActive={activeNode === "q-qualify"}
@@ -293,7 +288,7 @@ export default function CallFlowchartPage() {
             </div>
 
             {/* ═══════════════════════════════════════════════════════ */}
-            {/* RIGHT: MARKETING SWEET — EXISTING WEBSITES             */}
+            {/* RIGHT: MARKETING SWEET                                 */}
             {/* ═══════════════════════════════════════════════════════ */}
             <div>
               <div className="bg-pink-50 border border-pink-200 rounded-t-xl px-5 py-3">
@@ -301,7 +296,6 @@ export default function CallFlowchartPage() {
               </div>
               <div className="border border-t-0 border-pink-200 rounded-b-xl bg-white p-6 space-y-0">
 
-                {/* Reason for Call */}
                 <FlowCard
                   node={{ id: "ms-reason", type: "script", label: "Reason for Call", script: "The reason for my call is because I was doing some research in your area, you popped up, and a few things stood out. Before I go any further, in the last few months, have you been running at full capacity or could you take on more work if it came your way?" }}
                   isActive={activeNode === "ms-reason"}
@@ -310,7 +304,7 @@ export default function CallFlowchartPage() {
 
                 <DecisionLabel text="CAN THEY TAKE MORE WORK?" />
 
-                {/* Yes / No capacity branch headers */}
+                {/* Yes / No capacity headers */}
                 <div className="grid grid-cols-2 gap-5">
                   <div className="bg-emerald-50 rounded-t-lg px-4 py-2">
                     <span className="text-xs font-bold text-emerald-700">✅ YES — CAN TAKE WORK</span>
@@ -350,74 +344,99 @@ export default function CallFlowchartPage() {
                   </div>
                 </div>
 
-                {/* ─── YES CAPACITY: Marketing sub-branches ─── */}
-                {/* ─── NO CAPACITY: Marketing sub-branches  ─── */}
+                {/* Row 3: Sub-branches */}
                 <div className="grid grid-cols-2 gap-5 items-start">
 
-                  {/* LEFT: YES capacity outcomes */}
+                  {/* LEFT: YES capacity sub-branches */}
                   <div className="border-l border-r border-b border-emerald-100 bg-emerald-50/10 rounded-b-lg px-4 pb-4">
                     <div className="grid grid-cols-2 gap-4">
-                      {/* Yes, marketing */}
+
+                      {/* YES, doing marketing */}
                       <div className="space-y-0">
                         <div className="bg-blue-50 rounded-t-lg px-3 py-1.5">
                           <span className="text-[10px] font-bold text-blue-700">YES, MARKETING</span>
                         </div>
                         <div className="border border-t-0 border-blue-100 rounded-b-lg p-3 bg-blue-50/20 space-y-0">
                           <FlowCard
-                            node={{ id: "ms-yes-dig", type: "script", label: "Dig Deeper", script: "How long have you been doing it for? (Pause) And if you don't mind me asking, what are you spending each month?" }}
-                            isActive={activeNode === "ms-yes-dig"}
-                            onClick={() => toggle("ms-yes-dig")}
+                            node={{ id: "ms-yes-duration", type: "script", label: "Ask How Long", script: "How long have you been doing it for?" }}
+                            isActive={activeNode === "ms-yes-duration"}
+                            onClick={() => toggle("ms-yes-duration")}
                           />
                           <Arrow />
                           <FlowCard
-                            node={{ id: "ms-yes-spend", type: "decision", label: "Monthly Spend?" }}
-                            isActive={activeNode === "ms-yes-spend"}
-                            onClick={() => toggle("ms-yes-spend")}
+                            node={{ id: "ms-yes-duration-dec", type: "decision", label: "How Long?" }}
+                            isActive={activeNode === "ms-yes-duration-dec"}
+                            onClick={() => toggle("ms-yes-duration-dec")}
                           />
-                          <div className="mt-2 p-3 bg-white/60 rounded-lg border border-blue-100">
-                            <BranchLabel text="LESS THAN $6K" />
-                            <FlowCard
-                              node={{ id: "ms-less-6k", type: "outcome-followup", label: "Go to Follow Up" }}
-                              isActive={activeNode === "ms-less-6k"}
-                              onClick={() => toggle("ms-less-6k")}
-                            />
-                          </div>
-                          <div className="mt-2 p-3 bg-white/60 rounded-lg border border-blue-100">
-                            <BranchLabel text="MORE THAN $6K" />
-                            <FlowCard
-                              node={{ id: "ms-more-6k", type: "script", label: "Offer 2nd Opinion", script: "Perfect. Would it offend you at all if I came back with a 2nd opinion highlighting shortfalls and how easily it can be improved?" }}
-                              isActive={activeNode === "ms-more-6k"}
-                              onClick={() => toggle("ms-more-6k")}
-                            />
-                            <Arrow />
-                            <FlowCard
-                              node={{ id: "ms-more-6k-offend", type: "decision", label: "Would it offend?" }}
-                              isActive={activeNode === "ms-more-6k-offend"}
-                              onClick={() => toggle("ms-more-6k-offend")}
-                            />
-                            <div className="grid grid-cols-2 gap-2 mt-2">
-                              <div>
-                                <BranchLabel text="YES" />
+
+                          <div className="grid grid-cols-2 gap-2 mt-2">
+                            <div>
+                              <BranchLabel text="LESS THAN 6 MONTHS" />
+                              <FlowCard
+                                node={{ id: "ms-less-6mo", type: "outcome-followup", label: "Follow Up" }}
+                                isActive={activeNode === "ms-less-6mo"}
+                                onClick={() => toggle("ms-less-6mo")}
+                              />
+                            </div>
+                            <div>
+                              <BranchLabel text="MORE THAN 6 MONTHS" />
+                              <FlowCard
+                                node={{ id: "ms-more-6mo-ask", type: "script", label: "Ask About Spend", script: "And if you don't mind me asking, what are you spending each month?" }}
+                                isActive={activeNode === "ms-more-6mo-ask"}
+                                onClick={() => toggle("ms-more-6mo-ask")}
+                              />
+                              <Arrow />
+                              <FlowCard
+                                node={{ id: "ms-more-6mo-spend", type: "decision", label: "Monthly Spend?" }}
+                                isActive={activeNode === "ms-more-6mo-spend"}
+                                onClick={() => toggle("ms-more-6mo-spend")}
+                              />
+                              <div className="mt-2 p-2 bg-white/60 rounded-lg border border-blue-100">
+                                <BranchLabel text="LESS THAN $6K" />
                                 <FlowCard
-                                  node={{ id: "ms-6k-yes", type: "outcome-followup", label: "Follow Up", script: "No stress at all, I can follow up in a month or so and see how it's progressing." }}
-                                  isActive={activeNode === "ms-6k-yes"}
-                                  onClick={() => toggle("ms-6k-yes")}
+                                  node={{ id: "ms-less-6k", type: "outcome-followup", label: "Follow Up" }}
+                                  isActive={activeNode === "ms-less-6k"}
+                                  onClick={() => toggle("ms-less-6k")}
                                 />
                               </div>
-                              <div>
-                                <BranchLabel text="NO" />
+                              <div className="mt-2 p-2 bg-white/60 rounded-lg border border-blue-100">
+                                <BranchLabel text="MORE THAN $6K" />
                                 <FlowCard
-                                  node={{ id: "ms-6k-no", type: "outcome-book", label: "Book", script: "Awesome, are you free for 15–20 mins on [day] at [time]?" }}
-                                  isActive={activeNode === "ms-6k-no"}
-                                  onClick={() => toggle("ms-6k-no")}
+                                  node={{ id: "ms-more-6k", type: "script", label: "Offer 2nd Opinion", script: "Perfect. Would it offend you at all if I came back with a 2nd opinion highlighting shortfalls and how easily it can be improved?" }}
+                                  isActive={activeNode === "ms-more-6k"}
+                                  onClick={() => toggle("ms-more-6k")}
                                 />
+                                <Arrow />
+                                <FlowCard
+                                  node={{ id: "ms-6k-offend", type: "decision", label: "Would it offend?" }}
+                                  isActive={activeNode === "ms-6k-offend"}
+                                  onClick={() => toggle("ms-6k-offend")}
+                                />
+                                <div className="grid grid-cols-2 gap-2 mt-2">
+                                  <div>
+                                    <BranchLabel text="YES" />
+                                    <FlowCard
+                                      node={{ id: "ms-6k-yes", type: "outcome-followup", label: "Follow Up", script: "No stress at all, I can follow up in a month or so." }}
+                                      isActive={activeNode === "ms-6k-yes"}
+                                      onClick={() => toggle("ms-6k-yes")}
+                                    />
+                                  </div>
+                                  <div>
+                                    <BranchLabel text="NO" />
+                                    <FlowCard
+                                      node={{ id: "ms-6k-no", type: "outcome-book", label: "Book", script: "Awesome, are you free for 15–20 mins on [day] at [time]?" }}
+                                      isActive={activeNode === "ms-6k-no"}
+                                      onClick={() => toggle("ms-6k-no")}
+                                    />
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      {/* No, WOM/Referrals */}
+                      {/* NO, just WOM */}
                       <div className="space-y-0">
                         <div className="bg-slate-100 rounded-t-lg px-3 py-1.5">
                           <span className="text-[10px] font-bold text-slate-600">NO, JUST WOM</span>
@@ -430,9 +449,9 @@ export default function CallFlowchartPage() {
                           />
                           <Arrow />
                           <FlowCard
-                            node={{ id: "ms-yes-pitch-offend", type: "decision", label: "Would it offend?" }}
-                            isActive={activeNode === "ms-yes-pitch-offend"}
-                            onClick={() => toggle("ms-yes-pitch-offend")}
+                            node={{ id: "ms-pitch-offend", type: "decision", label: "Would it offend?" }}
+                            isActive={activeNode === "ms-pitch-offend"}
+                            onClick={() => toggle("ms-pitch-offend")}
                           />
                           <div className="grid grid-cols-2 gap-2 mt-2">
                             <div>
@@ -457,10 +476,11 @@ export default function CallFlowchartPage() {
                     </div>
                   </div>
 
-                  {/* RIGHT: NO capacity outcomes */}
+                  {/* RIGHT: NO capacity sub-branches */}
                   <div className="border-l border-r border-b border-orange-100 bg-orange-50/10 rounded-b-lg px-4 pb-4">
                     <div className="grid grid-cols-2 gap-4">
-                      {/* Yes, marketing while busy */}
+
+                      {/* Yes marketing while busy */}
                       <div className="space-y-0">
                         <div className="bg-blue-50 rounded-t-lg px-3 py-1.5">
                           <span className="text-[10px] font-bold text-blue-700">YES, MARKETING</span>
@@ -560,7 +580,6 @@ export default function CallFlowchartPage() {
           {/* FOOTER SECTIONS                                           */}
           {/* ══════════════════════════════════════════════════════════ */}
 
-          {/* Extra Qualification */}
           <div className="mt-10 max-w-3xl mx-auto print:mt-4">
             <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-6 text-white print:bg-slate-800">
               <div className="flex items-start gap-4">
@@ -579,7 +598,6 @@ export default function CallFlowchartPage() {
             </div>
           </div>
 
-          {/* Follow Up Reminder */}
           <div className="mt-4 max-w-3xl mx-auto">
             <div className="bg-[#E6017D]/5 border border-[#E6017D]/20 rounded-xl p-6">
               <div className="flex items-start gap-4">
@@ -594,7 +612,6 @@ export default function CallFlowchartPage() {
             </div>
           </div>
 
-          {/* Key Principles */}
           <div className="mt-10 max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 print:mt-4">
             <div className="bg-white rounded-xl border border-slate-200 p-5 text-center">
               <span className="text-2xl">🎧</span>
