@@ -92,16 +92,6 @@ function DecisionLabel({ text }: { text: string }) {
   );
 }
 
-/* Aligned row: renders two cards side by side at equal height */
-function AlignedRow({ left, right }: { left: React.ReactNode; right: React.ReactNode }) {
-  return (
-    <div className="grid grid-cols-2 gap-5 items-stretch">
-      <div className="flex flex-col">{left}</div>
-      <div className="flex flex-col">{right}</div>
-    </div>
-  );
-}
-
 export default function CallFlowchartPage() {
   const [activeNode, setActiveNode] = useState<string | null>(null);
   const toggle = (id: string) => setActiveNode(activeNode === id ? null : id);
@@ -201,7 +191,9 @@ export default function CallFlowchartPage() {
           {/* ══════════════════════════════════════════════════════════ */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-10">
 
-            {/* ─── LEFT: YES, CAN TAKE WORK ─── */}
+            {/* ─────────────────────────────────────────────────── */}
+            {/* LEFT: YES, CAN TAKE WORK                           */}
+            {/* ─────────────────────────────────────────────────── */}
             <div>
               <div className="bg-emerald-50 border border-emerald-200 rounded-t-xl px-5 py-2.5">
                 <span className="text-sm font-bold text-emerald-700 tracking-wider">✅ YES — CAN TAKE MORE WORK</span>
@@ -217,7 +209,7 @@ export default function CallFlowchartPage() {
 
                 <DecisionLabel text="ARE THEY DOING MARKETING?" />
 
-                {/* Sub-branch headers aligned */}
+                {/* Sub-branch headers */}
                 <div className="grid grid-cols-2 gap-5">
                   <div className="bg-blue-50 rounded-t-lg px-4 py-2">
                     <span className="text-xs font-bold text-blue-700">YES, MARKETING</span>
@@ -273,56 +265,59 @@ export default function CallFlowchartPage() {
                   </div>
                 </div>
 
-                {/* Row 4: Outcomes aligned */}
-                <div className="grid grid-cols-2 gap-5 items-stretch">
-                  {/* LEFT: Spend decision outcomes */}
-                  <div className="border-l border-r border-b border-blue-100 bg-blue-50/20 rounded-b-lg px-4 pb-4 pt-2">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <BranchLabel text="LESS THAN $6K" />
-                        <FlowCard
-                          node={{ id: "less-6k", type: "outcome-followup", label: "Go to Follow Up" }}
-                          isActive={activeNode === "less-6k"}
-                          onClick={() => toggle("less-6k")}
-                        />
-                      </div>
-                      <div>
-                        <BranchLabel text="MORE THAN $6K" />
-                        <FlowCard
-                          node={{ id: "more-6k", type: "script", label: "Offer 2nd Opinion", script: "Perfect. Would it offend you at all if I came back with a 2nd opinion highlighting shortfalls and how easily it can be improved?" }}
-                          isActive={activeNode === "more-6k"}
-                          onClick={() => toggle("more-6k")}
-                        />
-                        <Arrow />
-                        <FlowCard
-                          node={{ id: "more-6k-decision", type: "decision", label: "Would it offend?" }}
-                          isActive={activeNode === "more-6k-decision"}
-                          onClick={() => toggle("more-6k-decision")}
-                        />
-                        <div className="grid grid-cols-2 gap-2 mt-2">
-                          <div>
-                            <BranchLabel text="YES" />
-                            <FlowCard
-                              node={{ id: "offend-yes-1", type: "outcome-followup", label: "Follow Up", script: "No stress at all, I can follow up in a month or so and see how it's progressing." }}
-                              isActive={activeNode === "offend-yes-1"}
-                              onClick={() => toggle("offend-yes-1")}
-                            />
-                          </div>
-                          <div>
-                            <BranchLabel text="NO" />
-                            <FlowCard
-                              node={{ id: "offend-no-1", type: "outcome-book", label: "Book", script: "Awesome, it'll take me a few days to finalise the research. Are you free for 15–20 mins on [day] at [time]?" }}
-                              isActive={activeNode === "offend-no-1"}
-                              onClick={() => toggle("offend-no-1")}
-                            />
-                          </div>
+                {/* Row 4: Outcomes - RESTRUCTURED to avoid deep nesting */}
+                <div className="grid grid-cols-2 gap-5 items-start">
+
+                  {/* LEFT column: Spend outcomes - stacked vertically */}
+                  <div className="border-l border-r border-b border-blue-100 bg-blue-50/20 rounded-b-lg px-4 pb-4 pt-3">
+
+                    {/* Less than $6K - compact */}
+                    <div className="mb-4 p-3 bg-white/60 rounded-lg border border-blue-100">
+                      <BranchLabel text="LESS THAN $6K" />
+                      <FlowCard
+                        node={{ id: "less-6k", type: "outcome-followup", label: "Go to Follow Up" }}
+                        isActive={activeNode === "less-6k"}
+                        onClick={() => toggle("less-6k")}
+                      />
+                    </div>
+
+                    {/* More than $6K - full width of this column */}
+                    <div className="p-3 bg-white/60 rounded-lg border border-blue-100">
+                      <BranchLabel text="MORE THAN $6K" />
+                      <FlowCard
+                        node={{ id: "more-6k", type: "script", label: "Offer 2nd Opinion", script: "Perfect. Would it offend you at all if I came back with a 2nd opinion highlighting shortfalls and how easily it can be improved?" }}
+                        isActive={activeNode === "more-6k"}
+                        onClick={() => toggle("more-6k")}
+                      />
+                      <Arrow />
+                      <FlowCard
+                        node={{ id: "more-6k-decision", type: "decision", label: "Would it offend?" }}
+                        isActive={activeNode === "more-6k-decision"}
+                        onClick={() => toggle("more-6k-decision")}
+                      />
+                      <div className="grid grid-cols-2 gap-3 mt-3">
+                        <div>
+                          <BranchLabel text="YES" />
+                          <FlowCard
+                            node={{ id: "offend-yes-1", type: "outcome-followup", label: "Follow Up", script: "No stress at all, I can follow up in a month or so and see how it's progressing, then give you a 2nd opinion if you're open to it." }}
+                            isActive={activeNode === "offend-yes-1"}
+                            onClick={() => toggle("offend-yes-1")}
+                          />
+                        </div>
+                        <div>
+                          <BranchLabel text="NO" />
+                          <FlowCard
+                            node={{ id: "offend-no-1", type: "outcome-book", label: "Book", script: "Awesome, it'll take me a few days to finalise the research. Are you free for 15–20 mins on [day] at [time]?" }}
+                            isActive={activeNode === "offend-no-1"}
+                            onClick={() => toggle("offend-no-1")}
+                          />
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* RIGHT: Offend decision outcomes */}
-                  <div className="border-l border-r border-b border-slate-100 bg-slate-50/30 rounded-b-lg px-4 pb-4 pt-2">
+                  {/* RIGHT column: Offend outcomes */}
+                  <div className="border-l border-r border-b border-slate-100 bg-slate-50/30 rounded-b-lg px-4 pb-4 pt-3">
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <BranchLabel text="YES / NOT READY" />
@@ -347,7 +342,9 @@ export default function CallFlowchartPage() {
               </div>
             </div>
 
-            {/* ─── RIGHT: NO, TOO BUSY ─── */}
+            {/* ─────────────────────────────────────────────────── */}
+            {/* RIGHT: NO, TOO BUSY                                */}
+            {/* ─────────────────────────────────────────────────── */}
             <div>
               <div className="bg-orange-50 border border-orange-200 rounded-t-xl px-5 py-2.5">
                 <span className="text-sm font-bold text-orange-700 tracking-wider">⛔ NO — TOO BUSY / FULL</span>
@@ -363,7 +360,7 @@ export default function CallFlowchartPage() {
 
                 <DecisionLabel text="ARE THEY DOING MARKETING?" />
 
-                {/* Sub-branch headers aligned */}
+                {/* Sub-branch headers */}
                 <div className="grid grid-cols-2 gap-5">
                   <div className="bg-blue-50 rounded-t-lg px-4 py-2">
                     <span className="text-xs font-bold text-blue-700">YES, MARKETING</span>
@@ -373,7 +370,7 @@ export default function CallFlowchartPage() {
                   </div>
                 </div>
 
-                {/* Row 1: Website angle cards aligned */}
+                {/* Row 1: Website angle aligned */}
                 <div className="grid grid-cols-2 gap-5 items-stretch">
                   <div className="border-l border-r border-blue-100 bg-blue-50/20 px-4 pt-4 flex">
                     <FlowCard
@@ -447,7 +444,7 @@ export default function CallFlowchartPage() {
 
                 {/* Row 6: Outcomes aligned */}
                 <div className="grid grid-cols-2 gap-5 items-stretch">
-                  <div className="border-l border-r border-b border-blue-100 bg-blue-50/20 rounded-b-lg px-4 pb-4 pt-2">
+                  <div className="border-l border-r border-b border-blue-100 bg-blue-50/20 rounded-b-lg px-4 pb-4 pt-3">
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <BranchLabel text="YES" />
@@ -467,7 +464,7 @@ export default function CallFlowchartPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="border-l border-r border-b border-slate-100 bg-slate-50/30 rounded-b-lg px-4 pb-4 pt-2">
+                  <div className="border-l border-r border-b border-slate-100 bg-slate-50/30 rounded-b-lg px-4 pb-4 pt-3">
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <BranchLabel text="YES" />
