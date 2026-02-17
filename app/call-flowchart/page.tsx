@@ -115,24 +115,61 @@ function QuodoFlow({ activeNode, toggle }: { activeNode: string | null; toggle: 
 
       <DecisionLabel text="Have they considered updating?" />
 
-      <div className="grid grid-cols-2 gap-8 max-w-3xl mx-auto items-stretch">
+      <div className="grid grid-cols-2 gap-8 max-w-4xl mx-auto items-start">
+
+        {/* ── NO / NOT INTERESTED ── */}
         <div>
           <div className="bg-slate-100 rounded-t-lg px-5 py-2.5">
             <span className="text-xs font-bold text-slate-600">NO / NOT INTERESTED</span>
           </div>
-          <div className="border border-t-0 border-slate-200 rounded-b-lg p-5 bg-slate-50/30 h-full">
+          <div className="border border-t-0 border-slate-200 rounded-b-lg p-5 bg-slate-50/30">
             <FlowCard
-              node={{ id: "q-no-update", type: "outcome-followup", label: "Follow Up", script: "No worries at all. Would it be okay if I checked back in down the track? Things change and we'd love to help when the time is right." }}
-              isActive={activeNode === "q-no-update"}
-              onClick={() => toggle("q-no-update")}
+              node={{ id: "q-no-probe", type: "script", label: "Probe the Objection", script: "No worries at all — can I ask, is that just because you're too busy and don't have the time? Or is it more of a cost thing and you think it's going to be a lengthy process?" }}
+              isActive={activeNode === "q-no-probe"}
+              onClick={() => toggle("q-no-probe")}
             />
+
+            <DecisionLabel text="What's holding them back?" />
+
+            <div className="grid grid-cols-2 gap-4 items-stretch">
+              {/* Too Busy */}
+              <div>
+                <div className="bg-orange-50 rounded-t-lg px-3 py-1.5">
+                  <span className="text-[10px] font-bold text-orange-700">TOO BUSY / NO TIME</span>
+                </div>
+                <div className="border border-t-0 border-orange-100 rounded-b-lg p-4 bg-orange-50/10 flex flex-col">
+                  <FlowCard
+                    node={{ id: "q-no-busy", type: "outcome-followup", label: "Follow Up", script: "I'm more than happy to follow up in a month's time to see how your schedule is tracking along. I'll only need you for 15 mins but in the meantime I can send you some examples of our work." }}
+                    isActive={activeNode === "q-no-busy"}
+                    onClick={() => toggle("q-no-busy")}
+                    className="flex-1"
+                  />
+                </div>
+              </div>
+              {/* Cost Concern */}
+              <div>
+                <div className="bg-blue-50 rounded-t-lg px-3 py-1.5">
+                  <span className="text-[10px] font-bold text-blue-700">COST CONCERN</span>
+                </div>
+                <div className="border border-t-0 border-blue-100 rounded-b-lg p-4 bg-blue-50/10 flex flex-col">
+                  <FlowCard
+                    node={{ id: "q-no-cost", type: "script", label: "Overcome Cost Objection", script: "The best part about us is that we build websites for the price of a coffee a day and we handle 98% of the heavy lifting. The only thing we need from you is your approval and imagery." }}
+                    isActive={activeNode === "q-no-cost"}
+                    onClick={() => toggle("q-no-cost")}
+                    className="flex-1"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
+        {/* ── YES, INTERESTED ── */}
         <div>
           <div className="bg-emerald-50 rounded-t-lg px-5 py-2.5">
             <span className="text-xs font-bold text-emerald-700">YES, INTERESTED</span>
           </div>
-          <div className="border border-t-0 border-emerald-100 rounded-b-lg p-5 bg-emerald-50/20 h-full">
+          <div className="border border-t-0 border-emerald-100 rounded-b-lg p-5 bg-emerald-50/20">
             <FlowCard
               node={{ id: "q-yes-update", type: "script", label: "Present the Solution", script: "I've got a great solution for you. I can get it fixed up for the price of a coffee a day." }}
               isActive={activeNode === "q-yes-update"}
@@ -211,7 +248,6 @@ function MarketingSweetFlow({ activeNode, toggle }: { activeNode: string | null;
 
       <DecisionLabel text="Can they take more work?" />
 
-      {/* ── Two capacity branches ── */}
       <div className="grid grid-cols-2 gap-8 max-w-5xl mx-auto items-start">
 
         {/* YES — CAN TAKE WORK */}
@@ -490,7 +526,6 @@ export default function CallFlowchartPage() {
       `}</style>
 
       <main className="min-h-screen bg-slate-50 print:bg-white">
-        {/* Header */}
         <header className="bg-slate-900 text-white sticky top-0 z-20 print:relative">
           <div className="max-w-[1600px] mx-auto px-8 py-4 print:py-3">
             <div className="flex items-center gap-4">
@@ -534,7 +569,7 @@ export default function CallFlowchartPage() {
 
         <div className="max-w-[1600px] mx-auto px-8 py-8 print:py-4">
 
-          {/* ── SHARED INTRO ── */}
+          {/* Shared intro */}
           <div className="max-w-2xl mx-auto">
             <FlowCard
               node={{ id: "intro", type: "start", label: "Introduction", script: "Hi [Name], it's [Your Name] here from Marketing Sweet, how are you?" }}
@@ -560,7 +595,7 @@ export default function CallFlowchartPage() {
 
           <Arrow />
 
-          {/* ── BRAND TOGGLE ── */}
+          {/* Brand toggle */}
           <div className="flex justify-center my-4 print:hidden">
             <div className="inline-flex rounded-xl overflow-hidden border-2 border-slate-200 bg-white shadow-lg">
               <button
@@ -586,21 +621,20 @@ export default function CallFlowchartPage() {
             </div>
           </div>
 
-          {/* Active brand indicator */}
           <div className={`text-center mb-6 ${brand === "quodo" ? "text-violet-600" : "text-pink-600"}`}>
             <span className="text-sm font-bold tracking-wide uppercase">
               {brand === "quodo" ? "🟣 Quodo Flow" : "🩷 Marketing Sweet Flow"}
             </span>
           </div>
 
-          {/* ── FLOW CONTENT ── */}
+          {/* Flow content */}
           {brand === "quodo" ? (
             <QuodoFlow activeNode={activeNode} toggle={toggle} />
           ) : (
             <MarketingSweetFlow activeNode={activeNode} toggle={toggle} />
           )}
 
-          {/* ── FOOTER ── */}
+          {/* Footer */}
           <div className="mt-12 max-w-3xl mx-auto print:mt-4">
             <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-6 text-white print:bg-slate-800">
               <div className="flex items-start gap-4">
