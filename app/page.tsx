@@ -32,43 +32,20 @@ function CircularProgress({ percentage }: { percentage: number }) {
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
   
-  // Color based on progress
   const getColor = (pct: number) => {
-    if (pct >= 75) return "#22c55e"; // green
-    if (pct >= 50) return "#3b82f6"; // blue
-    if (pct >= 25) return "#f59e0b"; // amber
-    return "#94a3b8"; // gray
+    if (pct >= 75) return "#22c55e";
+    if (pct >= 50) return "#3b82f6";
+    if (pct >= 25) return "#f59e0b";
+    return "#94a3b8";
   };
 
   return (
     <div className="relative w-16 h-16 flex items-center justify-center">
       <svg className="w-16 h-16 transform -rotate-90">
-        {/* Background circle */}
-        <circle
-          cx="32"
-          cy="32"
-          r={radius}
-          stroke="#e5e7eb"
-          strokeWidth="6"
-          fill="none"
-        />
-        {/* Progress circle */}
-        <circle
-          cx="32"
-          cy="32"
-          r={radius}
-          stroke={getColor(percentage)}
-          strokeWidth="6"
-          fill="none"
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={strokeDashoffset}
-          className="transition-all duration-500"
-        />
+        <circle cx="32" cy="32" r={radius} stroke="#e5e7eb" strokeWidth="6" fill="none" />
+        <circle cx="32" cy="32" r={radius} stroke={getColor(percentage)} strokeWidth="6" fill="none" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} className="transition-all duration-500" />
       </svg>
-      <span className="absolute text-sm font-bold text-gray-700">
-        {percentage}%
-      </span>
+      <span className="absolute text-sm font-bold text-gray-700">{percentage}%</span>
     </div>
   );
 }
@@ -76,20 +53,14 @@ function CircularProgress({ percentage }: { percentage: number }) {
 // Format date to Adelaide timezone
 function formatAdelaideDate(dateString: string | undefined, includeTime: boolean = false) {
   if (!dateString) return null;
-  
   const date = new Date(dateString);
   const options: Intl.DateTimeFormatOptions = {
     timeZone: "Australia/Adelaide",
     day: "numeric",
     month: "short",
     year: "numeric",
-    ...(includeTime && {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    }),
+    ...(includeTime && { hour: "numeric", minute: "2-digit", hour12: true }),
   };
-  
   return date.toLocaleString("en-AU", options);
 }
 
@@ -104,14 +75,11 @@ function HomeContent() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch progress data
         const progressResponse = await fetch("/api/progress/all");
         const progressData = await progressResponse.json();
         if (progressData.records) {
           setProgressData(progressData.records);
         }
-
-        // Fetch exam results
         const examResponse = await fetch("/api/exam/results");
         const examData = await examResponse.json();
         if (examData.submissions) {
@@ -123,7 +91,6 @@ function HomeContent() {
         setIsLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
@@ -131,7 +98,6 @@ function HomeContent() {
     return progressData.find((p) => p.trainee_slug === slug);
   };
 
-  // Get exam attempts for a trainee
   const getTraineeExamAttempts = (traineeSlug: string, examId: string) => {
     return examResults
       .filter((s) => s.traineeSlug === traineeSlug && s.examId === examId)
@@ -158,18 +124,8 @@ function HomeContent() {
             href="/admin"
             className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm"
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-              />
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
             Admin Dashboard
           </Link>
@@ -177,18 +133,8 @@ function HomeContent() {
             href="/admin/performance"
             className="inline-flex items-center gap-2 px-4 py-2 bg-[#E6017D] text-white rounded-lg hover:bg-[#c4016a] transition-colors text-sm"
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-              />
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
             Performance Tracker
           </Link>
@@ -196,18 +142,8 @@ function HomeContent() {
             href="/admin/exams"
             className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm"
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             Exam Results
           </Link>
@@ -215,18 +151,8 @@ function HomeContent() {
             href="/schedule"
             className="inline-flex items-center gap-2 px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors text-sm"
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-              />
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             Schedule
           </Link>
@@ -234,18 +160,8 @@ function HomeContent() {
             href="/call-flowchart"
             className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors text-sm"
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"
-              />
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7" />
             </svg>
             Call Flowchart
           </Link>
@@ -258,21 +174,15 @@ function HomeContent() {
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="text-3xl font-bold text-blue-600">
-                {totalModules}
-              </div>
+              <div className="text-3xl font-bold text-blue-600">{totalModules}</div>
               <div className="text-sm text-gray-600">Modules</div>
             </div>
             <div className="text-center p-4 bg-green-50 rounded-lg">
-              <div className="text-3xl font-bold text-green-600">
-                {totalItems}
-              </div>
+              <div className="text-3xl font-bold text-green-600">{totalItems}</div>
               <div className="text-sm text-gray-600">Tasks</div>
             </div>
             <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <div className="text-3xl font-bold text-purple-600">
-                {trainees.length}
-              </div>
+              <div className="text-3xl font-bold text-purple-600">{trainees.length}</div>
               <div className="text-sm text-gray-600">Trainees</div>
             </div>
             <div className="text-center p-4 bg-orange-50 rounded-lg">
@@ -321,73 +231,20 @@ function HomeContent() {
                   {/* Dashboard Link */}
                   <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
                     <span className="text-gray-600">Training Dashboard</span>
-                    <Link
-                      href={`/trainees/${trainee.slug}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Open →
-                    </Link>
-          <Link
-            href="/call-flowchart"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors text-sm"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"
-              />
-            </svg>
-            Call Flowchart
-          </Link>
+                    <Link href={`/trainees/${trainee.slug}`} className="text-blue-600 hover:underline">Open →</Link>
                   </div>
                   
                   {/* Scorecard Link */}
                   <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
                     <span className="text-gray-600">Activity Scorecard</span>
-                    <Link
-                      href={`/scorecard/${trainee.slug}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Open →
-                    </Link>
+                    <Link href={`/scorecard/${trainee.slug}`} className="text-blue-600 hover:underline">Open →</Link>
                   </div>
                   
                   {/* Schedule Link */}
                   {hasSchedule && (
                   <div className="flex items-center justify-between p-2 bg-blue-50 rounded">
                     <span className="text-gray-600">📅 Schedule</span>
-                    <Link
-                      href={`/schedule/${scheduleSlug[trainee.slug]}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Open →
-                    </Link>
-          <Link
-            href="/call-flowchart"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors text-sm"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"
-              />
-            </svg>
-            Call Flowchart
-          </Link>
+                    <Link href={`/schedule/${scheduleSlug[trainee.slug]}`} className="text-blue-600 hover:underline">Open →</Link>
                   </div>
                   )}
                   
@@ -455,16 +312,10 @@ function HomeContent() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-lg">
-                      {trainee.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .slice(0, 2)}
+                      {trainee.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {trainee.name}
-                      </h3>
+                      <h3 className="text-lg font-semibold text-gray-900">{trainee.name}</h3>
                       <div className="text-sm text-gray-500 space-y-0.5">
                         {hasStarted ? (
                           <>
@@ -485,18 +336,8 @@ function HomeContent() {
                     ) : (
                       <CircularProgress percentage={progress?.checked_items ? Math.round(Object.values(progress.checked_items).filter(Boolean).length / totalItems * 100) : 0} />
                     )}
-                    <svg
-                      className="w-6 h-6 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
+                    <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
                 </div>
@@ -600,7 +441,7 @@ function HomeContent() {
           </div>
         </div>
 
-        {/* Module Preview */}
+        {/* Training Modules with Exam Links */}
         <div className="mt-12 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
             Training Modules
@@ -615,27 +456,52 @@ function HomeContent() {
               };
               const segment = segmentMap[index];
 
+              // Exam details per module
+              const examInfo: Record<number, { questions: number; pass: string }> = {
+                0: { questions: 5, pass: "80%" },
+                1: { questions: 15, pass: "80%" },
+                2: { questions: 12, pass: "80%" },
+                3: { questions: 8, pass: "80%" },
+              };
+              const exam = examInfo[index];
+
               return (
               <div
                 key={module.id}
-                className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
+                className="p-3 bg-gray-50 rounded-lg"
               >
-                <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
-                  {index + 1}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="font-medium text-gray-800">{module.title}</h3>
-                    {segment && (
-                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${segment.color}`}>
-                        {segment.name}
-                      </span>
-                    )}
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
+                    {index + 1}
                   </div>
-                  <p className="text-sm text-gray-500">
-                    {module.checklist.filter(item => !item.isSection).length} tasks
-                  </p>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-medium text-gray-800">{module.title}</h3>
+                      {segment && (
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${segment.color}`}>
+                          {segment.name}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-500">
+                      {module.checklist.filter(item => !item.isSection).length} tasks
+                    </p>
+                  </div>
                 </div>
+                {/* Exam link */}
+                {exam && (
+                  <div className="ml-11 mt-2">
+                    <Link
+                      href={`/exam/module-${index + 1}/admin-preview`}
+                      className="inline-flex items-center gap-2 text-xs px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-gray-600 hover:border-[#E6017D] hover:text-[#E6017D] transition-colors"
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Module {index + 1} Exam — {exam.questions} questions, {exam.pass} to pass
+                    </Link>
+                  </div>
+                )}
               </div>
               );
             })}
