@@ -2,6 +2,9 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { module1Exam, module1TotalPoints } from "@/data/exams/module-1";
+import { module2Exam, module2TotalPoints } from "@/data/exams/module-2";
+import { module3Exam, module3TotalPoints } from "@/data/exams/module-3";
+import { module4Exam, module4TotalPoints } from "@/data/exams/module-4";
 import { ExamSubmission } from "@/types/exam";
 
 const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY!;
@@ -14,12 +17,19 @@ const AIRTABLE_URL = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeUR
 
 // Get exam by ID
 function getExam(examId: string) {
-  if (examId === "exam-module-1") {
-    return { exam: module1Exam, totalPoints: module1TotalPoints };
+  switch (examId) {
+    case "exam-module-1":
+      return { exam: module1Exam, totalPoints: module1TotalPoints };
+    case "exam-module-2":
+      return { exam: module2Exam, totalPoints: module2TotalPoints };
+    case "exam-module-3":
+      return { exam: module3Exam, totalPoints: module3TotalPoints };
+    case "exam-module-4":
+      return { exam: module4Exam, totalPoints: module4TotalPoints };
+    default:
+      return null;
   }
-  return null;
 }
-
 // Calculate score
 function calculateScore(
   examId: string,
