@@ -28,6 +28,158 @@ function getExamData(moduleId: string): { exam: Exam; totalPoints: number } | nu
   }
 }
 
+// Willo Logo SVG Component
+function WilloLogo({ className = "" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <text x="0" y="26" fontFamily="system-ui, -apple-system, sans-serif" fontSize="28" fontWeight="700" fill="currentColor" letterSpacing="-0.5">
+        willo
+      </text>
+    </svg>
+  );
+}
+
+// Willo-Only Exam Page (no MC questions — just video assessment via Willo)
+function WilloOnlyExam({ exam, trainee, slug }: { exam: Exam; trainee: { name: string; slug: string }; slug: string }) {
+  return (
+    <main className="min-h-screen bg-slate-100">
+      {/* Header */}
+      <header className="bg-slate-900 text-white">
+        <div className="max-w-4xl mx-auto px-6 py-4">
+          <div className="flex items-center gap-4">
+            <Link
+              href={`/trainees/${slug}`}
+              className="text-slate-400 hover:text-white transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+            </Link>
+            <div>
+              <h1 className="text-lg font-bold">{exam.title}</h1>
+              <p className="text-slate-400 text-sm">{trainee.name}</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-4xl mx-auto px-6 py-8">
+        {/* Main Card */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+          {/* Top accent bar */}
+          <div className="h-2 bg-gradient-to-r from-[#E6017D] to-[#ff4da6]" />
+
+          <div className="p-8 sm:p-10">
+            {/* Title & Description */}
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-pink-50 text-[#E6017D] rounded-full text-sm font-medium mb-4">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                Video Assessment
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+                {exam.title}
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                {exam.description}
+              </p>
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-gray-100 my-8" />
+
+            {/* What to expect */}
+            <div className="mb-8">
+              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">What to Expect</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
+                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-gray-800 text-sm">6 Questions</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Short video responses</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
+                  <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-gray-800 text-sm">~15 Minutes</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Estimated completion</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
+                  <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-gray-800 text-sm">Reviewed Manually</div>
+                    <div className="text-xs text-gray-500 mt-0.5">By your manager</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-gray-100 my-8" />
+
+            {/* Willo CTA Section */}
+            <div className="text-center">
+              <div className="inline-flex items-center gap-2 text-gray-400 mb-4">
+                <span className="text-xs font-medium uppercase tracking-wider">Powered by</span>
+                <WilloLogo className="h-5 w-auto text-gray-700" />
+              </div>
+
+              <div className="mt-4">
+                <a
+                  href={exam.willoLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-[#E6017D] text-white rounded-xl font-semibold text-lg hover:bg-[#c9016b] transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  Take Exam on Willo
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              </div>
+
+              <p className="text-sm text-gray-400 mt-4">
+                Opens in a new tab. You&apos;ll need access to your camera and microphone.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Back to Training */}
+        <div className="mt-8 text-center">
+          <Link
+            href={`/trainees/${slug}`}
+            className="inline-flex items-center gap-2 text-[#E6017D] hover:underline"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Training Dashboard
+          </Link>
+        </div>
+      </div>
+    </main>
+  );
+}
+
 function QuestionCard({
   question,
   questionNumber,
@@ -68,7 +220,6 @@ function QuestionCard({
           
           let optionClass = "border-gray-200 hover:border-gray-300 hover:bg-gray-50";
           if (showResults) {
-            // After submission, just show what they selected - no correct/incorrect indication
             if (isSelected) {
               optionClass = "border-gray-400 bg-gray-100";
             } else {
@@ -143,8 +294,16 @@ function ExamContent() {
   const trainee = trainees.find((t) => t.slug === slug);
   const MAX_ATTEMPTS = 3;
 
-  // Fetch previous attempts on load
+  // Check if this is a Willo-only exam (no MC questions)
+  const isWilloOnly = examData?.exam.questions.length === 0;
+
+  // Fetch previous attempts on load (skip for Willo-only exams)
   useEffect(() => {
+    if (isWilloOnly) {
+      setIsLoading(false);
+      return;
+    }
+
     const fetchAttempts = async () => {
       if (!examData || !trainee) return;
       
@@ -162,7 +321,7 @@ function ExamContent() {
     };
 
     fetchAttempts();
-  }, [slug, examData, trainee]);
+  }, [slug, examData, trainee, isWilloOnly]);
 
   if (!examData || !trainee) {
     return (
@@ -179,6 +338,24 @@ function ExamContent() {
   }
 
   const { exam, totalPoints } = examData;
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <main className="min-h-screen bg-slate-100 flex items-center justify-center">
+        <div className="flex items-center gap-2 text-gray-500">
+          <div className="w-6 h-6 border-2 border-gray-300 border-t-[#E6017D] rounded-full animate-spin" />
+          Loading exam...
+        </div>
+      </main>
+    );
+  }
+
+  // Willo-only exam — render the video assessment page
+  if (isWilloOnly) {
+    return <WilloOnlyExam exam={exam} trainee={trainee} slug={slug} />;
+  }
+
   const answeredCount = Object.keys(answers).length;
   const allAnswered = answeredCount === exam.questions.length;
   const attemptNumber = previousAttempts.length + 1;
@@ -229,18 +406,6 @@ function ExamContent() {
       setIsSubmitting(false);
     }
   };
-
-  // Loading state
-  if (isLoading) {
-    return (
-      <main className="min-h-screen bg-slate-100 flex items-center justify-center">
-        <div className="flex items-center gap-2 text-gray-500">
-          <div className="w-6 h-6 border-2 border-gray-300 border-t-[#E6017D] rounded-full animate-spin" />
-          Loading exam...
-        </div>
-      </main>
-    );
-  }
 
   // Already passed - show success message
   if (hasPassed && !isSubmitted) {
@@ -502,7 +667,7 @@ function ExamContent() {
         </div>
 
         {/* Willo Section (before submission) */}
-        {!isSubmitted && exam.willoLink && (
+        {!isSubmitted && exam.willoLink && exam.questions.length > 0 && (
           <div className="mt-8 rounded-xl border-2 border-dashed border-[#E6017D]/30 bg-gradient-to-r from-pink-50 to-rose-50 p-6">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-full bg-[#E6017D]/10 flex items-center justify-center flex-shrink-0">
