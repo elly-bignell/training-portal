@@ -27,6 +27,26 @@ interface TraineePerformance {
   };
 }
 
+// Team structure — defines display order and grouping
+const teams = [
+  {
+    name: "Team 1",
+    members: ["lucas-tirri", "krishna-patel"],
+  },
+  {
+    name: "Team 2",
+    members: ["felipe-garcia", "connie-matthews"],
+  },
+  {
+    name: "Team 3",
+    members: ["dylan-munro", "cindy-rose-rondez-manrique"],
+  },
+];
+
+// Team bookings target: 40 per team EOW, ~13/day Wed–Fri
+const TEAM_BOOKINGS_TARGET_EOW = 40;
+const TEAM_BOOKINGS_TARGET_DAILY_WED_FRI = 13;
+
 // Week date ranges for display
 const weekDateRanges: Record<number, string> = {
   0: "Mon 16 Feb – Fri 20 Feb",
@@ -52,24 +72,35 @@ function getStatusIcon(pct: number): string {
   return "!";
 }
 
+function getTeamBookingStatusColor(actual: number, target: number): string {
+  const pct = target > 0 ? (actual / target) * 100 : 0;
+  if (pct >= 100) return "text-emerald-600";
+  if (pct >= 50) return "text-amber-600";
+  return "text-red-500";
+}
+
 export default function PerformanceSummary() {
   const [performances, setPerformances] = useState<TraineePerformance[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const currentWeek = getCurrentWeekNumber();
+
+  // All slugs we want to display (from team definitions)
+  const displaySlugs = new Set(teams.flatMap((t) => t.members));
 
   useEffect(() => {
     const fetchAllPerformances = async () => {
       setIsLoading(true);
       const { start, end } = getWeekBoundaries(currentWeek);
 
+      // Only fetch trainees that are in a team
+      const teamTrainees = trainees.filter((t) => displaySlugs.has(t.slug));
+
       const results = await Promise.all(
-        trainees.map(async (trainee) => {
+        teamTrainees.map(async (trainee) => {
           try {
-            // Fetch today's activity
             const todayRes = await fetch(`/api/activity?trainee_slug=${trainee.slug}`);
             const todayData = await todayRes.json();
 
-            // Fetch weekly activity
             const weekRes = await fetch(
               `/api/activity?trainee_slug=${trainee.slug}&week_start=${start}&week_end=${end}`
             );
@@ -112,6 +143,7 @@ export default function PerformanceSummary() {
     };
 
     fetchAllPerformances();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWeek]);
 
   if (isLoading) {
@@ -135,17 +167,14 @@ export default function PerformanceSummary() {
     revenue: dailyStandard.revenue * 5,
   };
 
-  // Calculate overall % to standard for each trainee
   const getOverallPct = (perf: TraineePerformance, type: "today" | "weekly") => {
     const data = type === "today" ? perf.today : perf.weekly;
     const standard = type === "today" ? dailyStandard : weeklyStandard;
-    
     const metrics = ["calls", "bookings", "meetings", "units", "revenue"] as const;
     const pcts = metrics.map((m) => {
       const target = standard[m];
       return target > 0 ? Math.min(100, (data[m] / target) * 100) : 100;
     });
-    
     return Math.round(pcts.reduce((a, b) => a + b, 0) / pcts.length);
   };
 
@@ -160,14 +189,30 @@ export default function PerformanceSummary() {
     if (currentWeek === 0) return { label: "Training", color: "bg-blue-100 text-blue-700" };
     if (currentWeek === 6) return { label: "🎯 The Standard", color: "bg-[#E6017D]/10 text-[#E6017D]" };
     if (currentWeek > 6) return { label: "Maintain", color: "bg-[#84D4BD]/20 text-teal-700" };
-    return { label: `Ramp`, color: "bg-slate-100 text-slate-600" };
+    return { label: "Ramp", color: "bg-slate-100 text-slate-600" };
   };
 
   const phaseTag = getWeekPhaseTag();
 
+  // Lookup map for quick access
+  const perfMap = new Map(performances.map((p) => [p.slug, p]));
+
+  // Get team totals
+  const getTeamTotals = (memberSlugs: string[]) => {
+    const teamPerfs = memberSlugs.map((s) => perfMap.get(s)).filter(Boolean) as TraineePerformance[];
+    return {
+      calls: teamPerfs.reduce((sum, p) => sum + p.weekly.calls, 0),
+      bookings: teamPerfs.reduce((sum, p) => sum + p.weekly.bookings, 0),
+      meetings: teamPerfs.reduce((sum, p) => sum + p.weekly.meetings, 0),
+      units: teamPerfs.reduce((sum, p) => sum + p.weekly.units, 0),
+      revenue: teamPerfs.reduce((sum, p) => sum + p.weekly.revenue, 0),
+      todayBookings: teamPerfs.reduce((sum, p) => sum + p.today.bookings, 0),
+    };
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      {/* Header with week info */}
+      {/* Header */}
       <div className="p-4 border-b border-gray-100">
         <div className="flex items-start justify-between">
           <div>
@@ -180,10 +225,7 @@ export default function PerformanceSummary() {
             </div>
             <p className="text-sm text-gray-400 mt-1">{weekDateRanges[currentWeek]}</p>
           </div>
-          <Link
-            href="/roadmap"
-            className="text-sm text-[#E6017D] hover:underline"
-          >
+          <Link href="/roadmap" className="text-sm text-[#E6017D] hover:underline">
             View Standards →
           </Link>
         </div>
@@ -204,62 +246,122 @@ export default function PerformanceSummary() {
               <th className="text-center px-2 py-3 font-semibold">Revenue</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
-            {performances.map((perf) => {
-              const todayPct = getOverallPct(perf, "today");
-              const weeklyPct = getOverallPct(perf, "weekly");
+            {teams.map((team, teamIndex) => {
+              const teamTotals = getTeamTotals(team.members);
 
               return (
-                <tr key={perf.slug} className="hover:bg-gray-50">
-                  <td className="px-4 py-3">
-                    <Link
-                      href={`/scorecard/${perf.slug}`}
-                      className="font-medium text-gray-900 hover:text-[#E6017D] transition-colors"
-                    >
-                      {perf.name}
-                    </Link>
-                  </td>
-                  <td className="px-2 py-3 text-center">
-                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(todayPct)}`}>
-                      {getStatusIcon(todayPct)} {todayPct}%
-                    </span>
-                  </td>
-                  <td className="px-2 py-3 text-center">
-                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(weeklyPct)}`}>
-                      {getStatusIcon(weeklyPct)} {weeklyPct}%
-                    </span>
-                  </td>
-                  <td className="px-2 py-3 text-center text-sm">
-                    <span className="text-gray-900 font-medium">{perf.weekly.calls}</span>
-                    <span className="text-gray-400">/{weeklyStandard.calls}</span>
-                  </td>
-                  <td className="px-2 py-3 text-center text-sm">
-                    <span className="text-gray-900 font-medium">{perf.weekly.bookings}</span>
-                    <span className="text-gray-400">/{weeklyStandard.bookings}</span>
-                  </td>
-                  <td className="px-2 py-3 text-center text-sm">
-                    <span className="text-gray-900 font-medium">{perf.weekly.meetings}</span>
-                    <span className="text-gray-400">/{weeklyStandard.meetings}</span>
-                  </td>
-                  <td className="px-2 py-3 text-center text-sm">
-                    <span className="text-gray-900 font-medium">{perf.weekly.units}</span>
-                    <span className="text-gray-400">/{weeklyStandard.units}</span>
-                  </td>
-                  <td className="px-2 py-3 text-center text-sm">
-                    <span className="text-gray-900 font-medium">${perf.weekly.revenue}</span>
-                    <span className="text-gray-400">/${weeklyStandard.revenue}</span>
-                  </td>
-                </tr>
+                <tbody key={team.name} className={teamIndex > 0 ? "border-t-2 border-gray-200" : ""}>
+                  {/* Team header row */}
+                  <tr className="bg-slate-800">
+                    <td colSpan={8} className="px-4 py-2.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-bold text-white">{team.name}</span>
+                        <div className="flex items-center gap-4">
+                          <span className="text-xs text-slate-300">
+                            Daily target (Wed–Fri): <span className="font-semibold text-white">{TEAM_BOOKINGS_TARGET_DAILY_WED_FRI} bookings/team</span>
+                          </span>
+                          <span className="text-xs text-slate-300">
+                            EOW target: <span className="font-semibold text-white">{TEAM_BOOKINGS_TARGET_EOW} bookings</span>
+                          </span>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+
+                  {/* Team member rows */}
+                  {team.members.map((slug) => {
+                    const perf = perfMap.get(slug);
+                    if (!perf) return null;
+
+                    const todayPct = getOverallPct(perf, "today");
+                    const weeklyPct = getOverallPct(perf, "weekly");
+
+                    return (
+                      <tr key={perf.slug} className="hover:bg-gray-50 border-b border-gray-100">
+                        <td className="px-4 py-3">
+                          <Link
+                            href={`/scorecard/${perf.slug}`}
+                            className="font-medium text-gray-900 hover:text-[#E6017D] transition-colors"
+                          >
+                            {perf.name}
+                          </Link>
+                        </td>
+                        <td className="px-2 py-3 text-center">
+                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(todayPct)}`}>
+                            {getStatusIcon(todayPct)} {todayPct}%
+                          </span>
+                        </td>
+                        <td className="px-2 py-3 text-center">
+                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(weeklyPct)}`}>
+                            {getStatusIcon(weeklyPct)} {weeklyPct}%
+                          </span>
+                        </td>
+                        <td className="px-2 py-3 text-center text-sm">
+                          <span className="text-gray-900 font-medium">{perf.weekly.calls}</span>
+                          <span className="text-gray-400">/{weeklyStandard.calls}</span>
+                        </td>
+                        <td className="px-2 py-3 text-center text-sm">
+                          <span className="text-gray-900 font-medium">{perf.weekly.bookings}</span>
+                          <span className="text-gray-400">/{weeklyStandard.bookings}</span>
+                        </td>
+                        <td className="px-2 py-3 text-center text-sm">
+                          <span className="text-gray-900 font-medium">{perf.weekly.meetings}</span>
+                          <span className="text-gray-400">/{weeklyStandard.meetings}</span>
+                        </td>
+                        <td className="px-2 py-3 text-center text-sm">
+                          <span className="text-gray-900 font-medium">{perf.weekly.units}</span>
+                          <span className="text-gray-400">/{weeklyStandard.units}</span>
+                        </td>
+                        <td className="px-2 py-3 text-center text-sm">
+                          <span className="text-gray-900 font-medium">${perf.weekly.revenue}</span>
+                          <span className="text-gray-400">/${weeklyStandard.revenue}</span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+
+                  {/* Team totals row */}
+                  <tr className="bg-slate-50">
+                    <td className="px-4 py-2.5 text-sm font-semibold text-slate-700">
+                      {team.name} Total
+                    </td>
+                    <td colSpan={2}></td>
+                    <td className="px-2 py-2.5 text-center text-sm font-semibold text-slate-700">
+                      {teamTotals.calls}
+                    </td>
+                    <td className="px-2 py-2.5 text-center text-sm font-bold">
+                      <span className={getTeamBookingStatusColor(teamTotals.bookings, TEAM_BOOKINGS_TARGET_EOW)}>
+                        {teamTotals.bookings}
+                      </span>
+                      <span className="text-gray-400 font-normal">/{TEAM_BOOKINGS_TARGET_EOW}</span>
+                    </td>
+                    <td className="px-2 py-2.5 text-center text-sm font-semibold text-slate-700">
+                      {teamTotals.meetings}
+                    </td>
+                    <td className="px-2 py-2.5 text-center text-sm font-semibold text-slate-700">
+                      {teamTotals.units}
+                    </td>
+                    <td className="px-2 py-2.5 text-center text-sm font-semibold text-slate-700">
+                      ${teamTotals.revenue}
+                    </td>
+                  </tr>
+                </tbody>
               );
             })}
-          </tbody>
         </table>
       </div>
 
-      {/* Footer with weekly targets */}
+      {/* Footer */}
       <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 text-xs text-gray-500">
-        <span className="font-semibold">Week {currentWeek} Target:</span>{" "}
-        {weeklyStandard.calls} calls → {weeklyStandard.bookings} bookings → {weeklyStandard.meetings} meetings → {weeklyStandard.units} units → ${weeklyStandard.revenue} revenue
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="font-semibold">Week {currentWeek} Target:</span>{" "}
+            {weeklyStandard.calls} calls → {weeklyStandard.bookings} bookings → {weeklyStandard.meetings} meetings → {weeklyStandard.units} units → ${weeklyStandard.revenue} revenue
+          </div>
+          <div className="font-semibold text-[#E6017D]">
+            Team Bookings: {TEAM_BOOKINGS_TARGET_EOW}/team EOW • {TEAM_BOOKINGS_TARGET_DAILY_WED_FRI}/team/day (Wed–Fri)
+          </div>
+        </div>
       </div>
     </div>
   );
