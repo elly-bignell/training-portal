@@ -86,6 +86,83 @@ function DecisionLabel({ text }: { text: string }) {
 }
 
 /* ════════════════════════════════════════════════════════════ */
+/* SHARED: YES MARKETING BRANCH (reused in both YES and NO)   */
+/* ════════════════════════════════════════════════════════════ */
+function YesMarketingBranch({ prefix, activeNode, toggle }: { prefix: string; activeNode: string | null; toggle: (id: string) => void }) {
+  return (
+    <>
+      <FlowCard
+        node={{ id: `${prefix}-ask-type`, type: "script", label: "Ask What Type", script: "Is it SEO or Google Ads that you're doing?" }}
+        isActive={activeNode === `${prefix}-ask-type`}
+        onClick={() => toggle(`${prefix}-ask-type`)}
+      />
+      <Arrow />
+      <FlowCard
+        node={{ id: `${prefix}-ask-long`, type: "script", label: "Ask How Long", script: "How long have you been doing it for?" }}
+        isActive={activeNode === `${prefix}-ask-long`}
+        onClick={() => toggle(`${prefix}-ask-long`)}
+      />
+      <Arrow />
+      <FlowCard
+        node={{ id: `${prefix}-duration-dec`, type: "decision", label: "How Long?" }}
+        isActive={activeNode === `${prefix}-duration-dec`}
+        onClick={() => toggle(`${prefix}-duration-dec`)}
+      />
+
+      {/* Less than 6 months */}
+      <div className="mt-3 p-4 bg-white/60 rounded-lg border border-blue-100">
+        <BranchLabel text="LESS THAN 6 MONTHS" />
+        <FlowCard
+          node={{ id: `${prefix}-less-6mo`, type: "outcome-followup", label: "Follow Up" }}
+          isActive={activeNode === `${prefix}-less-6mo`}
+          onClick={() => toggle(`${prefix}-less-6mo`)}
+        />
+      </div>
+
+      {/* More than 6 months → Ask spend → 2nd opinion */}
+      <div className="mt-3 p-4 bg-white/60 rounded-lg border border-blue-100">
+        <BranchLabel text="MORE THAN 6 MONTHS" />
+        <FlowCard
+          node={{ id: `${prefix}-ask-spend`, type: "script", label: "Ask About Spend", script: "And if you don't mind me asking, what are you spending each month?" }}
+          isActive={activeNode === `${prefix}-ask-spend`}
+          onClick={() => toggle(`${prefix}-ask-spend`)}
+        />
+        <Arrow />
+        <FlowCard
+          node={{ id: `${prefix}-2nd-opinion`, type: "script", label: "Offer 2nd Opinion", script: "Perfect. Would it offend you at all if I came back with a 2nd opinion highlighting shortfalls and how easily it can be improved?" }}
+          isActive={activeNode === `${prefix}-2nd-opinion`}
+          onClick={() => toggle(`${prefix}-2nd-opinion`)}
+        />
+        <Arrow />
+        <FlowCard
+          node={{ id: `${prefix}-offend`, type: "decision", label: "Would it offend?" }}
+          isActive={activeNode === `${prefix}-offend`}
+          onClick={() => toggle(`${prefix}-offend`)}
+        />
+        <div className="grid grid-cols-2 gap-4 mt-3">
+          <div>
+            <BranchLabel text="YES" />
+            <FlowCard
+              node={{ id: `${prefix}-offend-yes`, type: "outcome-followup", label: "Follow Up", script: "No stress at all, I can follow up in a month or so." }}
+              isActive={activeNode === `${prefix}-offend-yes`}
+              onClick={() => toggle(`${prefix}-offend-yes`)}
+            />
+          </div>
+          <div>
+            <BranchLabel text="NO" />
+            <FlowCard
+              node={{ id: `${prefix}-offend-no`, type: "outcome-book", label: "Book", script: "Awesome, are you free for 15–20 mins on [day] at [time]?" }}
+              isActive={activeNode === `${prefix}-offend-no`}
+              onClick={() => toggle(`${prefix}-offend-no`)}
+            />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════ */
 /* QUODO FLOW                                                  */
 /* ════════════════════════════════════════════════════════════ */
 function QuodoFlow({ activeNode, toggle }: { activeNode: string | null; toggle: (id: string) => void }) {
@@ -162,7 +239,7 @@ function QuodoFlow({ activeNode, toggle }: { activeNode: string | null; toggle: 
           </div>
         </div>
 
-        {/* YES, INTERESTED → Send Examples → Qualify → Book/Follow Up */}
+        {/* YES, INTERESTED */}
         <div>
           <div className="bg-emerald-50 rounded-t-lg px-5 py-2.5">
             <span className="text-xs font-bold text-emerald-700">YES, INTERESTED</span>
@@ -256,79 +333,13 @@ function MarketingSweetFlow({ activeNode, toggle }: { activeNode: string | null;
 
             <div className="grid grid-cols-2 gap-6 items-start">
 
-              {/* YES, marketing */}
+              {/* YES, marketing — uses shared component */}
               <div>
                 <div className="bg-blue-50 rounded-t-lg px-5 py-2.5">
                   <span className="text-xs font-bold text-blue-700">YES, MARKETING</span>
                 </div>
                 <div className="border border-t-0 border-blue-100 rounded-b-lg p-5 bg-blue-50/20">
-                  <FlowCard
-                    node={{ id: "ms-ask-type", type: "script", label: "Ask What Type", script: "Is it SEO or Google Ads that you're doing?" }}
-                    isActive={activeNode === "ms-ask-type"}
-                    onClick={() => toggle("ms-ask-type")}
-                  />
-                  <Arrow />
-                  <FlowCard
-                    node={{ id: "ms-ask-long", type: "script", label: "Ask How Long", script: "How long have you been doing it for?" }}
-                    isActive={activeNode === "ms-ask-long"}
-                    onClick={() => toggle("ms-ask-long")}
-                  />
-                  <Arrow />
-                  <FlowCard
-                    node={{ id: "ms-duration-dec", type: "decision", label: "How Long?" }}
-                    isActive={activeNode === "ms-duration-dec"}
-                    onClick={() => toggle("ms-duration-dec")}
-                  />
-
-                  {/* Less than 6 months */}
-                  <div className="mt-3 p-4 bg-white/60 rounded-lg border border-blue-100">
-                    <BranchLabel text="LESS THAN 6 MONTHS" />
-                    <FlowCard
-                      node={{ id: "ms-less-6mo", type: "outcome-followup", label: "Follow Up" }}
-                      isActive={activeNode === "ms-less-6mo"}
-                      onClick={() => toggle("ms-less-6mo")}
-                    />
-                  </div>
-
-                  {/* More than 6 months → Ask spend → 2nd opinion */}
-                  <div className="mt-3 p-4 bg-white/60 rounded-lg border border-blue-100">
-                    <BranchLabel text="MORE THAN 6 MONTHS" />
-                    <FlowCard
-                      node={{ id: "ms-ask-spend", type: "script", label: "Ask About Spend", script: "And if you don't mind me asking, what are you spending each month?" }}
-                      isActive={activeNode === "ms-ask-spend"}
-                      onClick={() => toggle("ms-ask-spend")}
-                    />
-                    <Arrow />
-                    <FlowCard
-                      node={{ id: "ms-2nd-opinion", type: "script", label: "Offer 2nd Opinion", script: "Perfect. Would it offend you at all if I came back with a 2nd opinion highlighting shortfalls and how easily it can be improved?" }}
-                      isActive={activeNode === "ms-2nd-opinion"}
-                      onClick={() => toggle("ms-2nd-opinion")}
-                    />
-                    <Arrow />
-                    <FlowCard
-                      node={{ id: "ms-offend", type: "decision", label: "Would it offend?" }}
-                      isActive={activeNode === "ms-offend"}
-                      onClick={() => toggle("ms-offend")}
-                    />
-                    <div className="grid grid-cols-2 gap-4 mt-3">
-                      <div>
-                        <BranchLabel text="YES" />
-                        <FlowCard
-                          node={{ id: "ms-offend-yes", type: "outcome-followup", label: "Follow Up", script: "No stress at all, I can follow up in a month or so." }}
-                          isActive={activeNode === "ms-offend-yes"}
-                          onClick={() => toggle("ms-offend-yes")}
-                        />
-                      </div>
-                      <div>
-                        <BranchLabel text="NO" />
-                        <FlowCard
-                          node={{ id: "ms-offend-no", type: "outcome-book", label: "Book", script: "Awesome, are you free for 15–20 mins on [day] at [time]?" }}
-                          isActive={activeNode === "ms-offend-no"}
-                          onClick={() => toggle("ms-offend-no")}
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  <YesMarketingBranch prefix="ms-y" activeNode={activeNode} toggle={toggle} />
                 </div>
               </div>
 
@@ -389,47 +400,13 @@ function MarketingSweetFlow({ activeNode, toggle }: { activeNode: string | null;
 
             <div className="grid grid-cols-2 gap-6 items-start">
 
-              {/* YES marketing while busy */}
+              {/* YES marketing while busy — SAME branch as YES capacity */}
               <div>
                 <div className="bg-blue-50 rounded-t-lg px-5 py-2.5">
                   <span className="text-xs font-bold text-blue-700">YES, MARKETING</span>
                 </div>
                 <div className="border border-t-0 border-blue-100 rounded-b-lg p-5 bg-blue-50/20">
-                  <FlowCard
-                    node={{ id: "ms-busy-y-site", type: "script", label: "Website Angle", script: "Got it, in that case I wouldn't recommend pushing any more work until the website is properly set up to handle it. I actually had a look at your site — when was it last updated?" }}
-                    isActive={activeNode === "ms-busy-y-site"}
-                    onClick={() => toggle("ms-busy-y-site")}
-                  />
-                  <Arrow />
-                  <FlowCard
-                    node={{ id: "ms-busy-y-book", type: "script", label: "Go for Booking", script: "If I come back to you with a couple of ideas to freshen it up so you're ready for future growth, would that offend you?" }}
-                    isActive={activeNode === "ms-busy-y-book"}
-                    onClick={() => toggle("ms-busy-y-book")}
-                  />
-                  <Arrow />
-                  <FlowCard
-                    node={{ id: "ms-busy-y-offend", type: "decision", label: "Would it offend?" }}
-                    isActive={activeNode === "ms-busy-y-offend"}
-                    onClick={() => toggle("ms-busy-y-offend")}
-                  />
-                  <div className="grid grid-cols-2 gap-4 mt-3">
-                    <div>
-                      <BranchLabel text="YES" />
-                      <FlowCard
-                        node={{ id: "ms-busy-yy", type: "outcome-followup", label: "Follow Up", script: "Leave with them. Ask to follow up. Mention link." }}
-                        isActive={activeNode === "ms-busy-yy"}
-                        onClick={() => toggle("ms-busy-yy")}
-                      />
-                    </div>
-                    <div>
-                      <BranchLabel text="NO" />
-                      <FlowCard
-                        node={{ id: "ms-busy-yn", type: "outcome-book", label: "Book", script: "Fantastic, I'll put some things together. Are you free for 15–20 mins on [day]?" }}
-                        isActive={activeNode === "ms-busy-yn"}
-                        onClick={() => toggle("ms-busy-yn")}
-                      />
-                    </div>
-                  </div>
+                  <YesMarketingBranch prefix="ms-busy-y" activeNode={activeNode} toggle={toggle} />
                 </div>
               </div>
 
@@ -573,7 +550,7 @@ export default function CallFlowchartPage() {
 
           <Arrow />
 
-          {/* Brand toggle — no emojis, custom gradient colors */}
+          {/* Brand toggle */}
           <div className="flex justify-center my-4 print:hidden">
             <div className="inline-flex rounded-xl overflow-hidden border-2 border-slate-200 bg-white shadow-lg">
               <button
