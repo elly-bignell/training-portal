@@ -646,6 +646,12 @@ export const trainingProgram: Module[] = [
       "Practice reading the cold call script aloud at least twice. Write any questions or notes in the section below.",
     checklist: [
       {
+        id: "m4-item0",
+        label: "Review: Cold Call Flowchart",
+        link: "/call-flowchart",
+        estimatedTime: "10 mins",
+      },
+      {
         id: "m4-item1",
         label: "Read: Cold Call Script",
         link: "https://docs.google.com/document/d/1AbGxVtE5N0nMQFQCBrXzm3vYoUs337UE47UTOdU43FY/edit?usp=sharing",
@@ -677,6 +683,7 @@ export const trainingProgram: Module[] = [
       },
     ],
     resources: [
+      { label: "Cold Call Flowchart", url: "/call-flowchart" },
       { label: "Cold Call Script", url: "https://docs.google.com/document/d/1AbGxVtE5N0nMQFQCBrXzm3vYoUs337UE47UTOdU43FY/edit?usp=sharing" },
       { label: "Sales Templates: Marketing Sweet", url: "https://docs.google.com/document/d/10QAA7F1lJuLfEnxNlKx1pdefzhOyMtlRfU1hq3Irx-0/edit?tab=t.0" },
       { label: "Sales Templates: Quodo", url: "https://docs.google.com/document/d/1UN2JW1YzJYbyZIQ26uQGT3QUDgb-62D8lJN8IGc09nY/edit?tab=t.0" },
