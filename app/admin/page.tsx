@@ -58,7 +58,7 @@ function AdminDashboardContent() {
   };
 
   const totalChecklistItems = trainingProgram.reduce(
-    (total, module) => total + module.checklist.length,
+    (total, module) => total + module.checklist.filter(item => !item.isSection).length,
     0
   );
 
@@ -68,7 +68,7 @@ function AdminDashboardContent() {
   ): number => {
     const trainingModule = trainingProgram.find((m) => m.id === moduleId);
     if (!trainingModule) return 0;
-    const moduleChecklistIds = trainingModule.checklist.map((item) => item.id);
+    const moduleChecklistIds = trainingModule.checklist.filter((item) => !item.isSection).map((item) => item.id);
     const checkedCount = moduleChecklistIds.filter(
       (id) => checkedItems[id]
     ).length;
