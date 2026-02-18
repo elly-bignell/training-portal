@@ -492,7 +492,7 @@ function HomeContent() {
                 {exam && (
                   <div className="ml-11 mt-2">
                     <Link
-                      href={`/exam/module-${index + 1}/admin-preview`}
+                      href={`/exam/module-${index + 1}/trainee-test`}
                       className="inline-flex items-center gap-2 text-xs px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-gray-600 hover:border-[#E6017D] hover:text-[#E6017D] transition-colors"
                     >
                       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
