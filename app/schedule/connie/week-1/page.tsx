@@ -131,8 +131,7 @@ function ConnieWeek1Content() {
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:00pm</td>
                     {days.map((day) => (
-                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-gray-100">
-                        <div className="text-gray-400 text-xs font-medium">12:00–1:00pm</div>
+                      <td key={day} rowSpan={2} className="p-2 border border-gray-200 bg-gray-100">
                       </td>
                     ))}
                   </tr>
