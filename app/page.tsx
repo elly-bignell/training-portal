@@ -212,7 +212,6 @@ function HomeContent() {
 
               const scheduleSlug: Record<string, string> = {
                 "cindy-rose-rondez-manrique": "cindy",
-                "becks-hatzis": "becks",
                 "krishna-patel": "krishna",
                 "connie-matthews": "connie",
               };

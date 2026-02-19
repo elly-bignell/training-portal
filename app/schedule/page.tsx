@@ -35,7 +35,6 @@ function SchedulePageContent() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
             { name: "Cindy", slug: "cindy", from: "Sydney" },
-            { name: "Becks", slug: "becks", from: "Brisbane" },
             { name: "Krishna", slug: "krishna", from: "Local" },
             { name: "Connie", slug: "connie", from: "Local" },
           ].map((t) => (

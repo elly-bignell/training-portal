@@ -11,7 +11,6 @@ export const TRAINEE_PASSWORDS: Record<string, string[]> = {
   "lucas-tirri": ["LTirri0202!"],
   "felipe-garcia": ["FGarcia0202!"],
   "connie-matthews": ["CMatthews0226!", "Connie"],
-  "becks-hatzis": ["BHatzis0226!"],
   "cindy-rose-rondez-manrique": ["CManrique0226!"],
   "krishna-patel": ["KPatel0226!"],
 };

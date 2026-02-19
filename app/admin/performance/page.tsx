@@ -91,6 +91,21 @@ function getStatusClass(actual: number, target: number): string {
   return "text-red-500";
 }
 
+// Team structure — defines display order and grouping on performance page
+const teams = [
+  {
+    name: "Team 1",
+    members: ["lucas-tirri", "krishna-patel"],
+  },
+  {
+    name: "Team 2",
+    members: ["felipe-garcia", "connie-matthews"],
+  },
+  {
+    name: "Team 3",
+    members: ["dylan-munro", "cindy-rose-rondez-manrique"],
+  },
+];
 function PerformanceDashboardContent() {
   const [traineeData, setTraineeData] = useState<TraineeData[]>([]);
   const [selectedTrainee, setSelectedTrainee] = useState<string>("all");
@@ -192,9 +207,19 @@ function PerformanceDashboardContent() {
     setExpandedWeeks((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
+  // Build team-ordered list for 'all' view
+  const teamOrderedSlugs = teams.flatMap((t) => t.members);
+  
   const filteredData =
     selectedTrainee === "all"
-      ? traineeData
+      ? [...traineeData].sort((a, b) => {
+          const aIdx = teamOrderedSlugs.indexOf(a.slug);
+          const bIdx = teamOrderedSlugs.indexOf(b.slug);
+          // Team members first in order, then others at end
+          const aPos = aIdx >= 0 ? aIdx : 999;
+          const bPos = bIdx >= 0 ? bIdx : 999;
+          return aPos - bPos;
+        })
       : traineeData.filter((t) => t.slug === selectedTrainee);
 
   if (isLoading) {
