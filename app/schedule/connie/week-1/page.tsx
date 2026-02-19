@@ -127,18 +127,6 @@ function ConnieWeek1Content() {
                   </tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:30am</td></tr>
 
-                  {/* ═══ 12:00–1:00 — Lunch ═══ */}
-                  <tr>
-                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:00pm</td>
-                    {days.map((day) => (
-                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-yellow-50">
-                        <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
-                        <div className="text-[10px] text-gray-500 mt-1">12:00–1:00pm</div>
-                      </td>
-                    ))}
-                  </tr>
-                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:30pm</td></tr>
-
                   {/* ═══ 1:00–2:00 — Calls → 1 Booking ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:00pm</td>
@@ -199,7 +187,6 @@ function ConnieWeek1Content() {
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-indigo-100 border border-indigo-200"></span><span className="text-gray-600">Team Meeting</span></div>
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-sky-100 border border-sky-200"></span><span className="text-gray-600">Calls</span></div>
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-emerald-100 border border-emerald-200"></span><span className="text-gray-600">Meeting Attendance</span></div>
-              <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-yellow-100 border border-yellow-200"></span><span className="text-gray-600">Lunch</span></div>
             </div>
           </div>
 
@@ -239,11 +226,6 @@ function ConnieWeek1Content() {
                     <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
                     <td className="py-2 text-center text-gray-600">11:00–12:00</td>
                     <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 text-gray-700 font-medium">🍽️ Lunch</td>
-                    <td className="py-2 text-center text-gray-600">12:00–1:00</td>
-                    <td className="py-2 text-right text-gray-400">—</td>
                   </tr>
                   <tr className="border-b border-gray-100 bg-sky-50/50">
                     <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
