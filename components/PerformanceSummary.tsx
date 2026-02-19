@@ -512,7 +512,7 @@ export default function PerformanceSummary() {
                             <span className="font-medium text-gray-900">{td.name}</span>
                           </td>
                           <td className="px-1 py-1.5 text-center">
-                            <span className="text-[10px] text-gray-400 uppercase font-semibold">Meet</span>
+                            <span className="text-[10px] text-gray-400 uppercase font-semibold">Attended</span>
                           </td>
                           {td.days.map((day) => (
                             <td key={`${td.slug}-meet-${day.date}`} className="px-2 py-1.5 text-center text-gray-700">
@@ -536,7 +536,7 @@ export default function PerformanceSummary() {
                         {/* Revenue row */}
                         <tr className="border-b border-gray-100 hover:bg-gray-50/50">
                           <td className="px-1 py-1.5 text-center">
-                            <span className="text-[10px] text-gray-400 uppercase font-semibold">Rev</span>
+                            <span className="text-[10px] text-gray-400 uppercase font-semibold">Rev ($)</span>
                           </td>
                           {td.days.map((day) => (
                             <td key={`${td.slug}-rev-${day.date}`} className="px-2 py-1.5 text-center text-gray-700">
@@ -554,7 +554,7 @@ export default function PerformanceSummary() {
                   {/* Team totals */}
                   <tr className="bg-slate-50 border-b border-gray-200">
                     <td rowSpan={3} className="px-4 py-2 text-xs font-bold text-slate-600 uppercase align-middle">{team.name} Total</td>
-                    <td className="px-1 py-1.5 text-center"><span className="text-[10px] text-slate-400 uppercase font-semibold">Meet</span></td>
+                    <td className="px-1 py-1.5 text-center"><span className="text-[10px] text-slate-400 uppercase font-semibold">Attended</span></td>
                     {teamDayMeetings.map((val, idx) => (
                       <td key={`team-meet-${team.name}-${idx}`} className="px-2 py-1.5 text-center font-semibold text-slate-700">{val}</td>
                     ))}
@@ -568,7 +568,7 @@ export default function PerformanceSummary() {
                     <td className="px-3 py-1.5 text-center font-semibold text-slate-700">{teamWeekTotals.units}</td>
                   </tr>
                   <tr className="bg-slate-50 border-b border-gray-200">
-                    <td className="px-1 py-1.5 text-center"><span className="text-[10px] text-slate-400 uppercase font-semibold">Rev</span></td>
+                    <td className="px-1 py-1.5 text-center"><span className="text-[10px] text-slate-400 uppercase font-semibold">Rev ($)</span></td>
                     {teamDayRevenue.map((val, idx) => (
                       <td key={`team-rev-${team.name}-${idx}`} className="px-2 py-1.5 text-center font-semibold text-slate-700">
                         {val > 0 ? `$${val.toLocaleString()}` : "$0"}
