@@ -118,11 +118,10 @@ function getWeekDates(weekNum: number): string[] {
     8: "2026-04-13",
   };
   const startStr = weekConfigs[weekNum] || weekConfigs[0];
-  const start = new Date(startStr + "T00:00:00");
+  const [year, month, day] = startStr.split("-").map(Number);
   const dates: string[] = [];
   for (let i = 0; i < 5; i++) {
-    const d = new Date(start);
-    d.setDate(start.getDate() + i);
+    const d = new Date(Date.UTC(year, month - 1, day + i));
     dates.push(d.toISOString().split("T")[0]);
   }
   return dates;
