@@ -31,9 +31,10 @@ const weeklyData: WeekData[] = [
     label: "Training Week",
     daily: { revenue: 0, units: 0, meetings: 0, bookings: 0, calls: 0 },
     takeaways: [
-      "Focus on learning the products inside out",
-      "Build confidence before hitting the phones",
-      "Complete all training modules before Week 1",
+      "Mon–Tue: Induction, tech setup, software training & understanding the customer service team",
+      "Wed–Fri: Hit the phones — paired with a senior buddy, going call for call",
+      "40 bookings between you and your buddy by end of week",
+      "200 calls between the pair over 3 days to hit the target",
     ],
   },
   {
@@ -430,11 +431,71 @@ function RoadmapContent() {
                 </div>
 
                 {isTraining ? (
-                  <div className="flex gap-4">
-                    <div className="flex-1 bg-blue-100/60 rounded-lg p-4">
-                      <p className="text-sm text-blue-800 mb-3">
-                        Complete your onboarding modules before heading into the field. This is your foundation.
-                      </p>
+                  <div className="space-y-4">
+                    {/* Two-phase layout */}
+                    <div className="grid grid-cols-2 gap-4">
+                      {/* Phase 1: Mon-Tue */}
+                      <div className="rounded-lg border border-blue-200 bg-white/80 p-4">
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-600 text-white">MON – TUE</span>
+                          <span className="text-xs font-semibold text-blue-700">Onboarding</span>
+                        </div>
+                        <div className="space-y-2.5">
+                          <div className="flex items-start gap-2">
+                            <span className="text-blue-500 mt-0.5">📋</span>
+                            <div>
+                              <p className="text-sm font-medium text-slate-800">Induction & Setup</p>
+                              <p className="text-xs text-slate-500">Company intro, tech setup, software training</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <span className="text-blue-500 mt-0.5">🎧</span>
+                            <div>
+                              <p className="text-sm font-medium text-slate-800">Customer Service Team</p>
+                              <p className="text-xs text-slate-500">Understand the CS team — our unfair advantage</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <span className="text-blue-500 mt-0.5">📚</span>
+                            <div>
+                              <p className="text-sm font-medium text-slate-800">Product Knowledge</p>
+                              <p className="text-xs text-slate-500">Learn the products inside out before hitting the phones</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Phase 2: Wed-Fri */}
+                      <div className="rounded-lg border border-blue-300 bg-blue-50/80 p-4">
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-700 text-white">WED – FRI</span>
+                          <span className="text-xs font-semibold text-blue-700">Hitting the Phones</span>
+                        </div>
+                        <p className="text-xs text-slate-600 mb-3">
+                          Paired with a senior buddy — going call for call. Your buddy sets the pace, you match it.
+                        </p>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="bg-white rounded-lg p-3 text-center border border-blue-200">
+                            <div className="text-2xl font-bold text-blue-700">40</div>
+                            <div className="text-[10px] text-slate-500 uppercase font-semibold mt-0.5">Bookings</div>
+                            <div className="text-[10px] text-blue-400 mt-0.5">between the pair</div>
+                          </div>
+                          <div className="bg-white rounded-lg p-3 text-center border border-blue-200">
+                            <div className="text-2xl font-bold text-blue-700">200</div>
+                            <div className="text-[10px] text-slate-500 uppercase font-semibold mt-0.5">Calls</div>
+                            <div className="text-[10px] text-blue-400 mt-0.5">over 3 days</div>
+                          </div>
+                        </div>
+                        <div className="mt-3 p-2 rounded bg-blue-100/60 border border-blue-200">
+                          <p className="text-[11px] text-blue-800 text-center font-medium">
+                            🎯 Target: ~67 calls/day each · ~13 bookings/day between you
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Training week link */}
+                    <div className="flex items-center justify-between">
                       <Link
                         href="/"
                         className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
@@ -444,17 +505,9 @@ function RoadmapContent() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                       </Link>
-                    </div>
-                    <div className={`w-80 flex-shrink-0 rounded-lg p-4 border ${styles.takeawayBorder} ${styles.takeawayBg}`}>
-                      <div className="text-[10px] uppercase tracking-wide font-semibold text-slate-500 mb-2">Key Takeaways</div>
-                      <div className="space-y-2">
-                        {w.takeaways.map((t, i) => (
-                          <div key={i} className="flex items-start gap-2">
-                            <div className={`w-1.5 h-1.5 rounded-full ${styles.takeawayDot} mt-1.5 flex-shrink-0`} />
-                            <p className={`text-xs ${styles.takeawayText} leading-relaxed`}>{t}</p>
-                          </div>
-                        ))}
-                      </div>
+                      <p className="text-xs text-slate-400">
+                        Complete all training modules before Week 1
+                      </p>
                     </div>
                   </div>
                 ) : (
