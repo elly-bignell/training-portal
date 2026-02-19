@@ -472,7 +472,7 @@ function RoadmapContent() {
                           <span className="text-xs font-semibold text-blue-700">Hitting the Phones</span>
                         </div>
                         <p className="text-xs text-slate-600 mb-3">
-                          Paired with a senior buddy — going call for call for half the day, then flying solo. Your buddy sets the pace, you match it.
+                          Paired with a senior buddy — going call for call. Your buddy sets the pace, you match it.
                         </p>
                         <div className="grid grid-cols-2 gap-3">
                           <div className="bg-white rounded-lg p-3 text-center border border-blue-200">
