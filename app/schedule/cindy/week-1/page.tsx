@@ -245,8 +245,8 @@ function CindyWeek1Content() {
                   </tr>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 text-gray-400 font-medium">Break</td>
-                    <td className="py-2 text-center text-gray-400">12:30–1:30</td>
-                    <td className="py-2 text-right text-gray-400">—</td>
+                    <td className="py-2 text-center text-gray-400">Flexible</td>
+                    <td className="py-2 text-right text-gray-400 text-[10px]">Take at your discretion</td>
                   </tr>
                   <tr className="border-b border-gray-100 bg-sky-50/50">
                     <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
