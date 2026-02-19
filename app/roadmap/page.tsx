@@ -43,11 +43,12 @@ const weeklyData: WeekData[] = [
     startDate: "2026-02-23",
     phase: "ramp",
     label: "First Week Out",
-    daily: { revenue: 0, units: 0, meetings: 0.4, bookings: 3, calls: 60 },
+    daily: { revenue: 0, units: 0, meetings: 1, bookings: 7, calls: 70 },
     takeaways: [
-      "This week is about building pipeline — not closing deals",
-      "60 calls/day builds the foundation for everything that follows",
-      "Low meeting attendance (13%) is expected — you're filling the funnel for Week 2+",
+      "60–80 calls/day depending on cut-through — volume is everything this week",
+      "Minimum 7 bookings/day — you're booking out your buddy's calendar",
+      "1 meeting/day observing your buddy — watch how they run the call",
+      "No revenue expected — this is about building pipeline and learning the process",
     ],
   },
   {
@@ -55,12 +56,13 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 2 Mar – Fri 6 Mar",
     startDate: "2026-03-02",
     phase: "ramp",
-    label: "First Deal Expected",
-    daily: { revenue: 100, units: 0.2, meetings: 1.6, bookings: 3.2, calls: 50 },
+    label: "Building Pipeline",
+    daily: { revenue: 0, units: 0, meetings: 1, bookings: 7, calls: 70 },
     takeaways: [
-      "First deal drops — momentum is building",
-      "Meeting show rate jumps from 13% to 50% as your Week 1 pipeline converts",
-      "10 fewer calls/day but same bookings — efficiency already improving",
+      "Same rhythm as Week 1 — 60–80 calls, 7 bookings/day minimum",
+      "1 meeting/day observing — you should be picking up the structure and pitch",
+      "Your pipeline is growing — the meetings you're booking now pay off in Week 3+",
+      "Buddy is still leading meetings — focus on learning, not closing",
     ],
   },
   {
@@ -68,11 +70,13 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 9 Mar – Fri 13 Mar",
     startDate: "2026-03-09",
     phase: "ramp",
-    daily: { revenue: 200, units: 0.4, meetings: 1.6, bookings: 3.2, calls: 50 },
+    label: "Stepping Up",
+    daily: { revenue: 100, units: 0.2, meetings: 2, bookings: 6, calls: 60 },
     takeaways: [
-      "Revenue doubles — close rate improves with every meeting",
-      "Same calls, same bookings — consistency is the discipline",
-      "Close rate hits 25% — every 4th meeting converts to a deal",
+      "50–70 calls/day — meetings are taking more of your time now",
+      "6 bookings/day minimum — efficiency improving as your pitch sharpens",
+      "2 meetings/day — you start leading parts of the call with buddy support",
+      "First deals expected — buddy is there to back you up on the close",
     ],
   },
   {
@@ -80,11 +84,13 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 16 Mar – Fri 20 Mar",
     startDate: "2026-03-16",
     phase: "ramp",
-    daily: { revenue: 300, units: 0.6, meetings: 2, bookings: 4, calls: 50 },
+    label: "Cut-Loose Ready",
+    daily: { revenue: 200, units: 0.4, meetings: 2, bookings: 6, calls: 60 },
     takeaways: [
-      "Bookings jump to 4/day from the same 50 calls — your pitch is sharpening",
-      "2 meetings per day — your calendar is filling up",
-      "Close rate at 30% — confidence is growing with experience",
+      "Same as Week 3 — 50–70 calls, 6 bookings, 2 meetings/day",
+      "By end of this week, aim to be running meetings independently",
+      "Don't cut your buddy prematurely — only go solo with 100% confidence",
+      "Revenue building — close rate improving with every meeting you lead",
     ],
   },
   {
@@ -387,6 +393,9 @@ function RoadmapContent() {
             const isStandard = w.phase === "standard";
             const isTraining = w.phase === "training";
             const isHere = currentWeek === w.week;
+
+            // Buddy/commission banner before Week 1
+            const showBuddyBanner = w.week === 1;
             const pctToStandard = getPercentToStandard(w.daily);
             const conversions = getConversions(w.daily);
             const conversionValues = [
@@ -398,8 +407,44 @@ function RoadmapContent() {
             const arrowHexColor = isStandard ? PINK : w.phase === "maintain" ? MINT : w.phase === "training" ? "#60a5fa" : "#94a3b8";
 
             return (
+              <div key={w.week}>
+                {showBuddyBanner && (
+                  <div className="mb-4 rounded-xl border-2 border-amber-300 bg-gradient-to-r from-amber-50 to-yellow-50 p-5">
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl">🤝</span>
+                      <div className="flex-1">
+                        <h3 className="text-sm font-bold text-amber-900 mb-2">Weeks 1–4: Buddy System</h3>
+                        <p className="text-sm text-amber-800 mb-3">
+                          You&#39;ll be paired with a senior team member for your first 4 weeks. They&#39;ll attend your meetings,
+                          guide your pitch, and help you close. By end of Week 4, you should aim to be running meetings independently.
+                        </p>
+                        <div className="grid sm:grid-cols-2 gap-3">
+                          <div className="bg-white/70 rounded-lg p-3 border border-amber-200">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-amber-600">💰</span>
+                              <span className="text-xs font-bold text-amber-900">Commission Split</span>
+                            </div>
+                            <p className="text-xs text-amber-700">
+                              While your buddy attends your meetings, commission is split <span className="font-bold">50/50</span>.
+                              It&#39;s in your best interest to reach 100% proficiency by end of Week 4.
+                            </p>
+                          </div>
+                          <div className="bg-white/70 rounded-lg p-3 border border-amber-200">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-amber-600">⚠️</span>
+                              <span className="text-xs font-bold text-amber-900">Don&#39;t Rush It</span>
+                            </div>
+                            <p className="text-xs text-amber-700">
+                              Do not cut your buddy loose prematurely. Only go solo when you have <span className="font-bold">100% confidence</span> in
+                              running the full meeting and close independently.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               <div
-                key={w.week}
                 className={`rounded-xl border-2 ${styles.border} ${styles.bg} p-5 transition-all shadow-sm ${
                   isStandard ? "shadow-lg shadow-pink-200/50" : ""
                 }`}
@@ -590,6 +635,7 @@ function RoadmapContent() {
                     </div>
                   </div>
                 )}
+              </div>
               </div>
             );
           })}
