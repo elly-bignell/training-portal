@@ -12,6 +12,7 @@ interface WeekData {
   startDate: string;
   phase: "training" | "ramp" | "standard" | "maintain";
   label?: string;
+  buddyWeek?: boolean;
   daily: {
     revenue: number;
     units: number;
@@ -43,12 +44,13 @@ const weeklyData: WeekData[] = [
     startDate: "2026-02-23",
     phase: "ramp",
     label: "First Week Out",
-    daily: { revenue: 0, units: 0, meetings: 1, bookings: 7, calls: 70 },
+    buddyWeek: true,
+    daily: { revenue: 250, units: 0.5, meetings: 1, bookings: 7, calls: 70 },
     takeaways: [
       "60–80 calls/day depending on cut-through — volume is everything this week",
-      "Minimum 7 bookings/day — you're booking out your buddy's calendar",
-      "1 meeting/day observing your buddy — watch how they run the call",
-      "No revenue expected — this is about building pipeline and learning the process",
+      "Minimum 7 bookings/day — you're booking meetings for your buddy",
+      "1 meeting/day — your buddy leads, you observe and learn the pitch",
+      "50% close rate → 2.5 deals/week → $1,250 (your 50% contribution: $625)",
     ],
   },
   {
@@ -57,12 +59,13 @@ const weeklyData: WeekData[] = [
     startDate: "2026-03-02",
     phase: "ramp",
     label: "Building Pipeline",
-    daily: { revenue: 0, units: 0, meetings: 1, bookings: 7, calls: 70 },
+    buddyWeek: true,
+    daily: { revenue: 250, units: 0.5, meetings: 1, bookings: 7, calls: 70 },
     takeaways: [
       "Same rhythm as Week 1 — 60–80 calls, 7 bookings/day minimum",
-      "1 meeting/day observing — you should be picking up the structure and pitch",
-      "Your pipeline is growing — the meetings you're booking now pay off in Week 3+",
-      "Buddy is still leading meetings — focus on learning, not closing",
+      "1 meeting/day — still observing, picking up the structure and close",
+      "Your pipeline is growing — the bookings you're making fill your buddy's calendar",
+      "50% close rate → 2.5 deals/week → $1,250 (your 50% contribution: $625)",
     ],
   },
   {
@@ -71,13 +74,13 @@ const weeklyData: WeekData[] = [
     startDate: "2026-03-09",
     phase: "ramp",
     label: "Stepping Up",
+    buddyWeek: true,
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 5, calls: 50 },
     takeaways: [
       "50 calls/day — meetings are taking more of your time now",
-      "5 bookings/day minimum — efficiency improving as your pitch sharpens",
+      "5 bookings/day — efficiency improving as your pitch sharpens",
       "2 meetings/day — you start leading the call with buddy support",
-      "50% close rate expected — 10 meetings/week → 5 deals → $2,500/week",
-      "Commission is 50/50 while buddy attends — $1,250 each",
+      "50% close rate → 5 deals/week → $2,500 (your 50% contribution: $1,250)",
     ],
   },
   {
@@ -86,11 +89,12 @@ const weeklyData: WeekData[] = [
     startDate: "2026-03-16",
     phase: "ramp",
     label: "Final Buddy Week",
+    buddyWeek: true,
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 5, calls: 50 },
     takeaways: [
       "Same as Week 3 — 50 calls, 5 bookings, 2 meetings/day",
-      "50% close rate → 5 deals/week → $2,500 (split 50/50 with buddy)",
-      "This is your last week with buddy support — prove you can run the full meeting",
+      "50% close rate → 5 deals/week → $2,500 (your 50% contribution: $1,250)",
+      "This is your last week with buddy support — prove you're ready",
       "Don't cut your buddy prematurely — only go solo with 100% confidence",
     ],
   },
@@ -100,11 +104,11 @@ const weeklyData: WeekData[] = [
     startDate: "2026-03-23",
     phase: "ramp",
     label: "Nearly There",
-    daily: { revenue: 400, units: 0.8, meetings: 2, bookings: 4, calls: 40 },
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
     takeaways: [
       "You're flying solo now — buddy is cut loose, 100% commission is yours",
       "40 calls/day, 4 bookings — call-to-book rate hits 10%, double Week 1",
-      "Close rate at 40% — nearly at The Standard",
+      "50% close rate → 5 deals/week → $2,500 — all yours",
       "Prove you can maintain the rhythm independently — Week 6 is the benchmark",
     ],
   },
@@ -118,7 +122,7 @@ const weeklyData: WeekData[] = [
     takeaways: [
       "1 deal per day — this is the benchmark you maintain from here",
       "10% call-to-book, 50% show rate, 50% close rate — every metric is optimised",
-      "33% fewer calls than Week 1, but 5x the revenue — efficiency wins",
+      "43% fewer calls than Week 1, 100% commission — efficiency wins",
     ],
   },
   {
@@ -184,7 +188,7 @@ function getPercentToStandard(daily: WeekData["daily"]) {
   const unitPct = standardDaily.units > 0 ? Math.min(100, (daily.units / standardDaily.units) * 100) : 100;
   const meetPct = Math.min(100, (daily.meetings / standardDaily.meetings) * 100);
   const bookPct = Math.min(100, (daily.bookings / standardDaily.bookings) * 100);
-  const callPct = Math.min(100, Math.max(0, ((60 - daily.calls) / (60 - standardDaily.calls)) * 100));
+  const callPct = Math.min(100, Math.max(0, ((70 - daily.calls) / (70 - standardDaily.calls)) * 100));
   return Math.round((revPct + unitPct + meetPct + bookPct + callPct) / 5);
 }
 
@@ -567,6 +571,9 @@ function RoadmapContent() {
                           const isZero = weeklyVal === 0;
                           const fmtWeekly = m.format === "currency" ? formatCurrency(weeklyVal) : formatNumber(weeklyVal);
                           const fmtDaily = m.format === "currency" ? formatCurrency(dailyVal) : formatNumber(dailyVal);
+                          const isBuddy = w.buddyWeek === true;
+                          // Show Rate is index 2 (between Meetings and Bookings) — hide for buddy weeks
+                          const hideThisArrow = isBuddy && i === 2;
 
                           return (
                             <div key={m.key} className="contents">
@@ -581,14 +588,30 @@ function RoadmapContent() {
                                 <div className={`text-xs mt-0.5 ${isZero ? "text-slate-300" : styles.dailyColor}`}>
                                   {fmtDaily} / day
                                 </div>
+                                {isBuddy && m.key === "revenue" && weeklyVal > 0 && (
+                                  <div className="mt-1 text-[10px] font-semibold text-amber-600">
+                                    ÷2 = {formatCurrency(weeklyVal / 2)}
+                                    <div className="font-normal text-amber-500">50% commission</div>
+                                  </div>
+                                )}
                               </div>
                               {i < funnelMetrics.length - 1 && (
-                                <ConversionArrowLeft
-                                  rate={conversionValues[i].rate}
-                                  label={conversionLabelsMap[i]}
-                                  format={conversionValues[i].format}
-                                  color={arrowHexColor}
-                                />
+                                hideThisArrow ? (
+                                  <div className="flex flex-col items-center justify-center">
+                                    <svg className="w-5 h-5 rotate-180 text-gray-200 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                    <span className="text-[10px] text-slate-300 whitespace-nowrap">N/A</span>
+                                    <span className="text-[10px] text-slate-300 whitespace-nowrap mt-0.5">Show Rate</span>
+                                  </div>
+                                ) : (
+                                  <ConversionArrowLeft
+                                    rate={conversionValues[i].rate}
+                                    label={conversionLabelsMap[i]}
+                                    format={conversionValues[i].format}
+                                    color={arrowHexColor}
+                                  />
+                                )
                               )}
                             </div>
                           );
@@ -648,24 +671,24 @@ function RoadmapContent() {
           <h3 className="text-lg font-bold text-slate-800 mb-4">💡 Key Observations</h3>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${PINK}08`, borderColor: `${PINK}22` }}>
-              <h4 className="font-semibold text-sm mb-2" style={{ color: PINK }}>📞 Calls Decrease, Efficiency Increases</h4>
+              <h4 className="font-semibold text-sm mb-2" style={{ color: PINK }}>📞 Calls Decrease, Output Stays Strong</h4>
               <p className="text-sm text-slate-600">
-                300 calls/week down to 200 by The Standard.
-                Call-to-booking rate doubles from 5% to 10% — fewer calls, better results.
+                350 calls/week in Weeks 1–2, down to 200 by The Standard.
+                10% book rate throughout — fewer calls, more time in meetings, same booking quality.
               </p>
             </div>
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${MINT}15`, borderColor: `${MINT}44` }}>
-              <h4 className="font-semibold text-sm mb-2 text-teal-700">📈 Show Rate Jumps After Week 1</h4>
+              <h4 className="font-semibold text-sm mb-2 text-teal-700">📈 Buddy System → Independence</h4>
               <p className="text-sm text-slate-600">
-                Week 1 is about filling the pipe — only 13% of bookings attend.
-                From Week 2 onwards, 50% show rate holds as your pipeline quality improves.
+                Weeks 1–4 with buddy support (50/50 commission). Cut loose by Week 5 with 100% commission.
+                The faster you learn, the sooner you earn full commission on every deal.
               </p>
             </div>
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${MINT}15`, borderColor: `${MINT}44` }}>
-              <h4 className="font-semibold text-sm mb-2 text-teal-700">🤝 Close Rate Builds Steadily</h4>
+              <h4 className="font-semibold text-sm mb-2 text-teal-700">🤝 50% Close Rate Throughout</h4>
               <p className="text-sm text-slate-600">
-                Meeting-to-close rate grows from 0% to 50% at The Standard.
-                Experience and product knowledge compound — each week you get sharper.
+                Close rate holds at 50% from Week 1 onwards — your buddy ensures strong conversion early,
+                and by Week 5 you maintain it independently. Every 2 meetings = 1 deal.
               </p>
             </div>
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${PINK}08`, borderColor: `${PINK}22` }}>
