@@ -50,7 +50,7 @@ const weeklyData: WeekData[] = [
       "60 calls/day — volume is everything this week",
       "6 bookings/day — you're booking meetings for your buddy",
       "1 meeting/day observing — watch how your buddy runs the call and closes",
-      "50% close rate → 2.5 deals/week → $1,250 (your 50% target contribution: $625)",
+      "50% close rate → 2.5 deals/week → $1,250 (your target contribution: $625)",
     ],
   },
   {
@@ -65,7 +65,7 @@ const weeklyData: WeekData[] = [
       "Same rhythm as Week 1 — 60 calls, 6 bookings, 1 meeting observing",
       "You should be picking up the pitch structure and objection handling",
       "Your pipeline is growing — the bookings you're making fill your buddy's calendar",
-      "50% close rate → 2.5 deals/week → $1,250 (your 50% target contribution: $625)",
+      "50% close rate → 2.5 deals/week → $1,250 (your target contribution: $625)",
     ],
   },
   {
@@ -80,7 +80,7 @@ const weeklyData: WeekData[] = [
       "Same targets — 60 calls, 6 bookings, 1 meeting observing",
       "Your booking quality should be improving — better prospects, fewer no-shows",
       "Learn from every meeting — what objections come up, how does your buddy handle them?",
-      "50% close rate → 2.5 deals/week → $1,250 (your 50% target contribution: $625)",
+      "50% close rate → 2.5 deals/week → $1,250 (your target contribution: $625)",
     ],
   },
   {
@@ -95,7 +95,7 @@ const weeklyData: WeekData[] = [
       "Last week at 60 calls / 6 bookings / 1 meeting — you've built the foundation",
       "Next week you step up to 2 meetings/day — your buddy will start handing you the reins",
       "Your booking rhythm is locked in — now it's about quality over quantity",
-      "50% close rate → 2.5 deals/week → $1,250 (your 50% target contribution: $625)",
+      "50% close rate → 2.5 deals/week → $1,250 (your target contribution: $625)",
     ],
   },
   {
@@ -110,7 +110,7 @@ const weeklyData: WeekData[] = [
       "50 calls/day, 5 bookings — meetings are taking more of your time now",
       "2 meetings/day — you start leading the call with buddy backup",
       "1 fewer booking but 1 more meeting — see the Rules of Thumb",
-      "50% close rate → 5 deals/week → $2,500 (your 50% target contribution: $1,250)",
+      "50% close rate → 5 deals/week → $2,500 (your target contribution: $1,250)",
     ],
   },
   {
@@ -123,7 +123,7 @@ const weeklyData: WeekData[] = [
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 5, calls: 50 },
     takeaways: [
       "Same as Week 5 — 50 calls, 5 bookings, 2 meetings/day",
-      "50% close rate → 5 deals/week → $2,500 (your 50% target contribution: $1,250)",
+      "50% close rate → 5 deals/week → $2,500 (your target contribution: $1,250)",
       "This is your last week with buddy support — prove you're ready to go solo",
       "Don't cut your buddy prematurely — only go solo with 100% confidence",
     ],
@@ -136,9 +136,9 @@ const weeklyData: WeekData[] = [
     label: "✈️ Flying Solo",
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 5, calls: 50 },
     takeaways: [
-      "First week running meetings solo — 100% commission from this week",
+      "First week running meetings solo — 100% of each deal counts towards your target",
       "Same rhythm: 50 calls, 5 bookings, 2 meetings — but all yours now",
-      "50% close rate → 5 deals/week → $2,500 — every dollar is yours",
+      "50% close rate → 5 deals/week → $2,500 — 100% to your target",
       "Prove you can maintain the close rate without your buddy in the room",
     ],
   },
@@ -187,7 +187,7 @@ const weeklyData: WeekData[] = [
     phase: "maintain",
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
     takeaways: [
-      "Look at your meeting-to-close ratio — every percentage point up is more $ commission",
+      "Look at your meeting-to-close ratio — every percentage point up is more revenue towards your target",
       "Pre-meeting prep is what separates good from great — research the prospect",
       "Aim to increase your average deal value through upsells and add-ons",
     ],
@@ -202,7 +202,7 @@ const weeklyData: WeekData[] = [
     takeaways: [
       "3 months in — you should know your numbers inside out",
       "Identify your best-performing time slots for calls and meetings",
-      "Maximise your calendar — dead time is lost commission opportunity",
+      "Maximise your calendar — dead time is a lost opportunity to hit your target",
     ],
   },
   {
@@ -214,7 +214,7 @@ const weeklyData: WeekData[] = [
     takeaways: [
       "Challenge yourself — can you close 6 deals this week instead of 5?",
       "Sharpen your discovery questions to qualify harder on the call",
-      "Better qualification = higher show rate = more commission per booking",
+      "Better qualification = higher show rate = more target contribution per booking",
     ],
   },
   {
@@ -579,11 +579,11 @@ function RoadmapContent() {
                           <div className="bg-white/70 rounded-lg p-3 border border-amber-200">
                             <div className="flex items-center gap-2 mb-1">
                               <span className="text-amber-600">💰</span>
-                              <span className="text-xs font-bold text-amber-900">Target Revenue Split</span>
+                              <span className="text-xs font-bold text-amber-900">Target Contribution</span>
                             </div>
                             <p className="text-xs text-amber-700">
-                              While your buddy attends your meetings, target revenue is split <span className="font-bold">50/50</span>.
-                              It&#39;s in your best interest to reach 100% proficiency and be cut loose by Week 7.
+                              While your buddy attends meetings, only <span className="font-bold">50%</span> of each deal counts towards your target.
+                              It&#39;s in your best interest to reach proficiency and be cut loose by Week 7 so 100% of every deal counts towards your target.
                             </p>
                           </div>
                           <div className="bg-white/70 rounded-lg p-3 border border-amber-200">
@@ -742,7 +742,7 @@ function RoadmapContent() {
                                 {isBuddy && m.key === "revenue" && weeklyVal > 0 && (
                                   <div className="mt-1 text-[10px] font-semibold text-amber-600">
                                     ÷2 = {formatCurrency(weeklyVal / 2)}
-                                    <div className="font-normal text-amber-500">50% target split</div>
+                                    <div className="font-normal text-amber-500">50% to target</div>
                                   </div>
                                 )}
                               </div>
@@ -782,7 +782,7 @@ function RoadmapContent() {
                       {w.phase === "solo" && (
                         <div className="mt-3 p-2.5 rounded-lg border border-emerald-300 bg-emerald-50">
                           <p className="text-xs font-medium text-center text-emerald-700">
-                            ✈️ First week flying solo — 100% commission on every deal you close
+                            ✈️ First week flying solo — 100% of every deal now counts towards your target
                           </p>
                         </div>
                       )}
@@ -827,8 +827,8 @@ function RoadmapContent() {
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${MINT}15`, borderColor: `${MINT}44` }}>
               <h4 className="font-semibold text-sm mb-2 text-teal-700">📈 Buddy System → Independence</h4>
               <p className="text-sm text-slate-600">
-                Weeks 1–6 with buddy support (50/50 target split). Flying solo from Week 7 with 100% commission.
-                The faster you reach proficiency, the sooner you keep every dollar.
+                Weeks 1–6 with buddy support (50% counts to target). Flying solo from Week 7 — 100% of every deal counts towards your target.
+                The faster you reach proficiency, the sooner every deal fully counts towards your target.
               </p>
             </div>
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${MINT}15`, borderColor: `${MINT}44` }}>
