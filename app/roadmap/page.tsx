@@ -71,12 +71,13 @@ const weeklyData: WeekData[] = [
     startDate: "2026-03-09",
     phase: "ramp",
     label: "Stepping Up",
-    daily: { revenue: 100, units: 0.2, meetings: 2, bookings: 6, calls: 60 },
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 5, calls: 50 },
     takeaways: [
-      "50–70 calls/day — meetings are taking more of your time now",
-      "6 bookings/day minimum — efficiency improving as your pitch sharpens",
-      "2 meetings/day — you start leading parts of the call with buddy support",
-      "First deals expected — buddy is there to back you up on the close",
+      "50 calls/day — meetings are taking more of your time now",
+      "5 bookings/day minimum — efficiency improving as your pitch sharpens",
+      "2 meetings/day — you start leading the call with buddy support",
+      "50% close rate expected — 10 meetings/week → 5 deals → $2,500/week",
+      "Commission is 50/50 while buddy attends — $1,250 each",
     ],
   },
   {
@@ -84,13 +85,13 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 16 Mar – Fri 20 Mar",
     startDate: "2026-03-16",
     phase: "ramp",
-    label: "Cut-Loose Ready",
-    daily: { revenue: 200, units: 0.4, meetings: 2, bookings: 6, calls: 60 },
+    label: "Final Buddy Week",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 5, calls: 50 },
     takeaways: [
-      "Same as Week 3 — 50–70 calls, 6 bookings, 2 meetings/day",
-      "By end of this week, aim to be running meetings independently",
+      "Same as Week 3 — 50 calls, 5 bookings, 2 meetings/day",
+      "50% close rate → 5 deals/week → $2,500 (split 50/50 with buddy)",
+      "This is your last week with buddy support — prove you can run the full meeting",
       "Don't cut your buddy prematurely — only go solo with 100% confidence",
-      "Revenue building — close rate improving with every meeting you lead",
     ],
   },
   {
@@ -101,9 +102,10 @@ const weeklyData: WeekData[] = [
     label: "Nearly There",
     daily: { revenue: 400, units: 0.8, meetings: 2, bookings: 4, calls: 40 },
     takeaways: [
-      "20 fewer calls/day, same bookings — call-to-book rate hits 10%, double Week 1",
+      "You're flying solo now — buddy is cut loose, 100% commission is yours",
+      "40 calls/day, 4 bookings — call-to-book rate hits 10%, double Week 1",
       "Close rate at 40% — nearly at The Standard",
-      "You're doing less activity for more output — that's the goal",
+      "Prove you can maintain the rhythm independently — Week 6 is the benchmark",
     ],
   },
   {
@@ -416,7 +418,7 @@ function RoadmapContent() {
                         <h3 className="text-sm font-bold text-amber-900 mb-2">Weeks 1–4: Buddy System</h3>
                         <p className="text-sm text-amber-800 mb-3">
                           You&#39;ll be paired with a senior team member for your first 4 weeks. They&#39;ll attend your meetings,
-                          guide your pitch, and help you close. By end of Week 4, you should aim to be running meetings independently.
+                          guide your pitch, and help you close. By Week 5, you should be cut loose and running independently.
                         </p>
                         <div className="grid sm:grid-cols-2 gap-3">
                           <div className="bg-white/70 rounded-lg p-3 border border-amber-200">
@@ -426,7 +428,7 @@ function RoadmapContent() {
                             </div>
                             <p className="text-xs text-amber-700">
                               While your buddy attends your meetings, commission is split <span className="font-bold">50/50</span>.
-                              It&#39;s in your best interest to reach 100% proficiency by end of Week 4.
+                              It&#39;s in your best interest to reach 100% proficiency and be cut loose by Week 5.
                             </p>
                           </div>
                           <div className="bg-white/70 rounded-lg p-3 border border-amber-200">
