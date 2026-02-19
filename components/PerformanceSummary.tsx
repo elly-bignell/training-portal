@@ -2,23 +2,26 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { trainees } from "@/data/trainees";
 import { weeklyStandards, getCurrentWeekNumber, getWeekBoundaries } from "@/hooks/useActivityTracking";
 
-interface TraineePerformance {
+interface DailyData {
+  date: string;
+  dayName: string;
+  calls: number;
+  bookings: number;
+  meetings: number;
+  units: number;
+  revenue: number;
+}
+
+interface TraineeWeekData {
   slug: string;
   name: string;
-  week: number;
-  today: {
-    calls: number;
-    bookings: number;
-    meetings: number;
-    units: number;
-    revenue: number;
-  };
-  weekly: {
+  days: DailyData[];
+  totals: {
     calls: number;
     bookings: number;
     meetings: number;
@@ -43,9 +46,13 @@ const teams = [
   },
 ];
 
-// Team bookings target: 40 per team EOW, ~13/day Wed–Fri
+// Booking targets
 const TEAM_BOOKINGS_TARGET_EOW = 40;
-const TEAM_BOOKINGS_TARGET_DAILY_WED_FRI = 13;
+const PERSON_BOOKINGS_TARGET_WED_FRI = 7;
+const TEAM_BOOKINGS_TARGET_WED_FRI = 13;
+
+// Days of the week
+const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
 // Week date ranges for display
 const weekDateRanges: Record<number, string> = {
@@ -60,27 +67,69 @@ const weekDateRanges: Record<number, string> = {
   8: "Mon 13 Apr – Fri 17 Apr",
 };
 
-function getStatusColor(pct: number): string {
-  if (pct >= 100) return "text-emerald-600 bg-emerald-50";
-  if (pct >= 75) return "text-amber-600 bg-amber-50";
-  return "text-red-600 bg-red-50";
+// Check if a day has a booking target (Wed, Thu, Fri)
+function hasBookingTarget(dayName: string): boolean {
+  return ["Wed", "Thu", "Fri"].includes(dayName);
 }
 
-function getStatusIcon(pct: number): string {
-  if (pct >= 100) return "✓";
-  if (pct >= 75) return "→";
-  return "!";
-}
-
-function getTeamBookingStatusColor(actual: number, target: number): string {
-  const pct = target > 0 ? (actual / target) * 100 : 0;
-  if (pct >= 100) return "text-emerald-600";
+// Get booking status colour for a person
+function getBookingStatusClass(actual: number, target: number): string {
+  if (target === 0) return "text-gray-600";
+  const pct = (actual / target) * 100;
+  if (pct >= 100) return "text-emerald-600 font-semibold";
   if (pct >= 50) return "text-amber-600";
   return "text-red-500";
 }
 
+// Get team booking status colour
+function getTeamBookingStatusClass(actual: number, target: number): string {
+  if (target === 0) return "text-slate-700";
+  const pct = (actual / target) * 100;
+  if (pct >= 100) return "text-emerald-600 font-bold";
+  if (pct >= 50) return "text-amber-600 font-bold";
+  return "text-red-500 font-bold";
+}
+
+function getWeekLabel(currentWeek: number) {
+  if (currentWeek === 0) return "Training Week";
+  if (currentWeek === 6) return "Week 6 — The Standard";
+  if (currentWeek > 6) return `Week ${currentWeek} — Maintaining`;
+  return `Week ${currentWeek} — Ramp Up`;
+}
+
+function getWeekPhaseTag(currentWeek: number) {
+  if (currentWeek === 0) return { label: "Training", color: "bg-blue-100 text-blue-700" };
+  if (currentWeek === 6) return { label: "🎯 The Standard", color: "bg-[#E6017D]/10 text-[#E6017D]" };
+  if (currentWeek > 6) return { label: "Maintain", color: "bg-[#84D4BD]/20 text-teal-700" };
+  return { label: "Ramp", color: "bg-slate-100 text-slate-600" };
+}
+
+// Generate the 5 weekday dates for a given week
+function getWeekDates(weekNum: number): string[] {
+  const weekConfigs: Record<number, string> = {
+    0: "2026-02-16",
+    1: "2026-02-23",
+    2: "2026-03-02",
+    3: "2026-03-09",
+    4: "2026-03-16",
+    5: "2026-03-23",
+    6: "2026-03-30",
+    7: "2026-04-06",
+    8: "2026-04-13",
+  };
+  const startStr = weekConfigs[weekNum] || weekConfigs[0];
+  const start = new Date(startStr + "T00:00:00");
+  const dates: string[] = [];
+  for (let i = 0; i < 5; i++) {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    dates.push(d.toISOString().split("T")[0]);
+  }
+  return dates;
+}
+
 export default function PerformanceSummary() {
-  const [performances, setPerformances] = useState<TraineePerformance[]>([]);
+  const [weekData, setWeekData] = useState<TraineeWeekData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const currentWeek = getCurrentWeekNumber();
 
@@ -88,9 +137,9 @@ export default function PerformanceSummary() {
   const displaySlugs = new Set(teams.flatMap((t) => t.members));
 
   useEffect(() => {
-    const fetchAllPerformances = async () => {
+    const fetchAllData = async () => {
       setIsLoading(true);
-      const { start, end } = getWeekBoundaries(currentWeek);
+      const weekDates = getWeekDates(currentWeek);
 
       // Only fetch trainees that are in a team
       const teamTrainees = trainees.filter((t) => displaySlugs.has(t.slug));
@@ -98,51 +147,66 @@ export default function PerformanceSummary() {
       const results = await Promise.all(
         teamTrainees.map(async (trainee) => {
           try {
-            const todayRes = await fetch(`/api/activity?trainee_slug=${trainee.slug}`);
-            const todayData = await todayRes.json();
+            const response = await fetch(`/api/activity/all?trainee_slug=${trainee.slug}`);
+            const data = await response.json();
+            const records = data.records || [];
 
-            const weekRes = await fetch(
-              `/api/activity?trainee_slug=${trainee.slug}&week_start=${start}&week_end=${end}`
+            // Map each weekday to its data
+            const days: DailyData[] = weekDates.map((date, idx) => {
+              const record = records.find((r: { date: string }) => r.date === date);
+              return {
+                date,
+                dayName: weekDays[idx],
+                calls: record?.calls || 0,
+                bookings: record?.bookings || 0,
+                meetings: record?.meetings || 0,
+                units: record?.units || 0,
+                revenue: record?.revenue || 0,
+              };
+            });
+
+            const totals = days.reduce(
+              (acc, day) => ({
+                calls: acc.calls + day.calls,
+                bookings: acc.bookings + day.bookings,
+                meetings: acc.meetings + day.meetings,
+                units: acc.units + day.units,
+                revenue: acc.revenue + day.revenue,
+              }),
+              { calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 }
             );
-            const weekData = await weekRes.json();
 
             return {
               slug: trainee.slug,
               name: trainee.name,
-              week: currentWeek,
-              today: {
-                calls: todayData.calls || 0,
-                bookings: todayData.bookings || 0,
-                meetings: todayData.meetings || 0,
-                units: todayData.units || 0,
-                revenue: todayData.revenue || 0,
-              },
-              weekly: weekData.weeklyTotals || {
+              days,
+              totals,
+            };
+          } catch (error) {
+            console.error(`Error fetching data for ${trainee.slug}:`, error);
+            return {
+              slug: trainee.slug,
+              name: trainee.name,
+              days: weekDates.map((date, idx) => ({
+                date,
+                dayName: weekDays[idx],
                 calls: 0,
                 bookings: 0,
                 meetings: 0,
                 units: 0,
                 revenue: 0,
-              },
-            };
-          } catch (error) {
-            console.error(`Error fetching performance for ${trainee.slug}:`, error);
-            return {
-              slug: trainee.slug,
-              name: trainee.name,
-              week: currentWeek,
-              today: { calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 },
-              weekly: { calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 },
+              })),
+              totals: { calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 },
             };
           }
         })
       );
 
-      setPerformances(results);
+      setWeekData(results);
       setIsLoading(false);
     };
 
-    fetchAllPerformances();
+    fetchAllData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWeek]);
 
@@ -158,209 +222,255 @@ export default function PerformanceSummary() {
     );
   }
 
-  const dailyStandard = weeklyStandards[currentWeek] || weeklyStandards[6];
-  const weeklyStandard = {
-    calls: dailyStandard.calls * 5,
-    bookings: dailyStandard.bookings * 5,
-    meetings: dailyStandard.meetings * 5,
-    units: dailyStandard.units * 5,
-    revenue: dailyStandard.revenue * 5,
+  const phaseTag = getWeekPhaseTag(currentWeek);
+  const dataMap = new Map(weekData.map((t) => [t.slug, t]));
+
+  // Get team day totals
+  const getTeamDayTotals = (memberSlugs: string[]) => {
+    const memberData = memberSlugs.map((s) => dataMap.get(s)).filter(Boolean) as TraineeWeekData[];
+    return weekDays.map((_, idx) => ({
+      calls: memberData.reduce((sum, m) => sum + (m.days[idx]?.calls || 0), 0),
+      bookings: memberData.reduce((sum, m) => sum + (m.days[idx]?.bookings || 0), 0),
+    }));
   };
 
-  const getOverallPct = (perf: TraineePerformance, type: "today" | "weekly") => {
-    const data = type === "today" ? perf.today : perf.weekly;
-    const standard = type === "today" ? dailyStandard : weeklyStandard;
-    const metrics = ["calls", "bookings", "meetings", "units", "revenue"] as const;
-    const pcts = metrics.map((m) => {
-      const target = standard[m];
-      return target > 0 ? Math.min(100, (data[m] / target) * 100) : 100;
-    });
-    return Math.round(pcts.reduce((a, b) => a + b, 0) / pcts.length);
-  };
-
-  const getWeekLabel = () => {
-    if (currentWeek === 0) return "Training Week";
-    if (currentWeek === 6) return "Week 6 — The Standard";
-    if (currentWeek > 6) return `Week ${currentWeek} — Maintaining`;
-    return `Week ${currentWeek} — Ramp Up`;
-  };
-
-  const getWeekPhaseTag = () => {
-    if (currentWeek === 0) return { label: "Training", color: "bg-blue-100 text-blue-700" };
-    if (currentWeek === 6) return { label: "🎯 The Standard", color: "bg-[#E6017D]/10 text-[#E6017D]" };
-    if (currentWeek > 6) return { label: "Maintain", color: "bg-[#84D4BD]/20 text-teal-700" };
-    return { label: "Ramp", color: "bg-slate-100 text-slate-600" };
-  };
-
-  const phaseTag = getWeekPhaseTag();
-
-  // Lookup map for quick access
-  const perfMap = new Map(performances.map((p) => [p.slug, p]));
-
-  // Get team totals
-  const getTeamTotals = (memberSlugs: string[]) => {
-    const teamPerfs = memberSlugs.map((s) => perfMap.get(s)).filter(Boolean) as TraineePerformance[];
+  const getTeamWeekTotals = (memberSlugs: string[]) => {
+    const memberData = memberSlugs.map((s) => dataMap.get(s)).filter(Boolean) as TraineeWeekData[];
     return {
-      calls: teamPerfs.reduce((sum, p) => sum + p.weekly.calls, 0),
-      bookings: teamPerfs.reduce((sum, p) => sum + p.weekly.bookings, 0),
-      meetings: teamPerfs.reduce((sum, p) => sum + p.weekly.meetings, 0),
-      units: teamPerfs.reduce((sum, p) => sum + p.weekly.units, 0),
-      revenue: teamPerfs.reduce((sum, p) => sum + p.weekly.revenue, 0),
-      todayBookings: teamPerfs.reduce((sum, p) => sum + p.today.bookings, 0),
+      calls: memberData.reduce((sum, m) => sum + m.totals.calls, 0),
+      bookings: memberData.reduce((sum, m) => sum + m.totals.bookings, 0),
+      meetings: memberData.reduce((sum, m) => sum + m.totals.meetings, 0),
+      units: memberData.reduce((sum, m) => sum + m.totals.units, 0),
+      revenue: memberData.reduce((sum, m) => sum + m.totals.revenue, 0),
     };
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      {/* Header */}
-      <div className="p-4 border-b border-gray-100">
-        <div className="flex items-start justify-between">
-          <div>
-            <h3 className="text-lg font-bold text-gray-800">📊 Performance vs Standards</h3>
-            <div className="flex items-center gap-2 mt-1">
-              <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${phaseTag.color}`}>
-                {phaseTag.label}
-              </span>
-              <span className="text-sm text-gray-600">{getWeekLabel()}</span>
+    <div className="space-y-6">
+      {/* ── Calls & Bookings Table ── */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        {/* Header */}
+        <div className="p-4 border-b border-gray-100">
+          <div className="flex items-start justify-between">
+            <div>
+              <h3 className="text-lg font-bold text-gray-800">📊 Calls & Bookings</h3>
+              <div className="flex items-center gap-2 mt-1">
+                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${phaseTag.color}`}>
+                  {phaseTag.label}
+                </span>
+                <span className="text-sm text-gray-600">{getWeekLabel(currentWeek)}</span>
+              </div>
+              <p className="text-sm text-gray-400 mt-1">{weekDateRanges[currentWeek]}</p>
             </div>
-            <p className="text-sm text-gray-400 mt-1">{weekDateRanges[currentWeek]}</p>
+            <Link href="/roadmap" className="text-sm text-[#E6017D] hover:underline">
+              View Standards →
+            </Link>
           </div>
-          <Link href="/roadmap" className="text-sm text-[#E6017D] hover:underline">
-            View Standards →
-          </Link>
         </div>
-      </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
-            <tr>
-              <th className="text-left px-4 py-3 font-semibold">Trainee</th>
-              <th className="text-center px-2 py-3 font-semibold">Today</th>
-              <th className="text-center px-2 py-3 font-semibold">WTD</th>
-              <th className="text-center px-2 py-3 font-semibold">Calls</th>
-              <th className="text-center px-2 py-3 font-semibold">Bookings</th>
-              <th className="text-center px-2 py-3 font-semibold">Meetings</th>
-              <th className="text-center px-2 py-3 font-semibold">Units</th>
-              <th className="text-center px-2 py-3 font-semibold">Revenue</th>
-            </tr>
-          </thead>
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
+              <tr>
+                <th className="text-left px-4 py-3 font-semibold min-w-[160px]">Trainee</th>
+                <th className="text-center px-1 py-3 font-semibold w-[50px]"></th>
+                {weekDays.map((day) => (
+                  <th key={day} className="text-center px-2 py-3 font-semibold">
+                    {day}
+                  </th>
+                ))}
+                <th className="text-center px-3 py-3 font-semibold">Total</th>
+              </tr>
+            </thead>
+
             {teams.map((team, teamIndex) => {
-              const teamTotals = getTeamTotals(team.members);
+              const teamDayTotals = getTeamDayTotals(team.members);
+              const teamWeekTotals = getTeamWeekTotals(team.members);
 
               return (
                 <tbody key={team.name} className={teamIndex > 0 ? "border-t-2 border-gray-200" : ""}>
-                  {/* Team header row */}
+                  {/* Team header */}
                   <tr className="bg-slate-800">
                     <td colSpan={8} className="px-4 py-2.5">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-bold text-white">{team.name}</span>
                         <div className="flex items-center gap-4">
                           <span className="text-xs text-slate-300">
-                            Daily target (Wed–Fri): <span className="font-semibold text-white">{TEAM_BOOKINGS_TARGET_DAILY_WED_FRI} bookings/team</span>
+                            Booking target (Wed–Fri): <span className="font-semibold text-white">{TEAM_BOOKINGS_TARGET_WED_FRI}/team</span> · <span className="font-semibold text-white">{PERSON_BOOKINGS_TARGET_WED_FRI}/person</span>
                           </span>
                           <span className="text-xs text-slate-300">
-                            EOW target: <span className="font-semibold text-white">{TEAM_BOOKINGS_TARGET_EOW} bookings</span>
+                            EOW: <span className="font-semibold text-white">{TEAM_BOOKINGS_TARGET_EOW} bookings</span>
                           </span>
                         </div>
                       </div>
                     </td>
                   </tr>
 
-                  {/* Team member rows */}
+                  {/* Team members */}
                   {team.members.map((slug) => {
-                    const perf = perfMap.get(slug);
-                    if (!perf) return null;
-
-                    const todayPct = getOverallPct(perf, "today");
-                    const weeklyPct = getOverallPct(perf, "weekly");
+                    const td = dataMap.get(slug);
+                    if (!td) return null;
 
                     return (
-                      <tr key={perf.slug} className="hover:bg-gray-50 border-b border-gray-100">
-                        <td className="px-4 py-3">
-                          <Link
-                            href={`/scorecard/${perf.slug}`}
-                            className="font-medium text-gray-900 hover:text-[#E6017D] transition-colors"
-                          >
-                            {perf.name}
-                          </Link>
-                        </td>
-                        <td className="px-2 py-3 text-center">
-                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(todayPct)}`}>
-                            {getStatusIcon(todayPct)} {todayPct}%
-                          </span>
-                        </td>
-                        <td className="px-2 py-3 text-center">
-                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(weeklyPct)}`}>
-                            {getStatusIcon(weeklyPct)} {weeklyPct}%
-                          </span>
-                        </td>
-                        <td className="px-2 py-3 text-center text-sm">
-                          <span className="text-gray-900 font-medium">{perf.weekly.calls}</span>
-                          <span className="text-gray-400">/{weeklyStandard.calls}</span>
-                        </td>
-                        <td className="px-2 py-3 text-center text-sm">
-                          <span className="text-gray-900 font-medium">{perf.weekly.bookings}</span>
-                          <span className="text-gray-400">/{weeklyStandard.bookings}</span>
-                        </td>
-                        <td className="px-2 py-3 text-center text-sm">
-                          <span className="text-gray-900 font-medium">{perf.weekly.meetings}</span>
-                          <span className="text-gray-400">/{weeklyStandard.meetings}</span>
-                        </td>
-                        <td className="px-2 py-3 text-center text-sm">
-                          <span className="text-gray-900 font-medium">{perf.weekly.units}</span>
-                          <span className="text-gray-400">/{weeklyStandard.units}</span>
-                        </td>
-                        <td className="px-2 py-3 text-center text-sm">
-                          <span className="text-gray-900 font-medium">${perf.weekly.revenue}</span>
-                          <span className="text-gray-400">/${weeklyStandard.revenue}</span>
-                        </td>
-                      </tr>
+                      <React.Fragment key={td.slug}>
+                        {/* Calls row */}
+                        <tr className="border-b border-gray-50 hover:bg-gray-50/50">
+                          <td rowSpan={2} className="px-4 py-2 align-middle border-b border-gray-100">
+                            <Link
+                              href={`/scorecard/${td.slug}`}
+                              className="font-medium text-gray-900 hover:text-[#E6017D] transition-colors"
+                            >
+                              {td.name}
+                            </Link>
+                          </td>
+                          <td className="px-1 py-1.5 text-center">
+                            <span className="text-[10px] text-gray-400 uppercase font-semibold">Calls</span>
+                          </td>
+                          {td.days.map((day) => (
+                            <td key={`${td.slug}-calls-${day.date}`} className="px-2 py-1.5 text-center text-gray-700">
+                              {day.calls > 0 ? day.calls : <span className="text-gray-300">–</span>}
+                            </td>
+                          ))}
+                          <td className="px-3 py-1.5 text-center font-semibold text-gray-800">
+                            {td.totals.calls}
+                          </td>
+                        </tr>
+                        {/* Bookings row */}
+                        <tr className="border-b border-gray-100 hover:bg-gray-50/50">
+                          <td className="px-1 py-1.5 text-center">
+                            <span className="text-[10px] text-gray-400 uppercase font-semibold">Book</span>
+                          </td>
+                          {td.days.map((day) => {
+                            const target = hasBookingTarget(day.dayName) ? PERSON_BOOKINGS_TARGET_WED_FRI : 0;
+                            const statusClass = target > 0
+                              ? getBookingStatusClass(day.bookings, target)
+                              : "text-gray-700";
+                            return (
+                              <td key={`${td.slug}-book-${day.date}`} className={`px-2 py-1.5 text-center ${statusClass}`}>
+                                {day.bookings > 0 ? day.bookings : <span className="text-gray-300">–</span>}
+                                {target > 0 && (
+                                  <span className="text-gray-300 text-[10px]">/{target}</span>
+                                )}
+                              </td>
+                            );
+                          })}
+                          <td className={`px-3 py-1.5 text-center font-semibold ${getBookingStatusClass(td.totals.bookings, TEAM_BOOKINGS_TARGET_EOW / 2)}`}>
+                            {td.totals.bookings}
+                          </td>
+                        </tr>
+                      </React.Fragment>
                     );
                   })}
 
-                  {/* Team totals row */}
-                  <tr className="bg-slate-50">
-                    <td className="px-4 py-2.5 text-sm font-semibold text-slate-700">
+                  {/* Team totals */}
+                  <tr className="bg-slate-50 border-b border-gray-200">
+                    <td className="px-4 py-2 text-xs font-bold text-slate-600 uppercase">
                       {team.name} Total
                     </td>
-                    <td colSpan={2}></td>
-                    <td className="px-2 py-2.5 text-center text-sm font-semibold text-slate-700">
-                      {teamTotals.calls}
+                    <td className="px-1 py-2 text-center">
+                      <span className="text-[10px] text-slate-400 uppercase font-semibold">Book</span>
                     </td>
-                    <td className="px-2 py-2.5 text-center text-sm font-bold">
-                      <span className={getTeamBookingStatusColor(teamTotals.bookings, TEAM_BOOKINGS_TARGET_EOW)}>
-                        {teamTotals.bookings}
-                      </span>
-                      <span className="text-gray-400 font-normal">/{TEAM_BOOKINGS_TARGET_EOW}</span>
-                    </td>
-                    <td className="px-2 py-2.5 text-center text-sm font-semibold text-slate-700">
-                      {teamTotals.meetings}
-                    </td>
-                    <td className="px-2 py-2.5 text-center text-sm font-semibold text-slate-700">
-                      {teamTotals.units}
-                    </td>
-                    <td className="px-2 py-2.5 text-center text-sm font-semibold text-slate-700">
-                      ${teamTotals.revenue}
+                    {teamDayTotals.map((dayTotal, idx) => {
+                      const target = hasBookingTarget(weekDays[idx]) ? TEAM_BOOKINGS_TARGET_WED_FRI : 0;
+                      const statusClass = target > 0
+                        ? getTeamBookingStatusClass(dayTotal.bookings, target)
+                        : "font-semibold text-slate-700";
+                      return (
+                        <td key={`team-${team.name}-${idx}`} className={`px-2 py-2 text-center text-sm ${statusClass}`}>
+                          {dayTotal.bookings}
+                          {target > 0 && (
+                            <span className="text-gray-400 font-normal text-xs">/{target}</span>
+                          )}
+                        </td>
+                      );
+                    })}
+                    <td className={`px-3 py-2 text-center text-sm ${getTeamBookingStatusClass(teamWeekTotals.bookings, TEAM_BOOKINGS_TARGET_EOW)}`}>
+                      {teamWeekTotals.bookings}
+                      <span className="text-gray-400 font-normal text-xs">/{TEAM_BOOKINGS_TARGET_EOW}</span>
                     </td>
                   </tr>
                 </tbody>
               );
             })}
-        </table>
+          </table>
+        </div>
+
+        {/* Footer */}
+        <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 text-xs text-gray-500">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="font-semibold">Booking targets:</span>{" "}
+              {PERSON_BOOKINGS_TARGET_WED_FRI}/person/day (Wed–Fri) · {TEAM_BOOKINGS_TARGET_WED_FRI}/team/day (Wed–Fri)
+            </div>
+            <div className="font-semibold text-[#E6017D]">
+              EOW: {TEAM_BOOKINGS_TARGET_EOW} bookings/team
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Footer */}
-      <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 text-xs text-gray-500">
-        <div className="flex items-center justify-between">
-          <div>
-            <span className="font-semibold">Week {currentWeek} Target:</span>{" "}
-            {weeklyStandard.calls} calls → {weeklyStandard.bookings} bookings → {weeklyStandard.meetings} meetings → {weeklyStandard.units} units → ${weeklyStandard.revenue} revenue
-          </div>
-          <div className="font-semibold text-[#E6017D]">
-            Team Bookings: {TEAM_BOOKINGS_TARGET_EOW}/team EOW • {TEAM_BOOKINGS_TARGET_DAILY_WED_FRI}/team/day (Wed–Fri)
-          </div>
+      {/* ── Meetings, Units & Revenue Table ── */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="p-4 border-b border-gray-100">
+          <h3 className="text-lg font-bold text-gray-800">📈 Meetings, Units & Revenue</h3>
+          <p className="text-sm text-gray-400 mt-1">Weekly totals — {weekDateRanges[currentWeek]}</p>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
+              <tr>
+                <th className="text-left px-4 py-3 font-semibold">Trainee</th>
+                <th className="text-center px-3 py-3 font-semibold">Meetings</th>
+                <th className="text-center px-3 py-3 font-semibold">Units</th>
+                <th className="text-center px-3 py-3 font-semibold">Revenue</th>
+              </tr>
+            </thead>
+
+            {teams.map((team, teamIndex) => {
+              const teamWeekTotals = getTeamWeekTotals(team.members);
+
+              return (
+                <tbody key={team.name} className={teamIndex > 0 ? "border-t-2 border-gray-200" : ""}>
+                  {/* Team header */}
+                  <tr className="bg-slate-800">
+                    <td colSpan={4} className="px-4 py-2">
+                      <span className="text-sm font-bold text-white">{team.name}</span>
+                    </td>
+                  </tr>
+
+                  {/* Members */}
+                  {team.members.map((slug) => {
+                    const td = dataMap.get(slug);
+                    if (!td) return null;
+                    return (
+                      <tr key={td.slug} className="hover:bg-gray-50 border-b border-gray-100">
+                        <td className="px-4 py-2.5">
+                          <span className="font-medium text-gray-900">{td.name}</span>
+                        </td>
+                        <td className="px-3 py-2.5 text-center text-gray-700">{td.totals.meetings}</td>
+                        <td className="px-3 py-2.5 text-center text-gray-700">{td.totals.units}</td>
+                        <td className="px-3 py-2.5 text-center text-gray-700">
+                          {td.totals.revenue > 0 ? `$${td.totals.revenue.toLocaleString()}` : "$0"}
+                        </td>
+                      </tr>
+                    );
+                  })}
+
+                  {/* Team total */}
+                  <tr className="bg-slate-50">
+                    <td className="px-4 py-2 text-xs font-bold text-slate-600 uppercase">{team.name} Total</td>
+                    <td className="px-3 py-2 text-center font-semibold text-slate-700">{teamWeekTotals.meetings}</td>
+                    <td className="px-3 py-2 text-center font-semibold text-slate-700">{teamWeekTotals.units}</td>
+                    <td className="px-3 py-2 text-center font-semibold text-slate-700">
+                      {teamWeekTotals.revenue > 0 ? `$${teamWeekTotals.revenue.toLocaleString()}` : "$0"}
+                    </td>
+                  </tr>
+                </tbody>
+              );
+            })}
+          </table>
         </div>
       </div>
     </div>
