@@ -191,7 +191,7 @@ function HomeContent() {
               <div className="text-sm text-gray-600">Tasks</div>
             </div>
             <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <div className="text-3xl font-bold text-purple-600">{trainees.length}</div>
+              <div className="text-3xl font-bold text-purple-600">3</div>
               <div className="text-sm text-gray-600">Trainees</div>
             </div>
             <div className="text-center p-4 bg-orange-50 rounded-lg">
@@ -211,8 +211,11 @@ function HomeContent() {
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
             📋 Trainee Quick Access
           </h2>
-          <div className="space-y-4">
-            {trainees.map((trainee) => {
+
+          {/* Trainees */}
+          <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">Trainees</h3>
+          <div className="space-y-4 mb-6">
+            {trainees.filter((t) => ["krishna-patel", "cindy-rose-rondez-manrique", "connie-matthews"].includes(t.slug)).map((trainee) => {
               const module1Attempts = getTraineeExamAttempts(trainee.slug, "exam-module-1");
               const module1Passed = module1Attempts.some((a) => a.passed);
               const module1BestScore = module1Attempts.length > 0
