@@ -244,6 +244,23 @@ export default function PerformanceSummary() {
     };
   };
 
+  // Grand totals across all teams
+  const allMembers = teams.flatMap((t) => t.members);
+  const grandDayTotals = (() => {
+    const memberData = allMembers.map((s) => dataMap.get(s)).filter(Boolean) as TraineeWeekData[];
+    return weekDays.map((_, idx) => ({
+      calls: memberData.reduce((sum, m) => sum + (m.days[idx]?.calls || 0), 0),
+      bookings: memberData.reduce((sum, m) => sum + (m.days[idx]?.bookings || 0), 0),
+    }));
+  })();
+  const grandWeekTotals = (() => {
+    const memberData = allMembers.map((s) => dataMap.get(s)).filter(Boolean) as TraineeWeekData[];
+    return {
+      calls: memberData.reduce((sum, m) => sum + m.totals.calls, 0),
+      bookings: memberData.reduce((sum, m) => sum + m.totals.bookings, 0),
+    };
+  })();
+
   return (
     <div className="space-y-6">
       {/* ── Calls & Bookings Table ── */}
@@ -313,7 +330,7 @@ export default function PerformanceSummary() {
 
                     return (
                       <React.Fragment key={td.slug}>
-                        {/* Calls row */}
+                        {/* Bookings row */}
                         <tr className="border-b border-gray-50 hover:bg-gray-50/50">
                           <td rowSpan={2} className="px-4 py-2 align-middle border-b border-gray-100">
                             <Link
@@ -323,20 +340,6 @@ export default function PerformanceSummary() {
                               {td.name}
                             </Link>
                           </td>
-                          <td className="px-1 py-1.5 text-center">
-                            <span className="text-[10px] text-gray-400 uppercase font-semibold">Calls</span>
-                          </td>
-                          {td.days.map((day) => (
-                            <td key={`${td.slug}-calls-${day.date}`} className="px-2 py-1.5 text-center text-gray-700">
-                              {day.calls > 0 ? day.calls : <span className="text-gray-300">–</span>}
-                            </td>
-                          ))}
-                          <td className="px-3 py-1.5 text-center font-semibold text-gray-800">
-                            {td.totals.calls}
-                          </td>
-                        </tr>
-                        {/* Bookings row */}
-                        <tr className="border-b border-gray-100 hover:bg-gray-50/50">
                           <td className="px-1 py-1.5 text-center">
                             <span className="text-[10px] text-gray-400 uppercase font-semibold">Book</span>
                           </td>
@@ -356,6 +359,20 @@ export default function PerformanceSummary() {
                           })}
                           <td className={`px-3 py-1.5 text-center font-semibold ${getBookingStatusClass(td.totals.bookings, TEAM_BOOKINGS_TARGET_EOW / 2)}`}>
                             {td.totals.bookings}
+                          </td>
+                        </tr>
+                        {/* Calls row */}
+                        <tr className="border-b border-gray-100 hover:bg-gray-50/50">
+                          <td className="px-1 py-1.5 text-center">
+                            <span className="text-[10px] text-gray-400 uppercase font-semibold">Calls</span>
+                          </td>
+                          {td.days.map((day) => (
+                            <td key={`${td.slug}-calls-${day.date}`} className="px-2 py-1.5 text-center text-gray-700">
+                              {day.calls > 0 ? day.calls : <span className="text-gray-300">–</span>}
+                            </td>
+                          ))}
+                          <td className="px-3 py-1.5 text-center font-semibold text-gray-800">
+                            {td.totals.calls}
                           </td>
                         </tr>
                       </React.Fragment>
@@ -392,6 +409,44 @@ export default function PerformanceSummary() {
                 </tbody>
               );
             })}
+
+            {/* Grand Total — all teams */}
+            <tbody className="border-t-4 border-slate-800">
+              <tr className="bg-slate-900">
+                <td colSpan={8} className="px-4 py-2">
+                  <span className="text-sm font-bold text-white">All Teams — Daily Total</span>
+                </td>
+              </tr>
+              <tr className="bg-slate-100">
+                <td className="px-4 py-2 text-xs font-bold text-slate-700 uppercase">Bookings</td>
+                <td></td>
+                {grandDayTotals.map((dayTotal, idx) => {
+                  const target = hasBookingTarget(weekDays[idx]) ? TEAM_BOOKINGS_TARGET_WED_FRI * 3 : 0;
+                  return (
+                    <td key={`grand-book-${idx}`} className={`px-2 py-2 text-center text-sm font-bold ${target > 0 ? getTeamBookingStatusClass(dayTotal.bookings, target) : "text-slate-800"}`}>
+                      {dayTotal.bookings}
+                      {target > 0 && <span className="text-gray-400 font-normal text-xs">/{target}</span>}
+                    </td>
+                  );
+                })}
+                <td className={`px-3 py-2 text-center text-sm font-bold ${getTeamBookingStatusClass(grandWeekTotals.bookings, TEAM_BOOKINGS_TARGET_EOW * 3)}`}>
+                  {grandWeekTotals.bookings}
+                  <span className="text-gray-400 font-normal text-xs">/{TEAM_BOOKINGS_TARGET_EOW * 3}</span>
+                </td>
+              </tr>
+              <tr className="bg-slate-50">
+                <td className="px-4 py-2 text-xs font-bold text-slate-700 uppercase">Calls</td>
+                <td></td>
+                {grandDayTotals.map((dayTotal, idx) => (
+                  <td key={`grand-calls-${idx}`} className="px-2 py-2 text-center text-sm font-bold text-slate-800">
+                    {dayTotal.calls}
+                  </td>
+                ))}
+                <td className="px-3 py-2 text-center text-sm font-bold text-slate-800">
+                  {grandWeekTotals.calls}
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
 
