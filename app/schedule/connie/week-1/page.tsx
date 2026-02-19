@@ -77,7 +77,7 @@ function ConnieWeek1Content() {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* ═══ 8:30 — Team Meeting ═══ */}
+                  {/* ═══ 8:30–9:00 — Team Meeting ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">8:30am</td>
                     {days.map((day) => (
@@ -88,66 +88,95 @@ function ConnieWeek1Content() {
                     ))}
                   </tr>
 
-                  {/* ═══ 9:00 — Meeting Attendance ═══ */}
+                  {/* ═══ 9:00–10:00 — Calls → 1 Booking ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">9:00am</td>
                     {days.map((day) => (
+                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
+                        <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Calls</div>
+                        <div className="text-[10px] text-gray-500 mt-1">9:00–10:00am · 1hr</div>
+                        <div className="text-[10px] text-sky-600 font-semibold mt-0.5">Target: 1 booking</div>
+                      </td>
+                    ))}
+                  </tr>
+                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">9:30am</td></tr>
+
+                  {/* ═══ 10:00–11:00 — Meeting Attendance ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">10:00am</td>
+                    {days.map((day) => (
                       <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-emerald-50">
                         <div className="bg-emerald-100 text-emerald-700 rounded px-2 py-1.5 text-xs font-semibold">📋 Meeting Attendance</div>
-                        <div className="text-[10px] text-gray-500 mt-1">9:00–10:00am · 1hr</div>
+                        <div className="text-[10px] text-gray-500 mt-1">10:00–11:00am · 1hr</div>
                         <div className="text-[10px] text-gray-400 mt-0.5">Observe buddy&apos;s meeting</div>
                       </td>
                     ))}
                   </tr>
-                  <tr>
-                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">9:30am</td>
-                  </tr>
+                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">10:30am</td></tr>
 
-                  {/* ═══ 10:00–12:30 — Calls Block 1 (2.5 hrs) ═══ */}
+                  {/* ═══ 11:00–12:00 — Calls → 1 Booking ═══ */}
                   <tr>
-                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">10:00am</td>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:00am</td>
                     {days.map((day) => (
-                      <td key={day} rowSpan={5} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
+                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
                         <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Calls</div>
-                        <div className="text-[10px] text-gray-500 mt-1">10:00am–12:30pm · 2.5hrs</div>
-                        <div className="text-[10px] text-gray-400 mt-0.5">~25 calls target</div>
+                        <div className="text-[10px] text-gray-500 mt-1">11:00am–12:00pm · 1hr</div>
+                        <div className="text-[10px] text-sky-600 font-semibold mt-0.5">Target: 1 booking</div>
                       </td>
                     ))}
                   </tr>
-                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">10:30am</td></tr>
-                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:00am</td></tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:30am</td></tr>
-                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:00pm</td></tr>
 
-                  {/* ═══ 12:30 — Lunch ═══ */}
+                  {/* ═══ 12:00–1:00 — Lunch ═══ */}
                   <tr>
-                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:30pm</td>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:00pm</td>
                     {days.map((day) => (
                       <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-yellow-50">
                         <span className="text-yellow-700 font-medium">🍽️ Lunch</span>
-                        <div className="text-[10px] text-gray-500 mt-1">12:30–1:30pm</div>
+                        <div className="text-[10px] text-gray-500 mt-1">12:00–1:00pm</div>
                       </td>
                     ))}
                   </tr>
-                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:00pm</td></tr>
+                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:30pm</td></tr>
 
-                  {/* ═══ 1:30–5:00 — Calls Block 2 (3.5 hrs) ═══ */}
+                  {/* ═══ 1:00–2:00 — Calls → 1 Booking ═══ */}
                   <tr>
-                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:30pm</td>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:00pm</td>
                     {days.map((day) => (
-                      <td key={day} rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
+                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
                         <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Calls</div>
-                        <div className="text-[10px] text-gray-500 mt-1">1:30–5:00pm · 3.5hrs</div>
-                        <div className="text-[10px] text-gray-400 mt-0.5">~35 calls target</div>
+                        <div className="text-[10px] text-gray-500 mt-1">1:00–2:00pm · 1hr</div>
+                        <div className="text-[10px] text-sky-600 font-semibold mt-0.5">Target: 1 booking</div>
                       </td>
                     ))}
                   </tr>
-                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:00pm</td></tr>
+                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:30pm</td></tr>
+
+                  {/* ═══ 2:00–3:00 — Calls → 1 Booking ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:00pm</td>
+                    {days.map((day) => (
+                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
+                        <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Calls</div>
+                        <div className="text-[10px] text-gray-500 mt-1">2:00–3:00pm · 1hr</div>
+                        <div className="text-[10px] text-sky-600 font-semibold mt-0.5">Target: 1 booking</div>
+                      </td>
+                    ))}
+                  </tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:30pm</td></tr>
-                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:00pm</td></tr>
+
+                  {/* ═══ 3:00–4:00 — Calls → 1 Booking ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:00pm</td>
+                    {days.map((day) => (
+                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
+                        <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Calls</div>
+                        <div className="text-[10px] text-gray-500 mt-1">3:00–4:00pm · 1hr</div>
+                        <div className="text-[10px] text-sky-600 font-semibold mt-0.5">Target: 1 booking</div>
+                      </td>
+                    ))}
+                  </tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:30pm</td></tr>
-                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:00pm</td></tr>
-                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:30pm</td></tr>
                 </tbody>
               </table>
             </div>
@@ -155,8 +184,8 @@ function ConnieWeek1Content() {
             {/* Legend */}
             <div className="mt-6 pt-4 border-t border-gray-100 flex flex-wrap gap-4 text-xs">
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-indigo-100 border border-indigo-200"></span><span className="text-gray-600">Team Meeting</span></div>
-              <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-emerald-100 border border-emerald-200"></span><span className="text-gray-600">Meeting Attendance</span></div>
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-sky-100 border border-sky-200"></span><span className="text-gray-600">Calls</span></div>
+              <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-emerald-100 border border-emerald-200"></span><span className="text-gray-600">Meeting Attendance</span></div>
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-yellow-100 border border-yellow-200"></span><span className="text-gray-600">Lunch</span></div>
             </div>
           </div>
@@ -172,34 +201,56 @@ function ConnieWeek1Content() {
               <table className="w-full text-xs border-collapse">
                 <thead>
                   <tr className="border-b-2 border-gray-200">
-                    <th className="pb-2 text-left font-semibold text-gray-500">Activity</th>
-                    <th className="pb-2 text-right font-semibold text-gray-500">Duration</th>
+                    <th className="pb-2 text-left font-semibold text-gray-500">Block</th>
+                    <th className="pb-2 text-center font-semibold text-gray-500">Time</th>
+                    <th className="pb-2 text-right font-semibold text-gray-500">Target</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 text-gray-700 font-medium">🗣️ Team Meeting</td>
-                    <td className="py-2 text-right text-gray-600">30 min</td>
+                    <td className="py-2 text-center text-gray-600">8:30–9:00</td>
+                    <td className="py-2 text-right text-gray-400">—</td>
+                  </tr>
+                  <tr className="border-b border-gray-100 bg-sky-50/50">
+                    <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
+                    <td className="py-2 text-center text-gray-600">9:00–10:00</td>
+                    <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
                   </tr>
                   <tr className="border-b border-gray-100">
-                    <td className="py-2 text-gray-700 font-medium">📋 Meeting Attendance</td>
-                    <td className="py-2 text-right text-gray-600">1 hr</td>
+                    <td className="py-2 text-emerald-700 font-medium">📋 Meeting</td>
+                    <td className="py-2 text-center text-gray-600">10:00–11:00</td>
+                    <td className="py-2 text-right text-emerald-700 font-semibold">1 meeting</td>
                   </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 text-gray-700 font-medium">📞 Calls (AM block)</td>
-                    <td className="py-2 text-right text-gray-600">2.5 hrs</td>
+                  <tr className="border-b border-gray-100 bg-sky-50/50">
+                    <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
+                    <td className="py-2 text-center text-gray-600">11:00–12:00</td>
+                    <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
                   </tr>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 text-gray-700 font-medium">🍽️ Lunch</td>
-                    <td className="py-2 text-right text-gray-600">1 hr</td>
+                    <td className="py-2 text-center text-gray-600">12:00–1:00</td>
+                    <td className="py-2 text-right text-gray-400">—</td>
                   </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 text-gray-700 font-medium">📞 Calls (PM block)</td>
-                    <td className="py-2 text-right text-gray-600">3.5 hrs</td>
+                  <tr className="border-b border-gray-100 bg-sky-50/50">
+                    <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
+                    <td className="py-2 text-center text-gray-600">1:00–2:00</td>
+                    <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
+                  </tr>
+                  <tr className="border-b border-gray-100 bg-sky-50/50">
+                    <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
+                    <td className="py-2 text-center text-gray-600">2:00–3:00</td>
+                    <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
+                  </tr>
+                  <tr className="border-b border-gray-100 bg-sky-50/50">
+                    <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
+                    <td className="py-2 text-center text-gray-600">3:00–4:00</td>
+                    <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
                   </tr>
                   <tr className="border-t-2 border-gray-200">
-                    <td className="py-2 text-gray-900 font-bold">Total Calls</td>
-                    <td className="py-2 text-right text-gray-900 font-bold">6 hrs</td>
+                    <td className="py-2 text-gray-900 font-bold">Daily Total</td>
+                    <td className="py-2 text-center text-gray-600 font-semibold">5hrs calls</td>
+                    <td className="py-2 text-right text-gray-900 font-bold">5 bookings + 1 meeting</td>
                   </tr>
                 </tbody>
               </table>
@@ -218,15 +269,15 @@ function ConnieWeek1Content() {
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-700 leading-relaxed">60 calls/day builds the foundation for everything that follows</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
                   <p className="text-xs text-gray-700 leading-relaxed">You&apos;re booking meetings for your buddy — observe how they run them</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-700 leading-relaxed">Meeting time is a <strong>placeholder</strong> — will shift based on actual bookings</p>
+                  <p className="text-xs text-gray-700 leading-relaxed">Meeting time is a <strong>placeholder at 10am</strong> — will shift based on actual bookings</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
+                  <p className="text-xs text-gray-700 leading-relaxed">1 hour on phones = minimum 1 booking</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
@@ -261,7 +312,7 @@ function ConnieWeek1Content() {
               </div>
             </div>
 
-            {/* Links */}
+            {/* Quick Links */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h2 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
                 <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs">🔗</span>
