@@ -106,7 +106,7 @@ const weeklyData: WeekData[] = [
     label: "Nearly There",
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
     takeaways: [
-      "You're flying solo now — buddy is cut loose, 100% commission from this week onwards",
+      "You're flying solo now — buddy is cut loose, 100% of target revenue is yours",
       "40 calls/day, 4 bookings — call-to-book rate hits 10%, double Week 1",
       "50% close rate → 5 deals/week → $2,500 — all yours",
       "Prove you can maintain the rhythm independently — Week 6 is the benchmark",
@@ -148,6 +148,104 @@ const weeklyData: WeekData[] = [
       "Your earning potential is uncapped — focus shifts to output over input",
       "5 deals/week minimum, achieved however you see fit with the inputs you choose",
       "Find your flow — 1 call = 1 deal should always be the goal",
+    ],
+  },
+  {
+    week: 9,
+    dateRange: "Mon 20 Apr – Fri 24 Apr",
+    startDate: "2026-04-20",
+    phase: "maintain",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
+    takeaways: [
+      "Refine your call list — target higher-quality prospects to improve booking conversion",
+      "Better bookings = better show rates = more meetings from less effort",
+      "Start tracking which industries and business types convert best for you",
+    ],
+  },
+  {
+    week: 10,
+    dateRange: "Mon 27 Apr – Fri 1 May",
+    startDate: "2026-04-27",
+    phase: "maintain",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
+    takeaways: [
+      "Your pitch should feel natural now — less scripted, more conversational",
+      "Focus on objection handling — every objection overcome is a booking saved",
+      "Efficiency is your edge — fewer wasted calls, more qualified conversations",
+    ],
+  },
+  {
+    week: 11,
+    dateRange: "Mon 4 May – Fri 8 May",
+    startDate: "2026-05-04",
+    phase: "maintain",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
+    takeaways: [
+      "Look at your meeting-to-close ratio — every percentage point up is more $ commission",
+      "Pre-meeting prep is what separates good from great — research the prospect",
+      "Aim to increase your average deal value through upsells and add-ons",
+    ],
+  },
+  {
+    week: 12,
+    dateRange: "Mon 11 May – Fri 15 May",
+    startDate: "2026-05-11",
+    phase: "maintain",
+    label: "Quarter Mark",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
+    takeaways: [
+      "3 months in — you should know your numbers inside out",
+      "Identify your best-performing time slots for calls and meetings",
+      "Maximise your calendar — dead time is lost commission opportunity",
+    ],
+  },
+  {
+    week: 13,
+    dateRange: "Mon 18 May – Fri 22 May",
+    startDate: "2026-05-18",
+    phase: "maintain",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
+    takeaways: [
+      "Challenge yourself — can you close 6 deals this week instead of 5?",
+      "Sharpen your discovery questions to qualify harder on the call",
+      "Better qualification = higher show rate = more commission per booking",
+    ],
+  },
+  {
+    week: 14,
+    dateRange: "Mon 25 May – Fri 29 May",
+    startDate: "2026-05-25",
+    phase: "maintain",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
+    takeaways: [
+      "Your booking quality should be improving — track no-show rate weekly",
+      "Every no-show is a wasted meeting slot — tighten your qualification",
+      "Follow-up game matters — chase confirmations the day before every meeting",
+    ],
+  },
+  {
+    week: 15,
+    dateRange: "Mon 1 Jun – Fri 5 Jun",
+    startDate: "2026-06-01",
+    phase: "maintain",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
+    takeaways: [
+      "You're building a reputation now — referrals and warm leads start flowing",
+      "Fewer cold calls needed as your pipeline compounds over time",
+      "Focus on maximising every meeting — your close technique is your biggest lever",
+    ],
+  },
+  {
+    week: 16,
+    dateRange: "Mon 8 Jun – Fri 12 Jun",
+    startDate: "2026-06-08",
+    phase: "maintain",
+    label: "4 Months In",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
+    takeaways: [
+      "4 months of consistency — this is who you are now",
+      "Your efficiency gains compound — same effort, better results every week",
+      "The Standard is your floor, not your ceiling — keep pushing",
     ],
   },
 ];
@@ -340,7 +438,7 @@ function RoadmapContent() {
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Our Standards</h1>
           <p className="text-lg sm:text-xl font-semibold mt-2" style={{ color: PINK }}>The Roadmap to Achieving 1 Deal Per Day</p>
           <p className="text-slate-400 mt-3">
-            This roadmap covers your first 8 weeks in the field, building up to The Standard by Week 6.
+            This roadmap covers your first 16 weeks, building up to The Standard by Week 6 and maintaining it beyond.
           </p>
         </div>
       </header>
