@@ -50,7 +50,7 @@ const weeklyData: WeekData[] = [
       "60–80 calls/day depending on cut-through — volume is everything this week",
       "Minimum 7 bookings/day — you're booking meetings for your buddy",
       "1 meeting/day — your buddy leads, you observe and learn the pitch",
-      "50% close rate → 2.5 deals/week → $1,250 (your 50% contribution: $625)",
+      "50% close rate → 2.5 deals/week → $1,250 (your 50% target contribution: $625)",
     ],
   },
   {
@@ -65,7 +65,7 @@ const weeklyData: WeekData[] = [
       "Same rhythm as Week 1 — 60–80 calls, 7 bookings/day minimum",
       "1 meeting/day — still observing, picking up the structure and close",
       "Your pipeline is growing — the bookings you're making fill your buddy's calendar",
-      "50% close rate → 2.5 deals/week → $1,250 (your 50% contribution: $625)",
+      "50% close rate → 2.5 deals/week → $1,250 (your 50% target contribution: $625)",
     ],
   },
   {
@@ -80,7 +80,7 @@ const weeklyData: WeekData[] = [
       "50 calls/day — meetings are taking more of your time now",
       "5 bookings/day — efficiency improving as your pitch sharpens",
       "2 meetings/day — you start leading the call with buddy support",
-      "50% close rate → 5 deals/week → $2,500 (your 50% contribution: $1,250)",
+      "50% close rate → 5 deals/week → $2,500 (your 50% target contribution: $1,250)",
     ],
   },
   {
@@ -93,7 +93,7 @@ const weeklyData: WeekData[] = [
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 5, calls: 50 },
     takeaways: [
       "Same as Week 3 — 50 calls, 5 bookings, 2 meetings/day",
-      "50% close rate → 5 deals/week → $2,500 (your 50% contribution: $1,250)",
+      "50% close rate → 5 deals/week → $2,500 (your 50% target contribution: $1,250)",
       "This is your last week with buddy support — prove you're ready",
       "Don't cut your buddy prematurely — only go solo with 100% confidence",
     ],
@@ -106,7 +106,7 @@ const weeklyData: WeekData[] = [
     label: "Nearly There",
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
     takeaways: [
-      "You're flying solo now — buddy is cut loose, 100% commission is yours",
+      "You're flying solo now — buddy is cut loose, 100% of target revenue is yours",
       "40 calls/day, 4 bookings — call-to-book rate hits 10%, double Week 1",
       "50% close rate → 5 deals/week → $2,500 — all yours",
       "Prove you can maintain the rhythm independently — Week 6 is the benchmark",
@@ -122,7 +122,7 @@ const weeklyData: WeekData[] = [
     takeaways: [
       "1 deal per day — this is the benchmark you maintain from here",
       "10% call-to-book, 50% show rate, 50% close rate — every metric is optimised",
-      "43% fewer calls than Week 1, 100% commission — efficiency wins",
+      "43% fewer calls than Week 1, 100% of your revenue — efficiency wins",
     ],
   },
   {
@@ -145,7 +145,7 @@ const weeklyData: WeekData[] = [
     label: "Fully Operational",
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
     takeaways: [
-      "Your commission is uncapped — focus shifts to output over input",
+      "Your earning potential is uncapped — focus shifts to output over input",
       "5 deals/week minimum, achieved however you see fit with the inputs you choose",
       "Find your flow — 1 call = 1 deal should always be the goal",
     ],
@@ -428,10 +428,10 @@ function RoadmapContent() {
                           <div className="bg-white/70 rounded-lg p-3 border border-amber-200">
                             <div className="flex items-center gap-2 mb-1">
                               <span className="text-amber-600">💰</span>
-                              <span className="text-xs font-bold text-amber-900">Commission Split</span>
+                              <span className="text-xs font-bold text-amber-900">Target Revenue Split</span>
                             </div>
                             <p className="text-xs text-amber-700">
-                              While your buddy attends your meetings, commission is split <span className="font-bold">50/50</span>.
+                              While your buddy attends your meetings, target revenue is split <span className="font-bold">50/50</span>.
                               It&#39;s in your best interest to reach 100% proficiency and be cut loose by Week 5.
                             </p>
                           </div>
@@ -591,7 +591,7 @@ function RoadmapContent() {
                                 {isBuddy && m.key === "revenue" && weeklyVal > 0 && (
                                   <div className="mt-1 text-[10px] font-semibold text-amber-600">
                                     ÷2 = {formatCurrency(weeklyVal / 2)}
-                                    <div className="font-normal text-amber-500">50% commission</div>
+                                    <div className="font-normal text-amber-500">50% target split</div>
                                   </div>
                                 )}
                               </div>
@@ -618,19 +618,7 @@ function RoadmapContent() {
                         })}
                       </div>
 
-                      {w.phase === "ramp" && (
-                        <div className="mt-3 flex items-center gap-2">
-                          <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
-                            <div
-                              className="h-full rounded-full"
-                              style={{ width: `${pctToStandard}%`, background: `linear-gradient(to right, ${MINT}, ${PINK})` }}
-                            />
-                          </div>
-                          <span className="text-xs text-slate-400 font-medium whitespace-nowrap">
-                            {pctToStandard}% to Standard
-                          </span>
-                        </div>
-                      )}
+
 
                       {isStandard && (
                         <div className="mt-3 p-2.5 rounded-lg border" style={{ backgroundColor: `${PINK}0D`, borderColor: `${PINK}33` }}>
@@ -680,8 +668,8 @@ function RoadmapContent() {
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${MINT}15`, borderColor: `${MINT}44` }}>
               <h4 className="font-semibold text-sm mb-2 text-teal-700">📈 Buddy System → Independence</h4>
               <p className="text-sm text-slate-600">
-                Weeks 1–4 with buddy support (50/50 commission). Cut loose by Week 5 with 100% commission.
-                The faster you learn, the sooner you earn full commission on every deal.
+                Weeks 1–4 with buddy support (50/50 target split). Cut loose by Week 5 with 100% of your target revenue.
+                The faster you reach proficiency, the sooner you keep 100% of your deal revenue.
               </p>
             </div>
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${MINT}15`, borderColor: `${MINT}44` }}>
