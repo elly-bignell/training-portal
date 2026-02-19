@@ -697,20 +697,6 @@ function RoadmapContent() {
                     </div>
 
                     {/* Training week link */}
-                    <div className="flex items-center justify-between">
-                      <Link
-                        href="/"
-                        className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
-                      >
-                        See the training schedule
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </Link>
-                      <p className="text-xs text-slate-400">
-                        Complete all training modules before Week 1
-                      </p>
-                    </div>
                   </div>
                 ) : (
                   <div className="flex gap-4">
@@ -740,9 +726,8 @@ function RoadmapContent() {
                                   {fmtDaily} / day
                                 </div>
                                 {isBuddy && m.key === "revenue" && weeklyVal > 0 && (
-                                  <div className="mt-1 text-[10px] font-semibold text-amber-600">
-                                    ÷2 = {formatCurrency(weeklyVal / 2)}
-                                    <div className="font-normal text-amber-500">50% to target</div>
+                                  <div className="mt-1 text-[10px] font-normal text-amber-600">
+                                    50% put towards your<br />monthly target
                                   </div>
                                 )}
                               </div>
