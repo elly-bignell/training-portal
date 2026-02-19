@@ -347,13 +347,13 @@ function getPhaseStyles(phase: string) {
     case "maintain":
       return {
         border: `border-[${MINT}]`,
-        bg: "bg-gradient-to-br from-emerald-50 to-teal-50",
+        bg: "bg-white",
         badge: "bg-slate-700 text-white",
-        metricBg: "bg-teal-100/60",
+        metricBg: "bg-slate-50",
         textColor: "text-teal-700",
         dailyColor: "text-teal-500",
         arrowColor: `text-[${MINT}]`,
-        takeawayBg: "bg-teal-50",
+        takeawayBg: "bg-slate-50",
         takeawayBorder: "border-teal-200",
         takeawayText: "text-teal-800",
         takeawayDot: `bg-[${MINT}]`,
