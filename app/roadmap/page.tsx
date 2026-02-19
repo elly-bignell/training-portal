@@ -10,7 +10,7 @@ interface WeekData {
   week: number;
   dateRange: string;
   startDate: string;
-  phase: "training" | "ramp" | "standard" | "maintain";
+  phase: "training" | "ramp" | "solo" | "standard" | "maintain";
   label?: string;
   buddyWeek?: boolean;
   daily: {
@@ -102,11 +102,11 @@ const weeklyData: WeekData[] = [
     week: 5,
     dateRange: "Mon 23 Mar – Fri 27 Mar",
     startDate: "2026-03-23",
-    phase: "ramp",
-    label: "Nearly There",
+    phase: "solo",
+    label: "✈️ Flying Solo",
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
     takeaways: [
-      "You're flying solo now — buddy is cut loose, 100% of target revenue is yours",
+      "You're flying solo — buddy is cut loose, 100% commission from this week",
       "40 calls/day, 4 bookings — call-to-book rate hits 10%, double Week 1",
       "50% close rate → 5 deals/week → $2,500 — all yours",
       "Prove you can maintain the rhythm independently — Week 6 is the benchmark",
@@ -310,6 +310,20 @@ const MINT = "#84D4BD";
 
 function getPhaseStyles(phase: string) {
   switch (phase) {
+    case "solo":
+      return {
+        border: "border-emerald-400",
+        bg: "bg-gradient-to-br from-emerald-50 to-green-50",
+        badge: "bg-emerald-600 text-white",
+        metricBg: "bg-emerald-100/60",
+        textColor: "text-emerald-700",
+        dailyColor: "text-emerald-500",
+        arrowColor: "text-emerald-500",
+        takeawayBg: "bg-emerald-50",
+        takeawayBorder: "border-emerald-200",
+        takeawayText: "text-emerald-800",
+        takeawayDot: "bg-emerald-500",
+      };
     case "standard":
       return {
         border: `border-[${PINK}]`,
@@ -508,7 +522,7 @@ function RoadmapContent() {
               { rate: conversions.bookingsToMeetings, format: "pct" as const },
               { rate: conversions.callsToBookings, format: "pct" as const },
             ];
-            const arrowHexColor = isStandard ? PINK : w.phase === "maintain" ? MINT : w.phase === "training" ? "#60a5fa" : "#94a3b8";
+            const arrowHexColor = isStandard ? PINK : w.phase === "maintain" ? MINT : w.phase === "solo" ? "#10b981" : w.phase === "training" ? "#60a5fa" : "#94a3b8";
 
             return (
               <div key={w.week}>
@@ -550,7 +564,7 @@ function RoadmapContent() {
                 )}
               <div
                 className={`rounded-xl border-2 ${styles.border} ${styles.bg} p-5 transition-all shadow-sm ${
-                  isStandard ? "shadow-lg shadow-pink-200/50" : ""
+                  isStandard ? "shadow-lg shadow-pink-200/50" : w.phase === "solo" ? "shadow-lg shadow-emerald-200/50" : ""
                 }`}
                 style={isHere ? { boxShadow: `0 0 0 3px ${PINK}33`, outline: `2px solid ${PINK}`, outlineOffset: "2px" } : {}}
               >
@@ -568,7 +582,7 @@ function RoadmapContent() {
                       </span>
                       {w.label && (
                         <span className={`text-xs font-semibold`} style={{
-                          color: isStandard ? PINK : w.phase === "maintain" ? "#0d9488" : isTraining ? "#2563eb" : "#64748b"
+                          color: isStandard ? PINK : w.phase === "maintain" ? "#0d9488" : w.phase === "solo" ? "#059669" : isTraining ? "#2563eb" : "#64748b"
                         }}>
                           {w.label}
                         </span>
@@ -722,6 +736,14 @@ function RoadmapContent() {
                         <div className="mt-3 p-2.5 rounded-lg border" style={{ backgroundColor: `${PINK}0D`, borderColor: `${PINK}33` }}>
                           <p className="text-xs font-medium text-center" style={{ color: PINK }}>
                             🎯 This is the benchmark. From this week onwards, these are your daily and weekly targets to maintain.
+                          </p>
+                        </div>
+                      )}
+
+                      {w.phase === "solo" && (
+                        <div className="mt-3 p-2.5 rounded-lg border border-emerald-300 bg-emerald-50">
+                          <p className="text-xs font-medium text-center text-emerald-700">
+                            ✈️ First week flying solo — 100% commission on every deal you close
                           </p>
                         </div>
                       )}
