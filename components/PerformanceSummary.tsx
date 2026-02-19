@@ -468,28 +468,34 @@ export default function PerformanceSummary() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="p-4 border-b border-gray-100">
           <h3 className="text-lg font-bold text-gray-800">📈 Meetings, Units & Revenue</h3>
-          <p className="text-sm text-gray-400 mt-1">Weekly totals — {weekDateRanges[currentWeek]}</p>
+          <p className="text-sm text-gray-400 mt-1">{weekDateRanges[currentWeek]}</p>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
               <tr>
-                <th className="text-left px-4 py-3 font-semibold">Trainee</th>
-                <th className="text-center px-3 py-3 font-semibold">Meetings</th>
-                <th className="text-center px-3 py-3 font-semibold">Units</th>
-                <th className="text-center px-3 py-3 font-semibold">Revenue</th>
+                <th className="text-left px-4 py-3 font-semibold min-w-[160px]">Trainee</th>
+                <th className="text-center px-1 py-3 font-semibold w-[50px]"></th>
+                {weekDays.map((day) => (
+                  <th key={day} className="text-center px-2 py-3 font-semibold">{day}</th>
+                ))}
+                <th className="text-center px-3 py-3 font-semibold">Total</th>
               </tr>
             </thead>
 
             {teams.map((team, teamIndex) => {
               const teamWeekTotals = getTeamWeekTotals(team.members);
+              const memberData = team.members.map((s) => dataMap.get(s)).filter(Boolean) as TraineeWeekData[];
+              const teamDayMeetings = weekDays.map((_, idx) => memberData.reduce((sum, m) => sum + (m.days[idx]?.meetings || 0), 0));
+              const teamDayUnits = weekDays.map((_, idx) => memberData.reduce((sum, m) => sum + (m.days[idx]?.units || 0), 0));
+              const teamDayRevenue = weekDays.map((_, idx) => memberData.reduce((sum, m) => sum + (m.days[idx]?.revenue || 0), 0));
 
               return (
                 <tbody key={team.name} className={teamIndex > 0 ? "border-t-2 border-gray-200" : ""}>
                   {/* Team header */}
                   <tr className="bg-slate-800">
-                    <td colSpan={4} className="px-4 py-2">
+                    <td colSpan={8} className="px-4 py-2">
                       <span className="text-sm font-bold text-white">{team.name}</span>
                     </td>
                   </tr>
@@ -499,25 +505,76 @@ export default function PerformanceSummary() {
                     const td = dataMap.get(slug);
                     if (!td) return null;
                     return (
-                      <tr key={td.slug} className="hover:bg-gray-50 border-b border-gray-100">
-                        <td className="px-4 py-2.5">
-                          <span className="font-medium text-gray-900">{td.name}</span>
-                        </td>
-                        <td className="px-3 py-2.5 text-center text-gray-700">{td.totals.meetings}</td>
-                        <td className="px-3 py-2.5 text-center text-gray-700">{td.totals.units}</td>
-                        <td className="px-3 py-2.5 text-center text-gray-700">
-                          {td.totals.revenue > 0 ? `$${td.totals.revenue.toLocaleString()}` : "$0"}
-                        </td>
-                      </tr>
+                      <React.Fragment key={td.slug}>
+                        {/* Meetings row */}
+                        <tr className="border-b border-gray-50 hover:bg-gray-50/50">
+                          <td rowSpan={3} className="px-4 py-2 align-middle border-b border-gray-100">
+                            <span className="font-medium text-gray-900">{td.name}</span>
+                          </td>
+                          <td className="px-1 py-1.5 text-center">
+                            <span className="text-[10px] text-gray-400 uppercase font-semibold">Meet</span>
+                          </td>
+                          {td.days.map((day) => (
+                            <td key={`${td.slug}-meet-${day.date}`} className="px-2 py-1.5 text-center text-gray-700">
+                              {day.meetings > 0 ? day.meetings : <span className="text-gray-300">–</span>}
+                            </td>
+                          ))}
+                          <td className="px-3 py-1.5 text-center font-semibold text-gray-800">{td.totals.meetings}</td>
+                        </tr>
+                        {/* Units row */}
+                        <tr className="border-b border-gray-50 hover:bg-gray-50/50">
+                          <td className="px-1 py-1.5 text-center">
+                            <span className="text-[10px] text-gray-400 uppercase font-semibold">Units</span>
+                          </td>
+                          {td.days.map((day) => (
+                            <td key={`${td.slug}-units-${day.date}`} className="px-2 py-1.5 text-center text-gray-700">
+                              {day.units > 0 ? day.units : <span className="text-gray-300">–</span>}
+                            </td>
+                          ))}
+                          <td className="px-3 py-1.5 text-center font-semibold text-gray-800">{td.totals.units}</td>
+                        </tr>
+                        {/* Revenue row */}
+                        <tr className="border-b border-gray-100 hover:bg-gray-50/50">
+                          <td className="px-1 py-1.5 text-center">
+                            <span className="text-[10px] text-gray-400 uppercase font-semibold">Rev</span>
+                          </td>
+                          {td.days.map((day) => (
+                            <td key={`${td.slug}-rev-${day.date}`} className="px-2 py-1.5 text-center text-gray-700">
+                              {day.revenue > 0 ? `$${day.revenue.toLocaleString()}` : <span className="text-gray-300">–</span>}
+                            </td>
+                          ))}
+                          <td className="px-3 py-1.5 text-center font-semibold text-gray-800">
+                            {td.totals.revenue > 0 ? `$${td.totals.revenue.toLocaleString()}` : "$0"}
+                          </td>
+                        </tr>
+                      </React.Fragment>
                     );
                   })}
 
-                  {/* Team total */}
-                  <tr className="bg-slate-50">
-                    <td className="px-4 py-2 text-xs font-bold text-slate-600 uppercase">{team.name} Total</td>
-                    <td className="px-3 py-2 text-center font-semibold text-slate-700">{teamWeekTotals.meetings}</td>
-                    <td className="px-3 py-2 text-center font-semibold text-slate-700">{teamWeekTotals.units}</td>
-                    <td className="px-3 py-2 text-center font-semibold text-slate-700">
+                  {/* Team totals */}
+                  <tr className="bg-slate-50 border-b border-gray-200">
+                    <td rowSpan={3} className="px-4 py-2 text-xs font-bold text-slate-600 uppercase align-middle">{team.name} Total</td>
+                    <td className="px-1 py-1.5 text-center"><span className="text-[10px] text-slate-400 uppercase font-semibold">Meet</span></td>
+                    {teamDayMeetings.map((val, idx) => (
+                      <td key={`team-meet-${team.name}-${idx}`} className="px-2 py-1.5 text-center font-semibold text-slate-700">{val}</td>
+                    ))}
+                    <td className="px-3 py-1.5 text-center font-semibold text-slate-700">{teamWeekTotals.meetings}</td>
+                  </tr>
+                  <tr className="bg-slate-50 border-b border-gray-200">
+                    <td className="px-1 py-1.5 text-center"><span className="text-[10px] text-slate-400 uppercase font-semibold">Units</span></td>
+                    {teamDayUnits.map((val, idx) => (
+                      <td key={`team-units-${team.name}-${idx}`} className="px-2 py-1.5 text-center font-semibold text-slate-700">{val}</td>
+                    ))}
+                    <td className="px-3 py-1.5 text-center font-semibold text-slate-700">{teamWeekTotals.units}</td>
+                  </tr>
+                  <tr className="bg-slate-50 border-b border-gray-200">
+                    <td className="px-1 py-1.5 text-center"><span className="text-[10px] text-slate-400 uppercase font-semibold">Rev</span></td>
+                    {teamDayRevenue.map((val, idx) => (
+                      <td key={`team-rev-${team.name}-${idx}`} className="px-2 py-1.5 text-center font-semibold text-slate-700">
+                        {val > 0 ? `$${val.toLocaleString()}` : "$0"}
+                      </td>
+                    ))}
+                    <td className="px-3 py-1.5 text-center font-semibold text-slate-700">
                       {teamWeekTotals.revenue > 0 ? `$${teamWeekTotals.revenue.toLocaleString()}` : "$0"}
                     </td>
                   </tr>
