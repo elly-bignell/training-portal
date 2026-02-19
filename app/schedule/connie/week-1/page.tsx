@@ -127,6 +127,17 @@ function ConnieWeek1Content() {
                   </tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:30am</td></tr>
 
+                  {/* ═══ 12:00–1:00 — Break ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:00pm</td>
+                    {days.map((day) => (
+                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-gray-100">
+                        <div className="text-gray-400 text-xs font-medium">12:00–1:00pm</div>
+                      </td>
+                    ))}
+                  </tr>
+                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:30pm</td></tr>
+
                   {/* ═══ 1:00–2:00 — Calls → 1 Booking ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:00pm</td>
@@ -226,6 +237,11 @@ function ConnieWeek1Content() {
                     <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
                     <td className="py-2 text-center text-gray-600">11:00–12:00</td>
                     <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
+                  </tr>
+                  <tr className="border-b border-gray-100">
+                    <td className="py-2 text-gray-400 font-medium">Break</td>
+                    <td className="py-2 text-center text-gray-400">12:00–1:00</td>
+                    <td className="py-2 text-right text-gray-400">—</td>
                   </tr>
                   <tr className="border-b border-gray-100 bg-sky-50/50">
                     <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
