@@ -519,10 +519,13 @@ export default function PerformanceSummary() {
                 const callsNeeded = Math.ceil(t.bookings / bestRate);
                 return (
                   <div key={t.bookings} className="bg-white/10 backdrop-blur rounded-lg p-4 text-center">
-                    <div className="text-2xl mb-1">{t.icon}</div>
-                    <div className="text-2xl font-bold text-white">{callsNeeded} calls</div>
-                    <div className="text-xs text-slate-300 mt-1">→ {t.bookings} bookings</div>
-                    <div className="text-[10px] text-slate-500 mt-0.5">at {bestPct}% conversion</div>
+                    <div className="text-2xl mb-2">{t.icon}</div>
+                    <div className="text-2xl font-bold text-white">{t.bookings} bookings</div>
+                    <div className="flex items-center justify-center gap-2 mt-2">
+                      <span className="text-slate-500">=</span>
+                      <span className="text-lg font-bold text-slate-300">{callsNeeded} calls</span>
+                    </div>
+                    <div className="text-[10px] text-slate-500 mt-1">at {bestPct}% conversion</div>
                   </div>
                 );
               })}
