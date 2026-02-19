@@ -749,11 +749,9 @@ function RoadmapContent() {
                               {i < funnelMetrics.length - 1 && (
                                 hideThisArrow ? (
                                   <div className="flex flex-col items-center justify-center">
-                                    <svg className="w-5 h-5 rotate-180 text-gray-200 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5 rotate-180 text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                                     </svg>
-                                    <span className="text-[10px] text-slate-300 whitespace-nowrap">N/A</span>
-                                    <span className="text-[10px] text-slate-300 whitespace-nowrap mt-0.5">Show Rate</span>
                                   </div>
                                 ) : (
                                   <ConversionArrowLeft
