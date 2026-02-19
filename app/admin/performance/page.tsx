@@ -56,6 +56,22 @@ const weekConfig: Record<number, { start: string; end: string; label: string; da
   8: { start: "2026-04-13", end: "2026-04-17", label: "Week 8", dateRange: "Mon 13 – Fri 17 Apr" },
 };
 
+// Team structure — defines display order and grouping
+const teams = [
+  {
+    name: "Team 1",
+    members: ["lucas-tirri", "krishna-patel"],
+  },
+  {
+    name: "Team 2",
+    members: ["felipe-garcia", "connie-matthews"],
+  },
+  {
+    name: "Team 3",
+    members: ["dylan-munro", "cindy-rose-rondez-manrique"],
+  },
+];
+
 // Get week number from date
 function getWeekNumber(dateStr: string): number {
   const date = new Date(dateStr);
@@ -91,21 +107,188 @@ function getStatusClass(actual: number, target: number): string {
   return "text-red-500";
 }
 
-// Team structure — defines display order and grouping on performance page
-const teams = [
-  {
-    name: "Team 1",
-    members: ["lucas-tirri", "krishna-patel"],
-  },
-  {
-    name: "Team 2",
-    members: ["felipe-garcia", "connie-matthews"],
-  },
-  {
-    name: "Team 3",
-    members: ["dylan-munro", "cindy-rose-rondez-manrique"],
-  },
-];
+// Trainee card component to avoid duplication
+function TraineeCard({
+  trainee,
+  expandedWeeks,
+  toggleWeekExpanded,
+}: {
+  trainee: TraineeData;
+  expandedWeeks: Record<string, boolean>;
+  toggleWeekExpanded: (key: string) => void;
+}) {
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      {/* Trainee Header */}
+      <div className="bg-gradient-to-r from-slate-800 to-slate-900 px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-[#E6017D] flex items-center justify-center text-white font-bold">
+            {trainee.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-white">{trainee.name}</h2>
+            <p className="text-slate-400 text-sm">{trainee.weeks.length} weeks of data</p>
+          </div>
+        </div>
+        <Link
+          href={`/scorecard/${trainee.slug}`}
+          className="text-sm text-[#E6017D] hover:text-pink-400 transition-colors"
+        >
+          View Scorecard →
+        </Link>
+      </div>
+
+      {/* Weeks */}
+      {trainee.weeks.length === 0 ? (
+        <div className="p-6 text-center text-gray-500">
+          No activity data recorded yet
+        </div>
+      ) : (
+        <div className="divide-y divide-gray-100">
+          {trainee.weeks.map((week) => {
+            const weekKey = `${trainee.slug}-${week.weekNum}`;
+            const isExpanded = expandedWeeks[weekKey];
+
+            return (
+              <div key={week.weekNum}>
+                {/* Week Summary Row */}
+                <button
+                  onClick={() => toggleWeekExpanded(weekKey)}
+                  className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors text-left"
+                >
+                  <div className="flex items-center gap-4">
+                    <svg
+                      className={`w-5 h-5 text-gray-400 transition-transform ${isExpanded ? "rotate-90" : ""}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    <div>
+                      <span className="font-semibold text-gray-900">
+                        {weekConfig[week.weekNum]?.label || `Week ${week.weekNum}`}
+                      </span>
+                      <span className="text-gray-400 text-sm ml-2">{week.dateRange}</span>
+                    </div>
+                  </div>
+
+                  {/* Week Totals */}
+                  <div className="flex items-center gap-6 text-sm">
+                    <div className="text-center">
+                      <div className={getStatusClass(week.totals.calls, week.targets.calls)}>
+                        {week.totals.calls}/{week.targets.calls}
+                      </div>
+                      <div className="text-[10px] text-gray-400 uppercase">Calls</div>
+                    </div>
+                    <div className="text-center">
+                      <div className={getStatusClass(week.totals.bookings, week.targets.bookings)}>
+                        {week.totals.bookings}/{week.targets.bookings}
+                      </div>
+                      <div className="text-[10px] text-gray-400 uppercase">Bookings</div>
+                    </div>
+                    <div className="text-center">
+                      <div className={getStatusClass(week.totals.meetings, week.targets.meetings)}>
+                        {week.totals.meetings}/{week.targets.meetings}
+                      </div>
+                      <div className="text-[10px] text-gray-400 uppercase">Meetings</div>
+                    </div>
+                    <div className="text-center">
+                      <div className={getStatusClass(week.totals.units, week.targets.units)}>
+                        {week.totals.units}/{week.targets.units}
+                      </div>
+                      <div className="text-[10px] text-gray-400 uppercase">Units</div>
+                    </div>
+                    <div className="text-center">
+                      <div className={getStatusClass(week.totals.revenue, week.targets.revenue)}>
+                        ${week.totals.revenue}/${week.targets.revenue}
+                      </div>
+                      <div className="text-[10px] text-gray-400 uppercase">Revenue</div>
+                    </div>
+                  </div>
+                </button>
+
+                {/* Day-by-day breakdown */}
+                {isExpanded && (
+                  <div className="bg-gray-50 px-6 py-4">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="text-xs text-gray-500 uppercase">
+                          <th className="text-left py-2 font-semibold">Day</th>
+                          <th className="text-center py-2 font-semibold">Calls</th>
+                          <th className="text-center py-2 font-semibold">Bookings</th>
+                          <th className="text-center py-2 font-semibold">Meetings</th>
+                          <th className="text-center py-2 font-semibold">Units</th>
+                          <th className="text-center py-2 font-semibold">Revenue</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {week.days.map((day) => {
+                          const dailyTarget = weeklyStandards[week.weekNum] || weeklyStandards[6];
+                          return (
+                            <tr key={day.date} className="hover:bg-white/50">
+                              <td className="py-2 font-medium text-gray-700">
+                                {getDayName(day.date)} {formatDateShort(day.date)}
+                              </td>
+                              <td className={`py-2 text-center ${getStatusClass(day.calls, dailyTarget.calls)}`}>
+                                {day.calls}
+                              </td>
+                              <td className={`py-2 text-center ${getStatusClass(day.bookings, dailyTarget.bookings)}`}>
+                                {day.bookings}
+                              </td>
+                              <td className={`py-2 text-center ${getStatusClass(day.meetings, dailyTarget.meetings)}`}>
+                                {day.meetings}
+                              </td>
+                              <td className={`py-2 text-center ${getStatusClass(day.units, dailyTarget.units)}`}>
+                                {day.units}
+                              </td>
+                              <td className={`py-2 text-center ${getStatusClass(day.revenue, dailyTarget.revenue)}`}>
+                                ${day.revenue}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                      <tfoot>
+                        <tr className="border-t-2 border-gray-300 font-semibold">
+                          <td className="py-2 text-gray-700">Week Total</td>
+                          <td className={`py-2 text-center ${getStatusClass(week.totals.calls, week.targets.calls)}`}>
+                            {week.totals.calls}
+                          </td>
+                          <td className={`py-2 text-center ${getStatusClass(week.totals.bookings, week.targets.bookings)}`}>
+                            {week.totals.bookings}
+                          </td>
+                          <td className={`py-2 text-center ${getStatusClass(week.totals.meetings, week.targets.meetings)}`}>
+                            {week.totals.meetings}
+                          </td>
+                          <td className={`py-2 text-center ${getStatusClass(week.totals.units, week.targets.units)}`}>
+                            {week.totals.units}
+                          </td>
+                          <td className={`py-2 text-center ${getStatusClass(week.totals.revenue, week.targets.revenue)}`}>
+                            ${week.totals.revenue}
+                          </td>
+                        </tr>
+                        <tr className="text-gray-400 text-xs">
+                          <td className="py-1">Target</td>
+                          <td className="py-1 text-center">{week.targets.calls}</td>
+                          <td className="py-1 text-center">{week.targets.bookings}</td>
+                          <td className="py-1 text-center">{week.targets.meetings}</td>
+                          <td className="py-1 text-center">{week.targets.units}</td>
+                          <td className="py-1 text-center">${week.targets.revenue}</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PerformanceDashboardContent() {
   const [traineeData, setTraineeData] = useState<TraineeData[]>([]);
   const [selectedTrainee, setSelectedTrainee] = useState<string>("all");
@@ -207,19 +390,13 @@ function PerformanceDashboardContent() {
     setExpandedWeeks((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  // Build team-ordered list for 'all' view
-  const teamOrderedSlugs = teams.flatMap((t) => t.members);
-  
+  // Build data lookup
+  const dataMap = new Map(traineeData.map((t) => [t.slug, t]));
+
+  // For individual filter
   const filteredData =
     selectedTrainee === "all"
-      ? [...traineeData].sort((a, b) => {
-          const aIdx = teamOrderedSlugs.indexOf(a.slug);
-          const bIdx = teamOrderedSlugs.indexOf(b.slug);
-          // Team members first in order, then others at end
-          const aPos = aIdx >= 0 ? aIdx : 999;
-          const bPos = bIdx >= 0 ? bIdx : 999;
-          return aPos - bPos;
-        })
+      ? traineeData
       : traineeData.filter((t) => t.slug === selectedTrainee);
 
   if (isLoading) {
@@ -283,178 +460,42 @@ function PerformanceDashboardContent() {
           </select>
         </div>
 
-        {/* Trainee Sections */}
+        {/* Trainee Sections — grouped by team */}
         <div className="space-y-8">
-          {filteredData.map((trainee) => (
-            <div key={trainee.slug} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              {/* Trainee Header */}
-              <div className="bg-gradient-to-r from-slate-800 to-slate-900 px-6 py-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#E6017D] flex items-center justify-center text-white font-bold">
-                    {trainee.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+          {selectedTrainee === "all"
+            ? teams.map((team) => {
+                const teamTrainees = team.members
+                  .map((slug) => dataMap.get(slug))
+                  .filter(Boolean) as TraineeData[];
+
+                return (
+                  <div key={team.name}>
+                    {/* Team Header */}
+                    <div className="bg-slate-800 rounded-t-lg px-5 py-3 flex items-center justify-between">
+                      <span className="text-sm font-bold text-white">{team.name}</span>
+                      <span className="text-xs text-slate-400">{teamTrainees.length} members</span>
+                    </div>
+                    <div className="space-y-4 mt-4">
+                      {teamTrainees.map((trainee) => (
+                        <TraineeCard
+                          key={trainee.slug}
+                          trainee={trainee}
+                          expandedWeeks={expandedWeeks}
+                          toggleWeekExpanded={toggleWeekExpanded}
+                        />
+                      ))}
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="text-lg font-bold text-white">{trainee.name}</h2>
-                    <p className="text-slate-400 text-sm">{trainee.weeks.length} weeks of data</p>
-                  </div>
-                </div>
-                <Link
-                  href={`/scorecard/${trainee.slug}`}
-                  className="text-sm text-[#E6017D] hover:text-pink-400 transition-colors"
-                >
-                  View Scorecard →
-                </Link>
-              </div>
-
-              {/* Weeks */}
-              {trainee.weeks.length === 0 ? (
-                <div className="p-6 text-center text-gray-500">
-                  No activity data recorded yet
-                </div>
-              ) : (
-                <div className="divide-y divide-gray-100">
-                  {trainee.weeks.map((week) => {
-                    const weekKey = `${trainee.slug}-${week.weekNum}`;
-                    const isExpanded = expandedWeeks[weekKey];
-
-                    return (
-                      <div key={week.weekNum}>
-                        {/* Week Summary Row */}
-                        <button
-                          onClick={() => toggleWeekExpanded(weekKey)}
-                          className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors text-left"
-                        >
-                          <div className="flex items-center gap-4">
-                            <svg
-                              className={`w-5 h-5 text-gray-400 transition-transform ${isExpanded ? "rotate-90" : ""}`}
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                            <div>
-                              <span className="font-semibold text-gray-900">
-                                {weekConfig[week.weekNum]?.label || `Week ${week.weekNum}`}
-                              </span>
-                              <span className="text-gray-400 text-sm ml-2">{week.dateRange}</span>
-                            </div>
-                          </div>
-
-                          {/* Week Totals */}
-                          <div className="flex items-center gap-6 text-sm">
-                            <div className="text-center">
-                              <div className={getStatusClass(week.totals.calls, week.targets.calls)}>
-                                {week.totals.calls}/{week.targets.calls}
-                              </div>
-                              <div className="text-[10px] text-gray-400 uppercase">Calls</div>
-                            </div>
-                            <div className="text-center">
-                              <div className={getStatusClass(week.totals.bookings, week.targets.bookings)}>
-                                {week.totals.bookings}/{week.targets.bookings}
-                              </div>
-                              <div className="text-[10px] text-gray-400 uppercase">Bookings</div>
-                            </div>
-                            <div className="text-center">
-                              <div className={getStatusClass(week.totals.meetings, week.targets.meetings)}>
-                                {week.totals.meetings}/{week.targets.meetings}
-                              </div>
-                              <div className="text-[10px] text-gray-400 uppercase">Meetings</div>
-                            </div>
-                            <div className="text-center">
-                              <div className={getStatusClass(week.totals.units, week.targets.units)}>
-                                {week.totals.units}/{week.targets.units}
-                              </div>
-                              <div className="text-[10px] text-gray-400 uppercase">Units</div>
-                            </div>
-                            <div className="text-center">
-                              <div className={getStatusClass(week.totals.revenue, week.targets.revenue)}>
-                                ${week.totals.revenue}/${week.targets.revenue}
-                              </div>
-                              <div className="text-[10px] text-gray-400 uppercase">Revenue</div>
-                            </div>
-                          </div>
-                        </button>
-
-                        {/* Day-by-day breakdown */}
-                        {isExpanded && (
-                          <div className="bg-gray-50 px-6 py-4">
-                            <table className="w-full text-sm">
-                              <thead>
-                                <tr className="text-xs text-gray-500 uppercase">
-                                  <th className="text-left py-2 font-semibold">Day</th>
-                                  <th className="text-center py-2 font-semibold">Calls</th>
-                                  <th className="text-center py-2 font-semibold">Bookings</th>
-                                  <th className="text-center py-2 font-semibold">Meetings</th>
-                                  <th className="text-center py-2 font-semibold">Units</th>
-                                  <th className="text-center py-2 font-semibold">Revenue</th>
-                                </tr>
-                              </thead>
-                              <tbody className="divide-y divide-gray-200">
-                                {week.days.map((day) => {
-                                  const dailyTarget = weeklyStandards[week.weekNum] || weeklyStandards[6];
-                                  return (
-                                    <tr key={day.date} className="hover:bg-white/50">
-                                      <td className="py-2 font-medium text-gray-700">
-                                        {getDayName(day.date)} {formatDateShort(day.date)}
-                                      </td>
-                                      <td className={`py-2 text-center ${getStatusClass(day.calls, dailyTarget.calls)}`}>
-                                        {day.calls}
-                                      </td>
-                                      <td className={`py-2 text-center ${getStatusClass(day.bookings, dailyTarget.bookings)}`}>
-                                        {day.bookings}
-                                      </td>
-                                      <td className={`py-2 text-center ${getStatusClass(day.meetings, dailyTarget.meetings)}`}>
-                                        {day.meetings}
-                                      </td>
-                                      <td className={`py-2 text-center ${getStatusClass(day.units, dailyTarget.units)}`}>
-                                        {day.units}
-                                      </td>
-                                      <td className={`py-2 text-center ${getStatusClass(day.revenue, dailyTarget.revenue)}`}>
-                                        ${day.revenue}
-                                      </td>
-                                    </tr>
-                                  );
-                                })}
-                              </tbody>
-                              <tfoot>
-                                <tr className="border-t-2 border-gray-300 font-semibold">
-                                  <td className="py-2 text-gray-700">Week Total</td>
-                                  <td className={`py-2 text-center ${getStatusClass(week.totals.calls, week.targets.calls)}`}>
-                                    {week.totals.calls}
-                                  </td>
-                                  <td className={`py-2 text-center ${getStatusClass(week.totals.bookings, week.targets.bookings)}`}>
-                                    {week.totals.bookings}
-                                  </td>
-                                  <td className={`py-2 text-center ${getStatusClass(week.totals.meetings, week.targets.meetings)}`}>
-                                    {week.totals.meetings}
-                                  </td>
-                                  <td className={`py-2 text-center ${getStatusClass(week.totals.units, week.targets.units)}`}>
-                                    {week.totals.units}
-                                  </td>
-                                  <td className={`py-2 text-center ${getStatusClass(week.totals.revenue, week.targets.revenue)}`}>
-                                    ${week.totals.revenue}
-                                  </td>
-                                </tr>
-                                <tr className="text-gray-400 text-xs">
-                                  <td className="py-1">Target</td>
-                                  <td className="py-1 text-center">{week.targets.calls}</td>
-                                  <td className="py-1 text-center">{week.targets.bookings}</td>
-                                  <td className="py-1 text-center">{week.targets.meetings}</td>
-                                  <td className="py-1 text-center">{week.targets.units}</td>
-                                  <td className="py-1 text-center">${week.targets.revenue}</td>
-                                </tr>
-                              </tfoot>
-                            </table>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          ))}
+                );
+              })
+            : filteredData.map((trainee) => (
+                <TraineeCard
+                  key={trainee.slug}
+                  trainee={trainee}
+                  expandedWeeks={expandedWeeks}
+                  toggleWeekExpanded={toggleWeekExpanded}
+                />
+              ))}
         </div>
       </div>
     </main>
