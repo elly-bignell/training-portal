@@ -163,7 +163,7 @@ const weeklyData: WeekData[] = [
     phase: "maintain",
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
     takeaways: [
-      "Refine your call list — target higher-quality prospects to improve booking conversion",
+      "Review your follow-up pipeline — warm leads from previous weeks are your easiest wins",
       "Better bookings = better show rates = more meetings from less effort",
       "Start tracking which industries and business types convert best for you",
     ],
@@ -356,7 +356,7 @@ function getPhaseStyles(phase: string) {
         takeawayBg: "bg-slate-50",
         takeawayBorder: "border-teal-200",
         takeawayText: "text-teal-800",
-        takeawayDot: `bg-[${MINT}]`,
+        takeawayDot: "bg-teal-500",
       };
     case "training":
       return {
@@ -782,7 +782,7 @@ function RoadmapContent() {
                       <div className="space-y-2">
                         {w.takeaways.map((t, i) => (
                           <div key={i} className="flex items-start gap-2">
-                            <div className={`w-1.5 h-1.5 rounded-full ${styles.takeawayDot} mt-1.5 flex-shrink-0`} />
+                            <div className={`w-2 h-2 rounded-full ${styles.takeawayDot} mt-1.5 flex-shrink-0`} />
                             <p className={`text-xs ${styles.takeawayText} leading-relaxed`}>{t}</p>
                           </div>
                         ))}
