@@ -45,11 +45,11 @@ const weeklyData: WeekData[] = [
     phase: "ramp",
     label: "First Week Out",
     buddyWeek: true,
-    daily: { revenue: 250, units: 0.5, meetings: 1, bookings: 7, calls: 70 },
+    daily: { revenue: 250, units: 0.5, meetings: 1, bookings: 6, calls: 60 },
     takeaways: [
-      "60–80 calls/day depending on cut-through — volume is everything this week",
-      "Minimum 7 bookings/day — you're booking meetings for your buddy",
-      "1 meeting/day — your buddy leads, you observe and learn the pitch",
+      "60 calls/day — volume is everything this week",
+      "6 bookings/day — you're booking meetings for your buddy",
+      "1 meeting/day observing — watch how your buddy runs the call and closes",
       "50% close rate → 2.5 deals/week → $1,250 (your 50% target contribution: $625)",
     ],
   },
@@ -60,10 +60,10 @@ const weeklyData: WeekData[] = [
     phase: "ramp",
     label: "Building Pipeline",
     buddyWeek: true,
-    daily: { revenue: 250, units: 0.5, meetings: 1, bookings: 7, calls: 70 },
+    daily: { revenue: 250, units: 0.5, meetings: 1, bookings: 6, calls: 60 },
     takeaways: [
-      "Same rhythm as Week 1 — 60–80 calls, 7 bookings/day minimum",
-      "1 meeting/day — still observing, picking up the structure and close",
+      "Same rhythm as Week 1 — 60 calls, 6 bookings, 1 meeting observing",
+      "You should be picking up the pitch structure and objection handling",
       "Your pipeline is growing — the bookings you're making fill your buddy's calendar",
       "50% close rate → 2.5 deals/week → $1,250 (your 50% target contribution: $625)",
     ],
@@ -73,14 +73,14 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 9 Mar – Fri 13 Mar",
     startDate: "2026-03-09",
     phase: "ramp",
-    label: "Stepping Up",
+    label: "Consistency",
     buddyWeek: true,
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 5, calls: 50 },
+    daily: { revenue: 250, units: 0.5, meetings: 1, bookings: 6, calls: 60 },
     takeaways: [
-      "50 calls/day — meetings are taking more of your time now",
-      "5 bookings/day — efficiency improving as your pitch sharpens",
-      "2 meetings/day — you start leading the call with buddy support",
-      "50% close rate → 5 deals/week → $2,500 (your 50% target contribution: $1,250)",
+      "Same targets — 60 calls, 6 bookings, 1 meeting observing",
+      "Your booking quality should be improving — better prospects, fewer no-shows",
+      "Learn from every meeting — what objections come up, how does your buddy handle them?",
+      "50% close rate → 2.5 deals/week → $1,250 (your 50% target contribution: $625)",
     ],
   },
   {
@@ -88,66 +88,72 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 16 Mar – Fri 20 Mar",
     startDate: "2026-03-16",
     phase: "ramp",
-    label: "Final Buddy Week",
+    label: "Wrapping Up Phase 1",
     buddyWeek: true,
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 5, calls: 50 },
+    daily: { revenue: 250, units: 0.5, meetings: 1, bookings: 6, calls: 60 },
     takeaways: [
-      "Same as Week 3 — 50 calls, 5 bookings, 2 meetings/day",
-      "50% close rate → 5 deals/week → $2,500 (your 50% target contribution: $1,250)",
-      "This is your last week with buddy support — prove you're ready",
-      "Don't cut your buddy prematurely — only go solo with 100% confidence",
+      "Last week at 60 calls / 6 bookings / 1 meeting — you've built the foundation",
+      "Next week you step up to 2 meetings/day — your buddy will start handing you the reins",
+      "Your booking rhythm is locked in — now it's about quality over quantity",
+      "50% close rate → 2.5 deals/week → $1,250 (your 50% target contribution: $625)",
     ],
   },
   {
     week: 5,
     dateRange: "Mon 23 Mar – Fri 27 Mar",
     startDate: "2026-03-23",
-    phase: "solo",
-    label: "✈️ Flying Solo",
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
+    phase: "ramp",
+    label: "Stepping Up",
+    buddyWeek: true,
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 5, calls: 50 },
     takeaways: [
-      "You're flying solo — buddy is cut loose, 100% commission from this week",
-      "40 calls/day, 4 bookings — call-to-book rate hits 10%, double Week 1",
-      "50% close rate → 5 deals/week → $2,500 — all yours",
-      "Prove you can maintain the rhythm independently — Week 6 is the benchmark",
+      "50 calls/day, 5 bookings — meetings are taking more of your time now",
+      "2 meetings/day — you start leading the call with buddy backup",
+      "1 fewer booking but 1 more meeting — see the Rules of Thumb",
+      "50% close rate → 5 deals/week → $2,500 (your 50% target contribution: $1,250)",
     ],
   },
   {
     week: 6,
     dateRange: "Mon 30 Mar – Fri 3 Apr",
     startDate: "2026-03-30",
-    phase: "standard",
-    label: "🎯 The Standard",
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
+    phase: "ramp",
+    label: "Final Buddy Week",
+    buddyWeek: true,
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 5, calls: 50 },
     takeaways: [
-      "1 deal per day — this is the benchmark you maintain from here",
-      "10% call-to-book, 50% show rate, 50% close rate — every metric is optimised",
-      "43% fewer calls than Week 1, 100% of your revenue — efficiency wins",
+      "Same as Week 5 — 50 calls, 5 bookings, 2 meetings/day",
+      "50% close rate → 5 deals/week → $2,500 (your 50% target contribution: $1,250)",
+      "This is your last week with buddy support — prove you're ready to go solo",
+      "Don't cut your buddy prematurely — only go solo with 100% confidence",
     ],
   },
   {
     week: 7,
     dateRange: "Mon 6 Apr – Fri 10 Apr",
     startDate: "2026-04-06",
-    phase: "maintain",
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
+    phase: "solo",
+    label: "✈️ Flying Solo",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 5, calls: 50 },
     takeaways: [
-      "Consistency is the challenge now — same discipline, same results",
-      "Build habits that make this your new normal",
-      "Trust the process — the numbers don't lie",
+      "First week running meetings solo — 100% commission from this week",
+      "Same rhythm: 50 calls, 5 bookings, 2 meetings — but all yours now",
+      "50% close rate → 5 deals/week → $2,500 — every dollar is yours",
+      "Prove you can maintain the close rate without your buddy in the room",
     ],
   },
   {
     week: 8,
     dateRange: "Mon 13 Apr – Fri 17 Apr",
     startDate: "2026-04-13",
-    phase: "maintain",
-    label: "Fully Operational",
+    phase: "standard",
+    label: "🎯 The Standard",
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
     takeaways: [
-      "Your earning potential is uncapped — focus shifts to output over input",
-      "5 deals/week minimum, achieved however you see fit with the inputs you choose",
-      "Find your flow — 1 call = 1 deal should always be the goal",
+      "Fully proficient closed-circuit selling — you own the entire process",
+      "40 calls, 4 bookings, 2 meetings — maximum efficiency, minimum waste",
+      "50% close rate → 5 deals/week → $2,500/week — this is your benchmark",
+      "The Standard is your floor, not your ceiling — keep pushing",
     ],
   },
   {
@@ -452,7 +458,7 @@ function RoadmapContent() {
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Our Standards</h1>
           <p className="text-lg sm:text-xl font-semibold mt-2" style={{ color: PINK }}>The Roadmap to Achieving 1 Deal Per Day</p>
           <p className="text-slate-400 mt-3">
-            This roadmap covers your first 16 weeks, building up to The Standard by Week 6 and maintaining it beyond.
+            This roadmap covers your first 16 weeks, building up to The Standard by Week 8 and maintaining it beyond.
           </p>
         </div>
       </header>
@@ -462,9 +468,9 @@ function RoadmapContent() {
         <div className="rounded-2xl p-6 sm:p-8 text-white shadow-xl" style={{ background: `linear-gradient(135deg, ${PINK} 0%, #ff4da6 100%)` }}>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-2xl">🎯</span>
-            <h2 className="text-xl font-bold">The Standard — Week 6 Target</h2>
+            <h2 className="text-xl font-bold">The Standard — Week 8 Target</h2>
           </div>
-          <p className="text-pink-200 text-sm mb-6">From Week 6 onwards — these are your targets to maintain</p>
+          <p className="text-pink-200 text-sm mb-6">From Week 8 onwards — these are your targets to maintain</p>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 60px 1fr 60px 1fr 60px 1fr 60px 1fr", alignItems: "center" }}>
             {funnelMetrics.map((m, i) => (
@@ -501,6 +507,39 @@ function RoadmapContent() {
         </div>
       </div>
 
+      {/* Rules of Thumb */}
+      <div className="max-w-7xl mx-auto px-4 pt-6">
+        <div className="rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-slate-50 p-5">
+          <div className="flex items-start gap-3">
+            <span className="text-2xl">📐</span>
+            <div className="flex-1">
+              <h3 className="text-sm font-bold text-indigo-900 mb-1">Rules of Thumb</h3>
+              <p className="text-xs text-indigo-700 mb-3">1 hour = 1 meeting <span className="font-bold">OR</span> 10 calls. As meetings increase, bookings decrease.</p>
+              <div className="bg-white rounded-lg border border-indigo-100 overflow-hidden">
+                <div className="grid grid-cols-3 text-[11px] font-bold text-indigo-900 border-b border-indigo-100">
+                  <div className="px-4 py-2 text-center border-r border-indigo-100">MEETINGS</div>
+                  <div className="px-4 py-2 text-center border-r border-indigo-100">BOOKINGS</div>
+                  <div className="px-4 py-2 text-center">CALLS</div>
+                </div>
+                {[
+                  { m: 1, b: 6, c: 60 },
+                  { m: 2, b: 5, c: 50 },
+                  { m: 3, b: 4, c: 40 },
+                  { m: 4, b: 3, c: 30 },
+                ].map((row, i) => (
+                  <div key={i} className={`grid grid-cols-3 text-sm ${i % 2 === 0 ? "bg-indigo-50/40" : "bg-white"} ${i < 3 ? "border-b border-indigo-50" : ""}`}>
+                    <div className="px-4 py-2.5 text-center font-bold text-indigo-700 border-r border-indigo-100">{row.m}</div>
+                    <div className="px-4 py-2.5 text-center font-bold text-indigo-700 border-r border-indigo-100">{row.b}</div>
+                    <div className="px-4 py-2.5 text-center font-bold text-indigo-700">{row.c}</div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[10px] text-indigo-500 mt-2">Total daily output stays constant — more meetings means fewer calls, but each meeting is a closing opportunity.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Weekly Cards */}
       <div className="max-w-7xl mx-auto px-4 py-10">
         <div className="space-y-4">
@@ -531,10 +570,10 @@ function RoadmapContent() {
                     <div className="flex items-start gap-3">
                       <span className="text-2xl">🤝</span>
                       <div className="flex-1">
-                        <h3 className="text-sm font-bold text-amber-900 mb-2">Weeks 1–4: Buddy System</h3>
+                        <h3 className="text-sm font-bold text-amber-900 mb-2">Weeks 1–6: Buddy System</h3>
                         <p className="text-sm text-amber-800 mb-3">
-                          You&#39;ll be paired with a senior team member for your first 4 weeks. They&#39;ll attend your meetings,
-                          guide your pitch, and help you close. By Week 5, you should be cut loose and running independently.
+                          You&#39;ll be paired with a senior team member for your first 6 weeks. They&#39;ll attend your meetings,
+                          guide your pitch, and help you close. By Week 7, you should be cut loose and running independently.
                         </p>
                         <div className="grid sm:grid-cols-2 gap-3">
                           <div className="bg-white/70 rounded-lg p-3 border border-amber-200">
@@ -544,7 +583,7 @@ function RoadmapContent() {
                             </div>
                             <p className="text-xs text-amber-700">
                               While your buddy attends your meetings, target revenue is split <span className="font-bold">50/50</span>.
-                              It&#39;s in your best interest to reach 100% proficiency and be cut loose by Week 5.
+                              It&#39;s in your best interest to reach 100% proficiency and be cut loose by Week 7.
                             </p>
                           </div>
                           <div className="bg-white/70 rounded-lg p-3 border border-amber-200">
@@ -779,24 +818,24 @@ function RoadmapContent() {
           <h3 className="text-lg font-bold text-slate-800 mb-4">💡 Key Observations</h3>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${PINK}08`, borderColor: `${PINK}22` }}>
-              <h4 className="font-semibold text-sm mb-2" style={{ color: PINK }}>📞 Calls Decrease, Output Stays Strong</h4>
+              <h4 className="font-semibold text-sm mb-2" style={{ color: PINK }}>📞 Calls Decrease as Meetings Increase</h4>
               <p className="text-sm text-slate-600">
-                350 calls/week in Weeks 1–2, down to 200 by The Standard.
-                10% book rate throughout — fewer calls, more time in meetings, same booking quality.
+                300 calls/week in Weeks 1–4, down to 200 by The Standard.
+                Every meeting you add frees up call time — see the Rules of Thumb.
               </p>
             </div>
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${MINT}15`, borderColor: `${MINT}44` }}>
               <h4 className="font-semibold text-sm mb-2 text-teal-700">📈 Buddy System → Independence</h4>
               <p className="text-sm text-slate-600">
-                Weeks 1–4 with buddy support (50/50 target split). Cut loose by Week 5 with 100% of your target revenue.
-                The faster you reach proficiency, the sooner you keep 100% of your deal revenue.
+                Weeks 1–6 with buddy support (50/50 target split). Flying solo from Week 7 with 100% commission.
+                The faster you reach proficiency, the sooner you keep every dollar.
               </p>
             </div>
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${MINT}15`, borderColor: `${MINT}44` }}>
               <h4 className="font-semibold text-sm mb-2 text-teal-700">🤝 50% Close Rate Throughout</h4>
               <p className="text-sm text-slate-600">
                 Close rate holds at 50% from Week 1 onwards — your buddy ensures strong conversion early,
-                and by Week 5 you maintain it independently. Every 2 meetings = 1 deal.
+                and by Week 7 you maintain it independently. Every 2 meetings = 1 deal.
               </p>
             </div>
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${PINK}08`, borderColor: `${PINK}22` }}>
