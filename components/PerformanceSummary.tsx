@@ -297,6 +297,7 @@ export default function PerformanceSummary() {
                   </th>
                 ))}
                 <th className="text-center px-3 py-3 font-semibold">Total</th>
+                <th className="text-center px-2 py-3 font-semibold">%</th>
               </tr>
             </thead>
 
@@ -308,7 +309,7 @@ export default function PerformanceSummary() {
                 <tbody key={team.name} className={teamIndex > 0 ? "border-t-2 border-gray-200" : ""}>
                   {/* Team header */}
                   <tr className="bg-slate-800">
-                    <td colSpan={8} className="px-4 py-2.5">
+                    <td colSpan={9} className="px-4 py-2.5">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-bold text-white">{team.name}</span>
                         <div className="flex items-center gap-4">
@@ -360,6 +361,9 @@ export default function PerformanceSummary() {
                           <td className={`px-3 py-1.5 text-center font-semibold ${getBookingStatusClass(td.totals.bookings, TEAM_BOOKINGS_TARGET_EOW / 2)}`}>
                             {td.totals.bookings}
                           </td>
+                          <td className="px-2 py-1.5 text-center text-xs font-semibold text-gray-600">
+                            {td.totals.calls > 0 ? `${Math.round((td.totals.bookings / td.totals.calls) * 100)}%` : <span className="text-gray-300">–</span>}
+                          </td>
                         </tr>
                         {/* Calls row */}
                         <tr className="border-b border-gray-100 hover:bg-gray-50/50">
@@ -374,6 +378,7 @@ export default function PerformanceSummary() {
                           <td className="px-3 py-1.5 text-center font-semibold text-gray-800">
                             {td.totals.calls}
                           </td>
+                          <td></td>
                         </tr>
                       </React.Fragment>
                     );
@@ -405,6 +410,9 @@ export default function PerformanceSummary() {
                       {teamWeekTotals.bookings}
                       <span className="text-gray-400 font-normal text-xs">/{TEAM_BOOKINGS_TARGET_EOW}</span>
                     </td>
+                    <td className="px-2 py-2 text-center text-xs font-bold text-slate-600">
+                      {teamWeekTotals.calls > 0 ? `${Math.round((teamWeekTotals.bookings / teamWeekTotals.calls) * 100)}%` : "–"}
+                    </td>
                   </tr>
                 </tbody>
               );
@@ -413,7 +421,7 @@ export default function PerformanceSummary() {
             {/* Grand Total — all teams */}
             <tbody className="border-t-4 border-slate-800">
               <tr className="bg-slate-900">
-                <td colSpan={8} className="px-4 py-2">
+                <td colSpan={9} className="px-4 py-2">
                   <span className="text-sm font-bold text-white">All Teams — Daily Total</span>
                 </td>
               </tr>
@@ -433,6 +441,9 @@ export default function PerformanceSummary() {
                   {grandWeekTotals.bookings}
                   <span className="text-gray-400 font-normal text-xs">/{TEAM_BOOKINGS_TARGET_EOW * 3}</span>
                 </td>
+                <td className="px-2 py-2 text-center text-xs font-bold text-slate-800">
+                  {grandWeekTotals.calls > 0 ? `${Math.round((grandWeekTotals.bookings / grandWeekTotals.calls) * 100)}%` : "–"}
+                </td>
               </tr>
               <tr className="bg-slate-50">
                 <td className="px-4 py-2 text-xs font-bold text-slate-700 uppercase">Calls</td>
@@ -445,6 +456,7 @@ export default function PerformanceSummary() {
                 <td className="px-3 py-2 text-center text-sm font-bold text-slate-800">
                   {grandWeekTotals.calls}
                 </td>
+                <td></td>
               </tr>
             </tbody>
           </table>
