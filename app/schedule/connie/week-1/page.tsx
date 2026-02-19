@@ -177,6 +177,19 @@ function ConnieWeek1Content() {
                     ))}
                   </tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:30pm</td></tr>
+
+                  {/* ═══ 4:00–5:00 — Calls → 1 Booking ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:00pm</td>
+                    {days.map((day) => (
+                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
+                        <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Calls</div>
+                        <div className="text-[10px] text-gray-500 mt-1">4:00–5:00pm · 1hr</div>
+                        <div className="text-[10px] text-sky-600 font-semibold mt-0.5">Target: 1 booking</div>
+                      </td>
+                    ))}
+                  </tr>
+                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:30pm</td></tr>
                 </tbody>
               </table>
             </div>
@@ -247,10 +260,15 @@ function ConnieWeek1Content() {
                     <td className="py-2 text-center text-gray-600">3:00–4:00</td>
                     <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
                   </tr>
+                  <tr className="border-b border-gray-100 bg-sky-50/50">
+                    <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
+                    <td className="py-2 text-center text-gray-600">4:00–5:00</td>
+                    <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
+                  </tr>
                   <tr className="border-t-2 border-gray-200">
                     <td className="py-2 text-gray-900 font-bold">Daily Total</td>
-                    <td className="py-2 text-center text-gray-600 font-semibold">5hrs calls</td>
-                    <td className="py-2 text-right text-gray-900 font-bold">5 bookings + 1 meeting</td>
+                    <td className="py-2 text-center text-gray-600 font-semibold">6hrs calls</td>
+                    <td className="py-2 text-right text-gray-900 font-bold">6 bookings + 1 meeting</td>
                   </tr>
                 </tbody>
               </table>
