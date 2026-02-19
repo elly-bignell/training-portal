@@ -480,17 +480,36 @@ export default function PerformanceSummary() {
       {(() => {
         // Find the best conversion rate across all individuals
         const allMemberData = teams.flatMap((t) => t.members).map((s) => dataMap.get(s)).filter(Boolean) as TraineeWeekData[];
-        let bestRate = 0;
-        let bestName = "";
+        let liveBestRate = 0;
+        let liveBestName = "";
         allMemberData.forEach((td) => {
           if (td.totals.calls > 0) {
             const rate = td.totals.bookings / td.totals.calls;
-            if (rate > bestRate) {
-              bestRate = rate;
-              bestName = td.name.split(" ")[0];
+            if (rate > liveBestRate) {
+              liveBestRate = rate;
+              liveBestName = td.name.split(" ")[0];
             }
           }
         });
+
+        // Persist the highest rate seen — survives week resets
+        let bestRate = liveBestRate;
+        let bestName = liveBestName;
+        try {
+          const stored = JSON.parse(localStorage.getItem("spotlight_best") || "{}");
+          if (stored.rate && stored.rate > liveBestRate) {
+            // Stored rate is higher (e.g. new week, data reset) — keep it
+            bestRate = stored.rate;
+            bestName = stored.name || "—";
+          }
+          // Save if current is higher or equal (keeps it fresh)
+          if (liveBestRate >= (stored.rate || 0)) {
+            localStorage.setItem("spotlight_best", JSON.stringify({ rate: liveBestRate, name: liveBestName }));
+          }
+        } catch {
+          // localStorage unavailable — just use live data
+        }
+
         const bestPct = Math.round(bestRate * 100);
         if (bestPct === 0) return null;
 
