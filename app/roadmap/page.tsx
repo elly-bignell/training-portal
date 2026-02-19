@@ -106,7 +106,7 @@ const weeklyData: WeekData[] = [
     label: "Nearly There",
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 },
     takeaways: [
-      "You're flying solo now — buddy is cut loose, 100% of target revenue is yours",
+      "You're flying solo now — buddy is cut loose, 100% commission from this week onwards",
       "40 calls/day, 4 bookings — call-to-book rate hits 10%, double Week 1",
       "50% close rate → 5 deals/week → $2,500 — all yours",
       "Prove you can maintain the rhythm independently — Week 6 is the benchmark",
