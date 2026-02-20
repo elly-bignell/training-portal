@@ -23,6 +23,7 @@ export async function GET() {
     const notes = (data.records || []).map((r: any) => ({
       id: r.id,
       content: r.fields.Content || "",
+      type: r.fields.Type || "well",
       createdAt: r.fields.CreatedAt || r.createdTime || "",
       updatedAt: r.fields.UpdatedAt || r.createdTime || "",
     })).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
@@ -35,7 +36,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { content } = await request.json();
+    const { content, type } = await request.json();
     const now = new Date().toISOString();
     const res = await fetch(airtableUrl, {
       method: "POST",
@@ -45,6 +46,7 @@ export async function POST(request: Request) {
           {
             fields: {
               Content: content,
+              Type: type || "well",
               CreatedAt: now,
               UpdatedAt: now,
             },
@@ -57,8 +59,9 @@ export async function POST(request: Request) {
     return NextResponse.json({
       id: r.id,
       content: r.fields.Content || "",
-      createdAt: r.fields.CreatedAt || r.createdTime || new Date().toISOString(),
-      updatedAt: r.fields.UpdatedAt || r.createdTime || new Date().toISOString(),
+      type: r.fields.Type || type || "well",
+      createdAt: r.fields.CreatedAt || r.createdTime || now,
+      updatedAt: r.fields.UpdatedAt || r.createdTime || now,
     });
   } catch (err) {
     console.error("Airtable POST error:", err);
@@ -90,8 +93,9 @@ export async function PUT(request: Request) {
     return NextResponse.json({
       id: r.id,
       content: r.fields.Content || "",
+      type: r.fields.Type || "well",
       createdAt: r.fields.CreatedAt || r.createdTime || "",
-      updatedAt: r.fields.UpdatedAt || r.createdTime || new Date().toISOString(),
+      updatedAt: r.fields.UpdatedAt || r.createdTime || now,
     });
   } catch (err) {
     console.error("Airtable PUT error:", err);
