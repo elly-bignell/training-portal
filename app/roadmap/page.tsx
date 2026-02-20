@@ -514,7 +514,7 @@ function RoadmapContent() {
             <span className="text-2xl">📐</span>
             <div className="flex-1">
               <h3 className="text-sm font-bold text-indigo-900 mb-1">Rules of Thumb</h3>
-              <p className="text-xs text-indigo-700 mb-3">1 hour = 1 meeting <span className="font-bold">OR</span> minimum 1 booking.</p>
+              <p className="text-xs text-indigo-700 mb-3">1 hour = 1 meeting <span className="font-bold">OR</span> minimum 1 booking. Week 1: 15% book rate. Week 2+: 20%.</p>
               <div className="bg-white rounded-lg border border-indigo-100 overflow-hidden">
                 <div className="grid grid-cols-3 text-[11px] font-bold text-indigo-900 border-b border-indigo-100">
                   <div className="px-4 py-2 text-center border-r border-indigo-100">MEETINGS</div>
@@ -522,6 +522,7 @@ function RoadmapContent() {
                   <div className="px-4 py-2 text-center">CALLS</div>
                 </div>
                 {[
+                  { m: 0, b: 7, c: 70 },
                   { m: 1, b: 6, c: 60 },
                   { m: 2, b: 5, c: 50 },
                   { m: 3, b: 4, c: 40 },
