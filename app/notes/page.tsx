@@ -107,7 +107,9 @@ function NotesPage() {
   }
 
   function formatDate(iso: string) {
+    if (!iso) return "Just now";
     const d = new Date(iso);
+    if (isNaN(d.getTime())) return "Just now";
     const now = new Date();
     const diffMs = now.getTime() - d.getTime();
     const diffMins = Math.floor(diffMs / 60000);

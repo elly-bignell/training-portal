@@ -15,7 +15,7 @@ const headers = {
 
 export async function GET() {
   try {
-    const res = await fetch(`${airtableUrl}?sort%5B0%5D%5Bfield%5D=CreatedAt&sort%5B0%5D%5Bdirection%5D=desc`, {
+    const res = await fetch(airtableUrl, {
       headers,
       cache: "no-store",
     });
@@ -23,9 +23,9 @@ export async function GET() {
     const notes = (data.records || []).map((r: any) => ({
       id: r.id,
       content: r.fields.Content || "",
-      createdAt: r.fields.CreatedAt || "",
-      updatedAt: r.fields.UpdatedAt || "",
-    }));
+      createdAt: r.fields.CreatedAt || r.createdTime || "",
+      updatedAt: r.fields.UpdatedAt || r.createdTime || "",
+    })).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     return NextResponse.json(notes);
   } catch (err) {
     console.error("Airtable GET error:", err);
@@ -56,9 +56,9 @@ export async function POST(request: Request) {
     const r = data.records[0];
     return NextResponse.json({
       id: r.id,
-      content: r.fields.Content,
-      createdAt: r.fields.CreatedAt,
-      updatedAt: r.fields.UpdatedAt,
+      content: r.fields.Content || "",
+      createdAt: r.fields.CreatedAt || r.createdTime || new Date().toISOString(),
+      updatedAt: r.fields.UpdatedAt || r.createdTime || new Date().toISOString(),
     });
   } catch (err) {
     console.error("Airtable POST error:", err);
@@ -89,9 +89,9 @@ export async function PUT(request: Request) {
     const r = data.records[0];
     return NextResponse.json({
       id: r.id,
-      content: r.fields.Content,
-      createdAt: r.fields.CreatedAt,
-      updatedAt: r.fields.UpdatedAt,
+      content: r.fields.Content || "",
+      createdAt: r.fields.CreatedAt || r.createdTime || "",
+      updatedAt: r.fields.UpdatedAt || r.createdTime || new Date().toISOString(),
     });
   } catch (err) {
     console.error("Airtable PUT error:", err);
