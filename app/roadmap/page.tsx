@@ -519,14 +519,14 @@ function RoadmapContent() {
                 <div className="grid grid-cols-3 text-[11px] font-bold text-indigo-900 border-b border-indigo-100">
                   <div className="px-4 py-2 text-center border-r border-indigo-100">MEETINGS</div>
                   <div className="px-4 py-2 text-center border-r border-indigo-100">BOOKINGS</div>
-                  <div className="px-4 py-2 text-center">CALLS</div>
+                  <div className="px-4 py-2 text-center">CALLS (20% CUT THROUGH)</div>
                 </div>
                 {[
-                  { m: 0, b: 7, c: 70 },
-                  { m: 1, b: 6, c: 60 },
-                  { m: 2, b: 5, c: 50 },
-                  { m: 3, b: 4, c: 40 },
-                  { m: 4, b: 3, c: 30 },
+                  { m: 0, b: 7, c: 35 },
+                  { m: 1, b: 6, c: 30 },
+                  { m: 2, b: 5, c: 25 },
+                  { m: 3, b: 4, c: 20 },
+                  { m: 4, b: 3, c: 15 },
                 ].map((row, i) => (
                   <div key={i} className={`grid grid-cols-3 text-sm ${i % 2 === 0 ? "bg-indigo-50/40" : "bg-white"} ${i < 3 ? "border-b border-indigo-50" : ""}`}>
                     <div className="px-4 py-2.5 text-center font-bold text-indigo-700 border-r border-indigo-100">{row.m}</div>
