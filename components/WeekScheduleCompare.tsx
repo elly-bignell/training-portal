@@ -2,6 +2,8 @@
 
 "use client";
 
+import { useState } from "react";
+
 interface ScheduleBlock {
   label: string;
   time: string;
