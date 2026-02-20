@@ -5,6 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import PasswordGate from "@/components/PasswordGate";
+import WeekScheduleCompare from "@/components/WeekScheduleCompare";
 
 interface Note {
   id: string;
@@ -18,9 +19,7 @@ function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [wellInput, setWellInput] = useState("");
   const [notWellInput, setNotWellInput] = useState("");
-  const [planInput, setPlanInput] = useState("");
-  const [actualInput, setActualInput] = useState("");
-  const [editingId, setEditingId] = useState<string | null>(null);
+      const [editingId, setEditingId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState("");
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -52,7 +51,7 @@ function NotesPage() {
   }
 
   async function addNote(type: Note["type"]) {
-    const inputMap: Record<string, string> = { well: wellInput, "not-well": notWellInput, plan: planInput, actual: actualInput };
+    const inputMap: Record<string, string> = { well: wellInput, "not-well": notWellInput };
     const content = inputMap[type];
     if (!content.trim()) return;
     setSaving(true);
@@ -66,8 +65,6 @@ function NotesPage() {
       setNotes((prev) => [note, ...prev]);
       if (type === "well") setWellInput("");
       if (type === "not-well") setNotWellInput("");
-      if (type === "plan") setPlanInput("");
-      if (type === "actual") setActualInput("");
     } catch {
       console.error("Failed to save note");
     } finally {
@@ -140,8 +137,6 @@ function NotesPage() {
 
   const wellNotes = notes.filter((n) => n.type === "well" || (!n.type));
   const notWellNotes = notes.filter((n) => n.type === "not-well");
-  const planNotes = notes.filter((n) => n.type === "plan");
-  const actualNotes = notes.filter((n) => n.type === "actual");
 
   function NoteCard({ note }: { note: Note }) {
     const isEditing = editingId === note.id;
@@ -346,109 +341,8 @@ function NotesPage() {
 
             {/* ═══ Weekly Plan vs Actual ═══ */}
             <div className="border-t-2 border-slate-200 pt-8">
-              <div className="flex items-center gap-2 mb-6">
-                <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-lg">📅</div>
-                <div>
-                  <h2 className="text-lg font-bold text-slate-900">Weekly Plan vs Actual</h2>
-                  <p className="text-xs text-slate-400">What we planned coming into the week vs what actually happened</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* The Plan */}
-                <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs">📐</div>
-                    <h3 className="text-sm font-bold text-slate-700">The Plan</h3>
-                    <span className="text-[10px] text-slate-400">Schedule, competencies & focus areas</span>
-                  </div>
-
-                  <div className="bg-white rounded-xl border-2 border-blue-200 p-3 mb-4 shadow-sm focus-within:border-blue-400 focus-within:shadow-md transition-all">
-                    <textarea
-                      value={planInput}
-                      onChange={(e) => { setPlanInput(e.target.value); autoResize(e.target); }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); addNote("plan"); }
-                      }}
-                      placeholder="What was the plan? (⌘+Enter to save)"
-                      className="w-full resize-none outline-none text-sm text-slate-700 placeholder-slate-400 min-h-[50px]"
-                      rows={2}
-                    />
-                    <div className="flex items-center justify-end mt-2 pt-2 border-t border-blue-100">
-                      <button
-                        onClick={() => addNote("plan")}
-                        disabled={!planInput.trim() || saving}
-                        className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                          planInput.trim() && !saving
-                            ? "bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
-                            : "bg-slate-100 text-slate-400 cursor-not-allowed"
-                        }`}
-                      >
-                        {saving ? "Saving..." : "Add Plan Note"}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    {planNotes.length === 0 ? (
-                      <div className="text-center py-8 text-slate-300">
-                        <div className="text-2xl mb-1">📐</div>
-                        <p className="text-xs">No plan notes yet</p>
-                      </div>
-                    ) : (
-                      planNotes.map((note) => <NoteCard key={note.id} note={note} />)
-                    )}
-                  </div>
-                </div>
-
-                {/* What Actually Happened */}
-                <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-6 h-6 rounded-full bg-amber-100 flex items-center justify-center text-xs">📊</div>
-                    <h3 className="text-sm font-bold text-slate-700">What Actually Happened</h3>
-                    <span className="text-[10px] text-slate-400">Adjustments, pivots & real outcomes</span>
-                  </div>
-
-                  <div className="bg-white rounded-xl border-2 border-amber-200 p-3 mb-4 shadow-sm focus-within:border-amber-400 focus-within:shadow-md transition-all">
-                    <textarea
-                      value={actualInput}
-                      onChange={(e) => { setActualInput(e.target.value); autoResize(e.target); }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); addNote("actual"); }
-                      }}
-                      placeholder="What actually happened? (⌘+Enter to save)"
-                      className="w-full resize-none outline-none text-sm text-slate-700 placeholder-slate-400 min-h-[50px]"
-                      rows={2}
-                    />
-                    <div className="flex items-center justify-end mt-2 pt-2 border-t border-amber-100">
-                      <button
-                        onClick={() => addNote("actual")}
-                        disabled={!actualInput.trim() || saving}
-                        className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                          actualInput.trim() && !saving
-                            ? "bg-amber-600 text-white hover:bg-amber-700 shadow-sm"
-                            : "bg-slate-100 text-slate-400 cursor-not-allowed"
-                        }`}
-                      >
-                        {saving ? "Saving..." : "Add Actual Note"}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    {actualNotes.length === 0 ? (
-                      <div className="text-center py-8 text-slate-300">
-                        <div className="text-2xl mb-1">📊</div>
-                        <p className="text-xs">No actual notes yet</p>
-                      </div>
-                    ) : (
-                      actualNotes.map((note) => <NoteCard key={note.id} note={note} />)
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </>
+              <WeekScheduleCompare />
+            </div>          </>
         )}
       </div>
     </div>
