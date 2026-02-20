@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import PasswordGate from "@/components/PasswordGate";
 import WeekScheduleCompare from "@/components/WeekScheduleCompare";
+import WeekScheduleCompare from "@/components/WeekScheduleCompare";
 
 interface Note {
   id: string;
