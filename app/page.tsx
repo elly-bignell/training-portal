@@ -174,6 +174,7 @@ function HomeContent() {
             </svg>
             Call Flowchart
           </Link>
+          <Link href="/timezones" className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors text-sm">🕐 Time Zones</Link>
         </div>
 
         {/* Training Program Overview */}
