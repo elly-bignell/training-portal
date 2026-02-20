@@ -256,7 +256,7 @@ const weeklyData: WeekData[] = [
   },
 ];
 
-const standardDaily = { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 40 };
+const standardDaily = { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 20 };
 
 function getWeekly(daily: WeekData["daily"]) {
   return {
