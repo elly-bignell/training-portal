@@ -109,7 +109,7 @@ function TimeTable({
           </thead>
           <tbody>
             {ADELAIDE_TIMES.map((time, rowIdx) => {
-              const isLunch = time === "12:30pm" || time === "1:00pm";
+              const isLunch = false;
               return (
                 <tr
                   key={time}
@@ -132,8 +132,8 @@ function TimeTable({
                             : z.offset === 0
                             ? "text-slate-700"
                             : z.offset > 0
-                            ? "text-blue-700"
-                            : "text-orange-700"
+                            ? "text-slate-700"
+                            : "text-slate-700"
                         }`}
                       >
                         {converted}
