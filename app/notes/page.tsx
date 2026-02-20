@@ -32,6 +32,7 @@ interface NoteCardProps {
 
 function NoteCard({ note, editingId, editContent, saving, deleteConfirm, setEditingId, setEditContent, setDeleteConfirm, updateNote, deleteNote, formatDate, autoResize }: NoteCardProps) {
   const isEditing = editingId === note.id;
+  const editRef = useRef<HTMLTextAreaElement>(null);
   const colorMap: Record<string, { border: string; hover: string }> = {
     well: { border: "border-emerald-200", hover: "hover:border-emerald-300" },
     "not-well": { border: "border-red-200", hover: "hover:border-red-300" },
