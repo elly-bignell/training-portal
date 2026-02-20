@@ -50,7 +50,7 @@ const PLAN_SCHEDULE: WeekData = {
         time: "9:00am–12:30pm",
         duration: "3.5hrs",
         color: "welcome",
-        subtitle: "Cindy, Krishna, Connie from 9:00am\nBecks joins from 10:00am",
+        subtitle: "Cindy, Krishna, Connie from 9:00am",
         details: ["Tech Setup", "This Week's Schedule", "Competencies", "Standards", "Scorecards"],
         rowSpan: 7,
       },
@@ -122,7 +122,6 @@ const ACTUAL_SCHEDULE: WeekData = {
   "Mon 16 Feb": {
     arrivals: [
       "Cindy · Sydney → Adelaide · Departs 6:40am · Lands 8:15am",
-      "Becks · Brisbane → Adelaide · Departs 6:35am · Lands 9:50am",
     ],
     blocks: {
       "8:30am": null,
@@ -131,7 +130,7 @@ const ACTUAL_SCHEDULE: WeekData = {
         time: "9:00am–12:30pm",
         duration: "3.5hrs",
         color: "welcome",
-        subtitle: "Cindy, Krishna, Connie from 9:00am\nBecks joins from 10:00am",
+        subtitle: "Cindy, Krishna, Connie from 9:00am",
         details: ["Management Team Introduction", "Tech Setup", "This Week's Schedule", "Competencies", "Standards", "Scorecards"],
         rowSpan: 7,
       },
@@ -193,7 +192,6 @@ const ACTUAL_SCHEDULE: WeekData = {
     departures: [
       "Saturday 21 Feb",
       "Cindy · Adelaide → Sydney · Departs 12:35pm · Arrives 3:00pm",
-      "Becks · Adelaide → Brisbane · Departs 10:55am · Arrives 12:55pm",
     ],
     evening: [],
   },
