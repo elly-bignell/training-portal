@@ -17,18 +17,19 @@ interface WeeklyData {
 }
 
 // Standards from the roadmap (daily targets)
-// calls_made = raw dials, calls = connected calls
-// Benchmark: 18 dials/hr → 10 connects/hr (55.6% connect rate)
+// Based on 4 hours calling per day
+// Per hour: 18 calls → 10 connects (55.6%) → 1.5 bookings (15%) → 0.75 attended (50%) → 0.375 deals (50%)
+// Revenue: $350 per deal
 export const weeklyStandards: Record<number, DailyActivity> = {
   0: { calls_made: 0, calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 }, // Training
-  1: { calls_made: 90, calls: 50, bookings: 10, meetings: 1, units: 0.5, revenue: 250 },
-  2: { calls_made: 90, calls: 50, bookings: 10, meetings: 2, units: 0.5, revenue: 250 },
-  3: { calls_made: 90, calls: 50, bookings: 10, meetings: 2, units: 0.5, revenue: 250 },
-  4: { calls_made: 90, calls: 50, bookings: 10, meetings: 2, units: 1, revenue: 500 },
-  5: { calls_made: 72, calls: 40, bookings: 8, meetings: 2, units: 1, revenue: 500 },
-  6: { calls_made: 72, calls: 40, bookings: 8, meetings: 2, units: 1, revenue: 500 }, // The Standard
-  7: { calls_made: 72, calls: 40, bookings: 8, meetings: 2, units: 1, revenue: 500 },
-  8: { calls_made: 72, calls: 40, bookings: 8, meetings: 2, units: 1, revenue: 500 },
+  1: { calls_made: 72, calls: 40, bookings: 6, meetings: 3, units: 1.5, revenue: 525 },
+  2: { calls_made: 72, calls: 40, bookings: 6, meetings: 3, units: 1.5, revenue: 525 },
+  3: { calls_made: 72, calls: 40, bookings: 6, meetings: 3, units: 1.5, revenue: 525 },
+  4: { calls_made: 72, calls: 40, bookings: 6, meetings: 3, units: 1.5, revenue: 525 },
+  5: { calls_made: 72, calls: 40, bookings: 6, meetings: 3, units: 1.5, revenue: 525 },
+  6: { calls_made: 72, calls: 40, bookings: 6, meetings: 3, units: 1.5, revenue: 525 }, // The Standard
+  7: { calls_made: 72, calls: 40, bookings: 6, meetings: 3, units: 1.5, revenue: 525 },
+  8: { calls_made: 72, calls: 40, bookings: 6, meetings: 3, units: 1.5, revenue: 525 },
 };
 
 // Week start dates (Sundays before each Monday)
