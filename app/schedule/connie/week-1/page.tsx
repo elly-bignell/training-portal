@@ -40,11 +40,11 @@ function ConnieWeek1Content() {
           </div>
           <div className="grid grid-cols-5 gap-4">
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">60</div>
+              <div className="text-2xl font-bold">55</div>
               <div className="text-[10px] text-slate-400 uppercase">Calls</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">6</div>
+              <div className="text-2xl font-bold">5</div>
               <div className="text-[10px] text-slate-400 uppercase">Bookings</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
@@ -77,44 +77,37 @@ function ConnieWeek1Content() {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* ═══ 8:30–9:00 — Team Meeting ═══ */}
-                  <tr>
-                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">8:30am</td>
-                    {days.map((day) => (
-                      <td key={day} className="p-2 text-center border border-gray-200 align-middle bg-indigo-50">
-                        <div className="bg-indigo-100 text-indigo-700 rounded px-2 py-1.5 text-xs font-semibold">🗣️ Team Meeting</div>
-                        <div className="text-[10px] text-gray-500 mt-1">8:30–9:00am · 30min</div>
-                      </td>
-                    ))}
-                  </tr>
-
-                  {/* ═══ 9:00–10:00 — Calls → 1 Booking ═══ */}
+                  {/* ═══ 9:00–10:00 — Management Team Zoom Meeting ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">9:00am</td>
                     {days.map((day) => (
-                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
-                        <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Calls</div>
+                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-indigo-50">
+                        <div className="bg-indigo-100 text-indigo-700 rounded px-2 py-1.5 text-xs font-semibold">🗣️ Management Team Zoom Meeting</div>
                         <div className="text-[10px] text-gray-500 mt-1">9:00–10:00am · 1hr</div>
-                        <div className="text-[10px] text-sky-600 font-semibold mt-0.5">Target: 1 booking</div>
+                        <div className="text-[10px] text-gray-400 mt-1 space-y-0.5">
+                          <div>Previous day&apos;s outcomes</div>
+                          <div>Questions / problems</div>
+                          <div>Meetings for today</div>
+                        </div>
                       </td>
                     ))}
                   </tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">9:30am</td></tr>
 
-                  {/* ═══ 10:00–11:00 — Meeting Attendance ═══ */}
+                  {/* ═══ 10:00–11:00 — Calls ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">10:00am</td>
                     {days.map((day) => (
-                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-emerald-50">
-                        <div className="bg-emerald-100 text-emerald-700 rounded px-2 py-1.5 text-xs font-semibold">📋 Meeting Attendance</div>
+                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
+                        <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Calls</div>
                         <div className="text-[10px] text-gray-500 mt-1">10:00–11:00am · 1hr</div>
-                        <div className="text-[10px] text-gray-400 mt-0.5">Observe buddy&apos;s meeting</div>
+                        <div className="text-[10px] text-sky-600 font-semibold mt-0.5">Target: 1 booking</div>
                       </td>
                     ))}
                   </tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">10:30am</td></tr>
 
-                  {/* ═══ 11:00–12:00 — Calls → 1 Booking ═══ */}
+                  {/* ═══ 11:00–12:00 — Calls ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:00am</td>
                     {days.map((day) => (
@@ -127,17 +120,27 @@ function ConnieWeek1Content() {
                   </tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:30am</td></tr>
 
-                  {/* ═══ 12:00–1:00 — Break ═══ */}
+                  {/* ═══ 12:00–12:30 — Break ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:00pm</td>
                     {days.map((day) => (
-                      <td key={day} rowSpan={2} className="p-2 border border-gray-200 bg-gray-100">
+                      <td key={day} className="p-2 border border-gray-200 bg-gray-100">
                       </td>
                     ))}
                   </tr>
-                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:30pm</td></tr>
 
-                  {/* ═══ 1:00–2:00 — Calls → 1 Booking ═══ */}
+                  {/* ═══ 12:30–1:00 — Zoom Catchup ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:30pm</td>
+                    {days.map((day) => (
+                      <td key={day} className="p-2 text-center border border-gray-200 align-middle bg-indigo-50">
+                        <div className="bg-indigo-100 text-indigo-700 rounded px-2 py-1.5 text-xs font-semibold">🗣️ Zoom Catchup</div>
+                        <div className="text-[10px] text-gray-500 mt-1">12:30–1:00pm · 30min</div>
+                      </td>
+                    ))}
+                  </tr>
+
+                  {/* ═══ 1:00–2:00 — Calls ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:00pm</td>
                     {days.map((day) => (
@@ -150,20 +153,20 @@ function ConnieWeek1Content() {
                   </tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:30pm</td></tr>
 
-                  {/* ═══ 2:00–3:00 — Calls → 1 Booking ═══ */}
+                  {/* ═══ 2:00–3:00 — Meeting Slot ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:00pm</td>
                     {days.map((day) => (
-                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
-                        <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Calls</div>
+                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-emerald-50">
+                        <div className="bg-emerald-100 text-emerald-700 rounded px-2 py-1.5 text-xs font-semibold">📋 Meeting Slot</div>
                         <div className="text-[10px] text-gray-500 mt-1">2:00–3:00pm · 1hr</div>
-                        <div className="text-[10px] text-sky-600 font-semibold mt-0.5">Target: 1 booking</div>
+                        <div className="text-[10px] text-gray-400 mt-0.5">At management&apos;s discretion</div>
                       </td>
                     ))}
                   </tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:30pm</td></tr>
 
-                  {/* ═══ 3:00–4:00 — Calls → 1 Booking ═══ */}
+                  {/* ═══ 3:00–4:00 — Calls ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:00pm</td>
                     {days.map((day) => (
@@ -176,7 +179,7 @@ function ConnieWeek1Content() {
                   </tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">3:30pm</td></tr>
 
-                  {/* ═══ 4:00–5:00 — Calls → 1 Booking ═══ */}
+                  {/* ═══ 4:00–5:00 — Calls ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:00pm</td>
                     {days.map((day) => (
@@ -188,15 +191,27 @@ function ConnieWeek1Content() {
                     ))}
                   </tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:30pm</td></tr>
+
+                  {/* ═══ 5:00–5:30 — Calls WA ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">5:00pm</td>
+                    {days.map((day) => (
+                      <td key={day} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
+                        <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Calls (WA)</div>
+                        <div className="text-[10px] text-gray-500 mt-1">5:00–5:30pm · 30min</div>
+                      </td>
+                    ))}
+                  </tr>
                 </tbody>
               </table>
             </div>
 
             {/* Legend */}
             <div className="mt-6 pt-4 border-t border-gray-100 flex flex-wrap gap-4 text-xs">
-              <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-indigo-100 border border-indigo-200"></span><span className="text-gray-600">Team Meeting</span></div>
+              <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-indigo-100 border border-indigo-200"></span><span className="text-gray-600">Zoom / Management Meeting</span></div>
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-sky-100 border border-sky-200"></span><span className="text-gray-600">Calls</span></div>
-              <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-emerald-100 border border-emerald-200"></span><span className="text-gray-600">Meeting Attendance</span></div>
+              <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-emerald-100 border border-emerald-200"></span><span className="text-gray-600">Meeting Slot</span></div>
+              <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-amber-100 border border-amber-200"></span><span className="text-gray-600">Calls (WA)</span></div>
             </div>
           </div>
 
@@ -218,19 +233,14 @@ function ConnieWeek1Content() {
                 </thead>
                 <tbody>
                   <tr className="border-b border-gray-100">
-                    <td className="py-2 text-gray-700 font-medium">🗣️ Team Meeting</td>
-                    <td className="py-2 text-center text-gray-600">8:30–9:00</td>
+                    <td className="py-2 text-indigo-700 font-medium">🗣️ Mgmt Zoom</td>
+                    <td className="py-2 text-center text-gray-600">9:00–10:00</td>
                     <td className="py-2 text-right text-gray-400">—</td>
                   </tr>
                   <tr className="border-b border-gray-100 bg-sky-50/50">
                     <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
-                    <td className="py-2 text-center text-gray-600">9:00–10:00</td>
-                    <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 text-emerald-700 font-medium">📋 Meeting</td>
                     <td className="py-2 text-center text-gray-600">10:00–11:00</td>
-                    <td className="py-2 text-right text-emerald-700 font-semibold">1 meeting</td>
+                    <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
                   </tr>
                   <tr className="border-b border-gray-100 bg-sky-50/50">
                     <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
@@ -239,18 +249,23 @@ function ConnieWeek1Content() {
                   </tr>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 text-gray-400 font-medium">Break</td>
-                    <td className="py-2 text-center text-gray-400">Flexible</td>
-                    <td className="py-2 text-right text-gray-400 text-[10px]">Take at your discretion</td>
+                    <td className="py-2 text-center text-gray-400">12:00–12:30</td>
+                    <td className="py-2 text-right text-gray-400">—</td>
+                  </tr>
+                  <tr className="border-b border-gray-100">
+                    <td className="py-2 text-indigo-700 font-medium">🗣️ Zoom Catchup</td>
+                    <td className="py-2 text-center text-gray-600">12:30–1:00</td>
+                    <td className="py-2 text-right text-gray-400">—</td>
                   </tr>
                   <tr className="border-b border-gray-100 bg-sky-50/50">
                     <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
                     <td className="py-2 text-center text-gray-600">1:00–2:00</td>
                     <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
                   </tr>
-                  <tr className="border-b border-gray-100 bg-sky-50/50">
-                    <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
+                  <tr className="border-b border-gray-100">
+                    <td className="py-2 text-emerald-700 font-medium">📋 Meeting Slot</td>
                     <td className="py-2 text-center text-gray-600">2:00–3:00</td>
-                    <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
+                    <td className="py-2 text-right text-emerald-700 font-semibold">1 meeting</td>
                   </tr>
                   <tr className="border-b border-gray-100 bg-sky-50/50">
                     <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
@@ -262,10 +277,15 @@ function ConnieWeek1Content() {
                     <td className="py-2 text-center text-gray-600">4:00–5:00</td>
                     <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
                   </tr>
+                  <tr className="border-b border-gray-100 bg-amber-50/50">
+                    <td className="py-2 text-amber-700 font-medium">📞 Calls (WA)</td>
+                    <td className="py-2 text-center text-gray-600">5:00–5:30</td>
+                    <td className="py-2 text-right text-gray-400">—</td>
+                  </tr>
                   <tr className="border-t-2 border-gray-200">
                     <td className="py-2 text-gray-900 font-bold">Daily Total</td>
-                    <td className="py-2 text-center text-gray-600 font-semibold">6hrs calls</td>
-                    <td className="py-2 text-right text-gray-900 font-bold">6 bookings + 1 meeting</td>
+                    <td className="py-2 text-center text-gray-600 font-semibold">5.5hrs calls</td>
+                    <td className="py-2 text-right text-gray-900 font-bold">5 bookings + 1 meeting</td>
                   </tr>
                 </tbody>
               </table>
@@ -288,11 +308,23 @@ function ConnieWeek1Content() {
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-700 leading-relaxed">Meeting time is a <strong>placeholder at 10am</strong> — will shift based on actual bookings</p>
+                  <p className="text-xs text-gray-700 leading-relaxed"><strong>9:00am Zoom</strong> — daily check-in with management team</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
+                  <p className="text-xs text-gray-700 leading-relaxed"><strong>12:30pm Zoom Catchup</strong> — midday check-in</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
+                  <p className="text-xs text-gray-700 leading-relaxed">2:00–3:00pm <strong>meeting slot</strong> — used at management&apos;s discretion if on track with bookings</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
                   <p className="text-xs text-gray-700 leading-relaxed">1 hour on phones = minimum 1 booking</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
+                  <p className="text-xs text-gray-700 leading-relaxed"><strong>5:00–5:30pm</strong> — WA calls while businesses are still open</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
