@@ -16,31 +16,35 @@ const STAFF = [
   { name: "Krishna Patel", slug: "krishna-patel", week: 1, buddy: true },
 ];
 
-// ─── Rules of Thumb (per hour of calling) ───
-// 5 calls = 1 booking (20% booking rate)
-// 2 bookings = 1 meeting
-// 2 meetings = 1 deal (unit)
-// Revenue per unit = $500
-// Week 1 buddy split = 50%
-
-const RATES = {
-  callsPerHour: 5,
-  bookingRate: 0.2,          // 20% → 1 booking per 5 calls
-  bookingsPerHour: 1,        // 5 calls × 20% = 1
-  meetingsPerBooking: 0.5,   // 2 bookings = 1 meeting
-  dealsPerMeeting: 0.5,      // 2 meetings = 1 deal
-  revenuePerUnit: 500,
+// ─── Benchmark per hour ───
+// 20 calls → 10 connects (50%) → 2.5 bookings (25% of connects) → 1.25 attended (50%) → 0.625 deals (50%)
+const PER_HOUR = {
+  calls: 20,
+  connects: 10,       // 50% of calls
+  bookings: 2.5,      // 25% of connects
+  attended: 1.25,      // 50% of bookings
+  deals: 0.625,        // 50% of attended
 };
 
+const CONVERSION_RATES = {
+  connectRate: 0.50,   // connects ÷ calls
+  bookingRate: 0.25,   // bookings ÷ connects
+  attendRate: 0.50,    // attended ÷ bookings
+  closeRate: 0.50,     // deals ÷ attended
+};
+
+const REVENUE_PER_UNIT = 500;
+
 function calculateTargets(callingHours: number, buddySplit: boolean) {
-  const calls = Math.round(RATES.callsPerHour * callingHours);
-  const bookings = RATES.bookingsPerHour * callingHours;
-  const meetings = bookings * RATES.meetingsPerBooking;
-  const units = meetings * RATES.dealsPerMeeting;
-  const grossRevenue = units * RATES.revenuePerUnit;
+  const calls = Math.round(PER_HOUR.calls * callingHours);
+  const connects = Math.round(PER_HOUR.connects * callingHours);
+  const bookings = PER_HOUR.bookings * callingHours;
+  const attended = PER_HOUR.attended * callingHours;
+  const deals = PER_HOUR.deals * callingHours;
+  const grossRevenue = deals * REVENUE_PER_UNIT;
   const revenue = buddySplit ? grossRevenue * 0.5 : grossRevenue;
 
-  return { calls, bookings, meetings, units, grossRevenue, revenue };
+  return { calls, connects, bookings, attended, deals, grossRevenue, revenue };
 }
 
 // ─── Quick hour presets ───
@@ -79,7 +83,7 @@ export default function CalculatorPage() {
         {/* ─── Step 1: Select Person ─── */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center gap-2 mb-4">
-            <span className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-base text-white">1</span>
+            <span className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-base text-white font-bold">1</span>
             <h2 className="text-sm font-bold text-slate-900">Select Person</h2>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -107,7 +111,7 @@ export default function CalculatorPage() {
         {/* ─── Step 2: Calling Hours ─── */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center gap-2 mb-4">
-            <span className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-base text-white">2</span>
+            <span className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-base text-white font-bold">2</span>
             <h2 className="text-sm font-bold text-slate-900">Hours on the Phones</h2>
             <span className="text-xs text-gray-400 ml-2">How many hours calling today?</span>
           </div>
@@ -161,7 +165,7 @@ export default function CalculatorPage() {
         {/* ─── Step 3: Generated Targets ─── */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center gap-2 mb-5">
-            <span className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-base text-white">3</span>
+            <span className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-base text-white font-bold">3</span>
             <div>
               <h2 className="text-sm font-bold text-slate-900">
                 {staff ? `${staff.name}'s` : "Daily"} Targets
@@ -175,27 +179,43 @@ export default function CalculatorPage() {
 
           {callingHours > 0 ? (
             <>
-              {/* Main target cards */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
+              {/* Funnel flow visual */}
+              <div className="flex flex-col sm:flex-row items-stretch gap-0 mb-6">
                 {[
-                  { label: "Calls", value: targets.calls, emoji: "📞", sub: `${RATES.callsPerHour}/hr`, color: "bg-sky-50 border-sky-200" },
-                  { label: "Bookings", value: targets.bookings, emoji: "📅", sub: `${RATES.bookingsPerHour}/hr (20%)`, color: "bg-sky-50 border-sky-200" },
-                  { label: "Meetings", value: targets.meetings, emoji: "🤝", sub: "1 per 2 bookings", color: "bg-emerald-50 border-emerald-200" },
-                  { label: "Units", value: targets.units, emoji: "🏆", sub: "1 per 2 meetings", color: "bg-amber-50 border-amber-200" },
-                  { label: "Revenue", value: targets.revenue, emoji: "💰", sub: staff?.buddy ? "50% buddy split" : "$500/unit", color: "bg-green-50 border-green-200", isCurrency: true },
-                ].map((item) => (
-                  <div key={item.label} className={`rounded-xl border p-4 text-center ${item.color}`}>
-                    <span className="text-xl">{item.emoji}</span>
-                    <div className="text-3xl font-black text-slate-900 tabular-nums mt-1">
-                      {(item as { isCurrency?: boolean }).isCurrency
-                        ? `$${item.value.toLocaleString()}`
-                        : item.value % 1 === 0
-                          ? item.value
-                          : item.value.toFixed(1)
-                      }
+                  { label: "Calls", value: targets.calls, rate: "100%", emoji: "📞", color: "bg-sky-50 border-sky-200 text-sky-700" },
+                  { label: "Connects", value: targets.connects, rate: "50%", emoji: "🔗", color: "bg-sky-50 border-sky-200 text-sky-700" },
+                  { label: "Bookings", value: targets.bookings, rate: "25%", emoji: "📅", color: "bg-indigo-50 border-indigo-200 text-indigo-700" },
+                  { label: "Attended", value: targets.attended, rate: "50%", emoji: "🤝", color: "bg-emerald-50 border-emerald-200 text-emerald-700" },
+                  { label: "Deals", value: targets.deals, rate: "50%", emoji: "🏆", color: "bg-amber-50 border-amber-200 text-amber-700" },
+                  { label: "Revenue", value: targets.revenue, rate: staff?.buddy ? "50% split" : "", emoji: "💰", color: "bg-green-50 border-green-200 text-green-700", isCurrency: true },
+                ].map((item, i, arr) => (
+                  <div key={item.label} className="flex sm:flex-col items-center flex-1">
+                    <div className={`rounded-xl border p-3 text-center w-full ${item.color}`}>
+                      <span className="text-lg">{item.emoji}</span>
+                      <div className="text-2xl font-black text-slate-900 tabular-nums mt-0.5">
+                        {(item as { isCurrency?: boolean }).isCurrency
+                          ? `$${Math.round(item.value).toLocaleString()}`
+                          : item.value % 1 === 0
+                            ? item.value
+                            : item.value.toFixed(1)
+                        }
+                      </div>
+                      <div className="text-[10px] font-bold mt-0.5">{item.label}</div>
                     </div>
-                    <div className="text-xs font-bold text-gray-600 mt-1">{item.label}</div>
-                    <div className="text-[10px] text-gray-400 mt-0.5">{item.sub}</div>
+                    {i < arr.length - 1 && (
+                      <div className="flex items-center justify-center sm:py-1 px-2 sm:px-0">
+                        {/* Arrow down on mobile, right on desktop */}
+                        <svg className="w-4 h-4 text-gray-300 hidden sm:block rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                        <svg className="w-4 h-4 text-gray-300 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                        {arr[i + 1] && !(arr[i + 1] as { isCurrency?: boolean }).isCurrency && (
+                          <span className="text-[9px] text-gray-400 font-semibold ml-0.5 sm:ml-0">{arr[i + 1].rate}</span>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -209,9 +229,10 @@ export default function CalculatorPage() {
                       <tr className="border-b-2 border-gray-200">
                         <th className="pb-2 text-left text-xs font-semibold text-gray-400">After</th>
                         <th className="pb-2 text-center text-xs font-semibold text-gray-400">📞 Calls</th>
+                        <th className="pb-2 text-center text-xs font-semibold text-gray-400">🔗 Connects</th>
                         <th className="pb-2 text-center text-xs font-semibold text-gray-400">📅 Bookings</th>
-                        <th className="pb-2 text-center text-xs font-semibold text-gray-400">🤝 Meetings</th>
-                        <th className="pb-2 text-center text-xs font-semibold text-gray-400">🏆 Units</th>
+                        <th className="pb-2 text-center text-xs font-semibold text-gray-400">🤝 Attended</th>
+                        <th className="pb-2 text-center text-xs font-semibold text-gray-400">🏆 Deals</th>
                         <th className="pb-2 text-center text-xs font-semibold text-gray-400">💰 Revenue</th>
                       </tr>
                     </thead>
@@ -220,7 +241,6 @@ export default function CalculatorPage() {
                         const h = Math.min(i + 1, callingHours);
                         const t = calculateTargets(h, staff?.buddy ?? true);
                         const isLast = h === callingHours;
-                        const isCurrent = i + 1 > callingHours; // partial hour
                         return (
                           <tr
                             key={i}
@@ -231,10 +251,11 @@ export default function CalculatorPage() {
                               {isLast && <span className="text-[10px] text-slate-400 ml-1">✓</span>}
                             </td>
                             <td className="py-2.5 text-center tabular-nums">{t.calls}</td>
+                            <td className="py-2.5 text-center tabular-nums">{t.connects}</td>
                             <td className="py-2.5 text-center tabular-nums">{t.bookings % 1 === 0 ? t.bookings : t.bookings.toFixed(1)}</td>
-                            <td className="py-2.5 text-center tabular-nums">{t.meetings % 1 === 0 ? t.meetings : t.meetings.toFixed(1)}</td>
-                            <td className="py-2.5 text-center tabular-nums">{t.units % 1 === 0 ? t.units : t.units.toFixed(2)}</td>
-                            <td className="py-2.5 text-center tabular-nums">${t.revenue.toLocaleString()}</td>
+                            <td className="py-2.5 text-center tabular-nums">{t.attended % 1 === 0 ? t.attended : t.attended.toFixed(1)}</td>
+                            <td className="py-2.5 text-center tabular-nums">{t.deals % 1 === 0 ? t.deals : t.deals.toFixed(2)}</td>
+                            <td className="py-2.5 text-center tabular-nums">${Math.round(t.revenue).toLocaleString()}</td>
                           </tr>
                         );
                       })}
@@ -251,29 +272,55 @@ export default function CalculatorPage() {
           )}
         </div>
 
-        {/* ─── Rules Reference ─── */}
+        {/* ─── Conversion Funnel Reference ─── */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center gap-2 mb-4">
             <span className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-base">📐</span>
-            <h2 className="text-sm font-bold text-slate-900">Rules of Thumb</h2>
+            <h2 className="text-sm font-bold text-slate-900">Conversion Funnel (per hour benchmark)</h2>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-            <div className="flex justify-between p-3 bg-indigo-50 rounded-lg border border-indigo-100">
-              <span className="text-indigo-700 font-medium">5 calls</span>
-              <span className="text-indigo-900 font-bold">= 1 booking</span>
-            </div>
-            <div className="flex justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
-              <span className="text-gray-700 font-medium">Booking rate</span>
-              <span className="text-gray-900 font-bold">20%</span>
-            </div>
-            <div className="flex justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
-              <span className="text-gray-700 font-medium">2 bookings</span>
-              <span className="text-gray-900 font-bold">= 1 meeting</span>
-            </div>
-            <div className="flex justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
-              <span className="text-gray-700 font-medium">2 meetings</span>
-              <span className="text-gray-900 font-bold">= 1 deal</span>
-            </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="border-b-2 border-gray-200">
+                  <th className="pb-2 text-left font-semibold text-gray-400">Stage</th>
+                  <th className="pb-2 text-center font-semibold text-gray-400">Per Hour</th>
+                  <th className="pb-2 text-center font-semibold text-gray-400">Cut-through</th>
+                  <th className="pb-2 text-center font-semibold text-gray-400">From</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-gray-100">
+                  <td className="py-2 font-medium text-gray-700">📞 Calls</td>
+                  <td className="py-2 text-center font-bold text-slate-900">20</td>
+                  <td className="py-2 text-center text-gray-500">100%</td>
+                  <td className="py-2 text-center text-gray-400">—</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-2 font-medium text-gray-700">🔗 Connects</td>
+                  <td className="py-2 text-center font-bold text-slate-900">10</td>
+                  <td className="py-2 text-center text-sky-600 font-semibold">50%</td>
+                  <td className="py-2 text-center text-gray-400">of Calls</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-2 font-medium text-gray-700">📅 Bookings</td>
+                  <td className="py-2 text-center font-bold text-slate-900">2.5</td>
+                  <td className="py-2 text-center text-indigo-600 font-semibold">25%</td>
+                  <td className="py-2 text-center text-gray-400">of Connects</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-2 font-medium text-gray-700">🤝 Attended</td>
+                  <td className="py-2 text-center font-bold text-slate-900">1.25</td>
+                  <td className="py-2 text-center text-emerald-600 font-semibold">50%</td>
+                  <td className="py-2 text-center text-gray-400">of Bookings</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-2 font-medium text-gray-700">🏆 Deals</td>
+                  <td className="py-2 text-center font-bold text-slate-900">0.625</td>
+                  <td className="py-2 text-center text-amber-600 font-semibold">50%</td>
+                  <td className="py-2 text-center text-gray-400">of Attended</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           <div className="mt-3 text-[10px] text-gray-400">
             Revenue calculated at $500 per unit. Week 1 trainees are on 50/50 buddy split — revenue shown reflects their 50% share.
