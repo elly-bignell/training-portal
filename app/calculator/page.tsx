@@ -29,16 +29,15 @@ const PER_HOUR = {
 
 const REVENUE_PER_DEAL = 350;
 
-function calculateTargets(callingHours: number, buddySplit: boolean) {
+function calculateTargets(callingHours: number) {
   const calls = Math.round(PER_HOUR.calls * callingHours);
   const connects = Math.round(PER_HOUR.connects * callingHours);
   const bookings = PER_HOUR.bookings * callingHours;
   const attended = PER_HOUR.attended * callingHours;
   const deals = PER_HOUR.deals * callingHours;
-  const grossRevenue = deals * REVENUE_PER_DEAL;
-  const revenue = buddySplit ? grossRevenue * 0.5 : grossRevenue;
+  const revenue = deals * REVENUE_PER_DEAL;
 
-  return { calls, connects, bookings, attended, deals, grossRevenue, revenue };
+  return { calls, connects, bookings, attended, deals, revenue };
 }
 
 // ─── Quick hour presets ───
@@ -59,7 +58,7 @@ export default function CalculatorPage() {
   const [callingHours, setCallingHours] = useState<number>(4);
 
   const staff = STAFF.find((s) => s.slug === selectedStaff);
-  const targets = calculateTargets(callingHours, staff?.buddy ?? true);
+  const targets = calculateTargets(callingHours);
 
   return (
     <main className="min-h-screen bg-slate-100">
@@ -176,7 +175,6 @@ export default function CalculatorPage() {
               </h2>
               <p className="text-xs text-gray-400">
                 Based on {callingHours} hour{callingHours !== 1 ? "s" : ""} of calling
-                {staff?.buddy ? " · 50/50 buddy revenue split" : ""}
               </p>
             </div>
           </div>
@@ -234,7 +232,7 @@ export default function CalculatorPage() {
                     <tbody>
                       {Array.from({ length: Math.ceil(callingHours) }, (_, i) => {
                         const h = Math.min(i + 1, callingHours);
-                        const t = calculateTargets(h, staff?.buddy ?? true);
+                        const t = calculateTargets(h);
                         const isLast = h === callingHours;
                         return (
                           <tr
@@ -331,7 +329,7 @@ export default function CalculatorPage() {
             </table>
           </div>
           <div className="mt-3 text-[10px] text-gray-400">
-            Revenue calculated at $350 per deal (monthly value). Week 1 trainees are on 50/50 buddy split — revenue shown reflects their 50% share.
+            Revenue calculated at $350 per deal (monthly value).
           </div>
         </div>
 
