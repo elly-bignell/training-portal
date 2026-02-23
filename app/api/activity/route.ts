@@ -58,6 +58,7 @@ export async function GET(request: NextRequest) {
       const records = data.records.map((record: any) => ({
         id: record.id,
         date: record.fields.date,
+        calls_made: record.fields.calls_made || 0,
         calls: record.fields.calls || 0,
         bookings: record.fields.bookings || 0,
         meetings: record.fields.meetings || 0,
@@ -68,13 +69,14 @@ export async function GET(request: NextRequest) {
       // Calculate weekly totals
       const weeklyTotals = records.reduce(
         (acc: any, r: any) => ({
+          calls_made: acc.calls_made + r.calls_made,
           calls: acc.calls + r.calls,
           bookings: acc.bookings + r.bookings,
           meetings: acc.meetings + r.meetings,
           units: acc.units + r.units,
           revenue: acc.revenue + r.revenue,
         }),
-        { calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 }
+        { calls_made: 0, calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 }
       );
 
       return NextResponse.json({ records, weeklyTotals });
@@ -87,6 +89,7 @@ export async function GET(request: NextRequest) {
         id: record.id,
         trainee_slug: record.fields.trainee_slug,
         date: record.fields.date,
+        calls_made: record.fields.calls_made || 0,
         calls: record.fields.calls || 0,
         bookings: record.fields.bookings || 0,
         meetings: record.fields.meetings || 0,
@@ -99,6 +102,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       exists: false,
       date,
+      calls_made: 0,
       calls: 0,
       bookings: 0,
       meetings: 0,
@@ -115,7 +119,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { trainee_slug, trainee_name, calls, bookings, meetings, units, revenue } = body;
+    const { trainee_slug, trainee_name, calls_made, calls, bookings, meetings, units, revenue } = body;
     const date = body.date || getAdelaideDate();
 
     if (!trainee_slug) {
@@ -142,6 +146,7 @@ export async function POST(request: NextRequest) {
       trainee_slug,
       trainee_name: trainee_name || trainee_slug,
       date,
+      calls_made: calls_made || 0,
       calls: calls || 0,
       bookings: bookings || 0,
       meetings: meetings || 0,

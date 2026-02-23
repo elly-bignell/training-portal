@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 
 interface DailyActivity {
+  calls_made: number;
   calls: number;
   bookings: number;
   meetings: number;
@@ -16,16 +17,18 @@ interface WeeklyData {
 }
 
 // Standards from the roadmap (daily targets)
+// calls_made = raw dials, calls = connected calls
+// Benchmark: 18 dials/hr → 10 connects/hr (55.6% connect rate)
 export const weeklyStandards: Record<number, DailyActivity> = {
-  0: { calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 }, // Training
-  1: { calls: 60, bookings: 3, meetings: 0.4, units: 0, revenue: 0 },
-  2: { calls: 50, bookings: 3.2, meetings: 1.6, units: 0.2, revenue: 100 },
-  3: { calls: 50, bookings: 3.2, meetings: 1.6, units: 0.4, revenue: 200 },
-  4: { calls: 50, bookings: 4, meetings: 2, units: 0.6, revenue: 300 },
-  5: { calls: 40, bookings: 4, meetings: 2, units: 0.8, revenue: 400 },
-  6: { calls: 40, bookings: 4, meetings: 2, units: 1, revenue: 500 }, // The Standard
-  7: { calls: 40, bookings: 4, meetings: 2, units: 1, revenue: 500 },
-  8: { calls: 40, bookings: 4, meetings: 2, units: 1, revenue: 500 },
+  0: { calls_made: 0, calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 }, // Training
+  1: { calls_made: 90, calls: 50, bookings: 10, meetings: 1, units: 0.5, revenue: 250 },
+  2: { calls_made: 90, calls: 50, bookings: 10, meetings: 2, units: 0.5, revenue: 250 },
+  3: { calls_made: 90, calls: 50, bookings: 10, meetings: 2, units: 0.5, revenue: 250 },
+  4: { calls_made: 90, calls: 50, bookings: 10, meetings: 2, units: 1, revenue: 500 },
+  5: { calls_made: 72, calls: 40, bookings: 8, meetings: 2, units: 1, revenue: 500 },
+  6: { calls_made: 72, calls: 40, bookings: 8, meetings: 2, units: 1, revenue: 500 }, // The Standard
+  7: { calls_made: 72, calls: 40, bookings: 8, meetings: 2, units: 1, revenue: 500 },
+  8: { calls_made: 72, calls: 40, bookings: 8, meetings: 2, units: 1, revenue: 500 },
 };
 
 // Week start dates (Sundays before each Monday)
@@ -84,6 +87,7 @@ export function getDayOfWeek(): number {
 
 export function useActivityTracking(traineeSlug: string, traineeName: string) {
   const [todayActivity, setTodayActivity] = useState<DailyActivity>({
+    calls_made: 0,
     calls: 0,
     bookings: 0,
     meetings: 0,
@@ -102,6 +106,7 @@ export function useActivityTracking(traineeSlug: string, traineeName: string) {
       const data = await response.json();
       if (data && !data.error) {
         setTodayActivity({
+          calls_made: data.calls_made || 0,
           calls: data.calls || 0,
           bookings: data.bookings || 0,
           meetings: data.meetings || 0,
@@ -204,6 +209,7 @@ export function useActivityTracking(traineeSlug: string, traineeName: string) {
   const getWeeklyStandard = useCallback((): DailyActivity => {
     const daily = getDailyStandard();
     return {
+      calls_made: daily.calls_made * 5,
       calls: daily.calls * 5,
       bookings: daily.bookings * 5,
       meetings: daily.meetings * 5,

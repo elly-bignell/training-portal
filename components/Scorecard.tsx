@@ -219,10 +219,10 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
 
   const dailyStandard = getDailyStandard();
   const weeklyStandard = getWeeklyStandard();
-  const weeklyTotals = weeklyData?.weeklyTotals || { calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 };
+  const weeklyTotals = weeklyData?.weeklyTotals || { calls_made: 0, calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 };
 
   // Calculate overall % to standard for the day
-  const metrics = ["calls", "bookings", "meetings", "units", "revenue"] as const;
+  const metrics = ["calls_made", "calls", "bookings", "meetings", "units", "revenue"] as const;
   const dailyPcts = metrics.map((m) => {
     const target = dailyStandard[m];
     return target > 0 ? Math.min(100, (todayActivity[m] / target) * 100) : 100;
@@ -280,75 +280,93 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
 
       {/* Metric Cards Grid */}
       <div className="p-3 sm:p-4">
-        <div className="grid grid-cols-2 gap-2 sm:gap-3">
-          {/* Calls Connected */}
-          <MetricCard
-            label="Calls Connected"
-            value={todayActivity.calls}
-            target={dailyStandard.calls}
-            weeklyValue={weeklyTotals.calls}
-            weeklyTarget={weeklyStandard.calls}
-            color="bg-gradient-to-br from-blue-500 to-blue-600"
-            icon="📞"
-            onIncrement={() => incrementMetric("calls", 1)}
-            onDecrement={() => incrementMetric("calls", -1)}
-            isSaving={isSaving}
-          />
-          
-          {/* Bookings Made */}
-          <MetricCard
-            label="Bookings Made"
-            value={todayActivity.bookings}
-            target={dailyStandard.bookings}
-            weeklyValue={weeklyTotals.bookings}
-            weeklyTarget={weeklyStandard.bookings}
-            color="bg-gradient-to-br from-purple-500 to-purple-600"
-            icon="📅"
-            onIncrement={() => incrementMetric("bookings", 1)}
-            onDecrement={() => incrementMetric("bookings", -1)}
-            isSaving={isSaving}
-          />
-          
-          {/* Attended Meetings */}
-          <MetricCard
-            label="Meetings"
-            value={todayActivity.meetings}
-            target={dailyStandard.meetings}
-            weeklyValue={weeklyTotals.meetings}
-            weeklyTarget={weeklyStandard.meetings}
-            color="bg-gradient-to-br from-orange-500 to-orange-600"
-            icon="🤝"
-            onIncrement={() => incrementMetric("meetings", 1)}
-            onDecrement={() => incrementMetric("meetings", -1)}
-            isSaving={isSaving}
-          />
-          
-          {/* Sales Units */}
-          <MetricCard
-            label="Sales Units"
-            value={todayActivity.units}
-            target={dailyStandard.units}
-            weeklyValue={weeklyTotals.units}
-            weeklyTarget={weeklyStandard.units}
-            color="bg-gradient-to-br from-pink-500 to-[#E6017D]"
-            icon="🎯"
-            onIncrement={() => incrementMetric("units", 1)}
-            onDecrement={() => incrementMetric("units", -1)}
-            allowDecimal
-            isSaving={isSaving}
-          />
-          
-          {/* Revenue */}
-          <div className="col-span-2">
-            <RevenueInput
-              value={todayActivity.revenue}
-              target={dailyStandard.revenue}
-              weeklyValue={weeklyTotals.revenue}
-              weeklyTarget={weeklyStandard.revenue}
-              onSetValue={(val) => setMetric("revenue", val)}
+        <div className="space-y-2 sm:space-y-3">
+          {/* Row 1: Calls Made → Calls Connected → Bookings */}
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            {/* Calls Made */}
+            <MetricCard
+              label="Calls"
+              value={todayActivity.calls_made}
+              target={dailyStandard.calls_made}
+              weeklyValue={weeklyTotals.calls_made}
+              weeklyTarget={weeklyStandard.calls_made}
+              color="bg-gradient-to-br from-slate-500 to-slate-600"
+              icon="📞"
+              onIncrement={() => incrementMetric("calls_made", 1)}
+              onDecrement={() => incrementMetric("calls_made", -1)}
+              isSaving={isSaving}
+            />
+            
+            {/* Calls Connected */}
+            <MetricCard
+              label="Connected"
+              value={todayActivity.calls}
+              target={dailyStandard.calls}
+              weeklyValue={weeklyTotals.calls}
+              weeklyTarget={weeklyStandard.calls}
+              color="bg-gradient-to-br from-blue-500 to-blue-600"
+              icon="🔗"
+              onIncrement={() => incrementMetric("calls", 1)}
+              onDecrement={() => incrementMetric("calls", -1)}
+              isSaving={isSaving}
+            />
+            
+            {/* Bookings Made */}
+            <MetricCard
+              label="Bookings"
+              value={todayActivity.bookings}
+              target={dailyStandard.bookings}
+              weeklyValue={weeklyTotals.bookings}
+              weeklyTarget={weeklyStandard.bookings}
+              color="bg-gradient-to-br from-purple-500 to-purple-600"
+              icon="📅"
+              onIncrement={() => incrementMetric("bookings", 1)}
+              onDecrement={() => incrementMetric("bookings", -1)}
               isSaving={isSaving}
             />
           </div>
+
+          {/* Row 2: Meetings + Sales Units */}
+          <div className="grid grid-cols-2 gap-2 sm:gap-3">
+            {/* Attended Meetings */}
+            <MetricCard
+              label="Meetings"
+              value={todayActivity.meetings}
+              target={dailyStandard.meetings}
+              weeklyValue={weeklyTotals.meetings}
+              weeklyTarget={weeklyStandard.meetings}
+              color="bg-gradient-to-br from-orange-500 to-orange-600"
+              icon="🤝"
+              onIncrement={() => incrementMetric("meetings", 1)}
+              onDecrement={() => incrementMetric("meetings", -1)}
+              isSaving={isSaving}
+            />
+            
+            {/* Sales Units */}
+            <MetricCard
+              label="Sales Units"
+              value={todayActivity.units}
+              target={dailyStandard.units}
+              weeklyValue={weeklyTotals.units}
+              weeklyTarget={weeklyStandard.units}
+              color="bg-gradient-to-br from-pink-500 to-[#E6017D]"
+              icon="🎯"
+              onIncrement={() => incrementMetric("units", 1)}
+              onDecrement={() => incrementMetric("units", -1)}
+              allowDecimal
+              isSaving={isSaving}
+            />
+          </div>
+          
+          {/* Row 3: Revenue (full width) */}
+          <RevenueInput
+            value={todayActivity.revenue}
+            target={dailyStandard.revenue}
+            weeklyValue={weeklyTotals.revenue}
+            weeklyTarget={weeklyStandard.revenue}
+            onSetValue={(val) => setMetric("revenue", val)}
+            isSaving={isSaving}
+          />
         </div>
       </div>
 
@@ -357,14 +375,19 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
         <span>
           📊 Week {currentWeek}/8
         </span>
+        {weeklyTotals.calls_made > 0 && (
+          <span>
+            Connect: {weeklyTotals.calls > 0 ? Math.round((weeklyTotals.calls / weeklyTotals.calls_made) * 100) : 0}%
+          </span>
+        )}
         {weeklyTotals.calls > 0 && (
           <span>
-            Call→Book: {weeklyTotals.bookings > 0 ? Math.round((weeklyTotals.bookings / weeklyTotals.calls) * 100) : 0}%
+            Book: {weeklyTotals.bookings > 0 ? Math.round((weeklyTotals.bookings / weeklyTotals.calls) * 100) : 0}%
           </span>
         )}
         {weeklyTotals.bookings > 0 && (
           <span>
-            Book→Meet: {weeklyTotals.meetings > 0 ? Math.round((weeklyTotals.meetings / weeklyTotals.bookings) * 100) : 0}%
+            Attend: {weeklyTotals.meetings > 0 ? Math.round((weeklyTotals.meetings / weeklyTotals.bookings) * 100) : 0}%
           </span>
         )}
         {weeklyTotals.meetings > 0 && (
