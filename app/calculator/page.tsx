@@ -17,24 +17,25 @@ const STAFF = [
 ];
 
 // ─── Benchmark per hour ───
-// 18 calls → 10 connects (55.6%) → 2 bookings (20% of connects) → 1 attended (50% of bookings) → 0.5 deals (50% of attended)
+// 18 calls → 10 connects (55.6%) → 1.5 bookings (15% of connects) → 0.75 attended (50%) → 0.375 deals (50%)
+// Revenue per deal = $350/month
 const PER_HOUR = {
   calls: 18,
   connects: 10,
-  bookings: 2,
-  attended: 1,
-  deals: 0.5,
+  bookings: 1.5,
+  attended: 0.75,
+  deals: 0.375,
 };
 
-const REVENUE_PER_UNIT = 500;
+const REVENUE_PER_DEAL = 350;
 
 function calculateTargets(callingHours: number, buddySplit: boolean) {
   const calls = Math.round(PER_HOUR.calls * callingHours);
   const connects = Math.round(PER_HOUR.connects * callingHours);
-  const bookings = Math.round(PER_HOUR.bookings * callingHours);
+  const bookings = PER_HOUR.bookings * callingHours;
   const attended = PER_HOUR.attended * callingHours;
   const deals = PER_HOUR.deals * callingHours;
-  const grossRevenue = deals * REVENUE_PER_UNIT;
+  const grossRevenue = deals * REVENUE_PER_DEAL;
   const revenue = buddySplit ? grossRevenue * 0.5 : grossRevenue;
 
   return { calls, connects, bookings, attended, deals, grossRevenue, revenue };
@@ -43,9 +44,19 @@ function calculateTargets(callingHours: number, buddySplit: boolean) {
 // ─── Quick hour presets ───
 const HOUR_PRESETS = [1, 2, 3, 4, 5, 5.5, 6, 7, 8];
 
+// ─── Smart number formatting ───
+function fmt(v: number): string {
+  if (v === 0) return "0";
+  if (Number.isInteger(v)) return v.toString();
+  // Show 1 decimal if clean, otherwise 2
+  const one = v.toFixed(1);
+  if (parseFloat(one) === v) return one;
+  return v.toFixed(2);
+}
+
 export default function CalculatorPage() {
   const [selectedStaff, setSelectedStaff] = useState<string | null>(null);
-  const [callingHours, setCallingHours] = useState<number>(5);
+  const [callingHours, setCallingHours] = useState<number>(4);
 
   const staff = STAFF.find((s) => s.slug === selectedStaff);
   const targets = calculateTargets(callingHours, staff?.buddy ?? true);
@@ -173,40 +184,35 @@ export default function CalculatorPage() {
           {callingHours > 0 ? (
             <>
               {/* Funnel flow visual */}
-              <div className="flex flex-col sm:flex-row items-stretch gap-0 mb-6">
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-2">
                 {[
-                  { label: "Calls", value: targets.calls, emoji: "📞", color: "bg-sky-50 border-sky-200 text-sky-700" },
-                  { label: "Connects", value: targets.connects, emoji: "🔗", color: "bg-sky-50 border-sky-200 text-sky-700", rate: "55.6%" },
-                  { label: "Bookings", value: targets.bookings, emoji: "📅", color: "bg-indigo-50 border-indigo-200 text-indigo-700", rate: "20%" },
-                  { label: "Attended", value: targets.attended, emoji: "🤝", color: "bg-emerald-50 border-emerald-200 text-emerald-700", rate: "50%" },
-                  { label: "Deals", value: targets.deals, emoji: "🏆", color: "bg-amber-50 border-amber-200 text-amber-700", rate: "50%" },
-                  { label: "Revenue", value: targets.revenue, emoji: "💰", color: "bg-green-50 border-green-200 text-green-700", isCurrency: true, rate: staff?.buddy ? "50% split" : "" },
-                ].map((item, i, arr) => (
-                  <div key={item.label} className="flex sm:flex-col items-center flex-1">
-                    <div className={`rounded-xl border p-3 text-center w-full ${item.color}`}>
-                      <span className="text-lg">{item.emoji}</span>
-                      <div className="text-2xl font-black text-slate-900 tabular-nums mt-0.5">
-                        {(item as { isCurrency?: boolean }).isCurrency
-                          ? `$${Math.round(item.value).toLocaleString()}`
-                          : item.value % 1 === 0
-                            ? item.value
-                            : item.value.toFixed(1)
-                        }
-                      </div>
-                      <div className="text-[10px] font-bold mt-0.5">{item.label}</div>
+                  { label: "Calls", value: targets.calls, emoji: "📞", color: "bg-sky-50 border-sky-200" },
+                  { label: "Connects", value: targets.connects, emoji: "🔗", color: "bg-sky-50 border-sky-200" },
+                  { label: "Bookings", value: targets.bookings, emoji: "📅", color: "bg-indigo-50 border-indigo-200" },
+                  { label: "Attended", value: targets.attended, emoji: "🤝", color: "bg-emerald-50 border-emerald-200" },
+                  { label: "Deals", value: targets.deals, emoji: "🏆", color: "bg-amber-50 border-amber-200" },
+                  { label: "Revenue", value: targets.revenue, emoji: "💰", color: "bg-green-50 border-green-200", isCurrency: true },
+                ].map((item) => (
+                  <div key={item.label} className={`rounded-xl border p-3 text-center ${item.color}`}>
+                    <span className="text-lg">{item.emoji}</span>
+                    <div className="text-2xl font-black text-slate-900 tabular-nums mt-0.5">
+                      {(item as { isCurrency?: boolean }).isCurrency
+                        ? `$${Math.round(item.value).toLocaleString()}`
+                        : fmt(item.value)
+                      }
                     </div>
-                    {i < arr.length - 1 && (
-                      <div className="flex items-center justify-center sm:py-1 px-2 sm:px-0">
-                        <svg className="w-4 h-4 text-gray-300 sm:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                        </svg>
-                        {arr[i + 1]?.rate && (
-                          <span className="text-[9px] text-gray-400 font-semibold ml-0.5 sm:ml-0">{arr[i + 1].rate}</span>
-                        )}
-                      </div>
-                    )}
+                    <div className="text-[10px] font-bold text-gray-600 mt-0.5">{item.label}</div>
                   </div>
                 ))}
+              </div>
+
+              {/* Cut-through percentages */}
+              <div className="flex justify-center gap-6 mb-6 text-[10px] text-gray-400">
+                <span>↓ 55.6%</span>
+                <span>↓ 15%</span>
+                <span>↓ 50%</span>
+                <span>↓ 50%</span>
+                <span></span>
               </div>
 
               {/* Hourly breakdown table */}
@@ -241,9 +247,9 @@ export default function CalculatorPage() {
                             </td>
                             <td className="py-2.5 text-center tabular-nums">{t.calls}</td>
                             <td className="py-2.5 text-center tabular-nums">{t.connects}</td>
-                            <td className="py-2.5 text-center tabular-nums">{t.bookings}</td>
-                            <td className="py-2.5 text-center tabular-nums">{t.attended % 1 === 0 ? t.attended : t.attended.toFixed(1)}</td>
-                            <td className="py-2.5 text-center tabular-nums">{t.deals % 1 === 0 ? t.deals : t.deals.toFixed(1)}</td>
+                            <td className="py-2.5 text-center tabular-nums">{fmt(t.bookings)}</td>
+                            <td className="py-2.5 text-center tabular-nums">{fmt(t.attended)}</td>
+                            <td className="py-2.5 text-center tabular-nums">{fmt(t.deals)}</td>
                             <td className="py-2.5 text-center tabular-nums">${Math.round(t.revenue).toLocaleString()}</td>
                           </tr>
                         );
@@ -273,6 +279,7 @@ export default function CalculatorPage() {
                 <tr className="border-b-2 border-gray-200">
                   <th className="pb-2 text-left font-semibold text-gray-400">Stage</th>
                   <th className="pb-2 text-center font-semibold text-gray-400">Per Hour</th>
+                  <th className="pb-2 text-center font-semibold text-gray-400">Per 4hr Day</th>
                   <th className="pb-2 text-center font-semibold text-gray-400">Cut-through</th>
                   <th className="pb-2 text-center font-semibold text-gray-400">From</th>
                 </tr>
@@ -281,38 +288,50 @@ export default function CalculatorPage() {
                 <tr className="border-b border-gray-100">
                   <td className="py-2 font-medium text-gray-700">📞 Calls</td>
                   <td className="py-2 text-center font-bold text-slate-900">18</td>
+                  <td className="py-2 text-center text-gray-600">72</td>
                   <td className="py-2 text-center text-gray-500">—</td>
                   <td className="py-2 text-center text-gray-400">—</td>
                 </tr>
                 <tr className="border-b border-gray-100">
                   <td className="py-2 font-medium text-gray-700">🔗 Connects</td>
                   <td className="py-2 text-center font-bold text-slate-900">10</td>
+                  <td className="py-2 text-center text-gray-600">40</td>
                   <td className="py-2 text-center text-sky-600 font-semibold">55.6%</td>
                   <td className="py-2 text-center text-gray-400">of Calls</td>
                 </tr>
                 <tr className="border-b border-gray-100">
                   <td className="py-2 font-medium text-gray-700">📅 Bookings</td>
-                  <td className="py-2 text-center font-bold text-slate-900">2</td>
-                  <td className="py-2 text-center text-indigo-600 font-semibold">20%</td>
+                  <td className="py-2 text-center font-bold text-slate-900">1.5</td>
+                  <td className="py-2 text-center text-gray-600">6</td>
+                  <td className="py-2 text-center text-indigo-600 font-semibold">15%</td>
                   <td className="py-2 text-center text-gray-400">of Connects</td>
                 </tr>
                 <tr className="border-b border-gray-100">
                   <td className="py-2 font-medium text-gray-700">🤝 Attended</td>
-                  <td className="py-2 text-center font-bold text-slate-900">1</td>
+                  <td className="py-2 text-center font-bold text-slate-900">0.75</td>
+                  <td className="py-2 text-center text-gray-600">3</td>
                   <td className="py-2 text-center text-emerald-600 font-semibold">50%</td>
                   <td className="py-2 text-center text-gray-400">of Bookings</td>
                 </tr>
                 <tr className="border-b border-gray-100">
                   <td className="py-2 font-medium text-gray-700">🏆 Deals</td>
-                  <td className="py-2 text-center font-bold text-slate-900">0.5</td>
+                  <td className="py-2 text-center font-bold text-slate-900">0.375</td>
+                  <td className="py-2 text-center text-gray-600">1.5</td>
                   <td className="py-2 text-center text-amber-600 font-semibold">50%</td>
                   <td className="py-2 text-center text-gray-400">of Attended</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-2 font-medium text-gray-700">💰 Revenue</td>
+                  <td className="py-2 text-center font-bold text-slate-900">$131</td>
+                  <td className="py-2 text-center text-gray-600">$525</td>
+                  <td className="py-2 text-center text-green-600 font-semibold">$350/deal</td>
+                  <td className="py-2 text-center text-gray-400">per month</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <div className="mt-3 text-[10px] text-gray-400">
-            Revenue calculated at $500 per unit. Week 1 trainees are on 50/50 buddy split — revenue shown reflects their 50% share.
+            Revenue calculated at $350 per deal (monthly value). Week 1 trainees are on 50/50 buddy split — revenue shown reflects their 50% share.
           </div>
         </div>
 
