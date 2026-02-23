@@ -17,20 +17,13 @@ const STAFF = [
 ];
 
 // ─── Benchmark per hour ───
-// 20 calls → 10 connects (50%) → 2.5 bookings (25% of connects) → 1.25 attended (50%) → 0.625 deals (50%)
+// 18 calls → 10 connects (55.6%) → 2 bookings (20% of connects) → 1 attended (50% of bookings) → 0.5 deals (50% of attended)
 const PER_HOUR = {
-  calls: 20,
-  connects: 10,       // 50% of calls
-  bookings: 2.5,      // 25% of connects
-  attended: 1.25,      // 50% of bookings
-  deals: 0.625,        // 50% of attended
-};
-
-const CONVERSION_RATES = {
-  connectRate: 0.50,   // connects ÷ calls
-  bookingRate: 0.25,   // bookings ÷ connects
-  attendRate: 0.50,    // attended ÷ bookings
-  closeRate: 0.50,     // deals ÷ attended
+  calls: 18,
+  connects: 10,
+  bookings: 2,
+  attended: 1,
+  deals: 0.5,
 };
 
 const REVENUE_PER_UNIT = 500;
@@ -38,7 +31,7 @@ const REVENUE_PER_UNIT = 500;
 function calculateTargets(callingHours: number, buddySplit: boolean) {
   const calls = Math.round(PER_HOUR.calls * callingHours);
   const connects = Math.round(PER_HOUR.connects * callingHours);
-  const bookings = PER_HOUR.bookings * callingHours;
+  const bookings = Math.round(PER_HOUR.bookings * callingHours);
   const attended = PER_HOUR.attended * callingHours;
   const deals = PER_HOUR.deals * callingHours;
   const grossRevenue = deals * REVENUE_PER_UNIT;
@@ -182,12 +175,12 @@ export default function CalculatorPage() {
               {/* Funnel flow visual */}
               <div className="flex flex-col sm:flex-row items-stretch gap-0 mb-6">
                 {[
-                  { label: "Calls", value: targets.calls, rate: "100%", emoji: "📞", color: "bg-sky-50 border-sky-200 text-sky-700" },
-                  { label: "Connects", value: targets.connects, rate: "50%", emoji: "🔗", color: "bg-sky-50 border-sky-200 text-sky-700" },
-                  { label: "Bookings", value: targets.bookings, rate: "25%", emoji: "📅", color: "bg-indigo-50 border-indigo-200 text-indigo-700" },
-                  { label: "Attended", value: targets.attended, rate: "50%", emoji: "🤝", color: "bg-emerald-50 border-emerald-200 text-emerald-700" },
-                  { label: "Deals", value: targets.deals, rate: "50%", emoji: "🏆", color: "bg-amber-50 border-amber-200 text-amber-700" },
-                  { label: "Revenue", value: targets.revenue, rate: staff?.buddy ? "50% split" : "", emoji: "💰", color: "bg-green-50 border-green-200 text-green-700", isCurrency: true },
+                  { label: "Calls", value: targets.calls, emoji: "📞", color: "bg-sky-50 border-sky-200 text-sky-700" },
+                  { label: "Connects", value: targets.connects, emoji: "🔗", color: "bg-sky-50 border-sky-200 text-sky-700", rate: "55.6%" },
+                  { label: "Bookings", value: targets.bookings, emoji: "📅", color: "bg-indigo-50 border-indigo-200 text-indigo-700", rate: "20%" },
+                  { label: "Attended", value: targets.attended, emoji: "🤝", color: "bg-emerald-50 border-emerald-200 text-emerald-700", rate: "50%" },
+                  { label: "Deals", value: targets.deals, emoji: "🏆", color: "bg-amber-50 border-amber-200 text-amber-700", rate: "50%" },
+                  { label: "Revenue", value: targets.revenue, emoji: "💰", color: "bg-green-50 border-green-200 text-green-700", isCurrency: true, rate: staff?.buddy ? "50% split" : "" },
                 ].map((item, i, arr) => (
                   <div key={item.label} className="flex sm:flex-col items-center flex-1">
                     <div className={`rounded-xl border p-3 text-center w-full ${item.color}`}>
@@ -204,14 +197,10 @@ export default function CalculatorPage() {
                     </div>
                     {i < arr.length - 1 && (
                       <div className="flex items-center justify-center sm:py-1 px-2 sm:px-0">
-                        {/* Arrow down on mobile, right on desktop */}
-                        <svg className="w-4 h-4 text-gray-300 hidden sm:block rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-gray-300 sm:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                         </svg>
-                        <svg className="w-4 h-4 text-gray-300 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                        </svg>
-                        {arr[i + 1] && !(arr[i + 1] as { isCurrency?: boolean }).isCurrency && (
+                        {arr[i + 1]?.rate && (
                           <span className="text-[9px] text-gray-400 font-semibold ml-0.5 sm:ml-0">{arr[i + 1].rate}</span>
                         )}
                       </div>
@@ -252,9 +241,9 @@ export default function CalculatorPage() {
                             </td>
                             <td className="py-2.5 text-center tabular-nums">{t.calls}</td>
                             <td className="py-2.5 text-center tabular-nums">{t.connects}</td>
-                            <td className="py-2.5 text-center tabular-nums">{t.bookings % 1 === 0 ? t.bookings : t.bookings.toFixed(1)}</td>
+                            <td className="py-2.5 text-center tabular-nums">{t.bookings}</td>
                             <td className="py-2.5 text-center tabular-nums">{t.attended % 1 === 0 ? t.attended : t.attended.toFixed(1)}</td>
-                            <td className="py-2.5 text-center tabular-nums">{t.deals % 1 === 0 ? t.deals : t.deals.toFixed(2)}</td>
+                            <td className="py-2.5 text-center tabular-nums">{t.deals % 1 === 0 ? t.deals : t.deals.toFixed(1)}</td>
                             <td className="py-2.5 text-center tabular-nums">${Math.round(t.revenue).toLocaleString()}</td>
                           </tr>
                         );
@@ -291,31 +280,31 @@ export default function CalculatorPage() {
               <tbody>
                 <tr className="border-b border-gray-100">
                   <td className="py-2 font-medium text-gray-700">📞 Calls</td>
-                  <td className="py-2 text-center font-bold text-slate-900">20</td>
-                  <td className="py-2 text-center text-gray-500">100%</td>
+                  <td className="py-2 text-center font-bold text-slate-900">18</td>
+                  <td className="py-2 text-center text-gray-500">—</td>
                   <td className="py-2 text-center text-gray-400">—</td>
                 </tr>
                 <tr className="border-b border-gray-100">
                   <td className="py-2 font-medium text-gray-700">🔗 Connects</td>
                   <td className="py-2 text-center font-bold text-slate-900">10</td>
-                  <td className="py-2 text-center text-sky-600 font-semibold">50%</td>
+                  <td className="py-2 text-center text-sky-600 font-semibold">55.6%</td>
                   <td className="py-2 text-center text-gray-400">of Calls</td>
                 </tr>
                 <tr className="border-b border-gray-100">
                   <td className="py-2 font-medium text-gray-700">📅 Bookings</td>
-                  <td className="py-2 text-center font-bold text-slate-900">2.5</td>
-                  <td className="py-2 text-center text-indigo-600 font-semibold">25%</td>
+                  <td className="py-2 text-center font-bold text-slate-900">2</td>
+                  <td className="py-2 text-center text-indigo-600 font-semibold">20%</td>
                   <td className="py-2 text-center text-gray-400">of Connects</td>
                 </tr>
                 <tr className="border-b border-gray-100">
                   <td className="py-2 font-medium text-gray-700">🤝 Attended</td>
-                  <td className="py-2 text-center font-bold text-slate-900">1.25</td>
+                  <td className="py-2 text-center font-bold text-slate-900">1</td>
                   <td className="py-2 text-center text-emerald-600 font-semibold">50%</td>
                   <td className="py-2 text-center text-gray-400">of Bookings</td>
                 </tr>
                 <tr className="border-b border-gray-100">
                   <td className="py-2 font-medium text-gray-700">🏆 Deals</td>
-                  <td className="py-2 text-center font-bold text-slate-900">0.625</td>
+                  <td className="py-2 text-center font-bold text-slate-900">0.5</td>
                   <td className="py-2 text-center text-amber-600 font-semibold">50%</td>
                   <td className="py-2 text-center text-gray-400">of Attended</td>
                 </tr>
