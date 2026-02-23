@@ -45,7 +45,7 @@ function CindyWeek1Content() {
           </div>
           <div className="grid grid-cols-5 gap-4">
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">55</div>
+              <div className="text-2xl font-bold">25</div>
               <div className="text-[10px] text-slate-400 uppercase">Calls</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
@@ -128,38 +128,38 @@ function CindyWeek1Content() {
                   </tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:00pm</td></tr>
 
-                  {/* ═══ 12:30–1:00 — Break ═══ */}
+                  {/* ═══ 12:30–1:30 — Calls ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">12:30pm</td>
+                    {days.map((day) => (
+                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
+                        <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Calls</div>
+                        <div className="text-[10px] text-gray-500 mt-1">12:30–1:30pm · 1hr</div>
+                        <div className="text-[10px] text-sky-600 font-semibold mt-0.5">Target: 1 booking</div>
+                      </td>
+                    ))}
+                  </tr>
+                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:00pm</td></tr>
+
+                  {/* ═══ 1:30–2:00 — Zoom Catchup ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:30pm</td>
+                    {days.map((day) => (
+                      <td key={day} className="p-2 text-center border border-gray-200 align-middle bg-indigo-50">
+                        <div className="bg-indigo-100 text-indigo-700 rounded px-2 py-1.5 text-xs font-semibold">🗣️ Zoom Catchup</div>
+                        <div className="text-[10px] text-gray-500 mt-1">1:30–2:00pm · 30min</div>
+                      </td>
+                    ))}
+                  </tr>
+
+                  {/* ═══ 2:00–2:30 — Break ═══ */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:00pm</td>
                     {days.map((day) => (
                       <td key={day} className="p-2 border border-gray-200 bg-gray-100">
                       </td>
                     ))}
                   </tr>
-
-                  {/* ═══ 1:00–1:30 — Zoom Catchup ═══ */}
-                  <tr>
-                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:00pm</td>
-                    {days.map((day) => (
-                      <td key={day} className="p-2 text-center border border-gray-200 align-middle bg-indigo-50">
-                        <div className="bg-indigo-100 text-indigo-700 rounded px-2 py-1.5 text-xs font-semibold">🗣️ Zoom Catchup</div>
-                        <div className="text-[10px] text-gray-500 mt-1">1:00–1:30pm · 30min</div>
-                      </td>
-                    ))}
-                  </tr>
-
-                  {/* ═══ 1:30–2:30 — Calls ═══ */}
-                  <tr>
-                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:30pm</td>
-                    {days.map((day) => (
-                      <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
-                        <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Calls</div>
-                        <div className="text-[10px] text-gray-500 mt-1">1:30–2:30pm · 1hr</div>
-                        <div className="text-[10px] text-sky-600 font-semibold mt-0.5">Target: 1 booking</div>
-                      </td>
-                    ))}
-                  </tr>
-                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:00pm</td></tr>
 
                   {/* ═══ 2:30–3:30 — Meeting Slot ═══ */}
                   <tr>
@@ -200,12 +200,12 @@ function CindyWeek1Content() {
                   </tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">5:00pm</td></tr>
 
-                  {/* ═══ 5:30–6:00 — Calls WA ═══ */}
+                  {/* ═══ 5:30–6:00 — Calls (WA) ═══ */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">5:30pm</td>
                     {days.map((day) => (
-                      <td key={day} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
-                        <div className="bg-amber-100 text-amber-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Calls (WA)</div>
+                      <td key={day} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
+                        <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Calls (WA)</div>
                         <div className="text-[10px] text-gray-500 mt-1">5:30–6:00pm · 30min</div>
                       </td>
                     ))}
@@ -219,7 +219,6 @@ function CindyWeek1Content() {
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-indigo-100 border border-indigo-200"></span><span className="text-gray-600">Zoom / Management Meeting</span></div>
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-sky-100 border border-sky-200"></span><span className="text-gray-600">Calls</span></div>
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-emerald-100 border border-emerald-200"></span><span className="text-gray-600">Meeting Slot</span></div>
-              <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-amber-100 border border-amber-200"></span><span className="text-gray-600">Calls (WA)</span></div>
             </div>
           </div>
 
@@ -255,20 +254,20 @@ function CindyWeek1Content() {
                     <td className="py-2 text-center text-gray-600">11:30–12:30</td>
                     <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
                   </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 text-gray-400 font-medium">Break</td>
-                    <td className="py-2 text-center text-gray-400">12:30–1:00</td>
-                    <td className="py-2 text-right text-gray-400">—</td>
+                  <tr className="border-b border-gray-100 bg-sky-50/50">
+                    <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
+                    <td className="py-2 text-center text-gray-600">12:30–1:30</td>
+                    <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
                   </tr>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 text-indigo-700 font-medium">🗣️ Zoom Catchup</td>
-                    <td className="py-2 text-center text-gray-600">1:00–1:30</td>
+                    <td className="py-2 text-center text-gray-600">1:30–2:00</td>
                     <td className="py-2 text-right text-gray-400">—</td>
                   </tr>
-                  <tr className="border-b border-gray-100 bg-sky-50/50">
-                    <td className="py-2 text-sky-700 font-medium">📞 Calls</td>
-                    <td className="py-2 text-center text-gray-600">1:30–2:30</td>
-                    <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
+                  <tr className="border-b border-gray-100">
+                    <td className="py-2 text-gray-400 font-medium">Break</td>
+                    <td className="py-2 text-center text-gray-400">2:00–2:30</td>
+                    <td className="py-2 text-right text-gray-400">—</td>
                   </tr>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 text-emerald-700 font-medium">📋 Meeting Slot</td>
@@ -285,8 +284,8 @@ function CindyWeek1Content() {
                     <td className="py-2 text-center text-gray-600">4:30–5:30</td>
                     <td className="py-2 text-right text-sky-700 font-semibold">1 booking</td>
                   </tr>
-                  <tr className="border-b border-gray-100 bg-amber-50/50">
-                    <td className="py-2 text-amber-700 font-medium">📞 Calls (WA)</td>
+                  <tr className="border-b border-gray-100 bg-sky-50/50">
+                    <td className="py-2 text-sky-700 font-medium">📞 Calls (WA)</td>
                     <td className="py-2 text-center text-gray-600">5:30–6:00</td>
                     <td className="py-2 text-right text-gray-400">—</td>
                   </tr>
@@ -320,7 +319,7 @@ function CindyWeek1Content() {
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-700 leading-relaxed"><strong>1:00pm Zoom Catchup (your time)</strong> — midday check-in</p>
+                  <p className="text-xs text-gray-700 leading-relaxed"><strong>1:30pm Zoom Catchup (your time)</strong> — midday check-in</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
@@ -328,7 +327,7 @@ function CindyWeek1Content() {
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-700 leading-relaxed">1 hour on phones = minimum 1 booking</p>
+                  <p className="text-xs text-gray-700 leading-relaxed">1 hour on phones = minimum 1 booking (20% booking rate)</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
@@ -353,8 +352,8 @@ function CindyWeek1Content() {
                   <span className="text-indigo-900 font-bold">= 1 meeting OR min 1 booking</span>
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
-                  <span className="text-gray-700 font-medium">10 calls</span>
-                  <span className="text-gray-900 font-bold">= 1 booking</span>
+                  <span className="text-gray-700 font-medium">5 calls</span>
+                  <span className="text-gray-900 font-bold">= 1 booking (20% rate)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
                   <span className="text-gray-700 font-medium">2 bookings</span>
