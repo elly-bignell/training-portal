@@ -49,7 +49,7 @@ const weeklyData: WeekData[] = [
     takeaways: [
       "Call for call with your buddy — supervised calls to hit 7 bookings/day as a team",
       "Focus: pipeline building — fill the calendar with quality meetings",
-      "Meeting attendance (1/day) at manager's discretion if on track with bookings",
+      "Your manager might get you into a meeting if your bookings are looking good",
       "This week is purely about calls and bookings — build the habit",
     ],
   },
