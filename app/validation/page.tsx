@@ -268,7 +268,7 @@ function CreateBookingTab({ onCreated, saving, setSaving }: {
 }) {
   const [form, setForm] = useState({
     business_name: "",
-    staff_member: STAFF_MEMBERS[0],
+    staff_member: "",
     booking_date: toISODate(new Date()),
     contact_name: "",
     contact_phone: "",
@@ -295,7 +295,7 @@ function CreateBookingTab({ onCreated, saving, setSaving }: {
         setSuccess(true);
         setForm({
           business_name: "",
-          staff_member: form.staff_member,
+          staff_member: "",
           booking_date: toISODate(new Date()),
           contact_name: "",
           contact_phone: "",
@@ -332,11 +332,12 @@ function CreateBookingTab({ onCreated, saving, setSaving }: {
                 onChange={(e) => setForm({ ...form, staff_member: e.target.value })}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
               >
+                <option value="" disabled>Select your name</option>
                 {STAFF_MEMBERS.map((s) => (
                   <option key={s} value={s}>{s}</option>
                 ))}
               </select>
-              <p className="text-[10px] text-gray-400 mt-1">Buddy: {getBuddy(form.staff_member)}</p>
+              <p className="text-[10px] text-gray-400 mt-1">{form.staff_member ? `Buddy: ${getBuddy(form.staff_member)}` : "Select a staff member to see buddy"}</p>
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1">Date Booked *</label>
