@@ -36,7 +36,8 @@ function KrishnaWeek1Content() {
         <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-5 text-white">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-lg">🎯</span>
-            <h2 className="text-sm font-bold uppercase tracking-wide">Week 1 Daily Targets</h2>
+            <h2 className="text-sm font-bold uppercase tracking-wide">Week 1 — Team Daily Targets</h2>
+          <p className="text-xs text-slate-300 mt-1">As a team, your daily targets are to hit at least:</p>
           </div>
           <div className="grid grid-cols-6 gap-4">
             <div className="bg-white/10 rounded-lg p-3 text-center">
@@ -48,7 +49,7 @@ function KrishnaWeek1Content() {
               <div className="text-[10px] text-slate-400 uppercase">Connects</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">6</div>
+              <div className="text-2xl font-bold">7</div>
               <div className="text-[10px] text-slate-400 uppercase">Bookings</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
@@ -60,11 +61,11 @@ function KrishnaWeek1Content() {
               <div className="text-[10px] text-slate-400 uppercase">Deals</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">$525</div>
+              <div className="text-2xl font-bold">$600</div>
               <div className="text-[10px] text-slate-400 uppercase">Revenue</div>
             </div>
           </div>
-          <p className="text-xs text-slate-400 mt-3">Revenue based on $350 per deal · 50/50 buddy split applies in Week 1</p>
+          <p className="text-xs text-slate-400 mt-3">Revenue based on $400 avg deal value · 50\/50 buddy split applies in Week 1</p>
         </div>
 
         <div className="flex gap-6">
@@ -233,7 +234,7 @@ function KrishnaWeek1Content() {
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-700 leading-relaxed">18 calls per hour = 10 connects = 1.5 bookings (15% booking rate)</p>
+                  <p className="text-xs text-gray-700 leading-relaxed">18 calls per hour = 10 connects ≈ 1.75 bookings (18% booking rate)</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
@@ -255,11 +256,11 @@ function KrishnaWeek1Content() {
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
                   <span className="text-gray-700 font-medium">10 connects</span>
-                  <span className="text-gray-900 font-bold">= 1.5 bookings (15%)</span>
+                  <span className="text-gray-900 font-bold">= ≈ 1.75 bookings (18%)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
-                  <span className="text-gray-700 font-medium">2 bookings</span>
-                  <span className="text-gray-900 font-bold">= 1 attended (50%)</span>
+                  <span className="text-gray-700 font-medium">7 bookings</span>
+                  <span className="text-gray-900 font-bold">= ≈ 3 attended (43%)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
                   <span className="text-gray-700 font-medium">2 attended</span>
@@ -267,7 +268,7 @@ function KrishnaWeek1Content() {
                 </div>
                 <div className="flex justify-between p-2 bg-emerald-50 rounded">
                   <span className="text-emerald-700 font-medium">1 deal</span>
-                  <span className="text-emerald-900 font-bold">= $350 revenue</span>
+                  <span className="text-emerald-900 font-bold">= $400 revenue</span>
                 </div>
               </div>
             </div>
