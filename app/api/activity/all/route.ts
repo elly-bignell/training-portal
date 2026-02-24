@@ -41,6 +41,7 @@ export async function GET(request: NextRequest) {
       trainee_slug: record.fields.trainee_slug,
       trainee_name: record.fields.trainee_name,
       date: record.fields.date,
+      calls_made: record.fields.calls_made || 0,
       calls: record.fields.calls || 0,
       bookings: record.fields.bookings || 0,
       meetings: record.fields.meetings || 0,
