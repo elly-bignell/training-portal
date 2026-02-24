@@ -382,7 +382,7 @@ function CreateBookingTab({ onCreated, saving, setSaving }: {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div>
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1">Meeting Date/Time</label>
               <input
@@ -430,66 +430,71 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
   onUpdate: () => void;
   allBookings: Booking[];
 }) {
-  const [validatingId, setValidatingId] = useState<string | null>(null);
-  const [noteText, setNoteText] = useState("");
-  const [rejectingId, setRejectingId] = useState<string | null>(null);
-  const [activeNoteId, setActiveNoteId] = useState<string | null>(null);
+  const [processingId, setProcessingId] = useState<string | null>(null);
+  const [notes, setNotes] = useState<Record<string, string>>({});
+  const [rejectMode, setRejectMode] = useState<Record<string, boolean>>({});
 
   const pendingBookings = bookings.filter((b) => b.status === "pending");
   const today = toISODate(new Date());
 
+  const getNote = (id: string) => notes[id] || "";
+  const setNote = (id: string, val: string) => setNotes((prev) => ({ ...prev, [id]: val }));
+
   const handleValidate = async (booking: Booking) => {
-    setValidatingId(booking.id);
+    setProcessingId(booking.id);
     try {
       const staffObsDates = allBookings
         .filter((b) => b.staff_member === booking.staff_member && b.observation_date)
         .map((b) => b.observation_date!);
       const obsDate = getNextAvailableObservationDate(staffObsDates, today);
 
-      await fetch(`/api/validation/${booking.id}`, {
+      const res = await fetch(`/api/validation/${booking.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           status: "validated",
           validation_date: today,
-          validation_note: activeNoteId === booking.id ? noteText : "",
+          validation_note: getNote(booking.id),
           observation_date: obsDate,
         }),
       });
-      setNoteText("");
-      setActiveNoteId(null);
+      if (!res.ok) throw new Error("PATCH failed");
+      setNotes((prev) => { const n = { ...prev }; delete n[booking.id]; return n; });
       onUpdate();
     } catch (err) {
       console.error("Failed to validate:", err);
+      alert("Failed to validate booking — check console for details.");
     } finally {
-      setValidatingId(null);
+      setProcessingId(null);
     }
   };
 
   const handleReject = async (booking: Booking) => {
-    if (!noteText.trim()) {
-      alert("A rejection note is required.");
+    const note = getNote(booking.id);
+    if (!note.trim()) {
+      alert("Please enter a rejection reason before confirming.");
       return;
     }
-    setValidatingId(booking.id);
+    setProcessingId(booking.id);
     try {
-      await fetch(`/api/validation/${booking.id}`, {
+      const res = await fetch(`/api/validation/${booking.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           status: "rejected",
           validation_date: today,
-          validation_note: noteText,
+          validation_note: note,
         }),
       });
-      setNoteText("");
-      setRejectingId(null);
-      setActiveNoteId(null);
+      if (!res.ok) throw new Error("PATCH failed");
+      setNotes((prev) => { const n = { ...prev }; delete n[booking.id]; return n; });
+      setRejectMode((prev) => { const r = { ...prev }; delete r[booking.id]; return r; });
       onUpdate();
     } catch (err) {
       console.error("Failed to reject:", err);
+      alert("Failed to reject booking — check console for details.");
     } finally {
-      setValidatingId(null);
+      setProcessingId(null);
     }
   };
 
@@ -510,69 +515,66 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
         </div>
       ) : (
         <div className="space-y-3">
-          {pendingBookings.map((booking) => (
-            <div key={booking.id} className="bg-white rounded-xl border border-amber-200 shadow-sm p-5">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded-full uppercase">Pending</span>
-                    <span className="text-xs text-gray-400">Booked {formatDate(booking.booking_date)}</span>
-                  </div>
-                  <h3 className="text-base font-bold text-slate-800">{booking.business_name}</h3>
-                  <div className="flex items-center gap-4 mt-1 text-xs text-slate-500">
-                    <span>👤 {booking.staff_member}</span>
-                    <span>🤝 Buddy: {booking.buddy}</span>
-                    {booking.contact_name && <span>📇 {booking.contact_name}</span>}
-                    {booking.contact_phone && <span>📞 {booking.contact_phone}</span>}
-                    {booking.meeting_datetime && <span>🕐 {booking.meeting_datetime}</span>}
-                  </div>
-                </div>
-              </div>
+          {pendingBookings.map((booking) => {
+            const isRejecting = !!rejectMode[booking.id];
+            const isProcessing = processingId === booking.id;
+            const note = getNote(booking.id);
 
-              <div className="mt-4">
-                <textarea
-                  value={activeNoteId === booking.id ? noteText : ""}
-                  onChange={(e) => {
-                    setNoteText(e.target.value);
-                    setActiveNoteId(booking.id);
-                  }}
-                  onFocus={() => {
-                    if (activeNoteId !== booking.id) {
-                      setNoteText("");
-                      setActiveNoteId(booking.id);
-                    }
-                  }}
-                  placeholder={rejectingId === booking.id ? "Rejection reason (required)..." : "Feedback note (optional)..."}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-                />
-                <div className="flex gap-2 mt-2">
-                  <button
-                    onClick={() => handleValidate(booking)}
-                    disabled={validatingId === booking.id}
-                    className="flex-1 py-2.5 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors text-sm flex items-center justify-center gap-1.5"
-                  >
-                    ✅ Validate
-                  </button>
-                  {rejectingId === booking.id ? (
+            return (
+              <div key={booking.id} className="bg-white rounded-xl border border-amber-200 shadow-sm p-5">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded-full uppercase">Pending</span>
+                      <span className="text-xs text-gray-400">Booked {formatDate(booking.booking_date)}</span>
+                    </div>
+                    <h3 className="text-base font-bold text-slate-800">{booking.business_name}</h3>
+                    <div className="flex items-center gap-4 mt-1 text-xs text-slate-500">
+                      <span>👤 {booking.staff_member}</span>
+                      <span>🤝 Buddy: {booking.buddy}</span>
+                      {booking.contact_name && <span>📇 {booking.contact_name}</span>}
+                      {booking.contact_phone && <span>📞 {booking.contact_phone}</span>}
+                      {booking.meeting_datetime && <span>🕐 {booking.meeting_datetime}</span>}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4">
+                  <textarea
+                    value={note}
+                    onChange={(e) => setNote(booking.id, e.target.value)}
+                    placeholder={isRejecting ? "Rejection reason (required)..." : "Feedback note (optional)..."}
+                    className={`w-full border rounded-lg px-3 py-2 text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent ${isRejecting ? "border-red-300 bg-red-50/30" : "border-gray-200"}`}
+                  />
+                  <div className="flex gap-2 mt-2">
                     <button
-                      onClick={() => handleReject(booking)}
-                      disabled={validatingId === booking.id || !(activeNoteId === booking.id && noteText.trim())}
-                      className="flex-1 py-2.5 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors text-sm flex items-center justify-center gap-1.5"
+                      onClick={() => handleValidate(booking)}
+                      disabled={isProcessing}
+                      className="flex-1 py-2.5 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors text-sm flex items-center justify-center gap-1.5"
                     >
-                      ❌ Confirm Rejection
+                      ✅ Validate
                     </button>
-                  ) : (
-                    <button
-                      onClick={() => { setRejectingId(booking.id); setNoteText(""); setActiveNoteId(booking.id); }}
-                      className="flex-1 py-2.5 bg-white text-red-600 border-2 border-red-200 font-semibold rounded-lg hover:bg-red-50 transition-colors text-sm flex items-center justify-center gap-1.5"
-                    >
-                      ❌ Reject
-                    </button>
-                  )}
+                    {isRejecting ? (
+                      <button
+                        onClick={() => handleReject(booking)}
+                        disabled={isProcessing || !note.trim()}
+                        className="flex-1 py-2.5 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors text-sm flex items-center justify-center gap-1.5"
+                      >
+                        ❌ Confirm Rejection
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setRejectMode((prev) => ({ ...prev, [booking.id]: true }))}
+                        className="flex-1 py-2.5 bg-white text-red-600 border-2 border-red-200 font-semibold rounded-lg hover:bg-red-50 transition-colors text-sm flex items-center justify-center gap-1.5"
+                      >
+                        ❌ Reject
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
