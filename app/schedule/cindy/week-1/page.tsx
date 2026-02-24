@@ -74,7 +74,7 @@ function CindyWeek1Content() {
 
         {/* Timezone note */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-xs text-blue-700">
-          <strong>🕐 NSW Time:</strong> All times shown are AEDT (Sydney). Your 1:00pm Zoom Checkpoint = 12:30pm ACDT (Adelaide) — synced with Connie &amp; Krishna.
+          <strong>🕐 NSW Time:</strong> All times shown are AEDT (Sydney). Your 1:00pm Zoom Checkpoint = 12:30pm ACDT (Adelaide).
         </div>
 
         <div className="flex gap-6">
@@ -133,10 +133,10 @@ function CindyWeek1Content() {
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:00pm</td>
                     {days.map((day) => (
-                      <td key={day} rowSpan={6} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
+                      <td key={day} rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
                         <div className="bg-sky-100 text-sky-700 rounded px-2 py-2 text-xs font-semibold">📞 Call Block 2</div>
-                        <div className="text-[10px] text-gray-500 mt-1">2:00–5:00pm · 3hrs</div>
-                        <div className="text-[10px] text-sky-600 font-semibold mt-1">Target: 3 bookings</div>
+                        <div className="text-[10px] text-gray-500 mt-1">2:00–5:30pm · 3.5hrs</div>
+                        <div className="text-[10px] text-sky-600 font-semibold mt-1">Target: 3–4 bookings</div>
                       </td>
                     ))}
                   </tr>
@@ -146,13 +146,17 @@ function CindyWeek1Content() {
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:00pm</td></tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:30pm</td></tr>
 
-                  {/* ═══ 5:00–5:30 — Zoom Checkpoint ═══ */}
+                  {/* ═══ 5:00–5:30 — Call Block 2 continued ═══ */}
+                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">5:00pm</td></tr>
+
+                  {/* ═══ 5:30–6:00 — Zoom Checkpoint ═══ */}
                   <tr>
-                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">5:00pm</td>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">5:30pm</td>
                     {days.map((day) => (
                       <td key={day} className="p-2 text-center border border-gray-200 align-middle bg-indigo-50">
                         <div className="bg-indigo-100 text-indigo-700 rounded px-2 py-1.5 text-xs font-semibold">🗣️ Zoom Checkpoint</div>
-                        <div className="text-[10px] text-gray-500 mt-1">5:00–5:30pm · 30min</div>
+                        <div className="text-[10px] text-gray-500 mt-1">5:30–6:00pm · 30min</div>
+                        <div className="text-[10px] text-gray-400 mt-0.5">= 5:00pm Adelaide time</div>
                       </td>
                     ))}
                   </tr>
@@ -201,17 +205,17 @@ function CindyWeek1Content() {
                   </tr>
                   <tr className="border-b border-gray-100 bg-sky-50/50">
                     <td className="py-2 text-sky-700 font-medium">📞 Call Block 2</td>
-                    <td className="py-2 text-center text-gray-600">2:00–5:00</td>
-                    <td className="py-2 text-right text-sky-700 font-semibold">3 bookings</td>
+                    <td className="py-2 text-center text-gray-600">2:00–5:30</td>
+                    <td className="py-2 text-right text-sky-700 font-semibold">3–4 bookings</td>
                   </tr>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 text-indigo-700 font-medium">🗣️ Zoom Checkpoint</td>
-                    <td className="py-2 text-center text-gray-600">5:00–5:30</td>
+                    <td className="py-2 text-center text-gray-600">5:30–6:00</td>
                     <td className="py-2 text-right text-gray-400">—</td>
                   </tr>
                   <tr className="border-t-2 border-gray-200">
                     <td className="py-2 text-gray-900 font-bold">Daily Total</td>
-                    <td className="py-2 text-center text-gray-600 font-semibold">6.5hrs calls</td>
+                    <td className="py-2 text-center text-gray-600 font-semibold">7hrs calls</td>
                     <td className="py-2 text-right text-gray-900 font-bold">6–7 bookings</td>
                   </tr>
                 </tbody>
@@ -239,7 +243,7 @@ function CindyWeek1Content() {
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-700 leading-relaxed"><strong>5:00pm Zoom Checkpoint</strong> — end-of-day wrap-up</p>
+                  <p className="text-xs text-gray-700 leading-relaxed"><strong>5:30pm Zoom Checkpoint</strong> — end-of-day wrap-up (= 5:00pm Adelaide)</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
