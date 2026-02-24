@@ -2,12 +2,13 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { trainees } from "@/data/trainees";
 import { weeklyStandards } from "@/hooks/useActivityTracking";
 import PasswordGate from "@/components/PasswordGate";
 
+// ─── Types ───
 interface DailyRecord {
   date: string;
   calls: number;
@@ -17,396 +18,170 @@ interface DailyRecord {
   revenue: number;
 }
 
-interface WeekData {
-  weekNum: number;
-  dateRange: string;
-  days: DailyRecord[];
-  totals: {
-    calls: number;
-    bookings: number;
-    meetings: number;
-    units: number;
-    revenue: number;
-  };
-  targets: {
-    calls: number;
-    bookings: number;
-    meetings: number;
-    units: number;
-    revenue: number;
-  };
-}
+type Metric = "calls" | "bookings" | "meetings" | "units" | "revenue";
 
-interface TraineeData {
-  slug: string;
-  name: string;
-  weeks: WeekData[];
-}
-
-// Week configurations
-const weekConfig: Record<number, { start: string; end: string; label: string; dateRange: string }> = {
-  0: { start: "2026-02-16", end: "2026-02-20", label: "Training Week", dateRange: "Mon 16 – Fri 20 Feb" },
-  1: { start: "2026-02-23", end: "2026-02-27", label: "Week 1", dateRange: "Mon 23 – Fri 27 Feb" },
-  2: { start: "2026-03-02", end: "2026-03-06", label: "Week 2", dateRange: "Mon 2 – Fri 6 Mar" },
-  3: { start: "2026-03-09", end: "2026-03-13", label: "Week 3", dateRange: "Mon 9 – Fri 13 Mar" },
-  4: { start: "2026-03-16", end: "2026-03-20", label: "Week 4", dateRange: "Mon 16 – Fri 20 Mar" },
-  5: { start: "2026-03-23", end: "2026-03-27", label: "Week 5", dateRange: "Mon 23 – Fri 27 Mar" },
-  6: { start: "2026-03-30", end: "2026-04-03", label: "Week 6 (The Standard)", dateRange: "Mon 30 Mar – Fri 3 Apr" },
-  7: { start: "2026-04-06", end: "2026-04-10", label: "Week 7", dateRange: "Mon 6 – Fri 10 Apr" },
-  8: { start: "2026-04-13", end: "2026-04-17", label: "Week 8", dateRange: "Mon 13 – Fri 17 Apr" },
-};
-
-// Team structure — defines display order and grouping
-const teams = [
-  {
-    name: "Team 1",
-    members: ["lucas-tirri", "krishna-patel"],
-  },
-  {
-    name: "Team 2",
-    members: ["felipe-garcia", "connie-matthews"],
-  },
-  {
-    name: "Team 3",
-    members: ["dylan-munro", "cindy-rose-rondez-manrique"],
-  },
+// ─── Buddy pairs (display order) ───
+const buddyPairs = [
+  { label: "Lucas & Cindy", members: ["lucas-tirri", "cindy-rose-rondez-manrique"] },
+  { label: "Felipe & Connie", members: ["felipe-garcia", "connie-matthews"] },
+  { label: "Dylan & Krishna", members: ["dylan-munro", "krishna-patel"] },
+  { label: "Tom", members: ["thomas-rennie"] },
 ];
 
-// Get week number from date
-function getWeekNumber(dateStr: string): number {
-  const date = new Date(dateStr);
-  for (let i = 8; i >= 0; i--) {
-    const weekStart = new Date(weekConfig[i].start);
-    const weekEnd = new Date(weekConfig[i].end);
-    weekEnd.setHours(23, 59, 59);
-    if (date >= weekStart && date <= weekEnd) {
-      return i;
-    }
-  }
-  return -1; // Outside training period
+const allSlugs = buddyPairs.flatMap((p) => p.members);
+
+// ─── Week configs ───
+const weekConfig: Record<number, { start: string; label: string; shortLabel: string }> = {
+  0: { start: "2026-02-16", label: "Training Week", shortLabel: "TW" },
+  1: { start: "2026-02-23", label: "Week 1 — Ramp Up", shortLabel: "W1" },
+  2: { start: "2026-03-02", label: "Week 2 — Ramp Up", shortLabel: "W2" },
+  3: { start: "2026-03-09", label: "Week 3 — Ramp Up", shortLabel: "W3" },
+  4: { start: "2026-03-16", label: "Week 4 — Ramp Up", shortLabel: "W4" },
+  5: { start: "2026-03-23", label: "Week 5 — Ramp Up", shortLabel: "W5" },
+  6: { start: "2026-03-30", label: "Week 6 — The Standard", shortLabel: "W6" },
+  7: { start: "2026-04-06", label: "Week 7 — Maintaining", shortLabel: "W7" },
+  8: { start: "2026-04-13", label: "Week 8 — Maintaining", shortLabel: "W8" },
+};
+
+const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+
+function getWeekDates(weekNum: number): string[] {
+  const startStr = weekConfig[weekNum]?.start || "2026-02-16";
+  const [y, m, d] = startStr.split("-").map(Number);
+  return Array.from({ length: 5 }, (_, i) => {
+    const dt = new Date(Date.UTC(y, m - 1, d + i));
+    return dt.toISOString().split("T")[0];
+  });
 }
 
-// Format day name
-function getDayName(dateStr: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("en-AU", { weekday: "short" });
-}
-
-// Format date short
 function formatDateShort(dateStr: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("en-AU", { day: "numeric", month: "short" });
+  const d = new Date(dateStr + "T00:00:00Z");
+  return d.toLocaleDateString("en-AU", { day: "numeric", month: "short", timeZone: "UTC" });
 }
 
-// Status color based on percentage
-function getStatusClass(actual: number, target: number): string {
-  if (target === 0) return "text-gray-400";
+// ─── Metric config ───
+const metricConfig: Record<Metric, { label: string; emoji: string; format: (v: number) => string }> = {
+  calls: { label: "Calls", emoji: "📞", format: (v) => v.toString() },
+  bookings: { label: "Bookings", emoji: "📅", format: (v) => v.toString() },
+  meetings: { label: "Meetings", emoji: "🤝", format: (v) => v.toString() },
+  units: { label: "Units", emoji: "📦", format: (v) => v.toString() },
+  revenue: { label: "Revenue", emoji: "💰", format: (v) => (v > 0 ? `$${v.toLocaleString()}` : "$0") },
+};
+
+const metricKeys: Metric[] = ["calls", "bookings", "meetings", "units", "revenue"];
+
+// ─── Status colour ───
+function getCellClass(actual: number, target: number): string {
+  if (target === 0) return "";
   const pct = (actual / target) * 100;
-  if (pct >= 100) return "text-emerald-600 font-semibold";
-  if (pct >= 75) return "text-amber-600";
-  return "text-red-500";
+  if (pct >= 100) return "bg-emerald-50 text-emerald-700 font-semibold";
+  if (pct >= 75) return "bg-amber-50 text-amber-700";
+  if (pct >= 50) return "bg-orange-50 text-orange-600";
+  return "bg-red-50 text-red-600";
 }
 
-// Trainee card component to avoid duplication
-function TraineeCard({
-  trainee,
-  expandedWeeks,
-  toggleWeekExpanded,
-}: {
-  trainee: TraineeData;
-  expandedWeeks: Record<string, boolean>;
-  toggleWeekExpanded: (key: string) => void;
-}) {
-  return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      {/* Trainee Header */}
-      <div className="bg-gradient-to-r from-slate-800 to-slate-900 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#E6017D] flex items-center justify-center text-white font-bold">
-            {trainee.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
-          </div>
-          <div>
-            <h2 className="text-lg font-bold text-white">{trainee.name}</h2>
-            <p className="text-slate-400 text-sm">{trainee.weeks.length} weeks of data</p>
-          </div>
-        </div>
-        <Link
-          href={`/scorecard/${trainee.slug}`}
-          className="text-sm text-[#E6017D] hover:text-pink-400 transition-colors"
-        >
-          View Scorecard →
-        </Link>
-      </div>
-
-      {/* Weeks */}
-      {trainee.weeks.length === 0 ? (
-        <div className="p-6 text-center text-gray-500">
-          No activity data recorded yet
-        </div>
-      ) : (
-        <div className="divide-y divide-gray-100">
-          {trainee.weeks.map((week) => {
-            const weekKey = `${trainee.slug}-${week.weekNum}`;
-            const isExpanded = expandedWeeks[weekKey];
-
-            return (
-              <div key={week.weekNum}>
-                {/* Week Summary Row */}
-                <button
-                  onClick={() => toggleWeekExpanded(weekKey)}
-                  className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors text-left"
-                >
-                  <div className="flex items-center gap-4">
-                    <svg
-                      className={`w-5 h-5 text-gray-400 transition-transform ${isExpanded ? "rotate-90" : ""}`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                    <div>
-                      <span className="font-semibold text-gray-900">
-                        {weekConfig[week.weekNum]?.label || `Week ${week.weekNum}`}
-                      </span>
-                      <span className="text-gray-400 text-sm ml-2">{week.dateRange}</span>
-                    </div>
-                  </div>
-
-                  {/* Week Totals */}
-                  <div className="flex items-center gap-6 text-sm">
-                    <div className="text-center">
-                      <div className={getStatusClass(week.totals.calls, week.targets.calls)}>
-                        {week.totals.calls}/{week.targets.calls}
-                      </div>
-                      <div className="text-[10px] text-gray-400 uppercase">Calls</div>
-                    </div>
-                    <div className="text-center">
-                      <div className={getStatusClass(week.totals.bookings, week.targets.bookings)}>
-                        {week.totals.bookings}/{week.targets.bookings}
-                      </div>
-                      <div className="text-[10px] text-gray-400 uppercase">Bookings</div>
-                    </div>
-                    <div className="text-center">
-                      <div className={getStatusClass(week.totals.meetings, week.targets.meetings)}>
-                        {week.totals.meetings}/{week.targets.meetings}
-                      </div>
-                      <div className="text-[10px] text-gray-400 uppercase">Meetings</div>
-                    </div>
-                    <div className="text-center">
-                      <div className={getStatusClass(week.totals.units, week.targets.units)}>
-                        {week.totals.units}/{week.targets.units}
-                      </div>
-                      <div className="text-[10px] text-gray-400 uppercase">Units</div>
-                    </div>
-                    <div className="text-center">
-                      <div className={getStatusClass(week.totals.revenue, week.targets.revenue)}>
-                        ${week.totals.revenue}/${week.targets.revenue}
-                      </div>
-                      <div className="text-[10px] text-gray-400 uppercase">Revenue</div>
-                    </div>
-                  </div>
-                </button>
-
-                {/* Day-by-day breakdown */}
-                {isExpanded && (
-                  <div className="bg-gray-50 px-6 py-4">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="text-xs text-gray-500 uppercase">
-                          <th className="text-left py-2 font-semibold">Day</th>
-                          <th className="text-center py-2 font-semibold">Calls</th>
-                          <th className="text-center py-2 font-semibold">Bookings</th>
-                          <th className="text-center py-2 font-semibold">Meetings</th>
-                          <th className="text-center py-2 font-semibold">Units</th>
-                          <th className="text-center py-2 font-semibold">Revenue</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200">
-                        {week.days.map((day) => {
-                          const dailyTarget = weeklyStandards[week.weekNum] || weeklyStandards[6];
-                          return (
-                            <tr key={day.date} className="hover:bg-white/50">
-                              <td className="py-2 font-medium text-gray-700">
-                                {getDayName(day.date)} {formatDateShort(day.date)}
-                              </td>
-                              <td className={`py-2 text-center ${getStatusClass(day.calls, dailyTarget.calls)}`}>
-                                {day.calls}
-                              </td>
-                              <td className={`py-2 text-center ${getStatusClass(day.bookings, dailyTarget.bookings)}`}>
-                                {day.bookings}
-                              </td>
-                              <td className={`py-2 text-center ${getStatusClass(day.meetings, dailyTarget.meetings)}`}>
-                                {day.meetings}
-                              </td>
-                              <td className={`py-2 text-center ${getStatusClass(day.units, dailyTarget.units)}`}>
-                                {day.units}
-                              </td>
-                              <td className={`py-2 text-center ${getStatusClass(day.revenue, dailyTarget.revenue)}`}>
-                                ${day.revenue}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                      <tfoot>
-                        <tr className="border-t-2 border-gray-300 font-semibold">
-                          <td className="py-2 text-gray-700">Week Total</td>
-                          <td className={`py-2 text-center ${getStatusClass(week.totals.calls, week.targets.calls)}`}>
-                            {week.totals.calls}
-                          </td>
-                          <td className={`py-2 text-center ${getStatusClass(week.totals.bookings, week.targets.bookings)}`}>
-                            {week.totals.bookings}
-                          </td>
-                          <td className={`py-2 text-center ${getStatusClass(week.totals.meetings, week.targets.meetings)}`}>
-                            {week.totals.meetings}
-                          </td>
-                          <td className={`py-2 text-center ${getStatusClass(week.totals.units, week.targets.units)}`}>
-                            {week.totals.units}
-                          </td>
-                          <td className={`py-2 text-center ${getStatusClass(week.totals.revenue, week.targets.revenue)}`}>
-                            ${week.totals.revenue}
-                          </td>
-                        </tr>
-                        <tr className="text-gray-400 text-xs">
-                          <td className="py-1">Target</td>
-                          <td className="py-1 text-center">{week.targets.calls}</td>
-                          <td className="py-1 text-center">{week.targets.bookings}</td>
-                          <td className="py-1 text-center">{week.targets.meetings}</td>
-                          <td className="py-1 text-center">{week.targets.units}</td>
-                          <td className="py-1 text-center">${week.targets.revenue}</td>
-                        </tr>
-                      </tfoot>
-                    </table>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
+function getTotalClass(actual: number, target: number): string {
+  if (target === 0) return "font-bold text-slate-800";
+  const pct = (actual / target) * 100;
+  if (pct >= 100) return "font-bold text-emerald-700";
+  if (pct >= 75) return "font-bold text-amber-700";
+  return "font-bold text-red-600";
 }
 
+// ─── Determine which weeks have data or are current/past ───
+function getCurrentWeek(): number {
+  const now = new Date();
+  for (let i = 8; i >= 0; i--) {
+    const start = new Date(weekConfig[i].start);
+    if (now >= start) return i;
+  }
+  return 0;
+}
+
+// ─── Main Component ───
 function PerformanceDashboardContent() {
-  const [traineeData, setTraineeData] = useState<TraineeData[]>([]);
-  const [selectedTrainee, setSelectedTrainee] = useState<string>("all");
+  const [allData, setAllData] = useState<Map<string, DailyRecord[]>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
-  const [expandedWeeks, setExpandedWeeks] = useState<Record<string, boolean>>({});
+  const [selectedMetric, setSelectedMetric] = useState<Metric | "all">("all");
+  const [collapsedWeeks, setCollapsedWeeks] = useState<Set<number>>(new Set());
+
+  const currentWeek = getCurrentWeek();
 
   useEffect(() => {
-    const fetchAllData = async () => {
+    const fetchAll = async () => {
       setIsLoading(true);
+      const dataMap = new Map<string, DailyRecord[]>();
 
-      const allTraineeData: TraineeData[] = [];
-
-      for (const trainee of trainees) {
-        try {
-          const response = await fetch(`/api/activity/all?trainee_slug=${trainee.slug}`);
-          const data = await response.json();
-
-          // Group records by week
-          const weekMap = new Map<number, DailyRecord[]>();
-
-          for (const record of data.records || []) {
-            const weekNum = getWeekNumber(record.date);
-            if (weekNum >= 0) {
-              if (!weekMap.has(weekNum)) {
-                weekMap.set(weekNum, []);
-              }
-              weekMap.get(weekNum)!.push({
-                date: record.date,
-                calls: record.calls,
-                bookings: record.bookings,
-                meetings: record.meetings,
-                units: record.units,
-                revenue: record.revenue,
-              });
-            }
+      await Promise.all(
+        allSlugs.map(async (slug) => {
+          try {
+            const res = await fetch(`/api/activity/all?trainee_slug=${slug}`);
+            const json = await res.json();
+            dataMap.set(slug, json.records || []);
+          } catch {
+            dataMap.set(slug, []);
           }
+        })
+      );
 
-          // Convert to WeekData array, sorted by week number descending (newest first)
-          const weeks: WeekData[] = [];
-          weekMap.forEach((days, weekNum) => {
-            // Sort days by date ascending within week
-            days.sort((a, b) => a.date.localeCompare(b.date));
-
-            const totals = days.reduce(
-              (acc, day) => ({
-                calls: acc.calls + day.calls,
-                bookings: acc.bookings + day.bookings,
-                meetings: acc.meetings + day.meetings,
-                units: acc.units + day.units,
-                revenue: acc.revenue + day.revenue,
-              }),
-              { calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 }
-            );
-
-            const dailyTarget = weeklyStandards[weekNum] || weeklyStandards[6];
-            const targets = {
-              calls: dailyTarget.calls * 5,
-              bookings: dailyTarget.bookings * 5,
-              meetings: dailyTarget.meetings * 5,
-              units: dailyTarget.units * 5,
-              revenue: dailyTarget.revenue * 5,
-            };
-
-            weeks.push({
-              weekNum,
-              dateRange: weekConfig[weekNum]?.dateRange || "",
-              days,
-              totals,
-              targets,
-            });
-          });
-
-          // Sort weeks descending (newest first)
-          weeks.sort((a, b) => b.weekNum - a.weekNum);
-
-          allTraineeData.push({
-            slug: trainee.slug,
-            name: trainee.name,
-            weeks,
-          });
-        } catch (error) {
-          console.error(`Error fetching data for ${trainee.slug}:`, error);
-          allTraineeData.push({
-            slug: trainee.slug,
-            name: trainee.name,
-            weeks: [],
-          });
-        }
-      }
-
-      setTraineeData(allTraineeData);
+      setAllData(dataMap);
       setIsLoading(false);
     };
-
-    fetchAllData();
+    fetchAll();
   }, []);
 
-  const toggleWeekExpanded = (key: string) => {
-    setExpandedWeeks((prev) => ({ ...prev, [key]: !prev[key] }));
+  const toggleWeek = (weekNum: number) => {
+    setCollapsedWeeks((prev) => {
+      const next = new Set(prev);
+      if (next.has(weekNum)) next.delete(weekNum);
+      else next.add(weekNum);
+      return next;
+    });
   };
 
-  // Build data lookup
-  const dataMap = new Map(traineeData.map((t) => [t.slug, t]));
+  // Get a trainee's value for a date+metric
+  const getValue = (slug: string, date: string, metric: Metric): number => {
+    const records = allData.get(slug) || [];
+    const rec = records.find((r) => r.date === date);
+    return rec ? (rec[metric] || 0) : 0;
+  };
 
-  // For individual filter
-  const filteredData =
-    selectedTrainee === "all"
-      ? traineeData
-      : traineeData.filter((t) => t.slug === selectedTrainee);
+  // Get trainee's week total for a metric
+  const getWeekTotal = (slug: string, weekNum: number, metric: Metric): number => {
+    const dates = getWeekDates(weekNum);
+    return dates.reduce((sum, d) => sum + getValue(slug, d, metric), 0);
+  };
+
+  // Get daily target for a metric in a given week
+  const getDailyTarget = (weekNum: number, metric: Metric): number => {
+    const std = weeklyStandards[weekNum] || weeklyStandards[6];
+    return std[metric] || 0;
+  };
+
+  // Get short name
+  const getShortName = (slug: string): string => {
+    const t = trainees.find((t) => t.slug === slug);
+    if (!t) return slug;
+    return t.name.split(" ")[0];
+  };
+
+  const getFullName = (slug: string): string => {
+    const t = trainees.find((t) => t.slug === slug);
+    return t?.name || slug;
+  };
+
+  // Weeks to show (0 through current)
+  const weeksToShow = Array.from({ length: currentWeek + 1 }, (_, i) => i);
+
+  // Active metrics for rendering
+  const activeMetrics: Metric[] = selectedMetric === "all" ? metricKeys : [selectedMetric];
 
   if (isLoading) {
     return (
       <main className="min-h-screen bg-slate-100 p-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-center gap-2 text-gray-500 py-20">
-            <div className="w-6 h-6 border-2 border-gray-300 border-t-[#E6017D] rounded-full animate-spin" />
-            Loading performance data...
-          </div>
+        <div className="flex items-center justify-center gap-2 text-gray-500 py-20">
+          <div className="w-6 h-6 border-2 border-gray-300 border-t-[#E6017D] rounded-full animate-spin" />
+          Loading performance data...
         </div>
       </main>
     );
@@ -415,87 +190,317 @@ function PerformanceDashboardContent() {
   return (
     <main className="min-h-screen bg-slate-100">
       {/* Header */}
-      <header className="bg-slate-900 text-white">
-        <div className="max-w-7xl mx-auto px-6 py-6">
+      <header className="bg-slate-900 text-white sticky top-0 z-30">
+        <div className="max-w-[1800px] mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link
-                href="/"
-                className="text-slate-400 hover:text-white transition-colors"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <Link href="/admin" className="text-slate-400 hover:text-white transition-colors">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
               </Link>
               <div>
-                <h1 className="text-2xl font-bold">Performance Dashboard</h1>
-                <p className="text-slate-400 text-sm">Week-by-week & day-by-day breakdown</p>
+                <h1 className="text-lg font-bold">Performance Dashboard</h1>
+                <p className="text-slate-400 text-xs">90-Day Training Cycle · All Metrics</p>
               </div>
             </div>
-            <Link
-              href="/roadmap"
-              className="text-sm text-slate-400 hover:text-white transition-colors"
-            >
-              View Standards →
+            <Link href="/roadmap" className="text-xs text-slate-400 hover:text-white transition-colors">
+              Standards →
             </Link>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-6">
-        {/* Filter */}
-        <div className="mb-6 flex items-center gap-4">
-          <label className="text-sm font-medium text-gray-700">View:</label>
-          <select
-            value={selectedTrainee}
-            onChange={(e) => setSelectedTrainee(e.target.value)}
-            className="px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-800 font-medium focus:ring-2 focus:ring-[#E6017D]/20 focus:border-[#E6017D]"
+      {/* Metric Tabs */}
+      <div className="bg-white border-b border-gray-200 sticky top-[60px] z-20">
+        <div className="max-w-[1800px] mx-auto px-4 py-2 flex items-center gap-1 overflow-x-auto">
+          <button
+            onClick={() => setSelectedMetric("all")}
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors whitespace-nowrap ${
+              selectedMetric === "all"
+                ? "bg-slate-900 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
           >
-            <option value="all">All Trainees</option>
-            {trainees.map((t) => (
-              <option key={t.slug} value={t.slug}>
-                {t.name}
-              </option>
-            ))}
-          </select>
+            📊 All Metrics
+          </button>
+          {metricKeys.map((m) => (
+            <button
+              key={m}
+              onClick={() => setSelectedMetric(m)}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors whitespace-nowrap ${
+                selectedMetric === m
+                  ? "bg-[#E6017D] text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              {metricConfig[m].emoji} {metricConfig[m].label}
+            </button>
+          ))}
         </div>
+      </div>
 
-        {/* Trainee Sections — grouped by team */}
-        <div className="space-y-8">
-          {selectedTrainee === "all"
-            ? teams.map((team) => {
-                const teamTrainees = team.members
-                  .map((slug) => dataMap.get(slug))
-                  .filter(Boolean) as TraineeData[];
+      {/* Table */}
+      <div className="max-w-[1800px] mx-auto px-4 py-4">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs border-collapse">
+              {/* ─── Header: Buddy pair groupings ─── */}
+              <thead className="sticky top-[104px] z-10">
+                {/* Buddy pair row */}
+                <tr className="bg-slate-800">
+                  <th className="sticky left-0 z-20 bg-slate-800 px-3 py-2 text-left text-slate-400 font-semibold min-w-[140px] border-r border-slate-700">
+                    Week / Day
+                  </th>
+                  {selectedMetric === "all" && (
+                    <th className="bg-slate-800 px-1 py-2 text-slate-400 font-semibold w-[50px] border-r border-slate-700"></th>
+                  )}
+                  {buddyPairs.map((pair, pIdx) => (
+                    <th
+                      key={pair.label}
+                      colSpan={pair.members.length}
+                      className={`px-2 py-2 text-center text-white font-bold text-sm ${
+                        pIdx < buddyPairs.length - 1 ? "border-r-2 border-slate-600" : ""
+                      }`}
+                    >
+                      {pair.label}
+                    </th>
+                  ))}
+                </tr>
+                {/* Individual names row */}
+                <tr className="bg-slate-700">
+                  <th className="sticky left-0 z-20 bg-slate-700 px-3 py-2 text-left text-slate-300 font-medium border-r border-slate-600">
+                    <span className="text-[10px] uppercase tracking-wide">Date</span>
+                  </th>
+                  {selectedMetric === "all" && (
+                    <th className="bg-slate-700 px-1 py-2 text-slate-300 font-medium border-r border-slate-600">
+                      <span className="text-[10px] uppercase tracking-wide">Metric</span>
+                    </th>
+                  )}
+                  {buddyPairs.map((pair, pIdx) =>
+                    pair.members.map((slug, mIdx) => (
+                      <th
+                        key={slug}
+                        className={`px-2 py-2 text-center min-w-[70px] ${
+                          mIdx === pair.members.length - 1 && pIdx < buddyPairs.length - 1
+                            ? "border-r-2 border-slate-600"
+                            : ""
+                        }`}
+                      >
+                        <Link
+                          href={`/scorecard/${slug}`}
+                          className="text-slate-200 hover:text-white font-semibold transition-colors"
+                        >
+                          {getShortName(slug)}
+                        </Link>
+                      </th>
+                    ))
+                  )}
+                </tr>
+              </thead>
 
-                return (
-                  <div key={team.name}>
-                    {/* Team Header */}
-                    <div className="bg-slate-800 rounded-t-lg px-5 py-3 flex items-center justify-between">
-                      <span className="text-sm font-bold text-white">{team.name}</span>
-                      <span className="text-xs text-slate-400">{teamTrainees.length} members</span>
-                    </div>
-                    <div className="space-y-4 mt-4">
-                      {teamTrainees.map((trainee) => (
-                        <TraineeCard
-                          key={trainee.slug}
-                          trainee={trainee}
-                          expandedWeeks={expandedWeeks}
-                          toggleWeekExpanded={toggleWeekExpanded}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                );
-              })
-            : filteredData.map((trainee) => (
-                <TraineeCard
-                  key={trainee.slug}
-                  trainee={trainee}
-                  expandedWeeks={expandedWeeks}
-                  toggleWeekExpanded={toggleWeekExpanded}
-                />
-              ))}
+              <tbody>
+                {weeksToShow.map((weekNum) => {
+                  const dates = getWeekDates(weekNum);
+                  const wc = weekConfig[weekNum];
+                  const isCollapsed = collapsedWeeks.has(weekNum);
+                  const isCurrentWeek = weekNum === currentWeek;
+                  const totalCols = allSlugs.length + 1 + (selectedMetric === "all" ? 1 : 0);
+
+                  return (
+                    <React.Fragment key={weekNum}>
+                      {/* ─── Week header row ─── */}
+                      <tr
+                        className={`cursor-pointer select-none ${
+                          isCurrentWeek
+                            ? "bg-[#E6017D]/10 hover:bg-[#E6017D]/15"
+                            : "bg-slate-100 hover:bg-slate-200"
+                        }`}
+                        onClick={() => toggleWeek(weekNum)}
+                      >
+                        <td
+                          colSpan={totalCols}
+                          className="px-3 py-2.5 font-bold text-sm"
+                        >
+                          <div className="flex items-center gap-2">
+                            <svg
+                              className={`w-4 h-4 text-gray-500 transition-transform ${isCollapsed ? "" : "rotate-90"}`}
+                              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                            <span className={isCurrentWeek ? "text-[#E6017D]" : "text-slate-800"}>
+                              {wc.label}
+                            </span>
+                            {isCurrentWeek && (
+                              <span className="text-[10px] bg-[#E6017D] text-white px-2 py-0.5 rounded-full font-semibold">
+                                CURRENT
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+
+                      {/* ─── Day rows (if expanded) ─── */}
+                      {!isCollapsed && (
+                        <>
+                          {dates.map((date, dayIdx) => {
+                            const dayLabel = `${dayNames[dayIdx]} ${formatDateShort(date)}`;
+
+                            if (selectedMetric !== "all") {
+                              // Single metric view — one row per day
+                              const metric = selectedMetric;
+                              const dailyTarget = getDailyTarget(weekNum, metric);
+                              return (
+                                <tr key={date} className="border-b border-gray-100 hover:bg-gray-50/50">
+                                  <td className="sticky left-0 z-10 bg-white px-3 py-2 text-gray-700 font-medium border-r border-gray-100 whitespace-nowrap">
+                                    {dayLabel}
+                                  </td>
+                                  {buddyPairs.map((pair, pIdx) =>
+                                    pair.members.map((slug, mIdx) => {
+                                      const val = getValue(slug, date, metric);
+                                      const cellClass = val > 0 ? getCellClass(val, dailyTarget) : "";
+                                      return (
+                                        <td
+                                          key={slug}
+                                          className={`px-2 py-2 text-center tabular-nums ${cellClass} ${
+                                            mIdx === pair.members.length - 1 && pIdx < buddyPairs.length - 1
+                                              ? "border-r-2 border-gray-200"
+                                              : ""
+                                          }`}
+                                        >
+                                          {val > 0 ? metricConfig[metric].format(val) : <span className="text-gray-300">–</span>}
+                                        </td>
+                                      );
+                                    })
+                                  )}
+                                </tr>
+                              );
+                            }
+
+                            // All metrics view — multiple rows per day
+                            return activeMetrics.map((metric, metricIdx) => (
+                              <tr
+                                key={`${date}-${metric}`}
+                                className={`${
+                                  metricIdx === activeMetrics.length - 1 ? "border-b border-gray-200" : "border-b border-gray-50"
+                                } hover:bg-gray-50/50`}
+                              >
+                                {metricIdx === 0 && (
+                                  <td
+                                    rowSpan={activeMetrics.length}
+                                    className="sticky left-0 z-10 bg-white px-3 py-1.5 text-gray-700 font-medium border-r border-gray-100 align-top whitespace-nowrap"
+                                  >
+                                    {dayLabel}
+                                  </td>
+                                )}
+                                <td className="px-1 py-1 text-center">
+                                  <span className="text-[9px] text-gray-400 uppercase font-semibold tracking-wide">
+                                    {metric === "revenue" ? "Rev" : metric === "bookings" ? "Book" : metric === "meetings" ? "Meet" : metric.charAt(0).toUpperCase() + metric.slice(1)}
+                                  </span>
+                                </td>
+                                {buddyPairs.map((pair, pIdx) =>
+                                  pair.members.map((slug, mIdx) => {
+                                    const val = getValue(slug, date, metric);
+                                    const dailyTarget = getDailyTarget(weekNum, metric);
+                                    const cellClass = val > 0 ? getCellClass(val, dailyTarget) : "";
+                                    return (
+                                      <td
+                                        key={slug}
+                                        className={`px-2 py-1 text-center tabular-nums ${cellClass} ${
+                                          mIdx === pair.members.length - 1 && pIdx < buddyPairs.length - 1
+                                            ? "border-r-2 border-gray-200"
+                                            : ""
+                                        }`}
+                                      >
+                                        {val > 0 ? metricConfig[metric].format(val) : <span className="text-gray-300">–</span>}
+                                      </td>
+                                    );
+                                  })
+                                )}
+                              </tr>
+                            ));
+                          })}
+
+                          {/* ─── Week totals row ─── */}
+                          {selectedMetric !== "all" ? (
+                            <tr className="bg-slate-50 border-b-2 border-slate-300">
+                              <td className="sticky left-0 z-10 bg-slate-50 px-3 py-2 font-bold text-slate-700 uppercase text-[10px] border-r border-gray-200 tracking-wide">
+                                {wc.shortLabel} Total
+                              </td>
+                              {buddyPairs.map((pair, pIdx) =>
+                                pair.members.map((slug, mIdx) => {
+                                  const total = getWeekTotal(slug, weekNum, selectedMetric);
+                                  const weeklyTarget = getDailyTarget(weekNum, selectedMetric) * 5;
+                                  return (
+                                    <td
+                                      key={slug}
+                                      className={`px-2 py-2 text-center tabular-nums ${getTotalClass(total, weeklyTarget)} ${
+                                        mIdx === pair.members.length - 1 && pIdx < buddyPairs.length - 1
+                                          ? "border-r-2 border-gray-200"
+                                          : ""
+                                      }`}
+                                    >
+                                      {metricConfig[selectedMetric].format(total)}
+                                      <span className="text-gray-400 font-normal text-[10px]">
+                                        /{metricConfig[selectedMetric].format(weeklyTarget)}
+                                      </span>
+                                    </td>
+                                  );
+                                })
+                              )}
+                            </tr>
+                          ) : (
+                            // All metrics — totals for each metric
+                            metricKeys.map((metric, metricIdx) => (
+                              <tr
+                                key={`total-${metric}`}
+                                className={`bg-slate-50 ${
+                                  metricIdx === metricKeys.length - 1 ? "border-b-2 border-slate-300" : "border-b border-slate-200"
+                                }`}
+                              >
+                                {metricIdx === 0 && (
+                                  <td
+                                    rowSpan={metricKeys.length}
+                                    className="sticky left-0 z-10 bg-slate-50 px-3 py-1.5 font-bold text-slate-700 uppercase text-[10px] border-r border-gray-200 tracking-wide align-top"
+                                  >
+                                    {wc.shortLabel} Total
+                                  </td>
+                                )}
+                                <td className="px-1 py-1 text-center bg-slate-50">
+                                  <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wide">
+                                    {metric === "revenue" ? "Rev" : metric === "bookings" ? "Book" : metric === "meetings" ? "Meet" : metric.charAt(0).toUpperCase() + metric.slice(1)}
+                                  </span>
+                                </td>
+                                {buddyPairs.map((pair, pIdx) =>
+                                  pair.members.map((slug, mIdx) => {
+                                    const total = getWeekTotal(slug, weekNum, metric);
+                                    const weeklyTarget = getDailyTarget(weekNum, metric) * 5;
+                                    return (
+                                      <td
+                                        key={slug}
+                                        className={`px-2 py-1 text-center tabular-nums ${getTotalClass(total, weeklyTarget)} ${
+                                          mIdx === pair.members.length - 1 && pIdx < buddyPairs.length - 1
+                                            ? "border-r-2 border-gray-200"
+                                            : ""
+                                        }`}
+                                      >
+                                        {metricConfig[metric].format(total)}
+                                      </td>
+                                    );
+                                  })
+                                )}
+                              </tr>
+                            ))
+                          )}
+                        </>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </main>
