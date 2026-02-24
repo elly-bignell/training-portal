@@ -20,7 +20,7 @@ function ConnieWeek8Content() {
                 </svg>
               </Link>
               <div>
-                <h1 className="text-xl font-bold">Connie Matthews</h1>
+                <h1 className="text-xl font-bold">Connie Matthews + Felipe Garcia</h1>
                 <p className="text-sm text-slate-400">Week 8 — 🎯 The Standard · Mon 13 Apr – Fri 17 Apr 2026</p>
               </div>
             </div>

@@ -20,7 +20,7 @@ function CindyWeek8Content() {
                 </svg>
               </Link>
               <div>
-                <h1 className="text-xl font-bold">Cindy Rose Rondez Manrique</h1>
+                <h1 className="text-xl font-bold">Cindy Manrique + Lucas Tirri</h1>
                 <p className="text-sm text-slate-400">Week 8 — 🎯 The Standard · Mon 13 Apr – Fri 17 Apr 2026</p>
               </div>
             </div>

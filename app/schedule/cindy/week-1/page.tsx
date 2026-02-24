@@ -20,7 +20,7 @@ function CindyWeek1Content() {
                 </svg>
               </Link>
               <div>
-                <h1 className="text-xl font-bold">Cindy Rose Rondez Manrique</h1>
+                <h1 className="text-xl font-bold">Cindy Manrique + Lucas Tirri</h1>
                 <p className="text-sm text-slate-400">Week 1 — First Week Out · Mon 23 Feb – Fri 27 Feb 2026</p>
               </div>
             </div>
@@ -99,6 +99,7 @@ function CindyWeek1Content() {
                         <div className="bg-sky-100 text-sky-700 rounded px-2 py-2 text-xs font-semibold">📞 Call Block 1</div>
                         <div className="text-[10px] text-gray-500 mt-1">9:30am–1:00pm · 3.5hrs</div>
                         <div className="text-[10px] text-sky-600 font-semibold mt-1">Target: 3–4 bookings</div>
+                        <div className="text-[10px] text-amber-600 font-medium mt-1">🔍 Buddy runs validation calls on previous day&apos;s bookings</div>
                       </td>
                     ))}
                   </tr>

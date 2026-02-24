@@ -76,7 +76,7 @@ function CindyScheduleContent() {
               </svg>
             </Link>
             <div>
-              <h1 className="text-2xl font-bold">Cindy Rose Rondez Manrique</h1>
+              <h1 className="text-2xl font-bold">Cindy Manrique + Lucas Tirri</h1>
               <p className="text-sm text-slate-400">Weekly Schedule — 8-Week Ramp</p>
             </div>
           </div>

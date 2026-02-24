@@ -76,7 +76,7 @@ function KrishnaScheduleContent() {
               </svg>
             </Link>
             <div>
-              <h1 className="text-2xl font-bold">Krishna Patel</h1>
+              <h1 className="text-2xl font-bold">Krishna Patel + Dylan Munro</h1>
               <p className="text-sm text-slate-400">Weekly Schedule — 8-Week Ramp</p>
             </div>
           </div>

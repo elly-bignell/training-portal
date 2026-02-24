@@ -20,7 +20,7 @@ function CindyWeek6Content() {
                 </svg>
               </Link>
               <div>
-                <h1 className="text-xl font-bold">Cindy Rose Rondez Manrique</h1>
+                <h1 className="text-xl font-bold">Cindy Manrique + Lucas Tirri</h1>
                 <p className="text-sm text-slate-400">Week 6 — Final Buddy Week · Mon 30 Mar – Fri 3 Apr 2026</p>
               </div>
             </div>
@@ -89,6 +89,7 @@ function CindyWeek6Content() {
                         <div className="bg-sky-100 text-sky-700 rounded px-2 py-2 text-xs font-semibold">📞 Call Block 1</div>
                         <div className="text-[10px] text-gray-500 mt-1">9:30am–12:30pm · 3hrs</div>
                         <div className="text-[10px] text-sky-600 font-semibold mt-1">Target: 3 bookings</div>
+                        <div className="text-[10px] text-amber-600 font-medium mt-1">🔍 Buddy runs validation calls on previous day&apos;s bookings</div>
                       </td>
                     ))}
                   </tr>

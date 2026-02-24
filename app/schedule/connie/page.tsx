@@ -76,7 +76,7 @@ function ConnieScheduleContent() {
               </svg>
             </Link>
             <div>
-              <h1 className="text-2xl font-bold">Connie Matthews</h1>
+              <h1 className="text-2xl font-bold">Connie Matthews + Felipe Garcia</h1>
               <p className="text-sm text-slate-400">Weekly Schedule — 8-Week Ramp</p>
             </div>
           </div>
