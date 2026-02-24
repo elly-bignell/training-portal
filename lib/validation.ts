@@ -4,13 +4,11 @@ export type BookingStatus = "pending" | "validated" | "rejected";
 
 export interface Booking {
   id: string;
-  airtable_id?: string;
   booking_date: string;
   business_name: string;
   contact_name?: string;
   contact_phone?: string;
   meeting_datetime?: string;
-  lead_source?: string;
   staff_member: string;
   buddy: string;
   status: BookingStatus;
@@ -55,14 +53,12 @@ export function getNextAvailableObservationDate(
   fromDate?: string
 ): string {
   const start = fromDate ? new Date(fromDate + "T00:00:00") : new Date();
-  // Start from tomorrow at the earliest
   const tomorrow = new Date(start);
   tomorrow.setDate(tomorrow.getDate() + 1);
-  
+
   let candidate = new Date(tomorrow);
   const usedSet = new Set(existingDates);
-  
-  // Find next weekday not already used
+
   for (let i = 0; i < 60; i++) {
     const day = candidate.getDay();
     const iso = toISODate(candidate);

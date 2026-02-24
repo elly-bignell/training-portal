@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY!;
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID!;
 const TABLE = "Bookings";
-const URL = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(TABLE)}`;
+const BASE_URL = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(TABLE)}`;
 
 const headers = {
   Authorization: `Bearer ${AIRTABLE_API_KEY}`,
@@ -26,7 +26,7 @@ export async function PATCH(
     if (body.validation_note !== undefined) fields.validation_note = body.validation_note;
     if (body.observation_date) fields.observation_date = body.observation_date;
 
-    const res = await fetch(`${URL}/${id}`, {
+    const res = await fetch(`${BASE_URL}/${id}`, {
       method: "PATCH",
       headers,
       body: JSON.stringify({ fields }),

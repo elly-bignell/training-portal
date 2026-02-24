@@ -1,4 +1,275 @@
-// app/validation/page.tsx
+// build-validation-system.mjs
+// Run: node build-validation-system.mjs
+// Creates the complete Booking Validation system at /validation (admin-only)
+
+import { writeFileSync, mkdirSync } from 'fs';
+import { join } from 'path';
+
+function ensureDir(dir) { mkdirSync(dir, { recursive: true }); }
+
+
+// ─── 1. lib/validation.ts — Types & helpers ──────────────────────────────────
+
+ensureDir('lib');
+writeFileSync('lib/validation.ts', `// lib/validation.ts
+
+export type BookingStatus = "pending" | "validated" | "rejected";
+
+export interface Booking {
+  id: string;
+  booking_date: string;
+  business_name: string;
+  contact_name?: string;
+  contact_phone?: string;
+  meeting_datetime?: string;
+  staff_member: string;
+  buddy: string;
+  status: BookingStatus;
+  validation_date?: string;
+  validation_note?: string;
+  observation_date?: string;
+  created_at: string;
+}
+
+export const BUDDY_PAIRS: Record<string, string> = {
+  "Connie Matthews": "Felipe Garcia",
+  "Cindy Manrique": "Lucas Tirri",
+  "Krishna Patel": "Dylan Munro",
+};
+
+export const STAFF_MEMBERS = Object.keys(BUDDY_PAIRS);
+export const BUDDIES = Object.values(BUDDY_PAIRS);
+
+export function getBuddy(staffMember: string): string {
+  return BUDDY_PAIRS[staffMember] || "Unknown";
+}
+
+export function getStaffForBuddy(buddy: string): string | undefined {
+  return Object.entries(BUDDY_PAIRS).find(([, b]) => b === buddy)?.[0];
+}
+
+export function formatDate(dateStr: string): string {
+  if (!dateStr) return "—";
+  const d = new Date(dateStr + "T00:00:00");
+  return d.toLocaleDateString("en-AU", { weekday: "short", day: "numeric", month: "short" });
+}
+
+export function toISODate(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return \`\${y}-\${m}-\${d}\`;
+}
+
+export function getNextAvailableObservationDate(
+  existingDates: string[],
+  fromDate?: string
+): string {
+  const start = fromDate ? new Date(fromDate + "T00:00:00") : new Date();
+  const tomorrow = new Date(start);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  let candidate = new Date(tomorrow);
+  const usedSet = new Set(existingDates);
+
+  for (let i = 0; i < 60; i++) {
+    const day = candidate.getDay();
+    const iso = toISODate(candidate);
+    if (day !== 0 && day !== 6 && !usedSet.has(iso)) {
+      return iso;
+    }
+    candidate.setDate(candidate.getDate() + 1);
+  }
+  return toISODate(candidate);
+}
+`);
+console.log('✅ Created: lib/validation.ts');
+
+
+// ─── 2. app/api/validation/route.ts — List & Create ─────────────────────────
+
+ensureDir('app/api/validation');
+writeFileSync('app/api/validation/route.ts', `// app/api/validation/route.ts
+
+import { NextRequest, NextResponse } from "next/server";
+
+const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY!;
+const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID!;
+const TABLE = "Bookings";
+const BASE_URL = \`https://api.airtable.com/v0/\${AIRTABLE_BASE_ID}/\${encodeURIComponent(TABLE)}\`;
+
+const headers = {
+  Authorization: \`Bearer \${AIRTABLE_API_KEY}\`,
+  "Content-Type": "application/json",
+};
+
+// GET — fetch all bookings
+export async function GET(request: NextRequest) {
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const staff = searchParams.get("staff");
+    const status = searchParams.get("status");
+
+    const filters: string[] = [];
+    if (staff) filters.push(\`{staff_member} = "\${staff}"\`);
+    if (status) filters.push(\`{status} = "\${status}"\`);
+
+    let filterFormula = "";
+    if (filters.length === 1) filterFormula = filters[0];
+    else if (filters.length > 1) filterFormula = \`AND(\${filters.join(",")})\`;
+
+    let allRecords: any[] = [];
+    let offset: string | undefined;
+
+    do {
+      const params = new URLSearchParams();
+      if (filterFormula) params.set("filterByFormula", filterFormula);
+      params.set("sort[0][field]", "booking_date");
+      params.set("sort[0][direction]", "desc");
+      if (offset) params.set("offset", offset);
+
+      const res = await fetch(\`\${BASE_URL}?\${params.toString()}\`, {
+        headers,
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        console.error("Airtable GET error:", err);
+        throw new Error(\`Airtable error: \${res.status}\`);
+      }
+
+      const data = await res.json();
+      allRecords = allRecords.concat(data.records || []);
+      offset = data.offset;
+    } while (offset);
+
+    const bookings = allRecords.map((r: any) => ({
+      id: r.id,
+      booking_date: r.fields.booking_date || "",
+      business_name: r.fields.business_name || "",
+      contact_name: r.fields.contact_name || "",
+      contact_phone: r.fields.contact_phone || "",
+      meeting_datetime: r.fields.meeting_datetime || "",
+      staff_member: r.fields.staff_member || "",
+      buddy: r.fields.buddy || "",
+      status: r.fields.status || "pending",
+      validation_date: r.fields.validation_date || "",
+      validation_note: r.fields.validation_note || "",
+      observation_date: r.fields.observation_date || "",
+      created_at: r.fields.created_at || "",
+    }));
+
+    return NextResponse.json({ bookings });
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+    return NextResponse.json({ error: "Failed to fetch bookings" }, { status: 500 });
+  }
+}
+
+// POST — create a new booking
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { booking_date, business_name, contact_name, contact_phone, meeting_datetime, staff_member, buddy } = body;
+
+    if (!business_name || !staff_member || !booking_date) {
+      return NextResponse.json({ error: "business_name, staff_member, and booking_date are required" }, { status: 400 });
+    }
+
+    const fields: Record<string, any> = {
+      booking_date,
+      business_name,
+      staff_member,
+      buddy: buddy || "",
+      status: "pending",
+      created_at: new Date().toISOString(),
+    };
+    if (contact_name) fields.contact_name = contact_name;
+    if (contact_phone) fields.contact_phone = contact_phone;
+    if (meeting_datetime) fields.meeting_datetime = meeting_datetime;
+
+    const res = await fetch(BASE_URL, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ fields }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      console.error("Airtable POST error:", err);
+      throw new Error(\`Airtable error: \${res.status}\`);
+    }
+
+    const data = await res.json();
+    return NextResponse.json({ success: true, id: data.id });
+  } catch (error) {
+    console.error("Error creating booking:", error);
+    return NextResponse.json({ error: "Failed to create booking" }, { status: 500 });
+  }
+}
+`);
+console.log('✅ Created: app/api/validation/route.ts');
+
+
+// ─── 3. app/api/validation/[id]/route.ts — Update ───────────────────────────
+
+ensureDir('app/api/validation/[id]');
+writeFileSync('app/api/validation/[id]/route.ts', `// app/api/validation/[id]/route.ts
+
+import { NextRequest, NextResponse } from "next/server";
+
+const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY!;
+const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID!;
+const TABLE = "Bookings";
+const BASE_URL = \`https://api.airtable.com/v0/\${AIRTABLE_BASE_ID}/\${encodeURIComponent(TABLE)}\`;
+
+const headers = {
+  Authorization: \`Bearer \${AIRTABLE_API_KEY}\`,
+  "Content-Type": "application/json",
+};
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const body = await request.json();
+
+    const fields: Record<string, any> = {};
+    if (body.status) fields.status = body.status;
+    if (body.validation_date) fields.validation_date = body.validation_date;
+    if (body.validation_note !== undefined) fields.validation_note = body.validation_note;
+    if (body.observation_date) fields.observation_date = body.observation_date;
+
+    const res = await fetch(\`\${BASE_URL}/\${id}\`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ fields }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      console.error("Airtable PATCH error:", err);
+      throw new Error(\`Airtable error: \${res.status}\`);
+    }
+
+    const data = await res.json();
+    return NextResponse.json({ success: true, record: data });
+  } catch (error) {
+    console.error("Error updating booking:", error);
+    return NextResponse.json({ error: "Failed to update booking" }, { status: 500 });
+  }
+}
+`);
+console.log('✅ Created: app/api/validation/[id]/route.ts');
+
+
+// ─── 4. app/validation/page.tsx — Full validation dashboard with tabs ────────
+
+ensureDir('app/validation');
+writeFileSync('app/validation/page.tsx', `// app/validation/page.tsx
 
 "use client";
 
@@ -87,11 +358,11 @@ function ValidationContent() {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+              className={\`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all \${
                 activeTab === tab.key
                   ? "bg-white text-slate-900 shadow-sm"
                   : "text-slate-400 hover:text-white hover:bg-slate-700"
-              }`}
+              }\`}
             >
               <span>{tab.icon}</span>
               {tab.label}
@@ -122,31 +393,31 @@ function ValidationContent() {
 // TAB 0: Flowchart
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const FLOWCHART_DEF = `flowchart TD
-    A["📞 Staff Member Makes a Booking"] --> B["📋 Booking Created\n<b>Status: Pending Validation</b>"]
+const FLOWCHART_DEF = \`flowchart TD
+    A["📞 Staff Member Makes a Booking"] --> B["📋 Booking Created\\n<b>Status: Pending Validation</b>"]
     B --> C["⏰ Next Business Day"]
-    C --> D["🤝 Buddy Calls the Booking\nto Validate Quality"]
-    D --> E{"Booking\nQuality?"}
+    C --> D["🤝 Buddy Calls the Booking\\nto Validate Quality"]
+    D --> E{"Booking\\nQuality?"}
 
-    E -->|"✅ Good"| F["Validated\n<b>Status: Validated</b>"]
-    E -->|"❌ Poor"| G["Rejected\n<b>Status: Rejected</b>\nBuddy writes rejection note"]
+    E -->|"✅ Good"| F["Validated\\n<b>Status: Validated</b>"]
+    E -->|"❌ Poor"| G["Rejected\\n<b>Status: Rejected</b>\\nBuddy writes rejection note"]
 
-    F --> H["📝 Buddy Provides Feedback\nto Staff Member"]
+    F --> H["📝 Buddy Provides Feedback\\nto Staff Member"]
     G --> H
 
     F --> I["📅 Added to Observation Queue"]
-    I --> J{"Next Available\nDay Free?"}
-    J -->|"Yes"| K["✅ Scheduled for Observation\n<b>1 per day max</b>"]
-    J -->|"No"| L["Rolls to Next\nAvailable Weekday"]
+    I --> J{"Next Available\\nDay Free?"}
+    J -->|"Yes"| K["✅ Scheduled for Observation\\n<b>1 per day max</b>"]
+    J -->|"No"| L["Rolls to Next\\nAvailable Weekday"]
     L --> J
 
-    K --> M["👀 Staff Member Observes\nBuddy Runs the Meeting"]
+    K --> M["👀 Staff Member Observes\\nBuddy Runs the Meeting"]
 
-    G --> N["📊 Logged in Daily\nLodgement Dashboard"]
+    G --> N["📊 Logged in Daily\\nLodgement Dashboard"]
     F --> N
 
-    N --> O["📈 Performance Report\nGenerated Weekly"]
-    O --> P["Validation Rate =\nValidated ÷ Total Bookings"]
+    N --> O["📈 Performance Report\\nGenerated Weekly"]
+    O --> P["Validation Rate =\\nValidated ÷ Total Bookings"]
 
     style A fill:#E6017D,stroke:#E6017D,color:#fff
     style B fill:#fef3c7,stroke:#f59e0b,color:#92400e
@@ -154,7 +425,7 @@ const FLOWCHART_DEF = `flowchart TD
     style G fill:#fee2e2,stroke:#ef4444,color:#991b1b
     style K fill:#dbeafe,stroke:#3b82f6,color:#1e40af
     style M fill:#84D4BD,stroke:#84D4BD,color:#064e3b
-    style P fill:#fce7f3,stroke:#E6017D,color:#9d174d`;
+    style P fill:#fce7f3,stroke:#E6017D,color:#9d174d\`;
 
 function FlowchartTab() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -446,7 +717,7 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
         .map((b) => b.observation_date!);
       const obsDate = getNextAvailableObservationDate(staffObsDates, today);
 
-      await fetch(`/api/validation/${booking.id}`, {
+      await fetch(\`/api/validation/\${booking.id}\`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -473,7 +744,7 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
     }
     setValidatingId(booking.id);
     try {
-      await fetch(`/api/validation/${booking.id}`, {
+      await fetch(\`/api/validation/\${booking.id}\`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -601,18 +872,18 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
   function BookingCard({ booking, type }: { booking: Booking; type: "validated" | "rejected" }) {
     const isGood = type === "validated";
     return (
-      <div className={`rounded-lg border-2 p-4 ${isGood ? "border-emerald-200 bg-emerald-50/50" : "border-red-200 bg-red-50/50"}`}>
+      <div className={\`rounded-lg border-2 p-4 \${isGood ? "border-emerald-200 bg-emerald-50/50" : "border-red-200 bg-red-50/50"}\`}>
         <div className="flex items-center justify-between mb-2">
-          <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full uppercase ${isGood ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}`}>
+          <span className={\`px-2 py-0.5 text-[10px] font-bold rounded-full uppercase \${isGood ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}\`}>
             {isGood ? "✅ Validated" : "❌ Rejected"}
           </span>
           <span className="text-[10px] text-gray-400">{formatDate(booking.booking_date)}</span>
         </div>
         <h4 className="font-semibold text-sm text-slate-800">{booking.business_name}</h4>
         <p className="text-xs text-slate-500 mt-1">👤 {booking.staff_member} · 🤝 {booking.buddy}</p>
-        {booking.contact_name && <p className="text-xs text-slate-400 mt-0.5">📇 {booking.contact_name} {booking.contact_phone ? `· 📞 ${booking.contact_phone}` : ""}</p>}
+        {booking.contact_name && <p className="text-xs text-slate-400 mt-0.5">📇 {booking.contact_name} {booking.contact_phone ? \`· 📞 \${booking.contact_phone}\` : ""}</p>}
         {booking.validation_note && (
-          <div className={`mt-2 p-2 rounded text-xs ${isGood ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"}`}>
+          <div className={\`mt-2 p-2 rounded text-xs \${isGood ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"}\`}>
             💬 {booking.validation_note}
           </div>
         )}
@@ -758,11 +1029,11 @@ function ObservationScheduleTab({ bookings }: { bookings: Booking[] }) {
                 const isPast = b.observation_date! < today;
                 const isToday = b.observation_date === today;
                 return (
-                  <tr key={b.id} className={`${isToday ? "bg-pink-50" : isPast ? "bg-gray-50/50" : "bg-white"} hover:bg-gray-50`}>
+                  <tr key={b.id} className={\`\${isToday ? "bg-pink-50" : isPast ? "bg-gray-50/50" : "bg-white"} hover:bg-gray-50\`}>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         {isToday && <span className="w-2 h-2 rounded-full bg-[#E6017D] animate-pulse"></span>}
-                        <span className={`font-medium ${isToday ? "text-[#E6017D]" : isPast ? "text-gray-400" : "text-slate-800"}`}>
+                        <span className={\`font-medium \${isToday ? "text-[#E6017D]" : isPast ? "text-gray-400" : "text-slate-800"}\`}>
                           {formatDate(b.observation_date!)}
                         </span>
                       </div>
@@ -841,12 +1112,12 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
       b.staff_member, b.buddy, b.status,
       b.validation_date || "", b.validation_note || "", b.observation_date || "",
     ]);
-    const csv = [headers, ...rows].map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const csv = [headers, ...rows].map((r) => r.map((c) => \`"\${String(c).replace(/"/g, '""')}"\`).join(",")).join("\\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `validation-report-${toISODate(new Date())}.csv`;
+    a.download = \`validation-report-\${toISODate(new Date())}.csv\`;
     a.click();
     window.URL.revokeObjectURL(url);
   };
@@ -929,7 +1200,7 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
                   <td className="px-4 py-2.5 text-center text-red-600 font-semibold">{r}</td>
                   <td className="px-4 py-2.5 text-center text-amber-600">{p}</td>
                   <td className="px-4 py-2.5 text-center">
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${rate >= 80 ? "bg-emerald-100 text-emerald-700" : rate >= 60 ? "bg-amber-100 text-amber-700" : "bg-red-100 text-red-700"}`}>
+                    <span className={\`px-2 py-0.5 rounded-full text-xs font-bold \${rate >= 80 ? "bg-emerald-100 text-emerald-700" : rate >= 60 ? "bg-amber-100 text-amber-700" : "bg-red-100 text-red-700"}\`}>
                       {rate}%
                     </span>
                   </td>
@@ -971,7 +1242,7 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
                   <td className="px-4 py-2.5 text-center text-red-600 font-semibold">{r}</td>
                   <td className="px-4 py-2.5 text-center text-amber-600">{p}</td>
                   <td className="px-4 py-2.5 text-center">
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${rate >= 80 ? "bg-emerald-100 text-emerald-700" : rate >= 60 ? "bg-amber-100 text-amber-700" : "bg-red-100 text-red-700"}`}>
+                    <span className={\`px-2 py-0.5 rounded-full text-xs font-bold \${rate >= 80 ? "bg-emerald-100 text-emerald-700" : rate >= 60 ? "bg-amber-100 text-amber-700" : "bg-red-100 text-red-700"}\`}>
                       {rate}%
                     </span>
                   </td>
@@ -1015,3 +1286,38 @@ export default function ValidationPage() {
     </PasswordGate>
   );
 }
+`);
+console.log('✅ Created: app/validation/page.tsx');
+
+
+// ─── Done ────────────────────────────────────────────────────────────────────
+
+console.log(`
+🎉 Booking Validation System created!
+
+Files:
+  ├── lib/validation.ts (types, buddy mapping, helpers)
+  ├── app/api/validation/route.ts (GET all, POST create)
+  ├── app/api/validation/[id]/route.ts (PATCH validate/reject)
+  └── app/validation/page.tsx (full dashboard with 6 tabs)
+
+⚠️  REQUIRED: Create a "Bookings" table in your Airtable base with these fields:
+  ┌──────────────────┬──────────────────┐
+  │ Field Name       │ Type             │
+  ├──────────────────┼──────────────────┤
+  │ booking_date     │ Date             │
+  │ business_name    │ Single line text │
+  │ contact_name     │ Single line text │
+  │ contact_phone    │ Single line text │
+  │ meeting_datetime │ Single line text │
+  │ staff_member     │ Single line text │
+  │ buddy            │ Single line text │
+  │ status           │ Single line text │
+  │ validation_date  │ Date             │
+  │ validation_note  │ Long text        │
+  │ observation_date │ Date             │
+  │ created_at       │ Single line text │
+  └──────────────────┴──────────────────┘
+
+Then: git add . && git commit -m "Add booking validation system" && git push
+`);
