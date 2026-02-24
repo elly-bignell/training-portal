@@ -255,7 +255,7 @@ function CindyWeek5Content() {
               <div className="space-y-3">
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-700 leading-relaxed">You're now leading 2 meetings/day — your buddy is backup only</p>
+                  <p className="text-xs text-gray-700 leading-relaxed">You&apos;re now leading 2 meetings/day — your buddy is backup only</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>

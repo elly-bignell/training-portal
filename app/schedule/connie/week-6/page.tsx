@@ -263,7 +263,7 @@ function ConnieWeek6Content() {
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-700 leading-relaxed">Don't cut your buddy prematurely — only go solo with 100% confidence</p>
+                  <p className="text-xs text-gray-700 leading-relaxed">Don&apos;t cut your buddy prematurely — only go solo with 100% confidence</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
