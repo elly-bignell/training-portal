@@ -308,7 +308,7 @@ function HomeContent() {
           {/* Senior Team Quick Access */}
           <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3 mt-6">Senior Team Quick Access</h3>
           <div className="space-y-4">
-            {trainees.filter((t) => ["lucas-tirri", "felipe-garcia", "dylan-munro", "thomas-rennie"].includes(t.slug)).map((trainee) => {
+            {["lucas-tirri", "felipe-garcia", "dylan-munro", "thomas-rennie"].map(s => trainees.find(t => t.slug === s)!).filter(Boolean).map((trainee) => {
               return (
               <div key={trainee.slug} className="border border-gray-200 rounded-lg p-4">
                 <div className="flex items-center gap-3 mb-3">
