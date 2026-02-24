@@ -15,7 +15,7 @@ const headers = {
 // GET — fetch all bookings (with optional filters)
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const staff = searchParams.get("staff");
     const status = searchParams.get("status");
     const from = searchParams.get("from");
