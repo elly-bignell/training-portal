@@ -44,6 +44,10 @@ const teams = [
     name: "Team 3",
     members: ["dylan-munro", "krishna-patel"],
   },
+  {
+    name: "Team 4",
+    members: ["thomas-rennie"],
+  },
 ];
 
 // Booking targets
@@ -429,7 +433,7 @@ export default function PerformanceSummary() {
                 <td className="px-4 py-2 text-xs font-bold text-slate-700 uppercase">Bookings</td>
                 <td></td>
                 {grandDayTotals.map((dayTotal, idx) => {
-                  const target = hasBookingTarget(weekDays[idx]) ? TEAM_BOOKINGS_TARGET_WED_FRI * 3 : 0;
+                  const target = hasBookingTarget(weekDays[idx]) ? TEAM_BOOKINGS_TARGET_WED_FRI * teams.length : 0;
                   return (
                     <td key={`grand-book-${idx}`} className={`px-2 py-2 text-center text-sm font-bold ${target > 0 ? getTeamBookingStatusClass(dayTotal.bookings, target) : "text-slate-800"}`}>
                       {dayTotal.bookings}
@@ -437,9 +441,9 @@ export default function PerformanceSummary() {
                     </td>
                   );
                 })}
-                <td className={`px-3 py-2 text-center text-sm font-bold ${getTeamBookingStatusClass(grandWeekTotals.bookings, TEAM_BOOKINGS_TARGET_EOW * 3)}`}>
+                <td className={`px-3 py-2 text-center text-sm font-bold ${getTeamBookingStatusClass(grandWeekTotals.bookings, TEAM_BOOKINGS_TARGET_EOW * teams.length)}`}>
                   {grandWeekTotals.bookings}
-                  <span className="text-gray-400 font-normal text-xs">/{TEAM_BOOKINGS_TARGET_EOW * 3}</span>
+                  <span className="text-gray-400 font-normal text-xs">/{TEAM_BOOKINGS_TARGET_EOW * teams.length}</span>
                 </td>
                 <td className="px-2 py-2 text-center text-xs font-bold text-slate-800">
                   {grandWeekTotals.calls > 0 ? `${Math.round((grandWeekTotals.bookings / grandWeekTotals.calls) * 100)}%` : "–"}
