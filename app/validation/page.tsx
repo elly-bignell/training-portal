@@ -4,7 +4,6 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
-import PasswordGate from "@/components/PasswordGate";
 import {
   Booking,
   BookingStatus,
@@ -18,20 +17,22 @@ import {
 
 type Tab = "flowchart" | "create" | "queue" | "lodgement" | "schedule" | "reports";
 
-const TABS: { key: Tab; label: string; icon: string }[] = [
-  { key: "flowchart", label: "Process", icon: "🔀" },
-  { key: "create", label: "Create Booking", icon: "📝" },
+const TABS: { key: Tab; label: string; icon: string; publicTab?: boolean }[] = [
+  { key: "flowchart", label: "Process", icon: "🔀", publicTab: true },
+  { key: "create", label: "Create Booking", icon: "📝", publicTab: true },
   { key: "queue", label: "Validation Queue", icon: "⏳" },
   { key: "lodgement", label: "Daily Lodgement", icon: "📊" },
   { key: "schedule", label: "Observations", icon: "📅" },
   { key: "reports", label: "Reports", icon: "📈" },
 ];
 
+type UserRole = "admin" | "senior" | "trainee";
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // MAIN CONTENT
 // ═══════════════════════════════════════════════════════════════════════════════
 
-function ValidationContent() {
+function ValidationContent({ role }: { role: UserRole }) {
   const [activeTab, setActiveTab] = useState<Tab>("flowchart");
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,6 +56,8 @@ function ValidationContent() {
   }, [fetchBookings]);
 
   const pendingCount = bookings.filter((b) => b.status === "pending").length;
+  const isFullAccess = role === "admin" || role === "senior";
+  const visibleTabs = isFullAccess ? TABS : TABS.filter((t) => t.publicTab);
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -83,7 +86,7 @@ function ValidationContent() {
       {/* Tabs */}
       <div className="max-w-7xl mx-auto px-4 -mt-3">
         <div className="flex gap-1 bg-slate-800 rounded-xl p-1 overflow-x-auto">
-          {TABS.map((tab) => (
+          {visibleTabs.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
@@ -384,7 +387,7 @@ function CreateBookingTab({ onCreated, saving, setSaving }: {
 
           <div>
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1">Meeting Date/Time</label>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">Meeting Date/Time <span className="font-normal text-gray-400">(Adelaide time)</span></label>
               <input
                 type="datetime-local"
                 value={form.meeting_datetime}
@@ -392,19 +395,7 @@ function CreateBookingTab({ onCreated, saving, setSaving }: {
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
               />
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1">Lead Source</label>
-              <select
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-              >
-                <option value="">Select...</option>
-                <option value="Cold Call">Cold Call</option>
-                <option value="Referral">Referral</option>
-                <option value="Inbound">Inbound</option>
-                <option value="Follow-up">Follow-up</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
+            
           </div>
 
           <button
@@ -1010,10 +1001,89 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
 // EXPORT
 // ═══════════════════════════════════════════════════════════════════════════════
 
-export default function ValidationPage() {
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// AUTH GATE — role-based access using existing password system
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function AuthGate() {
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState<UserRole | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [error, setError] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const saved = window.sessionStorage.getItem("validation_role");
+    if (saved === "admin" || saved === "senior" || saved === "trainee") {
+      setRole(saved as UserRole);
+    }
+    setLoaded(true);
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setChecking(true);
+    setError(false);
+
+    try {
+      const res = await fetch("/api/validation/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      const data = await res.json();
+
+      if (data.role) {
+        setRole(data.role);
+        window.sessionStorage.setItem("validation_role", data.role);
+      } else {
+        setError(true);
+      }
+    } catch {
+      setError(true);
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  if (!loaded) return null;
+
+  if (role) {
+    return <ValidationContent role={role} />;
+  }
+
   return (
-    <PasswordGate requireMaster>
-      <ValidationContent />
-    </PasswordGate>
+    <main className="min-h-screen bg-slate-100 flex items-center justify-center">
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 w-full max-w-sm">
+        <div className="text-center mb-6">
+          <div className="text-3xl mb-2">🔐</div>
+          <h1 className="text-xl font-bold text-slate-800">Booking Validation</h1>
+          <p className="text-sm text-slate-500 mt-1">Enter your password to continue</p>
+        </div>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => { setPassword(e.target.value); setError(false); }}
+            placeholder="Password"
+            autoFocus
+            className={"w-full border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent " + (error ? "border-red-300 bg-red-50" : "border-gray-300")}
+          />
+          {error && <p className="text-xs text-red-500 mt-2">Invalid password. Try again.</p>}
+          <button
+            type="submit"
+            disabled={checking || !password}
+            className="w-full mt-4 py-3 bg-[#E6017D] text-white font-semibold rounded-lg hover:bg-[#c9016c] disabled:opacity-50 transition-colors"
+          >
+            {checking ? "Checking..." : "Enter"}
+          </button>
+        </form>
+      </div>
+    </main>
   );
+}
+
+export default function ValidationPage() {
+  return <AuthGate />;
 }
