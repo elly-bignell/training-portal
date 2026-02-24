@@ -45,12 +45,12 @@ const weeklyData: WeekData[] = [
     phase: "ramp",
     label: "First Week Out",
     buddyWeek: true,
-    daily: { revenue: 250, units: 0.5, meetings: 1, bookings: 6, calls: 40 },
+    daily: { revenue: 0, units: 0, meetings: 0, bookings: 6, calls: 40 },
     takeaways: [
       "15% book rate — 40 calls to generate 6 bookings/day",
-      "6 bookings/day — you're booking meetings for your buddy",
-      "1 meeting/day observing — watch how your buddy runs the call and closes",
-      "50% close rate → 2.5 deals/week → $1,250 (your target contribution: $625)",
+      "Focus: pipeline building — fill the calendar with quality meetings",
+      "Meeting attendance (1/day) at manager's discretion if on track with bookings",
+      "This week is purely about calls and bookings — build the habit",
     ],
   },
   {

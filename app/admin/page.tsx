@@ -286,6 +286,49 @@ function AdminDashboardContent() {
           </div>
         </div>
 
+        {/* Schedules Quick Access */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <span>📅</span> Weekly Schedules
+          </h3>
+          <div className="space-y-4">
+            {[
+              { name: "Connie Matthews", dir: "connie" },
+              { name: "Cindy Rose Rondez Manrique", dir: "cindy" },
+              { name: "Krishna Patel", dir: "krishna" },
+            ].map((t) => (
+              <div key={t.dir}>
+                <div className="text-sm font-medium text-gray-700 mb-2">{t.name}</div>
+                <div className="flex flex-wrap gap-2">
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((w) => (
+                    <Link
+                      key={w}
+                      href={`/schedule/${t.dir}/week-${w}`}
+                      className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all hover:shadow-sm ${
+                        w <= 4
+                          ? "bg-sky-50 border-sky-200 text-sky-700 hover:bg-sky-100"
+                          : w <= 6
+                          ? "bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100"
+                          : w === 7
+                          ? "bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100"
+                          : "bg-pink-50 border-pink-200 text-pink-700 hover:bg-pink-100"
+                      }`}
+                    >
+                      Wk {w}
+                    </Link>
+                  ))}
+                  <Link
+                    href={`/schedule/${t.dir}`}
+                    className="px-3 py-1.5 text-xs font-semibold rounded-lg border bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 transition-all hover:shadow-sm"
+                  >
+                    All →
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Roadmap Link */}
         <Link
           href="/roadmap"
