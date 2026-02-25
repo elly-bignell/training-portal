@@ -60,12 +60,12 @@ const weeklyData: WeekData[] = [
     phase: "ramp",
     label: "Building Pipeline",
     buddyWeek: true,
-    daily: { revenue: 250, units: 0.5, meetings: 1, bookings: 7, calls: 30 },
+    daily: { revenue: 200, units: 0.5, meetings: 1, bookings: 7, calls: 40 },
     takeaways: [
-      "Call for call with your buddy — supervised calls to hit 7 bookings/day as a team",
+      "Call for call with your buddy — 40 calls/day to hit 7 bookings as a team",
       "You should be picking up the pitch structure and objection handling",
       "Your pipeline is growing — the bookings you're making fill your buddy's calendar",
-      "50% close rate → 2.5 deals/week → $1,250 (your target contribution: $625)",
+      "50% close rate → 2.5 deals/week → $1,000 (your target contribution: $500)",
     ],
   },
   {
@@ -75,12 +75,12 @@ const weeklyData: WeekData[] = [
     phase: "ramp",
     label: "Consistency",
     buddyWeek: true,
-    daily: { revenue: 250, units: 0.5, meetings: 1, bookings: 7, calls: 30 },
+    daily: { revenue: 200, units: 0.5, meetings: 1, bookings: 7, calls: 40 },
     takeaways: [
-      "Call for call with your buddy — supervised calls to maintain 7 bookings/day as a team",
+      "Call for call with your buddy — 40 calls/day to maintain 7 bookings as a team",
       "Your booking quality should be improving — better prospects, fewer no-shows",
       "Learn from every meeting — what objections come up, how does your buddy handle them?",
-      "50% close rate → 2.5 deals/week → $1,250 (your target contribution: $625)",
+      "50% close rate → 2.5 deals/week → $1,000 (your target contribution: $500)",
     ],
   },
   {
@@ -90,12 +90,12 @@ const weeklyData: WeekData[] = [
     phase: "ramp",
     label: "Wrapping Up Phase 1",
     buddyWeek: true,
-    daily: { revenue: 250, units: 0.5, meetings: 1, bookings: 7, calls: 30 },
+    daily: { revenue: 200, units: 0.5, meetings: 1, bookings: 7, calls: 40 },
     takeaways: [
-      "Call for call with your buddy — supervised calls to maintain 7 bookings/day as a team",
+      "Call for call with your buddy — 40 calls/day to maintain 7 bookings as a team",
       "Next week you step up to 2 meetings/day — your buddy will start handing you the reins",
       "Your booking rhythm is locked in — now it's about quality over quantity",
-      "50% close rate → 2.5 deals/week → $1,250 (your target contribution: $625)",
+      "50% close rate → 2.5 deals/week → $1,000 (your target contribution: $500)",
     ],
   },
   {
@@ -105,12 +105,12 @@ const weeklyData: WeekData[] = [
     phase: "ramp",
     label: "Stepping Up",
     buddyWeek: true,
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 5, calls: 25 },
+    daily: { revenue: 400, units: 1, meetings: 2, bookings: 5, calls: 25 },
     takeaways: [
       "20% book rate — 25 calls for 5 bookings, meetings are taking more of your time",
       "2 meetings/day — you start leading the call with buddy backup",
       "1 fewer booking but 1 more meeting — see the Rules of Thumb",
-      "50% close rate → 5 deals/week → $2,500 (your target contribution: $1,250)",
+      "50% close rate → 5 deals/week → $2,000 (your target contribution: $1,000)",
     ],
   },
   {
@@ -120,10 +120,10 @@ const weeklyData: WeekData[] = [
     phase: "ramp",
     label: "Final Buddy Week",
     buddyWeek: true,
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 5, calls: 25 },
+    daily: { revenue: 400, units: 1, meetings: 2, bookings: 5, calls: 25 },
     takeaways: [
       "Same as Week 5 — 25 calls, 5 bookings, 2 meetings/day",
-      "50% close rate → 5 deals/week → $2,500 (your target contribution: $1,250)",
+      "50% close rate → 5 deals/week → $2,000 (your target contribution: $1,000)",
       "This is your last week with buddy support — prove you're ready to go solo",
       "Don't cut your buddy prematurely — only go solo with 100% confidence",
     ],
@@ -134,12 +134,12 @@ const weeklyData: WeekData[] = [
     startDate: "2026-04-06",
     phase: "solo",
     label: "✈️ Flying Solo",
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 5, calls: 25 },
+    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 20 },
     takeaways: [
       "First week running meetings solo — 100% of each deal counts towards your target",
-      "Same rhythm: 50 calls, 5 bookings, 2 meetings — but all yours now",
-      "50% close rate → 5 deals/week → $2,500 — 100% to your target",
-      "Prove you can maintain the close rate without your buddy in the room",
+      "20 calls, 4 bookings, 3 meetings — your follow-up pipeline from buddy weeks feeds your calendar",
+      "50% close rate → 7.5 deals/week → $3,000 — 100% to your target",
+      "Warm leads from weeks of calling are now converting — your pipeline is your advantage",
     ],
   },
   {
@@ -148,11 +148,11 @@ const weeklyData: WeekData[] = [
     startDate: "2026-04-13",
     phase: "standard",
     label: "🎯 The Standard",
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 20 },
+    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 20 },
     takeaways: [
       "Fully proficient closed-circuit selling — you own the entire process",
-      "20 calls, 4 bookings, 2 meetings — 20% book rate at peak efficiency",
-      "50% close rate → 5 deals/week → $2,500/week — this is your benchmark",
+      "20 calls, 4 bookings, 3 meetings — your warm lead pipeline reduces cold call dependency",
+      "Your call:booking ratio improves as follow-up leads convert easier than cold calls",
       "The Standard is your floor, not your ceiling — keep pushing",
     ],
   },
@@ -161,11 +161,11 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 20 Apr – Fri 24 Apr",
     startDate: "2026-04-20",
     phase: "maintain",
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 20 },
+    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 20 },
     takeaways: [
-      "Review your follow-up pipeline — warm leads from previous weeks are your easiest wins",
-      "Better bookings = better show rates = more meetings from less effort",
-      "Start tracking which industries and business types convert best for you",
+      "Your follow-up pipeline is your goldmine — warm leads from previous weeks are your easiest wins",
+      "Increasing call:booking efficiency through warm leads — fewer dials, better conversions",
+      "Track which prospects didn't close but showed interest — they're your next meetings",
     ],
   },
   {
@@ -173,11 +173,11 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 27 Apr – Fri 1 May",
     startDate: "2026-04-27",
     phase: "maintain",
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 20 },
+    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 20 },
     takeaways: [
-      "Your pitch should feel natural now — less scripted, more conversational",
-      "Focus on objection handling — every objection overcome is a booking saved",
-      "Efficiency is your edge — fewer wasted calls, more qualified conversations",
+      "Pitch strength is your biggest lever — a stronger pitch means more bookings from fewer calls",
+      "Efficiency in meetings comes from preparation — research every prospect before you sit down",
+      "Your warm lead follow-ups should be generating bookings with minimal effort",
     ],
   },
   {
@@ -185,11 +185,11 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 4 May – Fri 8 May",
     startDate: "2026-05-04",
     phase: "maintain",
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 20 },
+    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 20 },
     takeaways: [
-      "Look at your meeting-to-close ratio — every percentage point up is more revenue towards your target",
+      "Your call:booking ratio should be improving — warm leads convert at a higher rate than cold",
       "Pre-meeting prep is what separates good from great — research the prospect",
-      "Aim to increase your average deal value through upsells and add-ons",
+      "Every percentage point improvement in close rate is more revenue towards your target",
     ],
   },
   {
@@ -198,11 +198,11 @@ const weeklyData: WeekData[] = [
     startDate: "2026-05-11",
     phase: "maintain",
     label: "Quarter Mark",
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 20 },
+    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 20 },
     takeaways: [
-      "3 months in — you should know your numbers inside out",
-      "Identify your best-performing time slots for calls and meetings",
-      "Maximise your calendar — dead time is a lost opportunity to hit your target",
+      "3 months in — your follow-up pipeline should be self-sustaining",
+      "Warm leads from your pipeline compound — less cold calling, more qualified conversations",
+      "Maximise every meeting — pitch strength and preparation are your biggest levers",
     ],
   },
   {
@@ -210,11 +210,11 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 18 May – Fri 22 May",
     startDate: "2026-05-18",
     phase: "maintain",
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 20 },
+    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 20 },
     takeaways: [
-      "Challenge yourself — can you close 6 deals this week instead of 5?",
-      "Sharpen your discovery questions to qualify harder on the call",
-      "Better qualification = higher show rate = more target contribution per booking",
+      "Challenge yourself — can you push past 7.5 deals this week?",
+      "Your warm lead pipeline should be driving a significant portion of your bookings now",
+      "Better qualification + stronger pitch = higher show rate and close rate combined",
     ],
   },
   {
@@ -222,11 +222,11 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 25 May – Fri 29 May",
     startDate: "2026-05-25",
     phase: "maintain",
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 20 },
+    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 20 },
     takeaways: [
-      "Your booking quality should be improving — track no-show rate weekly",
-      "Every no-show is a wasted meeting slot — tighten your qualification",
       "Follow-up game matters — chase confirmations the day before every meeting",
+      "Your pipeline compounds — every call you've made is a potential future booking",
+      "Track your warm lead conversion rate vs cold calls — know your efficiency edge",
     ],
   },
   {
@@ -234,11 +234,11 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 1 Jun – Fri 5 Jun",
     startDate: "2026-06-01",
     phase: "maintain",
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 20 },
+    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 20 },
     takeaways: [
-      "You're building a reputation now — referrals and warm leads start flowing",
-      "Fewer cold calls needed as your pipeline compounds over time",
-      "Focus on maximising every meeting — your close technique is your biggest lever",
+      "Referrals and warm leads are flowing — your pipeline is your competitive advantage",
+      "Fewer cold calls needed as your follow-up pipeline matures over time",
+      "Focus on maximising every meeting — pitch strength is your biggest revenue lever",
     ],
   },
   {
@@ -247,16 +247,16 @@ const weeklyData: WeekData[] = [
     startDate: "2026-06-08",
     phase: "maintain",
     label: "4 Months In",
-    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 20 },
+    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 20 },
     takeaways: [
-      "4 months of consistency — this is who you are now",
-      "Your efficiency gains compound — same effort, better results every week",
+      "4 months of consistency — your pipeline is a machine",
+      "Warm lead efficiency means better call:booking ratios with less effort",
       "The Standard is your floor, not your ceiling — keep pushing",
     ],
   },
 ];
 
-const standardDaily = { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 20 };
+const standardDaily = { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 20 };
 
 function getWeekly(daily: WeekData["daily"]) {
   return {
@@ -456,7 +456,7 @@ function RoadmapContent() {
             </Link>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Our Standards</h1>
-          <p className="text-lg sm:text-xl font-semibold mt-2" style={{ color: PINK }}>The Roadmap to Achieving 1 Deal Per Day</p>
+          <p className="text-lg sm:text-xl font-semibold mt-2" style={{ color: PINK }}>The Roadmap to Achieving 1.5 Deals Per Day</p>
           <p className="text-slate-400 mt-3">
             This roadmap covers your first 16 weeks, building up to The Standard by Week 8 and maintaining it beyond.
           </p>
@@ -802,31 +802,31 @@ function RoadmapContent() {
           <h3 className="text-lg font-bold text-slate-800 mb-4">💡 Key Observations</h3>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${PINK}08`, borderColor: `${PINK}22` }}>
-              <h4 className="font-semibold text-sm mb-2" style={{ color: PINK }}>📞 Calls Decrease as Meetings Increase</h4>
+              <h4 className="font-semibold text-sm mb-2" style={{ color: PINK }}>🔁 Follow-Up Pipeline Is Everything</h4>
               <p className="text-sm text-slate-600">
-                300 calls/week in Weeks 1–4, down to 200 by The Standard.
-                Every meeting you add frees up call time — see the Rules of Thumb.
+                Your warm leads from previous weeks are your easiest wins. As your pipeline matures,
+                your call:booking efficiency improves — fewer cold dials, more qualified conversations.
               </p>
             </div>
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${MINT}15`, borderColor: `${MINT}44` }}>
-              <h4 className="font-semibold text-sm mb-2 text-teal-700">📈 Buddy System → Independence</h4>
+              <h4 className="font-semibold text-sm mb-2 text-teal-700">📈 Warm Leads Drive Efficiency</h4>
               <p className="text-sm text-slate-600">
-                Weeks 1–6 with buddy support (50% counts to target). Flying solo from Week 7 — 100% of every deal counts towards your target.
-                The faster you reach proficiency, the sooner every deal fully counts towards your target.
+                Increasing your call:booking efficiency through your own warm leads is the key to sustainability.
+                Every week you build pipeline, the next week gets easier. Your follow-ups compound over time.
               </p>
             </div>
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${MINT}15`, borderColor: `${MINT}44` }}>
-              <h4 className="font-semibold text-sm mb-2 text-teal-700">🤝 50% Close Rate Throughout</h4>
+              <h4 className="font-semibold text-sm mb-2 text-teal-700">💪 Strength in Pitching</h4>
               <p className="text-sm text-slate-600">
-                Close rate holds at 50% from Week 1 onwards — your buddy ensures strong conversion early,
-                and by Week 7 you maintain it independently. Every 2 meetings = 1 deal.
+                A stronger pitch means more bookings from fewer calls and higher close rates in meetings.
+                Your pitch is your biggest lever — sharpen it every week and watch your numbers climb.
               </p>
             </div>
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${PINK}08`, borderColor: `${PINK}22` }}>
-              <h4 className="font-semibold text-sm mb-2" style={{ color: PINK }}>💰 $500 Average Deal Value</h4>
+              <h4 className="font-semibold text-sm mb-2" style={{ color: PINK }}>⚡ Efficiency in Meetings</h4>
               <p className="text-sm text-slate-600">
-                Revenue per unit stays consistent at $500. Growth comes from closing more deals,
-                not bigger deals — 1 deal per day is The Standard.
+                $400 average deal value with a 50% close rate — 3 meetings/day at The Standard.
+                Pre-meeting preparation and strong qualification maximise every slot on your calendar.
               </p>
             </div>
           </div>
