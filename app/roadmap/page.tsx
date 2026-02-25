@@ -5,6 +5,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import PasswordGate from "@/components/PasswordGate";
+import { hasMasterAccess } from "@/data/passwords";
 
 interface WeekData {
   week: number;
@@ -432,11 +433,20 @@ function YouAreHereBadge() {
 
 function RoadmapContent() {
   const [currentWeek, setCurrentWeek] = useState<number>(0);
+  const [isAdmin, setIsAdmin] = useState(false);
   const standardWeekly = getWeekly(standardDaily);
   const standardConversions = getConversions(standardDaily);
 
   useEffect(() => {
     setCurrentWeek(getCurrentWeek());
+    // Check if user logged in with master password
+    const stored = localStorage.getItem("training-portal-auth");
+    if (stored) {
+      try {
+        const authData = JSON.parse(stored);
+        setIsAdmin(hasMasterAccess(authData.password));
+      } catch (e) {}
+    }
   }, []);
 
   return (
@@ -445,15 +455,19 @@ function RoadmapContent() {
       <header className="bg-slate-900 text-white">
         <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
           <div className="flex items-center justify-between mb-6">
-            <Link href="/" className="text-slate-400 hover:text-white transition-colors text-sm flex items-center gap-1">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              Back to Portal
-            </Link>
-            <Link href="/admin" className="text-slate-400 hover:text-white transition-colors text-sm">
-              Admin Dashboard →
-            </Link>
+            {isAdmin ? (
+              <Link href="/" className="text-slate-400 hover:text-white transition-colors text-sm flex items-center gap-1">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                Back to Portal
+              </Link>
+            ) : <div />}
+            {isAdmin && (
+              <Link href="/admin" className="text-slate-400 hover:text-white transition-colors text-sm">
+                Admin Dashboard →
+              </Link>
+            )}
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Our Standards</h1>
           <p className="text-lg sm:text-xl font-semibold mt-2" style={{ color: PINK }}>The Roadmap to Achieving 1.5 Deals Per Day</p>
@@ -838,7 +852,7 @@ function RoadmapContent() {
 
 export default function RoadmapPage() {
   return (
-    <PasswordGate requireMaster>
+    <PasswordGate>
       <RoadmapContent />
     </PasswordGate>
   );
