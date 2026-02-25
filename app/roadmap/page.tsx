@@ -36,7 +36,7 @@ const weeklyData: WeekData[] = [
       "Mon–Tue: Induction, tech setup, software training & understanding the customer service team",
       "Wed–Fri: Hit the phones — paired with a senior buddy, going call for call",
       "40 bookings between you and your buddy by end of week",
-      "200 calls between the pair over 3 days to hit the target",
+      "200 connected calls between the pair over 3 days (from ~364 attempts)",
     ],
   },
   {
@@ -48,7 +48,7 @@ const weeklyData: WeekData[] = [
     buddyWeek: true,
     daily: { revenue: 0, units: 0, meetings: 0, bookings: 7, calls: 65 },
     takeaways: [
-      "6.5 hours on the phones — 65 calls, 7 bookings/day (~1 booking per hour)",
+      "6.5 hours on the phones — 65 connected calls (from ~118 attempts), 7 bookings/day (~1 booking per hour)",
       "Focus: pipeline building — fill the calendar with quality meetings",
       "Your manager might get you into a meeting if your bookings are looking good",
       "This week is purely about calls and bookings — build the habit",
@@ -63,7 +63,7 @@ const weeklyData: WeekData[] = [
     buddyWeek: true,
     daily: { revenue: 200, units: 0.5, meetings: 1, bookings: 7, calls: 55 },
     takeaways: [
-      "5.5 hours calling + 1 meeting — 55 calls, 7 bookings (book rate increasing to 1.3/hr, targeting 1.5)",
+      "5.5 hours calling + 1 meeting — 55 connected calls (from ~100 attempts), 7 bookings (book rate increasing to 1.3/hr, targeting 1.5)",
       "1 hour less on the phones but same booking output — your efficiency is improving",
       "Your pipeline is growing — the bookings you're making fill your buddy's calendar",
       "50% close rate → 2.5 deals/week → $1,000 (your target contribution: $500)",
@@ -93,7 +93,7 @@ const weeklyData: WeekData[] = [
     buddyWeek: true,
     daily: { revenue: 200, units: 0.5, meetings: 1, bookings: 7, calls: 40 },
     takeaways: [
-      "Call for call with your buddy — 40 calls/day to maintain 7 bookings as a team",
+      "40 connected calls/day (from ~73 attempts) to maintain 7 bookings as a team",
       "Next week you step up to 2 meetings/day — your buddy will start handing you the reins",
       "Your booking rhythm is locked in — now it's about quality over quantity",
       "50% close rate → 2.5 deals/week → $1,000 (your target contribution: $500)",
@@ -108,7 +108,7 @@ const weeklyData: WeekData[] = [
     buddyWeek: true,
     daily: { revenue: 400, units: 1, meetings: 2, bookings: 5, calls: 25 },
     takeaways: [
-      "20% book rate — 25 calls for 5 bookings, meetings are taking more of your time",
+      "25 connected calls (from ~45 attempts) for 5 bookings — meetings are taking more of your time",
       "2 meetings/day — you start leading the call with buddy backup",
       "1 fewer booking but 1 more meeting — see the Rules of Thumb",
       "50% close rate → 5 deals/week → $2,000 (your target contribution: $1,000)",
@@ -123,7 +123,7 @@ const weeklyData: WeekData[] = [
     buddyWeek: true,
     daily: { revenue: 400, units: 1, meetings: 2, bookings: 5, calls: 25 },
     takeaways: [
-      "Same as Week 5 — 25 calls, 5 bookings, 2 meetings/day",
+      "Same as Week 5 — 25 connected calls (from ~45 attempts), 5 bookings, 2 meetings/day",
       "50% close rate → 5 deals/week → $2,000 (your target contribution: $1,000)",
       "This is your last week with buddy support — prove you're ready to go solo",
       "Don't cut your buddy prematurely — only go solo with 100% confidence",
@@ -138,7 +138,7 @@ const weeklyData: WeekData[] = [
     daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 20 },
     takeaways: [
       "First week running meetings solo — 100% of each deal counts towards your target",
-      "20 calls, 4 bookings, 3 meetings — your follow-up pipeline from buddy weeks feeds your calendar",
+      "20 connected calls (from ~36 attempts), 4 bookings, 3 meetings — your follow-up pipeline from buddy weeks feeds your calendar",
       "50% close rate → 7.5 deals/week → $3,000 — 100% to your target",
       "Warm leads from weeks of calling are now converting — your pipeline is your advantage",
     ],
@@ -152,7 +152,7 @@ const weeklyData: WeekData[] = [
     daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 20 },
     takeaways: [
       "Fully proficient closed-circuit selling — you own the entire process",
-      "20 calls, 4 bookings, 3 meetings — your warm lead pipeline reduces cold call dependency",
+      "20 connected calls (from ~36 attempts), 4 bookings, 3 meetings — your warm lead pipeline reduces cold call dependency",
       "Your call:booking ratio improves as follow-up leads convert easier than cold calls",
       "The Standard is your floor, not your ceiling — keep pushing",
     ],
@@ -395,7 +395,7 @@ const funnelMetrics = [
   { key: "units" as const, label: "Units", format: "number" },
   { key: "meetings" as const, label: "Meetings", format: "number" },
   { key: "bookings" as const, label: "Bookings", format: "number" },
-  { key: "calls" as const, label: "Calls", format: "number" },
+  { key: "calls" as const, label: "Connected", format: "number" },
 ];
 
 const conversionLabelsMap = ["Avg Deal", "Close Rate", "Show Rate", "Book Rate"];
@@ -533,7 +533,7 @@ function RoadmapContent() {
                 <div className="grid grid-cols-3 text-[11px] font-bold text-indigo-900 border-b border-indigo-100">
                   <div className="px-4 py-2 text-center border-r border-indigo-100">MEETINGS</div>
                   <div className="px-4 py-2 text-center border-r border-indigo-100">BOOKINGS</div>
-                  <div className="px-4 py-2 text-center">CALLS (20% CUT THROUGH)</div>
+                  <div className="px-4 py-2 text-center">CONNECTED CALLS (55% CONNECT RATE)</div>
                 </div>
                 {[
                   { m: 0, b: 7, c: 35 },
@@ -699,13 +699,13 @@ function RoadmapContent() {
                           </div>
                           <div className="bg-white rounded-lg p-3 text-center border border-blue-200">
                             <div className="text-2xl font-bold text-blue-700">200</div>
-                            <div className="text-[10px] text-slate-500 uppercase font-semibold mt-0.5">Calls</div>
-                            <div className="text-[10px] text-blue-400 mt-0.5">over 3 days</div>
+                            <div className="text-[10px] text-slate-500 uppercase font-semibold mt-0.5">Connected Calls</div>
+                            <div className="text-[10px] text-blue-400 mt-0.5">over 3 days (~364 attempts)</div>
                           </div>
                         </div>
                         <div className="mt-3 p-2 rounded bg-blue-100/60 border border-blue-200">
                           <p className="text-[11px] text-blue-800 text-center font-medium">
-                            🎯 Target: ~67 calls/day each · ~13 bookings/day between you
+                            🎯 Target: ~67 connected calls/day each (~122 attempts) · ~13 bookings/day between you
                           </p>
                         </div>
                       </div>
