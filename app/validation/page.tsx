@@ -231,7 +231,6 @@ function FlowchartTab() {
             <div className="w-4 h-4 rounded bg-red-100 border border-red-400"></div>
             <span className="text-xs text-slate-600">Rejected</span>
           </div>
-
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 rounded bg-pink-100 border border-pink-400"></div>
             <span className="text-xs text-slate-600">Performance Report</span>
@@ -431,8 +430,11 @@ function CreateBookingTab({ onCreated, saving, setSaving }: {
 
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// TAB 2: Validation Queue
+// TAB 2: Validation Queue (GROUPED BY BUDDY)
 // ═══════════════════════════════════════════════════════════════════════════════
+
+// Buddy sort order — Lucas (Cindy's buddy) first, Felipe (Connie's buddy) second, Dylan (Krishna's buddy) third
+const BUDDY_SORT_ORDER = ["Lucas Tirri", "Felipe Garcia", "Dylan Munro"];
 
 function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
   bookings: Booking[];
@@ -445,6 +447,24 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
 
   const pendingBookings = bookings.filter((b) => b.status === "pending");
   const today = toISODate(new Date());
+
+  // Group pending bookings by buddy
+  const groupedByBuddy: Record<string, Booking[]> = {};
+  pendingBookings.forEach((b) => {
+    const buddy = b.buddy || "Unknown";
+    if (!groupedByBuddy[buddy]) groupedByBuddy[buddy] = [];
+    groupedByBuddy[buddy].push(b);
+  });
+
+  // Sort buddy groups: Lucas first, then Felipe, then Dylan, then any others alphabetically
+  const sortedBuddyKeys = Object.keys(groupedByBuddy).sort((a, b) => {
+    const ai = BUDDY_SORT_ORDER.indexOf(a);
+    const bi = BUDDY_SORT_ORDER.indexOf(b);
+    if (ai === -1 && bi === -1) return a.localeCompare(b);
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
 
   const getNote = (id: string) => notes[id] || "";
   const setNote = (id: string, val: string) => setNotes((prev) => ({ ...prev, [id]: val }));
@@ -523,63 +543,78 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
           <p className="text-slate-400 text-sm mt-1">New bookings will appear here when created</p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {pendingBookings.map((booking) => {
-            const isRejecting = !!rejectMode[booking.id];
-            const isProcessing = processingId === booking.id;
-            const note = getNote(booking.id);
+        <div className="space-y-8">
+          {sortedBuddyKeys.map((buddyName) => {
+            const group = groupedByBuddy[buddyName];
+            const firstName = buddyName.split(" ")[0];
 
             return (
-              <div key={booking.id} className="bg-white rounded-xl border border-amber-200 shadow-sm p-5">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded-full uppercase">Pending</span>
-                      <span className="text-xs text-gray-400">Booked {formatDate(booking.booking_date)}</span>
-                    </div>
-                    <h3 className="text-base font-bold text-slate-800">{booking.business_name}</h3>
-                    <div className="flex items-center gap-4 mt-1 text-xs text-slate-500">
-                      <span>👤 {booking.staff_member}</span>
-                      <span>🤝 Buddy: {booking.buddy}</span>
-                      {booking.contact_name && <span>📇 {booking.contact_name}</span>}
-                      {booking.contact_phone && <span>📞 {booking.contact_phone}</span>}
-                      {booking.meeting_datetime && <span>🕐 {booking.meeting_datetime}</span>}
-                    </div>
-                  </div>
-                </div>
+              <div key={buddyName}>
+                <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                  {firstName} — Validation Calls To Be Made ({group.length})
+                </h3>
+                <div className="space-y-3">
+                  {group.map((booking) => {
+                    const isRejecting = !!rejectMode[booking.id];
+                    const isProcessing = processingId === booking.id;
+                    const note = getNote(booking.id);
 
-                <div className="mt-4">
-                  <textarea
-                    value={note}
-                    onChange={(e) => setNote(booking.id, e.target.value)}
-                    placeholder={isRejecting ? "Rejection reason (required)..." : "Feedback note (optional)..."}
-                    className={`w-full border rounded-lg px-3 py-2 text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent ${isRejecting ? "border-red-300 bg-red-50/30" : "border-gray-200"}`}
-                  />
-                  <div className="flex gap-2 mt-2">
-                    <button
-                      onClick={() => handleValidate(booking)}
-                      disabled={isProcessing}
-                      className="flex-1 py-2.5 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors text-sm flex items-center justify-center gap-1.5"
-                    >
-                      ✅ Validate
-                    </button>
-                    {isRejecting ? (
-                      <button
-                        onClick={() => handleReject(booking)}
-                        disabled={isProcessing || !note.trim()}
-                        className="flex-1 py-2.5 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors text-sm flex items-center justify-center gap-1.5"
-                      >
-                        ❌ Confirm Rejection
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => setRejectMode((prev) => ({ ...prev, [booking.id]: true }))}
-                        className="flex-1 py-2.5 bg-white text-red-600 border-2 border-red-200 font-semibold rounded-lg hover:bg-red-50 transition-colors text-sm flex items-center justify-center gap-1.5"
-                      >
-                        ❌ Reject
-                      </button>
-                    )}
-                  </div>
+                    return (
+                      <div key={booking.id} className="bg-white rounded-xl border border-amber-200 shadow-sm p-5">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded-full uppercase">Pending</span>
+                              <span className="text-xs text-gray-400">Booked {formatDate(booking.booking_date)}</span>
+                            </div>
+                            <h3 className="text-base font-bold text-slate-800">{booking.business_name}</h3>
+                            <div className="flex items-center gap-4 mt-1 text-xs text-slate-500">
+                              <span>👤 {booking.staff_member}</span>
+                              <span>🤝 Buddy: {booking.buddy}</span>
+                              {booking.contact_name && <span>📇 {booking.contact_name}</span>}
+                              {booking.contact_phone && <span>📞 {booking.contact_phone}</span>}
+                              {booking.meeting_datetime && <span>🕐 {booking.meeting_datetime}</span>}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="mt-4">
+                          <textarea
+                            value={note}
+                            onChange={(e) => setNote(booking.id, e.target.value)}
+                            placeholder={isRejecting ? "Rejection reason (required)..." : "Feedback note (optional)..."}
+                            className={`w-full border rounded-lg px-3 py-2 text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent ${isRejecting ? "border-red-300 bg-red-50/30" : "border-gray-200"}`}
+                          />
+                          <div className="flex gap-2 mt-2">
+                            <button
+                              onClick={() => handleValidate(booking)}
+                              disabled={isProcessing}
+                              className="flex-1 py-2.5 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors text-sm flex items-center justify-center gap-1.5"
+                            >
+                              ✅ Validate
+                            </button>
+                            {isRejecting ? (
+                              <button
+                                onClick={() => handleReject(booking)}
+                                disabled={isProcessing || !note.trim()}
+                                className="flex-1 py-2.5 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors text-sm flex items-center justify-center gap-1.5"
+                              >
+                                ❌ Confirm Rejection
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => setRejectMode((prev) => ({ ...prev, [booking.id]: true }))}
+                                className="flex-1 py-2.5 bg-white text-red-600 border-2 border-red-200 font-semibold rounded-lg hover:bg-red-50 transition-colors text-sm flex items-center justify-center gap-1.5"
+                              >
+                                ❌ Reject
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             );
@@ -1016,12 +1051,7 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
 
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// EXPORT
-// ═══════════════════════════════════════════════════════════════════════════════
-
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// AUTH GATE — role-based access using existing password system
+// AUTH GATE
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function AuthGate() {
