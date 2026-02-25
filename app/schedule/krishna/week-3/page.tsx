@@ -64,7 +64,7 @@ function KrishnaWeek3Content() {
               <div className="text-[10px] text-slate-400 uppercase">Revenue</div>
             </div>
           </div>
-          <p className="text-xs text-slate-400 mt-3">Revenue based on $350 per deal · 50/50 buddy split applies</p>
+          <p className="text-xs text-slate-400 mt-3">Revenue based on $400 per deal · 50/50 buddy split applies</p>
         </div>
 
         <div className="flex gap-6">
@@ -292,7 +292,7 @@ function KrishnaWeek3Content() {
                 </div>
                 <div className="flex justify-between p-2 bg-emerald-50 rounded">
                   <span className="text-emerald-700 font-medium">1 deal</span>
-                  <span className="text-emerald-900 font-bold">= $350 revenue</span>
+                  <span className="text-emerald-900 font-bold">= $400 revenue</span>
                 </div>
               </div>
             </div>
