@@ -63,7 +63,7 @@ function CindyWeek7Content() {
               <div className="text-[10px] text-slate-400 uppercase">Deals</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">$500</div>
+              <div className="text-2xl font-bold">$400</div>
               <div className="text-[10px] text-slate-400 uppercase">Revenue</div>
             </div>
           </div>
@@ -304,11 +304,11 @@ function CindyWeek7Content() {
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
                   <span className="text-gray-700 font-medium">2 attended</span>
-                  <span className="text-gray-900 font-bold">= 1 deal (50%)</span>
+                  <span className="text-gray-900 font-bold">= 1.5 deals (50%)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-emerald-50 rounded">
-                  <span className="text-emerald-700 font-medium">1 deal</span>
-                  <span className="text-emerald-900 font-bold">= $500 revenue</span>
+                  <span className="text-emerald-700 font-medium">1.5 deals</span>
+                  <span className="text-emerald-900 font-bold">= $400 revenue</span>
                 </div>
               </div>
             </div>
@@ -342,7 +342,7 @@ function CindyWeek7Content() {
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">View Standards</div>
-                    <div className="text-[10px] text-gray-500">Roadmap to 1 deal per day</div>
+                    <div className="text-[10px] text-gray-500">Roadmap to 1.5 deals per day</div>
                   </div>
                   <svg className="w-4 h-4 text-gray-400 ml-auto group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

@@ -36,7 +36,7 @@ function ConnieWeek8Content() {
         <div className="bg-gradient-to-r from-pink-600 to-rose-500 rounded-xl p-4 text-white text-center">
           <div className="text-2xl mb-1">🏆</div>
           <h2 className="text-lg font-bold">You&apos;ve Reached The Standard</h2>
-          <p className="text-pink-200 text-sm mt-1">5 bookings, 2 meetings, 1 deal per day — this is your benchmark from here on</p>
+          <p className="text-pink-200 text-sm mt-1">5 bookings, 2 meetings, 1.5 deals per day — this is your benchmark from here on</p>
         </div>
         {/* Week 8 Targets Banner */}
         <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-5 text-white">
@@ -66,7 +66,7 @@ function ConnieWeek8Content() {
               <div className="text-[10px] text-slate-400 uppercase">Deals</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">$500</div>
+              <div className="text-2xl font-bold">$400</div>
               <div className="text-[10px] text-slate-400 uppercase">Revenue</div>
             </div>
           </div>
@@ -269,7 +269,7 @@ function ConnieWeek8Content() {
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-700 leading-relaxed">5 bookings, 2 meetings, 1 deal per day — maintain this consistently</p>
+                  <p className="text-xs text-gray-700 leading-relaxed">5 bookings, 2 meetings, 1.5 deals per day — maintain this consistently</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
@@ -307,11 +307,11 @@ function ConnieWeek8Content() {
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
                   <span className="text-gray-700 font-medium">2 attended</span>
-                  <span className="text-gray-900 font-bold">= 1 deal (50%)</span>
+                  <span className="text-gray-900 font-bold">= 1.5 deals (50%)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-emerald-50 rounded">
-                  <span className="text-emerald-700 font-medium">1 deal</span>
-                  <span className="text-emerald-900 font-bold">= $500 revenue</span>
+                  <span className="text-emerald-700 font-medium">1.5 deals</span>
+                  <span className="text-emerald-900 font-bold">= $400 revenue</span>
                 </div>
               </div>
             </div>
@@ -345,7 +345,7 @@ function ConnieWeek8Content() {
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">View Standards</div>
-                    <div className="text-[10px] text-gray-500">Roadmap to 1 deal per day</div>
+                    <div className="text-[10px] text-gray-500">Roadmap to 1.5 deals per day</div>
                   </div>
                   <svg className="w-4 h-4 text-gray-400 ml-auto group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
