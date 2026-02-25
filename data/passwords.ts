@@ -27,6 +27,13 @@ export function isValidPassword(password: string, traineeSlug?: string): boolean
     return TRAINEE_PASSWORDS[traineeSlug].includes(password);
   }
 
+  // If no traineeSlug provided (e.g. roadmap page), accept ANY valid trainee password
+  if (!traineeSlug) {
+    return Object.values(TRAINEE_PASSWORDS).some((passwords) =>
+      passwords.includes(password)
+    );
+  }
+
   return false;
 }
 
