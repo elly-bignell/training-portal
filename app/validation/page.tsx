@@ -1038,6 +1038,8 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
   const validated = filtered.filter((b) => b.status === "validated").length;
   const rejected = filtered.filter((b) => b.status === "rejected").length;
   const pending = filtered.filter((b) => b.status === "pending").length;
+  const firstCallPending = filtered.filter((b) => b.status === "pending" && !((b as any).na_count > 0)).length;
+  const naAwaitingRetry = filtered.filter((b) => b.status === "pending" && (b as any).na_count > 0).length;
   const validationRate = (validated + rejected) > 0 ? Math.round((validated / (validated + rejected)) * 100) : 0;
 
   const rejectionNotes = filtered
@@ -1045,10 +1047,10 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
     .map((b) => ({ note: b.validation_note!, staff: b.staff_member, date: b.booking_date, business: b.business_name }));
 
   const exportCSV = () => {
-    const headers = ["Booking Date", "Business Name", "Contact Name", "Contact Phone", "Staff Member", "Buddy", "Status", "Validation Date", "Note", "Observation Date"];
+    const headers = ["Booking Date", "Business Name", "Contact Name", "Contact Phone", "Staff Member", "Buddy", "Status", "N/A Count", "Validation Date", "Note", "Observation Date"];
     const rows = filtered.map((b) => [
       b.booking_date, b.business_name, b.contact_name || "", b.contact_phone || "",
-      b.staff_member, b.buddy, b.status,
+      b.staff_member, b.buddy, b.status, (b as any).na_count || 0,
       b.validation_date || "", b.validation_note || "", b.observation_date || "",
     ]);
     const csv = [headers, ...rows].map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
@@ -1086,7 +1088,7 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-6 gap-3 mb-6">
         <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
           <div className="text-2xl font-bold text-slate-800">{total}</div>
           <div className="text-xs text-slate-500">Total Bookings</div>
@@ -1100,8 +1102,12 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
           <div className="text-xs text-red-600">Rejected</div>
         </div>
         <div className="bg-amber-50 rounded-xl border border-amber-200 p-4 text-center">
-          <div className="text-2xl font-bold text-amber-600">{pending}</div>
-          <div className="text-xs text-amber-600">Pending</div>
+          <div className="text-2xl font-bold text-amber-600">{firstCallPending}</div>
+          <div className="text-xs text-amber-600">1st Call Pending</div>
+        </div>
+        <div className="bg-orange-50 rounded-xl border border-orange-200 p-4 text-center">
+          <div className="text-2xl font-bold text-orange-600">{naAwaitingRetry}</div>
+          <div className="text-xs text-orange-600">N/A, Retry Pending</div>
         </div>
         <div className="bg-pink-50 rounded-xl border border-pink-200 p-4 text-center">
           <div className="text-2xl font-bold text-[#E6017D]">{validationRate}%</div>
@@ -1121,7 +1127,8 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Total</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Validated</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Rejected</th>
-              <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Pending</th>
+              <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">1st Call Pending</th>
+              <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">N/A, Retry</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Val. Rate</th>
             </tr>
           </thead>
@@ -1129,7 +1136,8 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
             {Object.entries(byStaff).map(([staff, bks]) => {
               const v = bks.filter((b) => b.status === "validated").length;
               const r = bks.filter((b) => b.status === "rejected").length;
-              const p = bks.filter((b) => b.status === "pending").length;
+              const fcp = bks.filter((b) => b.status === "pending" && !((b as any).na_count > 0)).length;
+              const nar = bks.filter((b) => b.status === "pending" && (b as any).na_count > 0).length;
               const rate = (v + r) > 0 ? Math.round((v / (v + r)) * 100) : 0;
               return (
                 <tr key={staff} className="hover:bg-gray-50">
@@ -1137,7 +1145,8 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
                   <td className="px-4 py-2.5 text-center">{bks.length}</td>
                   <td className="px-4 py-2.5 text-center text-emerald-600 font-semibold">{v}</td>
                   <td className="px-4 py-2.5 text-center text-red-600 font-semibold">{r}</td>
-                  <td className="px-4 py-2.5 text-center text-amber-600">{p}</td>
+                  <td className="px-4 py-2.5 text-center text-amber-600">{fcp}</td>
+                  <td className="px-4 py-2.5 text-center text-orange-600 font-semibold">{nar}</td>
                   <td className="px-4 py-2.5 text-center">
                     <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${rate >= 80 ? "bg-emerald-100 text-emerald-700" : rate >= 60 ? "bg-amber-100 text-amber-700" : "bg-red-100 text-red-700"}`}>
                       {rate}%
@@ -1162,7 +1171,8 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Total</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Validated</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Rejected</th>
-              <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Pending</th>
+              <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">1st Call Pending</th>
+              <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">N/A, Retry</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Val. Rate</th>
             </tr>
           </thead>
@@ -1171,7 +1181,8 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
               const dayBookings = byDate[date];
               const v = dayBookings.filter((b) => b.status === "validated").length;
               const r = dayBookings.filter((b) => b.status === "rejected").length;
-              const p = dayBookings.filter((b) => b.status === "pending").length;
+              const fcp = dayBookings.filter((b) => b.status === "pending" && !((b as any).na_count > 0)).length;
+              const nar = dayBookings.filter((b) => b.status === "pending" && (b as any).na_count > 0).length;
               const rate = (v + r) > 0 ? Math.round((v / (v + r)) * 100) : 0;
               return (
                 <tr key={date} className="hover:bg-gray-50">
@@ -1179,7 +1190,8 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
                   <td className="px-4 py-2.5 text-center">{dayBookings.length}</td>
                   <td className="px-4 py-2.5 text-center text-emerald-600 font-semibold">{v}</td>
                   <td className="px-4 py-2.5 text-center text-red-600 font-semibold">{r}</td>
-                  <td className="px-4 py-2.5 text-center text-amber-600">{p}</td>
+                  <td className="px-4 py-2.5 text-center text-amber-600">{fcp}</td>
+                  <td className="px-4 py-2.5 text-center text-orange-600 font-semibold">{nar}</td>
                   <td className="px-4 py-2.5 text-center">
                     <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${rate >= 80 ? "bg-emerald-100 text-emerald-700" : rate >= 60 ? "bg-amber-100 text-amber-700" : "bg-red-100 text-red-700"}`}>
                       {rate}%
