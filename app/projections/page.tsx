@@ -4,6 +4,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import PasswordGate from "@/components/PasswordGate";
 
 // ─── Defaults ───
 const DEFAULT_CALLS_PER_HOUR = 18;
@@ -101,7 +102,7 @@ function FunnelInput({ value, onChange, step = 0.1, min = 0, prefix, suffix, wid
   );
 }
 
-export default function ProjectionsPage() {
+function ProjectionsContent() {
   const [activeTab, setActiveTab] = useState<"leadgen" | "closing">("leadgen");
   const [phoneHours, setPhoneHours] = useState(DEFAULT_HOURS);
   const [dealValue, setDealValue] = useState(DEFAULT_DEAL_VALUE);
@@ -500,5 +501,13 @@ export default function ProjectionsPage() {
 
       </div>
     </main>
+  );
+}
+
+export default function ProjectionsPage() {
+  return (
+    <PasswordGate requireMaster>
+      <ProjectionsContent />
+    </PasswordGate>
   );
 }
