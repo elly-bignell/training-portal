@@ -552,11 +552,13 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
   const handleNA = async (booking: Booking) => {
     setProcessingId(booking.id);
     try {
+      const currentCount = (booking as any).na_count || 0;
       const res = await fetch(`/api/validation/${booking.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           na_date: today,
+          na_count: currentCount + 1,
         }),
       });
       if (!res.ok) throw new Error("PATCH failed");
@@ -575,16 +577,22 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
     const isProcessing = processingId === booking.id;
     const note = getNote(booking.id);
     const isNA = (booking as any).na_date === today;
+    const naCount = (booking as any).na_count || 0;
 
     return (
       <div key={booking.id} className={`bg-white rounded-xl border shadow-sm p-5 ${isNA ? "border-slate-200 bg-slate-50/50" : "border-amber-200"}`}>
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
               <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded-full uppercase">Pending</span>
+              {naCount > 0 && (
+                <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-[10px] font-bold rounded-full uppercase flex items-center gap-1">
+                  📞 N/A × {naCount}
+                </span>
+              )}
               {isNA && (
                 <span className="px-2 py-0.5 bg-slate-200 text-slate-600 text-[10px] font-bold rounded-full uppercase flex items-center gap-1">
-                  📞 Call N/A — moved to bottom
+                  ↓ moved to bottom for today
                 </span>
               )}
               <span className="text-xs text-gray-400">Booked {formatDate(booking.booking_date)}</span>

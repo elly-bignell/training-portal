@@ -67,6 +67,7 @@ export async function GET(request: NextRequest) {
       validation_note: r.fields.validation_note || "",
       observation_date: r.fields.observation_date || "",
       na_date: r.fields.na_date || "",
+      na_count: r.fields.na_count || 0,
       created_at: r.fields.created_at || "",
     }));
 

@@ -26,6 +26,7 @@ export async function PATCH(
     if (body.validation_note !== undefined) fields.validation_note = body.validation_note;
     if (body.observation_date) fields.observation_date = body.observation_date;
     if (body.na_date !== undefined) fields.na_date = body.na_date;
+    if (body.na_count !== undefined) fields.na_count = body.na_count;
 
     const res = await fetch(`${BASE_URL}/${id}`, {
       method: "PATCH",
