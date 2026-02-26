@@ -328,7 +328,7 @@ function CreateBookingTab({ onCreated, saving, setSaving }: {
               <p className="text-[10px] text-gray-400 mt-1">{form.staff_member ? `Buddy: ${getBuddy(form.staff_member)}` : "Select a staff member to see buddy"}</p>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1">Date Booked *</label>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">Date Booked (Select Today&apos;s Date) *</label>
               <input
                 type="date"
                 value={form.booking_date}
