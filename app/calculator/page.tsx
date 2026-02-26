@@ -18,7 +18,7 @@ const STAFF = [
 
 // ─── Benchmark per hour ───
 // 18 calls → 10 connects (55.6%) → 1.5 bookings (15% of connects) → 0.75 attended (50%) → 0.375 deals (50%)
-// Revenue per deal = $350/month
+// Revenue per deal = $400/month
 const PER_HOUR = {
   calls: 18,
   connects: 10,
@@ -27,7 +27,7 @@ const PER_HOUR = {
   deals: 0.375,
 };
 
-const REVENUE_PER_DEAL = 350;
+const REVENUE_PER_DEAL = 400;
 
 function calculateTargets(callingHours: number) {
   const calls = Math.round(PER_HOUR.calls * callingHours);
@@ -320,16 +320,16 @@ export default function CalculatorPage() {
                 </tr>
                 <tr className="border-b border-gray-100">
                   <td className="py-2 font-medium text-gray-700">💰 Revenue</td>
-                  <td className="py-2 text-center font-bold text-slate-900">$131</td>
-                  <td className="py-2 text-center text-gray-600">$525</td>
-                  <td className="py-2 text-center text-green-600 font-semibold">$350/deal</td>
+                  <td className="py-2 text-center font-bold text-slate-900">$150</td>
+                  <td className="py-2 text-center text-gray-600">$600</td>
+                  <td className="py-2 text-center text-green-600 font-semibold">$400/deal</td>
                   <td className="py-2 text-center text-gray-400">per month</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <div className="mt-3 text-[10px] text-gray-400">
-            Revenue calculated at $350 per deal (monthly value).
+            Revenue calculated at $400 per deal (monthly value).
           </div>
         </div>
 
