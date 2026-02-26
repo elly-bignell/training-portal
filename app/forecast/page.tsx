@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { usePersistedState } from "@/hooks/usePersistedState";
 import Link from "next/link";
 import PasswordGate from "@/components/PasswordGate";
 import {
@@ -150,13 +150,13 @@ function ForecastContent() {
   const currentYear = today.getFullYear();
 
   // ─── Ratios (linked to projections defaults) ───
-  const [ratios, setRatios] = useLocalStorage("forecast-ratios", { ...DEFAULT_RATIOS });
-  const [ramp, setRamp] = useLocalStorage("forecast-ramp", DEFAULT_RAMP.map((r) => ({ ...r })));
-  const [churnRate, setChurnRate] = useLocalStorage("forecast-churn", 5); // % monthly client loss
-  const [forecastYear, setForecastYear] = useLocalStorage("forecast-year", currentYear);
+  const [ratios, setRatios] = usePersistedState("forecast-ratios", { ...DEFAULT_RATIOS });
+  const [ramp, setRamp] = usePersistedState("forecast-ramp", DEFAULT_RAMP.map((r) => ({ ...r })));
+  const [churnRate, setChurnRate] = usePersistedState("forecast-churn", 5); // % monthly client loss
+  const [forecastYear, setForecastYear] = usePersistedState("forecast-year", currentYear);
 
   // ─── Team Members ───
-  const [team, setTeam] = useLocalStorage<TeamMember[]>("forecast-team", [
+  const [team, setTeam] = usePersistedState<TeamMember[]>("forecast-team", [
     { id: generateId(), label: "Person 1", startDate: `${currentYear}-03-01` },
   ]);
 

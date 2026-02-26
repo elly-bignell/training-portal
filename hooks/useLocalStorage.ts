@@ -2,34 +2,213 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { TraineeProgress } from "@/types";
 
-export function useLocalStorage<T>(key: string, defaultValue: T): [T, (value: T | ((prev: T) => T)) => void] {
-  const [value, setValue] = useState<T>(defaultValue);
+const getStorageKey = (traineeSlug: string) => `training-progress-${traineeSlug}`;
+
+const defaultProgress: TraineeProgress = {
+  checkedItems: {},
+  notes: {},
+  lastUpdated: "",
+};
+
+export function useTraineeProgress(traineeSlug: string, traineeName: string) {
+  const [progress, setProgress] = useState<TraineeProgress>(defaultProgress);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Load from localStorage on mount
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(key);
-      if (stored !== null) {
-        setValue(JSON.parse(stored));
+  // Sync to Airtable (debounced)
+  const syncToAirtable = useCallback(
+    async (progressToSync: TraineeProgress, overallProgress: number) => {
+      try {
+        setIsSyncing(true);
+        await fetch("/api/progress", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            trainee_slug: traineeSlug,
+            trainee_name: traineeName,
+            checked_items: progressToSync.checkedItems,
+            notes: progressToSync.notes,
+            overall_progress: overallProgress,
+          }),
+        });
+      } catch (error) {
+        console.error("Failed to sync to Airtable:", error);
+      } finally {
+        setIsSyncing(false);
       }
-    } catch (e) {
-      console.warn(`Failed to load ${key} from localStorage:`, e);
-    }
-    setIsLoaded(true);
-  }, [key]);
+    },
+    [traineeSlug, traineeName]
+  );
 
-  // Save to localStorage on change (skip initial load)
+  // Load from Airtable first (source of truth), fall back to localStorage
   useEffect(() => {
-    if (!isLoaded) return;
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (e) {
-      console.warn(`Failed to save ${key} to localStorage:`, e);
-    }
-  }, [key, value, isLoaded]);
+    if (typeof window === "undefined") return;
 
-  return [value, setValue];
+    const loadProgress = async () => {
+      const storageKey = getStorageKey(traineeSlug);
+      
+      // Try to fetch from Airtable first (source of truth)
+      try {
+        const response = await fetch(`/api/progress?trainee_slug=${traineeSlug}`);
+        const data = await response.json();
+
+        if (data && !data.error && data.checked_items) {
+          const airtableProgress: TraineeProgress = {
+            checkedItems: data.checked_items || {},
+            notes: data.notes || {},
+            lastUpdated: data.last_updated || new Date().toISOString(),
+          };
+
+          // Use Airtable data and update localStorage to match
+          setProgress(airtableProgress);
+          localStorage.setItem(storageKey, JSON.stringify(airtableProgress));
+          setIsLoaded(true);
+          return;
+        }
+      } catch (error) {
+        console.error("Failed to fetch from Airtable:", error);
+      }
+
+      // Fall back to localStorage if Airtable fetch failed or returned no data
+      const stored = localStorage.getItem(storageKey);
+      if (stored) {
+        try {
+          const localProgress = JSON.parse(stored) as TraineeProgress;
+          setProgress(localProgress);
+        } catch (e) {
+          console.error("Failed to parse stored progress:", e);
+        }
+      }
+
+      setIsLoaded(true);
+    };
+
+    loadProgress();
+  }, [traineeSlug]);
+
+  // Save to localStorage and schedule Airtable sync
+  const saveProgress = useCallback(
+    (newProgress: TraineeProgress, allChecklistIds: string[]) => {
+      if (typeof window === "undefined") return;
+
+      const storageKey = getStorageKey(traineeSlug);
+      const progressWithTimestamp = {
+        ...newProgress,
+        lastUpdated: new Date().toISOString(),
+      };
+      localStorage.setItem(storageKey, JSON.stringify(progressWithTimestamp));
+      setProgress(progressWithTimestamp);
+
+      // Calculate overall progress
+      const checkedCount = allChecklistIds.filter(
+        (id) => newProgress.checkedItems[id]
+      ).length;
+      const overallProgress = Math.round(
+        (checkedCount / allChecklistIds.length) * 100
+      );
+
+      // Debounce Airtable sync (wait 1 second after last change)
+      if (syncTimeoutRef.current) {
+        clearTimeout(syncTimeoutRef.current);
+      }
+      syncTimeoutRef.current = setTimeout(() => {
+        syncToAirtable(progressWithTimestamp, overallProgress);
+      }, 1000);
+    },
+    [traineeSlug, syncToAirtable]
+  );
+
+  // Toggle a checklist item
+  const toggleItem = useCallback(
+    (itemId: string, allChecklistIds: string[]) => {
+      const newCheckedItems = {
+        ...progress.checkedItems,
+        [itemId]: !progress.checkedItems[itemId],
+      };
+      saveProgress(
+        {
+          ...progress,
+          checkedItems: newCheckedItems,
+        },
+        allChecklistIds
+      );
+    },
+    [progress, saveProgress]
+  );
+
+  // Update notes for a module
+  const updateNotes = useCallback(
+    (moduleId: string, content: string, allChecklistIds: string[]) => {
+      const newNotes = {
+        ...progress.notes,
+        [moduleId]: content,
+      };
+      saveProgress(
+        {
+          ...progress,
+          notes: newNotes,
+        },
+        allChecklistIds
+      );
+    },
+    [progress, saveProgress]
+  );
+
+  // Reset all progress
+  const resetProgress = useCallback(
+    async (allChecklistIds: string[]) => {
+      if (typeof window === "undefined") return;
+
+      const storageKey = getStorageKey(traineeSlug);
+      localStorage.removeItem(storageKey);
+      const newProgress = {
+        ...defaultProgress,
+        lastUpdated: new Date().toISOString(),
+      };
+      setProgress(newProgress);
+
+      // Also reset in Airtable
+      await syncToAirtable(newProgress, 0);
+    },
+    [traineeSlug, syncToAirtable]
+  );
+
+  // Calculate progress percentage for a module
+  const getModuleProgress = useCallback(
+    (checklistIds: string[]): number => {
+      if (checklistIds.length === 0) return 0;
+      const checkedCount = checklistIds.filter(
+        (id) => progress.checkedItems[id]
+      ).length;
+      return Math.round((checkedCount / checklistIds.length) * 100);
+    },
+    [progress.checkedItems]
+  );
+
+  // Calculate overall progress
+  const getOverallProgress = useCallback(
+    (allChecklistIds: string[]): number => {
+      if (allChecklistIds.length === 0) return 0;
+      const checkedCount = allChecklistIds.filter(
+        (id) => progress.checkedItems[id]
+      ).length;
+      return Math.round((checkedCount / allChecklistIds.length) * 100);
+    },
+    [progress.checkedItems]
+  );
+
+  return {
+    progress,
+    isLoaded,
+    isSyncing,
+    toggleItem,
+    updateNotes,
+    resetProgress,
+    getModuleProgress,
+    getOverallProgress,
+  };
 }
