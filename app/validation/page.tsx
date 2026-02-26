@@ -473,7 +473,16 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
       if (bi === -1) return -1;
       return ai - bi;
     });
-    return sortedKeys.map((key) => ({ buddyName: key, bookings: grouped[key] }));
+    return sortedKeys.map((key) => ({
+      buddyName: key,
+      bookings: grouped[key].sort((a, b) => {
+        // N/A'd today → bottom of list
+        const aNa = (a as any).na_date === today ? 1 : 0;
+        const bNa = (b as any).na_date === today ? 1 : 0;
+        if (aNa !== bNa) return aNa - bNa;
+        return a.booking_date.localeCompare(b.booking_date);
+      }),
+    }));
   };
 
   const yesterdayGroups = groupByBuddy(yesterdayBookings);
@@ -540,21 +549,47 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
     }
   };
 
+  const handleNA = async (booking: Booking) => {
+    setProcessingId(booking.id);
+    try {
+      const res = await fetch(`/api/validation/${booking.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          na_date: today,
+        }),
+      });
+      if (!res.ok) throw new Error("PATCH failed");
+      onUpdate();
+    } catch (err) {
+      console.error("Failed to mark N/A:", err);
+      alert("Failed to mark as N/A — check console for details.");
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
   // Shared booking card renderer
   const renderBookingCard = (booking: Booking) => {
     const isRejecting = !!rejectMode[booking.id];
     const isProcessing = processingId === booking.id;
     const note = getNote(booking.id);
+    const isNA = (booking as any).na_date === today;
 
     return (
-      <div key={booking.id} className="bg-white rounded-xl border border-amber-200 shadow-sm p-5">
+      <div key={booking.id} className={`bg-white rounded-xl border shadow-sm p-5 ${isNA ? "border-slate-200 bg-slate-50/50" : "border-amber-200"}`}>
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
               <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded-full uppercase">Pending</span>
+              {isNA && (
+                <span className="px-2 py-0.5 bg-slate-200 text-slate-600 text-[10px] font-bold rounded-full uppercase flex items-center gap-1">
+                  📞 Call N/A — moved to bottom
+                </span>
+              )}
               <span className="text-xs text-gray-400">Booked {formatDate(booking.booking_date)}</span>
             </div>
-            <h3 className="text-base font-bold text-slate-800">{booking.business_name}</h3>
+            <h3 className={`text-base font-bold ${isNA ? "text-slate-500" : "text-slate-800"}`}>{booking.business_name}</h3>
             <div className="flex items-center gap-4 mt-1 text-xs text-slate-500">
               <span>👤 {booking.staff_member}</span>
               <span>🤝 Buddy: {booking.buddy}</span>
@@ -594,6 +629,15 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
                 className="flex-1 py-2.5 bg-white text-red-600 border-2 border-red-200 font-semibold rounded-lg hover:bg-red-50 transition-colors text-sm flex items-center justify-center gap-1.5"
               >
                 ❌ Reject
+              </button>
+            )}
+            {!isRejecting && !isNA && (
+              <button
+                onClick={() => handleNA(booking)}
+                disabled={isProcessing}
+                className="py-2.5 px-4 bg-white text-slate-500 border-2 border-slate-200 font-semibold rounded-lg hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 transition-colors text-sm flex items-center justify-center gap-1.5 whitespace-nowrap"
+              >
+                📞 Call N/A
               </button>
             )}
           </div>
