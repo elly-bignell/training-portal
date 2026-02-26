@@ -769,6 +769,13 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
   const validated = filtered.filter((b) => b.status === "validated");
   const rejected = filtered.filter((b) => b.status === "rejected");
 
+  // N/A calls: pending bookings that were marked N/A on the selected date (or have any na_count if no date filter)
+  const naCalls = bookings.filter((b) => {
+    if (staffFilter !== "all" && b.staff_member !== staffFilter) return false;
+    if (dateFilter) return (b as any).na_date === dateFilter;
+    return ((b as any).na_count || 0) > 0;
+  });
+
   function BookingCard({ booking, type }: { booking: Booking; type: "validated" | "rejected" }) {
     const isGood = type === "validated";
     return (
@@ -822,7 +829,7 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
       </div>
 
       {/* Summary */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-4 gap-4 mb-6">
         <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
           <div className="text-2xl font-bold text-slate-800">{filtered.length}</div>
           <div className="text-xs text-slate-500">Total Processed</div>
@@ -834,6 +841,10 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
         <div className="bg-red-50 rounded-xl border border-red-200 p-4 text-center">
           <div className="text-2xl font-bold text-red-600">{rejected.length}</div>
           <div className="text-xs text-red-600">Rejected</div>
+        </div>
+        <div className="bg-orange-50 rounded-xl border border-orange-200 p-4 text-center">
+          <div className="text-2xl font-bold text-orange-600">{naCalls.length}</div>
+          <div className="text-xs text-orange-600">Call N/A</div>
         </div>
       </div>
 
@@ -866,6 +877,34 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
           </div>
         </div>
       </div>
+
+      {/* N/A Calls section */}
+      {naCalls.length > 0 && (
+        <div className="mt-6">
+          <h3 className="text-sm font-bold text-orange-700 mb-3 flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-orange-500"></span>
+            Call N/A ({naCalls.length})
+          </h3>
+          <div className="grid grid-cols-2 gap-3">
+            {naCalls.map((b) => (
+              <div key={b.id} className="rounded-lg border-2 border-orange-200 bg-orange-50/50 p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 text-[10px] font-bold rounded-full uppercase bg-orange-100 text-orange-700">
+                      📞 N/A × {(b as any).na_count || 1}
+                    </span>
+                    <span className="px-2 py-0.5 text-[10px] font-bold rounded-full uppercase bg-amber-100 text-amber-700">Pending</span>
+                  </div>
+                  <span className="text-[10px] text-gray-400">{formatDate(b.booking_date)}</span>
+                </div>
+                <h4 className="font-semibold text-sm text-slate-800">{b.business_name}</h4>
+                <p className="text-xs text-slate-500 mt-1">👤 {b.staff_member} · 🤝 {b.buddy}</p>
+                {b.contact_name && <p className="text-xs text-slate-400 mt-0.5">📇 {b.contact_name} {b.contact_phone ? `· 📞 ${b.contact_phone}` : ""}</p>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
