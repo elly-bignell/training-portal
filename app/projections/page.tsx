@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { usePersistedState } from "@/hooks/usePersistedState";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import Link from "next/link";
 import PasswordGate from "@/components/PasswordGate";
 
@@ -105,13 +105,13 @@ function FunnelInput({ value, onChange, step = 0.1, min = 0, prefix, suffix, wid
 
 function ProjectionsContent() {
   const [activeTab, setActiveTab] = useState<"leadgen" | "closing">("leadgen");
-  const [phoneHours, setPhoneHours] = usePersistedState("proj-phoneHours", DEFAULT_HOURS);
-  const [dealValue, setDealValue] = usePersistedState("proj-dealValue", DEFAULT_DEAL_VALUE);
-  const [callsPerHour, setCallsPerHour] = usePersistedState("proj-callsPerHour", DEFAULT_CALLS_PER_HOUR);
-  const [connectsPerHour, setConnectsPerHour] = usePersistedState("proj-connectsPerHour", DEFAULT_CONNECTS_PER_HOUR);
-  const [bookingsPerHour, setBookingsPerHour] = usePersistedState("proj-bookingsPerHour", DEFAULT_BOOKINGS_PER_HOUR);
-  const [attendanceRate, setAttendanceRate] = usePersistedState("proj-attendanceRate", DEFAULT_ATTENDANCE_RATE);
-  const [closeRate, setCloseRate] = usePersistedState("proj-closeRate", DEFAULT_CLOSE_RATE);
+  const [phoneHours, setPhoneHours] = useLocalStorage("proj-phoneHours", DEFAULT_HOURS);
+  const [dealValue, setDealValue] = useLocalStorage("proj-dealValue", DEFAULT_DEAL_VALUE);
+  const [callsPerHour, setCallsPerHour] = useLocalStorage("proj-callsPerHour", DEFAULT_CALLS_PER_HOUR);
+  const [connectsPerHour, setConnectsPerHour] = useLocalStorage("proj-connectsPerHour", DEFAULT_CONNECTS_PER_HOUR);
+  const [bookingsPerHour, setBookingsPerHour] = useLocalStorage("proj-bookingsPerHour", DEFAULT_BOOKINGS_PER_HOUR);
+  const [attendanceRate, setAttendanceRate] = useLocalStorage("proj-attendanceRate", DEFAULT_ATTENDANCE_RATE);
+  const [closeRate, setCloseRate] = useLocalStorage("proj-closeRate", DEFAULT_CLOSE_RATE);
 
   const today = new Date();
   const [viewMonth, setViewMonth] = useState(today.getMonth());
@@ -194,14 +194,22 @@ function ProjectionsContent() {
     <main className="min-h-screen bg-slate-100">
       <header className="bg-slate-900 text-white">
         <div className="max-w-[1200px] mx-auto px-4 py-6">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="text-slate-400 hover:text-white transition-colors">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-            </Link>
-            <div>
-              <h1 className="text-xl font-bold flex items-center gap-2"><span>📊</span> Revenue Projections</h1>
-              <p className="text-sm text-slate-400">Projected lead generation &amp; closing targets per person</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link href="/" className="text-slate-400 hover:text-white transition-colors">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+              </Link>
+              <div>
+                <h1 className="text-xl font-bold flex items-center gap-2"><span>📊</span> Revenue Projections</h1>
+                <p className="text-sm text-slate-400">Projected lead generation &amp; closing targets per person</p>
+              </div>
             </div>
+            <Link
+              href="/forecast"
+              className="px-4 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2"
+            >
+              📈 Team Forecast →
+            </Link>
           </div>
         </div>
       </header>

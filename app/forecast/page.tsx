@@ -1153,6 +1153,110 @@ function ForecastContent() {
           </table>
         </div>
 
+        {/* ─── Rules of Thumb ─── */}
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+          <h2 className="text-lg font-bold text-slate-800 mb-1 flex items-center gap-2">📘 Rules of Thumb</h2>
+          <p className="text-xs text-slate-400 mb-5">How the model works — the logic behind the numbers</p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left column: Timeline */}
+            <div>
+              <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+                <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold">1</span>
+                The 8-Week Onboarding Timeline
+              </h3>
+              <div className="space-y-2">
+                <div className="flex gap-3 p-3 bg-blue-50 rounded-lg">
+                  <span className="text-xs font-bold text-blue-600 w-20 shrink-0">Weeks 1–{buddyWeeks}</span>
+                  <div className="text-xs text-slate-600">
+                    <span className="font-bold">Buddy Phase.</span> New hire makes calls and books meetings. Team leader closes the deals and fills any booking shortfall. They work as a <span className="font-bold">pair</span> — the leader&apos;s own production is absorbed into this unit.
+                  </div>
+                </div>
+                <div className="flex gap-3 p-3 bg-amber-50 rounded-lg">
+                  <span className="text-xs font-bold text-amber-600 w-20 shrink-0">Week {buddyWeeks + 1}</span>
+                  <div className="text-xs text-slate-600">
+                    <span className="font-bold">Solo launch.</span> New hire starts taking their own meetings. Team leader is <span className="font-bold">freed up</span> to produce independently again (or take the next new hire).
+                  </div>
+                </div>
+                <div className="flex gap-3 p-3 bg-emerald-50 rounded-lg">
+                  <span className="text-xs font-bold text-emerald-600 w-20 shrink-0">Week 8+</span>
+                  <div className="text-xs text-slate-600">
+                    <span className="font-bold">Full proficiency.</span> New hire operates at 100% — booking AND closing independently. Expected to hit full daily targets.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right column: Production logic */}
+            <div>
+              <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+                <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold">2</span>
+                How Revenue Production Works
+              </h3>
+              <div className="space-y-2">
+                <div className="p-3 bg-slate-50 rounded-lg">
+                  <div className="text-xs font-bold text-slate-700 mb-1">Team Leader Alone (no buddy assigned)</div>
+                  <div className="text-xs text-slate-500">Makes own calls + closes own deals = <span className="font-bold text-emerald-600">100% output</span></div>
+                </div>
+                <div className="p-3 bg-slate-50 rounded-lg">
+                  <div className="text-xs font-bold text-slate-700 mb-1">Team Leader + New Hire (buddy phase)</div>
+                  <div className="text-xs text-slate-500">
+                    Pair produces at the ramp % (e.g. <span className="font-bold text-blue-600">{ramp[0].pct}% in Week 1</span>).
+                    Leader&apos;s own output drops to 0% — their time is spent closing the junior&apos;s deals and coaching.
+                    <span className="font-bold text-amber-600"> Net cost: the leader temporarily stops producing solo.</span>
+                  </div>
+                </div>
+                <div className="p-3 bg-slate-50 rounded-lg">
+                  <div className="text-xs font-bold text-slate-700 mb-1">After Buddy Phase Ends</div>
+                  <div className="text-xs text-slate-500">
+                    New hire produces at 75–100%. Leader returns to 100%.
+                    <span className="font-bold text-emerald-600"> Where there was 1 producer, now there are 2.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom: Quick reference numbers */}
+          <div className="mt-5 pt-5 border-t border-gray-100">
+            <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center text-xs font-bold">3</span>
+              Quick Reference Numbers
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="p-3 bg-gray-50 rounded-lg text-center">
+                <div className="text-lg font-black text-slate-800">{fullDealsPerWeek.toFixed(1)}</div>
+                <div className="text-[10px] text-slate-500 font-semibold">deals/wk at 100%</div>
+                <div className="text-[10px] text-slate-400">{ratios.phoneHoursPerDay}hrs × {ratios.bookingsPerHour} bkgs/hr × {(ratios.attendanceRate * 100).toFixed(0)}% att × {(ratios.closeRate * 100).toFixed(0)}% close</div>
+              </div>
+              <div className="p-3 bg-gray-50 rounded-lg text-center">
+                <div className="text-lg font-black text-emerald-600">+{fmtMoney(fullWeeklyNewRecurring)}</div>
+                <div className="text-[10px] text-slate-500 font-semibold">new recurring/wk</div>
+                <div className="text-[10px] text-slate-400">per person at 100% ramp</div>
+              </div>
+              <div className="p-3 bg-gray-50 rounded-lg text-center">
+                <div className="text-lg font-black text-red-500">-{fmtMoney(csWeeklyLoss)}</div>
+                <div className="text-[10px] text-slate-500 font-semibold">CS loss/wk</div>
+                <div className="text-[10px] text-slate-400">${csDailyLoss}/day × 5 days</div>
+              </div>
+              <div className="p-3 bg-gray-50 rounded-lg text-center">
+                <div className="text-lg font-black text-slate-800">{numLeaders}</div>
+                <div className="text-[10px] text-slate-500 font-semibold">max simultaneous hires</div>
+                <div className="text-[10px] text-slate-400">1 leader per new hire during buddy phase</div>
+              </div>
+            </div>
+          </div>
+
+          {/* The trade-off */}
+          <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+            <div className="text-xs text-amber-800">
+              <span className="font-bold">⚡ The Trade-Off:</span> Every new hire temporarily <span className="font-bold">reduces</span> total output (leader stops solo production).
+              After {buddyWeeks} weeks the pair splits into 2 independent producers — doubling that slot&apos;s output.
+              The chart will show a <span className="font-bold">dip then accelerate</span> pattern each time you onboard.
+            </div>
+          </div>
+        </div>
+
         {/* ─── Key Insights ─── */}
         <div className="bg-slate-800 rounded-2xl p-6 text-white">
           <h2 className="text-base font-bold mb-3 flex items-center gap-2">💡 Key Numbers</h2>
