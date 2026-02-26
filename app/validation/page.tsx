@@ -430,7 +430,7 @@ function CreateBookingTab({ onCreated, saving, setSaving }: {
 
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// TAB 2: Validation Queue (GROUPED BY BUDDY)
+// TAB 2: Validation Queue (GROUPED BY BUDDY, SPLIT BY DATE)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 // Buddy sort order — Lucas (Cindy's buddy) first, Felipe (Connie's buddy) second, Dylan (Krishna's buddy) third
@@ -448,23 +448,35 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
   const pendingBookings = bookings.filter((b) => b.status === "pending");
   const today = toISODate(new Date());
 
-  // Group pending bookings by buddy
-  const groupedByBuddy: Record<string, Booking[]> = {};
-  pendingBookings.forEach((b) => {
-    const buddy = b.buddy || "Unknown";
-    if (!groupedByBuddy[buddy]) groupedByBuddy[buddy] = [];
-    groupedByBuddy[buddy].push(b);
-  });
+  // Split pending bookings: yesterday & older vs today
+  const yesterdayBookings = pendingBookings
+    .filter((b) => b.booking_date < today)
+    .sort((a, b) => a.booking_date.localeCompare(b.booking_date)); // oldest first
+  const todayBookings = pendingBookings
+    .filter((b) => b.booking_date >= today)
+    .sort((a, b) => a.booking_date.localeCompare(b.booking_date));
 
-  // Sort buddy groups: Lucas first, then Felipe, then Dylan, then any others alphabetically
-  const sortedBuddyKeys = Object.keys(groupedByBuddy).sort((a, b) => {
-    const ai = BUDDY_SORT_ORDER.indexOf(a);
-    const bi = BUDDY_SORT_ORDER.indexOf(b);
-    if (ai === -1 && bi === -1) return a.localeCompare(b);
-    if (ai === -1) return 1;
-    if (bi === -1) return -1;
-    return ai - bi;
-  });
+  // Helper: group bookings by buddy and sort by buddy order
+  const groupByBuddy = (bks: Booking[]) => {
+    const grouped: Record<string, Booking[]> = {};
+    bks.forEach((b) => {
+      const buddy = b.buddy || "Unknown";
+      if (!grouped[buddy]) grouped[buddy] = [];
+      grouped[buddy].push(b);
+    });
+    const sortedKeys = Object.keys(grouped).sort((a, b) => {
+      const ai = BUDDY_SORT_ORDER.indexOf(a);
+      const bi = BUDDY_SORT_ORDER.indexOf(b);
+      if (ai === -1 && bi === -1) return a.localeCompare(b);
+      if (ai === -1) return 1;
+      if (bi === -1) return -1;
+      return ai - bi;
+    });
+    return sortedKeys.map((key) => ({ buddyName: key, bookings: grouped[key] }));
+  };
+
+  const yesterdayGroups = groupByBuddy(yesterdayBookings);
+  const todayGroups = groupByBuddy(todayBookings);
 
   const getNote = (id: string) => notes[id] || "";
   const setNote = (id: string, val: string) => setNotes((prev) => ({ ...prev, [id]: val }));
@@ -527,6 +539,86 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
     }
   };
 
+  // Shared booking card renderer
+  const renderBookingCard = (booking: Booking) => {
+    const isRejecting = !!rejectMode[booking.id];
+    const isProcessing = processingId === booking.id;
+    const note = getNote(booking.id);
+
+    return (
+      <div key={booking.id} className="bg-white rounded-xl border border-amber-200 shadow-sm p-5">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded-full uppercase">Pending</span>
+              <span className="text-xs text-gray-400">Booked {formatDate(booking.booking_date)}</span>
+            </div>
+            <h3 className="text-base font-bold text-slate-800">{booking.business_name}</h3>
+            <div className="flex items-center gap-4 mt-1 text-xs text-slate-500">
+              <span>👤 {booking.staff_member}</span>
+              <span>🤝 Buddy: {booking.buddy}</span>
+              {booking.contact_name && <span>📇 {booking.contact_name}</span>}
+              {booking.contact_phone && <span>📞 {booking.contact_phone}</span>}
+              {booking.meeting_datetime && <span>🕐 {booking.meeting_datetime}</span>}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <textarea
+            value={note}
+            onChange={(e) => setNote(booking.id, e.target.value)}
+            placeholder={isRejecting ? "Rejection reason (required)..." : "Feedback note (optional)..."}
+            className={`w-full border rounded-lg px-3 py-2 text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent ${isRejecting ? "border-red-300 bg-red-50/30" : "border-gray-200"}`}
+          />
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={() => handleValidate(booking)}
+              disabled={isProcessing}
+              className="flex-1 py-2.5 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors text-sm flex items-center justify-center gap-1.5"
+            >
+              ✅ Validate
+            </button>
+            {isRejecting ? (
+              <button
+                onClick={() => handleReject(booking)}
+                disabled={isProcessing || !note.trim()}
+                className="flex-1 py-2.5 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors text-sm flex items-center justify-center gap-1.5"
+              >
+                ❌ Confirm Rejection
+              </button>
+            ) : (
+              <button
+                onClick={() => setRejectMode((prev) => ({ ...prev, [booking.id]: true }))}
+                className="flex-1 py-2.5 bg-white text-red-600 border-2 border-red-200 font-semibold rounded-lg hover:bg-red-50 transition-colors text-sm flex items-center justify-center gap-1.5"
+              >
+                ❌ Reject
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Render a section of buddy groups
+  const renderBuddyGroups = (groups: { buddyName: string; bookings: Booking[] }[]) => {
+    return groups.map(({ buddyName, bookings: groupBookings }) => {
+      const firstName = buddyName.split(" ")[0];
+      return (
+        <div key={buddyName}>
+          <h4 className="text-sm font-bold text-slate-600 mb-3 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+            {firstName} — {groupBookings.length} booking{groupBookings.length !== 1 ? "s" : ""}
+          </h4>
+          <div className="space-y-3">
+            {groupBookings.map(renderBookingCard)}
+          </div>
+        </div>
+      );
+    });
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
@@ -543,82 +635,40 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
           <p className="text-slate-400 text-sm mt-1">New bookings will appear here when created</p>
         </div>
       ) : (
-        <div className="space-y-8">
-          {sortedBuddyKeys.map((buddyName) => {
-            const group = groupedByBuddy[buddyName];
-            const firstName = buddyName.split(" ")[0];
-
-            return (
-              <div key={buddyName}>
-                <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                  {firstName} — Validation Calls To Be Made ({group.length})
+        <div className="space-y-10">
+          {/* ── Section 1: Yesterday's Bookings (validate today) ── */}
+          {yesterdayBookings.length > 0 && (
+            <div>
+              <div className="mb-4 pb-2 border-b-2 border-[#E6017D]">
+                <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-[#E6017D] animate-pulse"></span>
+                  Validation Calls to be Made Today
+                  <span className="text-sm font-normal text-slate-500">— Yesterday&apos;s Bookings ({yesterdayBookings.length})</span>
                 </h3>
-                <div className="space-y-3">
-                  {group.map((booking) => {
-                    const isRejecting = !!rejectMode[booking.id];
-                    const isProcessing = processingId === booking.id;
-                    const note = getNote(booking.id);
-
-                    return (
-                      <div key={booking.id} className="bg-white rounded-xl border border-amber-200 shadow-sm p-5">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded-full uppercase">Pending</span>
-                              <span className="text-xs text-gray-400">Booked {formatDate(booking.booking_date)}</span>
-                            </div>
-                            <h3 className="text-base font-bold text-slate-800">{booking.business_name}</h3>
-                            <div className="flex items-center gap-4 mt-1 text-xs text-slate-500">
-                              <span>👤 {booking.staff_member}</span>
-                              <span>🤝 Buddy: {booking.buddy}</span>
-                              {booking.contact_name && <span>📇 {booking.contact_name}</span>}
-                              {booking.contact_phone && <span>📞 {booking.contact_phone}</span>}
-                              {booking.meeting_datetime && <span>🕐 {booking.meeting_datetime}</span>}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="mt-4">
-                          <textarea
-                            value={note}
-                            onChange={(e) => setNote(booking.id, e.target.value)}
-                            placeholder={isRejecting ? "Rejection reason (required)..." : "Feedback note (optional)..."}
-                            className={`w-full border rounded-lg px-3 py-2 text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent ${isRejecting ? "border-red-300 bg-red-50/30" : "border-gray-200"}`}
-                          />
-                          <div className="flex gap-2 mt-2">
-                            <button
-                              onClick={() => handleValidate(booking)}
-                              disabled={isProcessing}
-                              className="flex-1 py-2.5 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors text-sm flex items-center justify-center gap-1.5"
-                            >
-                              ✅ Validate
-                            </button>
-                            {isRejecting ? (
-                              <button
-                                onClick={() => handleReject(booking)}
-                                disabled={isProcessing || !note.trim()}
-                                className="flex-1 py-2.5 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors text-sm flex items-center justify-center gap-1.5"
-                              >
-                                ❌ Confirm Rejection
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => setRejectMode((prev) => ({ ...prev, [booking.id]: true }))}
-                                className="flex-1 py-2.5 bg-white text-red-600 border-2 border-red-200 font-semibold rounded-lg hover:bg-red-50 transition-colors text-sm flex items-center justify-center gap-1.5"
-                              >
-                                ❌ Reject
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                <p className="text-xs text-slate-400 mt-1">These bookings were made yesterday or earlier — validate them now</p>
               </div>
-            );
-          })}
+              <div className="space-y-6">
+                {renderBuddyGroups(yesterdayGroups)}
+              </div>
+            </div>
+          )}
+
+          {/* ── Section 2: Today's Bookings (validate tomorrow) ── */}
+          {todayBookings.length > 0 && (
+            <div>
+              <div className="mb-4 pb-2 border-b-2 border-slate-300">
+                <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-slate-400"></span>
+                  Future Validation Calls
+                  <span className="text-sm font-normal text-slate-500">— Today&apos;s Bookings to be Validated Tomorrow ({todayBookings.length})</span>
+                </h3>
+                <p className="text-xs text-slate-400 mt-1">These bookings were made today — don&apos;t call until tomorrow</p>
+              </div>
+              <div className="space-y-6 opacity-80">
+                {renderBuddyGroups(todayGroups)}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
