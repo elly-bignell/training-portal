@@ -69,13 +69,22 @@ function fmtMoneyK(v: number): string {
 }
 
 // ─── Projection Engine ───
+// Model:
+// - 3 team leaders (always present). When free (no buddy), they produce at 100%.
+// - When a leader is buddying a new hire (weeks 1-6), the PAIR produces at the
+//   ramp %. The leader's solo output is absorbed — they're busy closing the
+//   junior's deals + filling booking gaps. Leader own output = 0% during buddy.
+// - After buddy phase (week 7+), new hire flies solo AND leader is freed up.
+// - Net effect: onboarding temporarily DIPS revenue, then exceeds baseline.
 function calculateProjections(
   team: TeamMember[],
+  numLeaders: number,
   ratios: Ratios,
   ramp: Ramp,
   startingBase: number,
   baseDateStr: string,
   csDailyLoss: number,
+  buddyWeeks: number,
 ): WeekProjection[] {
   const baseDate = getMonday(new Date(baseDateStr + "T00:00:00"));
   const baseWeekIdx = weeksBetween(JAN5, baseDate);
@@ -90,7 +99,7 @@ function calculateProjections(
     ratios.attendanceRate *
     ratios.closeRate;
 
-  // Weekly recurring value per deal ($400/month = $400 × 12 / 52)
+  // Weekly recurring value per deal ($400/month ÷ 4.333 weeks)
   const weeklyValuePerDeal = (ratios.dealValue * 12) / 52;
 
   const csWeeklyLoss = csDailyLoss * 5;
@@ -118,8 +127,9 @@ function calculateProjections(
       continue;
     }
 
-    // Calculate new deals this week from all team members
-    let newDeals = 0;
+    // Count new hires in buddy phase (weeks 1 to buddyWeeks) — these lock a leader
+    let hiresInBuddyPhase = 0;
+    let newHireDeals = 0;
     let activeStaff = 0;
 
     for (const person of team) {
@@ -129,12 +139,29 @@ function calculateProjections(
       if (w >= personWeekIdx) {
         const weekInRole = w - personWeekIdx + 1;
         const rampPct = getRampPct(weekInRole, ramp);
-        if (rampPct > 0) activeStaff++;
-        newDeals += fullDealsPerWeek * (rampPct / 100);
+
+        if (weekInRole <= buddyWeeks) {
+          // In buddy phase — pair produces at ramp %, locks one leader
+          hiresInBuddyPhase++;
+          newHireDeals += fullDealsPerWeek * (rampPct / 100);
+          if (rampPct > 0) activeStaff++;
+        } else {
+          // Flying solo — produces independently, leader is free
+          newHireDeals += fullDealsPerWeek * (rampPct / 100);
+          if (rampPct > 0) activeStaff++;
+        }
       }
     }
 
-    cumulativeNewClients += newDeals;
+    // Leaders: free leaders produce 100%, occupied leaders produce 0% (absorbed into pair)
+    const occupiedLeaders = Math.min(hiresInBuddyPhase, numLeaders);
+    const freeLeaders = numLeaders - occupiedLeaders;
+    const leaderDeals = freeLeaders * fullDealsPerWeek;
+    activeStaff += freeLeaders; // Count producing leaders
+
+    const totalDeals = leaderDeals + newHireDeals;
+
+    cumulativeNewClients += totalDeals;
     cumulativeCsLost += csWeeklyLoss;
 
     // Revenue = base + all accumulated new recurring - all accumulated CS losses
@@ -145,8 +172,8 @@ function calculateProjections(
       weekIndex: w,
       date: weekDate,
       revenue,
-      newDealsThisWeek: newDeals,
-      newRecurringAdded: newDeals * weeklyValuePerDeal,
+      newDealsThisWeek: totalDeals,
+      newRecurringAdded: totalDeals * weeklyValuePerDeal,
       csLossThisWeek: csWeeklyLoss,
       cumulativeNewClients,
       cumulativeCsLost,
@@ -463,11 +490,13 @@ function TrajectoryChart({
           >
             <div className="font-bold text-emerald-300">{fmtMoney(hovered.revenue)}/wk</div>
             <div className="text-gray-300 mt-0.5">
-              Week of {fmtDate(hovered.date)} · {hovered.activeStaff} active
+              Week of {fmtDate(hovered.date)} · {hovered.activeStaff} producing
             </div>
             <div className="text-gray-400 mt-0.5">
-              +{hovered.newDealsThisWeek.toFixed(1)} deals · +{fmtMoney(hovered.newRecurringAdded)} new
-              · -{fmtMoney(hovered.csLossThisWeek)} CS
+              +{hovered.newDealsThisWeek.toFixed(1)} deals · +{fmtMoney(hovered.newRecurringAdded)} new recurring
+            </div>
+            <div className="text-gray-400">
+              -{fmtMoney(hovered.csLossThisWeek)} CS loss
             </div>
           </div>
         )}
@@ -480,24 +509,23 @@ function TrajectoryChart({
 function ForecastContent() {
   const [ratios, setRatios] = usePersistedState<Ratios>("shared-ratios", { ...DEFAULT_RATIOS });
   const [ramp, setRamp] = usePersistedState("shared-ramp", DEFAULT_RAMP.map((r) => ({ ...r })));
-  const [startingBase, setStartingBase] = usePersistedState("forecast-startingBase", 152522);
+  const [startingBase, setStartingBase] = usePersistedState("forecast-startingBase", 144400);
   const [weeklyTarget, setWeeklyTarget] = usePersistedState("forecast-weeklyTarget", 250000);
   const [targetDate, setTargetDate] = usePersistedState("forecast-targetDate", "2026-12-18");
   const [csDailyLoss, setCsDailyLoss] = usePersistedState("forecast-csDailyLoss", 230);
   const [baseDate, setBaseDate] = usePersistedState("forecast-baseDate", "2026-02-23");
   const [team, setTeam] = usePersistedState<TeamMember[]>("forecast-team", []);
+  const [numLeaders, setNumLeaders] = usePersistedState("forecast-numLeaders", 3);
+  const [buddyWeeks, setBuddyWeeks] = usePersistedState("forecast-buddyWeeks", 6);
   const [showRamp, setShowRamp] = usePersistedState("forecast-showRamp", false);
   const [showRatios, setShowRatios] = usePersistedState("forecast-showRatios", false);
 
   const nextId = () => `p-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
 
-  // Team leader capacity check
-  const teamLeaders = 3;
-
   // Calculate projections
   const projections = useMemo(
-    () => calculateProjections(team, ratios, ramp, startingBase, baseDate, csDailyLoss),
-    [team, ratios, ramp, startingBase, baseDate, csDailyLoss],
+    () => calculateProjections(team, numLeaders, ratios, ramp, startingBase, baseDate, csDailyLoss, buddyWeeks),
+    [team, numLeaders, ratios, ramp, startingBase, baseDate, csDailyLoss, buddyWeeks],
   );
 
   // Summary stats
@@ -536,7 +564,6 @@ function ForecastContent() {
 
   // Buddy capacity warning
   const buddyWarnings = useMemo(() => {
-    // Check each week if more than 3 people are in buddy phase (weeks 1-6)
     const warnings: string[] = [];
     for (const p of projections) {
       if (p.revenue === null) continue;
@@ -545,14 +572,14 @@ function ForecastContent() {
         const personStart = getMonday(new Date(person.startDate + "T00:00:00"));
         const personWeekIdx = weeksBetween(JAN5, personStart);
         const weekInRole = p.weekIndex - personWeekIdx + 1;
-        if (weekInRole >= 1 && weekInRole <= 6) inBuddyPhase++;
+        if (weekInRole >= 1 && weekInRole <= buddyWeeks) inBuddyPhase++;
       }
-      if (inBuddyPhase > teamLeaders) {
-        warnings.push(`Week of ${fmtDate(p.date)}: ${inBuddyPhase} people in buddy phase but only ${teamLeaders} team leaders`);
+      if (inBuddyPhase > numLeaders) {
+        warnings.push(`Week of ${fmtDate(p.date)}: ${inBuddyPhase} people in buddy phase but only ${numLeaders} team leaders`);
       }
     }
     return Array.from(new Set(warnings)).slice(0, 3);
-  }, [projections, team]);
+  }, [projections, team, numLeaders, buddyWeeks]);
 
   // Add person
   const addPerson = () => {
@@ -676,6 +703,24 @@ function ForecastContent() {
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mt-1"
                 />
               </div>
+              <div className="pt-2 border-t border-gray-100">
+                <label className="text-[10px] font-semibold text-gray-500">Team Leaders (closers/buddies)</label>
+                <div className="flex items-center gap-3 mt-1">
+                  <button onClick={() => setNumLeaders(Math.max(0, numLeaders - 1))} className="w-8 h-8 rounded bg-slate-100 hover:bg-slate-200 text-sm font-bold">−</button>
+                  <span className="text-xl font-black text-slate-800 w-6 text-center">{numLeaders}</span>
+                  <button onClick={() => setNumLeaders(numLeaders + 1)} className="w-8 h-8 rounded bg-slate-100 hover:bg-slate-200 text-sm font-bold">+</button>
+                </div>
+                <p className="text-[10px] text-gray-400 mt-1">Each produces 100% when free, 0% when buddying</p>
+              </div>
+              <div>
+                <label className="text-[10px] font-semibold text-gray-500">Buddy Phase Duration (weeks)</label>
+                <div className="flex items-center gap-3 mt-1">
+                  <button onClick={() => setBuddyWeeks(Math.max(1, buddyWeeks - 1))} className="w-8 h-8 rounded bg-slate-100 hover:bg-slate-200 text-sm font-bold">−</button>
+                  <span className="text-xl font-black text-slate-800 w-6 text-center">{buddyWeeks}</span>
+                  <button onClick={() => setBuddyWeeks(buddyWeeks + 1)} className="w-8 h-8 rounded bg-slate-100 hover:bg-slate-200 text-sm font-bold">+</button>
+                </div>
+                <p className="text-[10px] text-gray-400 mt-1">Weeks 1–{buddyWeeks}: leader locked. Week {buddyWeeks + 1}+: leader freed</p>
+              </div>
             </div>
           </div>
 
@@ -767,9 +812,9 @@ function ForecastContent() {
             <div className="flex items-center gap-3">
               <span className="text-2xl">👥</span>
               <div>
-                <h2 className="text-lg font-bold text-slate-800">Team Builder</h2>
+                <h2 className="text-lg font-bold text-slate-800">Team Builder — New Hires</h2>
                 <p className="text-xs text-slate-400">
-                  {teamLeaders} team leaders available · Each can buddy 1 new hire at a time (Weeks 1–6)
+                  {numLeaders} team leaders producing when free · Each locks to a new hire for Weeks 1–{buddyWeeks}
                 </p>
               </div>
             </div>
@@ -793,8 +838,8 @@ function ForecastContent() {
                 const weekInRole = getPersonWeekInRole(person.startDate);
                 const hasStarted = weekInRole >= 1;
                 const rampPct = hasStarted ? getRampPct(Math.min(weekInRole, 8), ramp) : 0;
-                const isBuddyPhase = hasStarted && weekInRole <= 6;
-                const isSolo = hasStarted && weekInRole >= 7;
+                const isBuddyPhase = hasStarted && weekInRole <= buddyWeeks;
+                const isSolo = hasStarted && weekInRole > buddyWeeks;
                 const fullDate = new Date(person.startDate + "T00:00:00");
                 const week8Date = addWeeks(fullDate, 7);
 
@@ -1029,7 +1074,8 @@ function ForecastContent() {
                 ))}
               </div>
               <p className="text-[10px] text-gray-400 mt-3">
-                Weeks 1–6: New hire books, team leader closes (buddy system). Week 7+: Flying solo.
+                Weeks 1–{buddyWeeks}: New hire books, team leader closes (buddy system). Leader output absorbed into pair.
+                Week {buddyWeeks + 1}+: New hire flies solo, leader freed to produce independently.
               </p>
             </div>
           )}
@@ -1110,11 +1156,16 @@ function ForecastContent() {
         {/* ─── Key Insights ─── */}
         <div className="bg-slate-800 rounded-2xl p-6 text-white">
           <h2 className="text-base font-bold mb-3 flex items-center gap-2">💡 Key Numbers</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
             <div>
-              <span className="text-slate-400">Full-ramp person adds:</span>
-              <div className="font-bold text-emerald-400">+{fmtMoney(fullWeeklyNewRecurring)}/wk recurring</div>
-              <div className="text-xs text-slate-400">{fullDealsPerWeek.toFixed(1)} deals/wk × ${weeklyValuePerDeal.toFixed(2)}/deal/wk</div>
+              <span className="text-slate-400">{numLeaders} leaders (no buddies):</span>
+              <div className="font-bold text-emerald-400">+{fmtMoney(numLeaders * fullWeeklyNewRecurring)}/wk new recurring</div>
+              <div className="text-xs text-slate-400">{numLeaders} × {fullDealsPerWeek.toFixed(1)} deals/wk</div>
+            </div>
+            <div>
+              <span className="text-slate-400">Onboarding cost (per hire):</span>
+              <div className="font-bold text-amber-400">-{fmtMoney(fullWeeklyNewRecurring * (1 - ramp[0].pct / 100))}/wk for {buddyWeeks} wks</div>
+              <div className="text-xs text-slate-400">Leader drops from 100% → absorbed into {ramp[0].pct}% pair</div>
             </div>
             <div>
               <span className="text-slate-400">CS headwind:</span>
@@ -1122,9 +1173,9 @@ function ForecastContent() {
               <div className="text-xs text-slate-400">Need {peopleToOffsetCS.toFixed(1)} fully ramped just to break even</div>
             </div>
             <div>
-              <span className="text-slate-400">Max onboarding capacity:</span>
-              <div className="font-bold text-blue-300">{teamLeaders} at a time (buddy phase)</div>
-              <div className="text-xs text-slate-400">New batch every 6 weeks when team leaders free up</div>
+              <span className="text-slate-400">Fully ramped hire adds:</span>
+              <div className="font-bold text-emerald-400">+{fmtMoney(fullWeeklyNewRecurring)}/wk recurring</div>
+              <div className="text-xs text-slate-400">{fullDealsPerWeek.toFixed(1)} deals/wk × ${weeklyValuePerDeal.toFixed(2)}/deal/wk</div>
             </div>
           </div>
         </div>
