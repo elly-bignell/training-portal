@@ -3,6 +3,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import Link from "next/link";
 import PasswordGate from "@/components/PasswordGate";
 
@@ -104,13 +105,13 @@ function FunnelInput({ value, onChange, step = 0.1, min = 0, prefix, suffix, wid
 
 function ProjectionsContent() {
   const [activeTab, setActiveTab] = useState<"leadgen" | "closing">("leadgen");
-  const [phoneHours, setPhoneHours] = useState(DEFAULT_HOURS);
-  const [dealValue, setDealValue] = useState(DEFAULT_DEAL_VALUE);
-  const [callsPerHour, setCallsPerHour] = useState(DEFAULT_CALLS_PER_HOUR);
-  const [connectsPerHour, setConnectsPerHour] = useState(DEFAULT_CONNECTS_PER_HOUR);
-  const [bookingsPerHour, setBookingsPerHour] = useState(DEFAULT_BOOKINGS_PER_HOUR);
-  const [attendanceRate, setAttendanceRate] = useState(DEFAULT_ATTENDANCE_RATE);
-  const [closeRate, setCloseRate] = useState(DEFAULT_CLOSE_RATE);
+  const [phoneHours, setPhoneHours] = useLocalStorage("proj-phoneHours", DEFAULT_HOURS);
+  const [dealValue, setDealValue] = useLocalStorage("proj-dealValue", DEFAULT_DEAL_VALUE);
+  const [callsPerHour, setCallsPerHour] = useLocalStorage("proj-callsPerHour", DEFAULT_CALLS_PER_HOUR);
+  const [connectsPerHour, setConnectsPerHour] = useLocalStorage("proj-connectsPerHour", DEFAULT_CONNECTS_PER_HOUR);
+  const [bookingsPerHour, setBookingsPerHour] = useLocalStorage("proj-bookingsPerHour", DEFAULT_BOOKINGS_PER_HOUR);
+  const [attendanceRate, setAttendanceRate] = useLocalStorage("proj-attendanceRate", DEFAULT_ATTENDANCE_RATE);
+  const [closeRate, setCloseRate] = useLocalStorage("proj-closeRate", DEFAULT_CLOSE_RATE);
 
   const today = new Date();
   const [viewMonth, setViewMonth] = useState(today.getMonth());
