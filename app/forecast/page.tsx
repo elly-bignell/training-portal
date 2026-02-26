@@ -551,7 +551,7 @@ function ForecastContent() {
         warnings.push(`Week of ${fmtDate(p.date)}: ${inBuddyPhase} people in buddy phase but only ${teamLeaders} team leaders`);
       }
     }
-    return [...new Set(warnings)].slice(0, 3);
+    return Array.from(new Set(warnings)).slice(0, 3);
   }, [projections, team]);
 
   // Add person
