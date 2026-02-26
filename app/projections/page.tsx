@@ -5,16 +5,11 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 
-// ─── Ratios (per hour) ───
-const PER_HOUR = {
-  calls: 18,
-  connects: 10,
-  bookings: 1.5,
-  attended: 0.75,
-  deals: 0.38,
-};
-
-const DEFAULT_HOURS = 3.5; // ~5.25 bookings/day ≈ 5 target
+// ─── Base Ratios (per hour) ───
+const BASE_CALLS_PER_HOUR = 18;
+const BASE_CONNECTS_PER_HOUR = 10;
+const DEFAULT_BOOKINGS_PER_HOUR = 1.5;
+const DEFAULT_HOURS = 3.5;
 const DEFAULT_DEAL_VALUE = 400;
 const ATTENDANCE_RATE = 0.6; // 60% of bookings attend
 const CLOSE_RATE = 0.5; // 50% of attended close
@@ -71,6 +66,7 @@ interface LeadGenDay {
   connects: number;
   bookings: number;
   phoneHours: number;
+  weekNumber: number;
 }
 
 interface ClosingDay {
@@ -79,6 +75,18 @@ interface ClosingDay {
   meetingsAttended: number;
   deals: number;
   revenue: number;
+  weekNumber: number;
+}
+
+// ─── Get week number within month (Mon-based) ───
+function getWeekNumber(year: number, month: number, day: number): number {
+  let weekNum = 0;
+  for (let d = 1; d <= day; d++) {
+    const dow = new Date(year, month, d).getDay();
+    if (dow === 1) weekNum++;
+  }
+  if (weekNum === 0) weekNum = 1;
+  return weekNum;
 }
 
 // ─── Build calendar weeks (Mon-Fri only) ───
@@ -91,11 +99,9 @@ function buildWeeks<T extends { day: number }>(
   const weeks: (T | null)[][] = [];
   let currentWeek: (T | null)[] = [];
 
-  // Figure out what day of the week the 1st falls on (Mon=0, Fri=4)
   const firstDow = new Date(year, month, 1).getDay();
   const adjustedStart = firstDow === 0 ? 6 : firstDow - 1;
 
-  // Fill blanks before first weekday
   if (adjustedStart < 5) {
     for (let i = 0; i < adjustedStart; i++) currentWeek.push(null);
   }
@@ -127,6 +133,7 @@ export default function ProjectionsPage() {
   const [activeTab, setActiveTab] = useState<"leadgen" | "closing">("leadgen");
   const [phoneHours, setPhoneHours] = useState(DEFAULT_HOURS);
   const [dealValue, setDealValue] = useState(DEFAULT_DEAL_VALUE);
+  const [bookingsPerHour, setBookingsPerHour] = useState(DEFAULT_BOOKINGS_PER_HOUR);
 
   const today = new Date();
   const [viewMonth, setViewMonth] = useState(today.getMonth());
@@ -142,9 +149,9 @@ export default function ProjectionsPage() {
   };
 
   // ─── Daily calculations ───
-  const dailyCalls = phoneHours * PER_HOUR.calls;
-  const dailyConnects = phoneHours * PER_HOUR.connects;
-  const dailyBookings = phoneHours * PER_HOUR.bookings;
+  const dailyCalls = phoneHours * BASE_CALLS_PER_HOUR;
+  const dailyConnects = phoneHours * BASE_CONNECTS_PER_HOUR;
+  const dailyBookings = phoneHours * bookingsPerHour;
   const dailyAttended = dailyBookings * ATTENDANCE_RATE;
   const dailyDeals = dailyAttended * CLOSE_RATE;
   const dailyRevenue = dailyDeals * dealValue;
@@ -161,18 +168,18 @@ export default function ProjectionsPage() {
           connects: dailyConnects,
           bookings: dailyBookings,
           phoneHours,
+          weekNumber: getWeekNumber(viewYear, viewMonth, d),
         });
       }
     }
     return data;
   }, [viewYear, viewMonth, phoneHours, dailyCalls, dailyConnects, dailyBookings]);
 
-  // ─── Closing calendar data (meetings land 3-5 biz days after booking) ───
+  // ─── Closing calendar data ───
   const closingData = useMemo(() => {
     const { daysInMonth } = getMonthData(viewYear, viewMonth);
     const meetingMap: Record<number, number> = {};
 
-    // Helper to distribute bookings into meeting days
     const distributeBookings = (srcYear: number, srcMonth: number, srcDay: number) => {
       const attendedPerLag = (dailyBookings * ATTENDANCE_RATE) / MEETING_LAG_DAYS.length;
       for (const lag of MEETING_LAG_DAYS) {
@@ -184,7 +191,7 @@ export default function ProjectionsPage() {
       }
     };
 
-    // Previous month carry-over (last 10 days)
+    // Previous month carry-over
     const prevY = viewMonth === 0 ? viewYear - 1 : viewYear;
     const prevM = viewMonth === 0 ? 11 : viewMonth - 1;
     const { daysInMonth: prevDays } = getMonthData(prevY, prevM);
@@ -197,7 +204,6 @@ export default function ProjectionsPage() {
       if (isWeekday(viewYear, viewMonth, d)) distributeBookings(viewYear, viewMonth, d);
     }
 
-    // Build day data
     const data: ClosingDay[] = [];
     for (let d = 1; d <= daysInMonth; d++) {
       if (isWeekday(viewYear, viewMonth, d)) {
@@ -211,6 +217,7 @@ export default function ProjectionsPage() {
           meetingsAttended: Number(attended.toFixed(2)),
           deals: Number(deals.toFixed(2)),
           revenue: Math.round(revenue),
+          weekNumber: getWeekNumber(viewYear, viewMonth, d),
         });
       }
     }
@@ -224,13 +231,53 @@ export default function ProjectionsPage() {
   const monthlyDeals = closingData.reduce((s, d) => s + d.deals, 0);
   const monthlyRevenue = closingData.reduce((s, d) => s + d.revenue, 0);
 
-  // Weekly figures (5-day week)
+  // Weekly figures
   const weeklyBookings = dailyBookings * 5;
   const weeklyDeals = dailyDeals * 5;
   const weeklyRevenue = dailyRevenue * 5;
 
   const leadGenWeeks = buildWeeks(viewYear, viewMonth, leadGenData);
   const closingWeeks = buildWeeks(viewYear, viewMonth, closingData);
+
+  // ─── Weekly revenue totals for closing ───
+  const weeklyRevenueTotals = useMemo(() => {
+    const totals: Record<number, number> = {};
+    for (const d of closingData) {
+      totals[d.weekNumber] = (totals[d.weekNumber] || 0) + d.revenue;
+    }
+    return totals;
+  }, [closingData]);
+
+  // ─── Cumulative revenue running total ───
+  const cumulativeRevenueByDay = useMemo(() => {
+    let running = 0;
+    const map: Record<number, number> = {};
+    for (const d of closingData) {
+      running += d.revenue;
+      map[d.day] = running;
+    }
+    return map;
+  }, [closingData]);
+
+  // ─── Weekly booking totals for lead gen ───
+  const weeklyBookingTotals = useMemo(() => {
+    const totals: Record<number, number> = {};
+    for (const d of leadGenData) {
+      totals[d.weekNumber] = (totals[d.weekNumber] || 0) + d.bookings;
+    }
+    return totals;
+  }, [leadGenData]);
+
+  // ─── Cumulative bookings running total ───
+  const cumulativeBookingsByDay = useMemo(() => {
+    let running = 0;
+    const map: Record<number, number> = {};
+    for (const d of leadGenData) {
+      running += d.bookings;
+      map[d.day] = running;
+    }
+    return map;
+  }, [leadGenData]);
 
   return (
     <main className="min-h-screen bg-slate-100">
@@ -255,9 +302,9 @@ export default function ProjectionsPage() {
 
       <div className="max-w-[1200px] mx-auto px-4 py-8 space-y-6">
 
-        {/* ─── Controls: Hours + Deal Value ─── */}
+        {/* ─── Controls: Hours + Bookings/Hr + Deal Value ─── */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Hours */}
             <div>
               <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">Hours on Phones</h3>
@@ -290,10 +337,49 @@ export default function ProjectionsPage() {
               </div>
             </div>
 
+            {/* Bookings Per Hour */}
+            <div>
+              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">Bookings Per Hour</h3>
+              <div className="flex items-center gap-3 mb-3">
+                <button
+                  onClick={() => setBookingsPerHour(Math.max(0.1, Math.round((bookingsPerHour - 0.1) * 100) / 100))}
+                  className="w-10 h-10 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-lg"
+                >−</button>
+                <div className="text-center">
+                  <input
+                    type="number"
+                    value={bookingsPerHour}
+                    onChange={(e) => setBookingsPerHour(Math.max(0, parseFloat(e.target.value) || 0))}
+                    step={0.1}
+                    min={0}
+                    className="w-20 text-center text-4xl font-black text-slate-900 tabular-nums bg-transparent border-b-2 border-gray-200 focus:border-slate-900 outline-none"
+                  />
+                  <div className="text-[10px] text-gray-400">bookings/hr</div>
+                </div>
+                <button
+                  onClick={() => setBookingsPerHour(Math.round((bookingsPerHour + 0.1) * 100) / 100)}
+                  className="w-10 h-10 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-lg"
+                >+</button>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {[0.5, 0.75, 1, 1.25, 1.5, 2].map((b) => (
+                  <button
+                    key={b}
+                    onClick={() => setBookingsPerHour(b)}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                      bookingsPerHour === b
+                        ? "bg-slate-900 text-white"
+                        : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                    }`}
+                  >{b}/hr</button>
+                ))}
+              </div>
+            </div>
+
             {/* Deal Value */}
             <div>
               <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">Avg Deal Value</h3>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 mb-3">
                 <span className="text-2xl font-bold text-gray-400">$</span>
                 <input
                   type="number"
@@ -304,7 +390,7 @@ export default function ProjectionsPage() {
                   className="text-4xl font-black text-slate-900 tabular-nums bg-transparent border-b-2 border-gray-200 focus:border-slate-900 outline-none w-32"
                 />
               </div>
-              <div className="text-[10px] text-gray-400 mt-1">Monthly recurring per deal</div>
+              <div className="text-[10px] text-gray-400">Monthly recurring per deal</div>
             </div>
           </div>
         </div>
@@ -315,7 +401,7 @@ export default function ProjectionsPage() {
             {/* Per Day */}
             <div>
               <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">
-                Daily Output <span className="text-gray-300">({phoneHours}hrs calling)</span>
+                Daily Output <span className="text-gray-300">({phoneHours}hrs × {bookingsPerHour} bkgs/hr)</span>
               </h3>
               <div className="grid grid-cols-3 gap-2">
                 {[
@@ -334,7 +420,7 @@ export default function ProjectionsPage() {
               </div>
             </div>
 
-            {/* Closing from daily bookings */}
+            {/* Closing */}
             <div className="border-t md:border-t-0 md:border-l border-gray-200 md:pl-6 pt-4 md:pt-0">
               <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">Daily Closing</h3>
               <div className="grid grid-cols-3 gap-2">
@@ -381,42 +467,29 @@ export default function ProjectionsPage() {
           <button
             onClick={() => setActiveTab("leadgen")}
             className={`px-5 py-3 text-sm font-bold transition-colors relative ${
-              activeTab === "leadgen"
-                ? "text-slate-900"
-                : "text-gray-400 hover:text-gray-600"
+              activeTab === "leadgen" ? "text-slate-900" : "text-gray-400 hover:text-gray-600"
             }`}
           >
             📅 Lead Generation
-            {activeTab === "leadgen" && (
-              <div className="absolute bottom-[-2px] left-0 right-0 h-[2px] bg-slate-900" />
-            )}
+            {activeTab === "leadgen" && <div className="absolute bottom-[-2px] left-0 right-0 h-[2px] bg-slate-900" />}
           </button>
           <button
             onClick={() => setActiveTab("closing")}
             className={`px-5 py-3 text-sm font-bold transition-colors relative ${
-              activeTab === "closing"
-                ? "text-slate-900"
-                : "text-gray-400 hover:text-gray-600"
+              activeTab === "closing" ? "text-slate-900" : "text-gray-400 hover:text-gray-600"
             }`}
           >
             💰 Closing
-            {activeTab === "closing" && (
-              <div className="absolute bottom-[-2px] left-0 right-0 h-[2px] bg-slate-900" />
-            )}
+            {activeTab === "closing" && <div className="absolute bottom-[-2px] left-0 right-0 h-[2px] bg-slate-900" />}
           </button>
         </div>
 
         {/* ─── Month Nav ─── */}
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-slate-900">
-            {MONTH_NAMES[viewMonth]} {viewYear}
-          </h2>
+          <h2 className="text-lg font-bold text-slate-900">{MONTH_NAMES[viewMonth]} {viewYear}</h2>
           <div className="flex gap-2">
             <button onClick={prevMonth} className="px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50">← Prev</button>
-            <button
-              onClick={() => { setViewMonth(today.getMonth()); setViewYear(today.getFullYear()); }}
-              className="px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50"
-            >Today</button>
+            <button onClick={() => { setViewMonth(today.getMonth()); setViewYear(today.getFullYear()); }} className="px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50">Today</button>
             <button onClick={nextMonth} className="px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50">Next →</button>
           </div>
         </div>
@@ -465,91 +538,137 @@ export default function ProjectionsPage() {
 
           {/* Weeks */}
           {activeTab === "leadgen"
-            ? leadGenWeeks.map((week, wi) => (
-                <div key={wi} className="grid grid-cols-5 border-b border-gray-100 last:border-b-0">
-                  {week.map((dayData, di) => (
-                    <div
-                      key={di}
-                      className={`border-r border-gray-100 last:border-r-0 p-2.5 min-h-[120px] ${
-                        dayData ? "hover:bg-slate-50 transition-colors" : "bg-gray-50/50"
-                      }`}
-                    >
-                      {dayData && (
-                        <>
-                          <div className="text-xs font-bold text-gray-400 mb-2">{dayData.day}</div>
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-1.5 text-[11px]">
-                              <span className="text-[10px]">📞</span>
-                              <span className="font-bold text-slate-700 tabular-nums">{Math.round(dayData.calls)}</span>
-                              <span className="text-gray-400">calls</span>
-                            </div>
-                            <div className="flex items-center gap-1.5 text-[11px]">
-                              <span className="text-[10px]">🔗</span>
-                              <span className="font-bold text-slate-700 tabular-nums">{Math.round(dayData.connects)}</span>
-                              <span className="text-gray-400">connects</span>
-                            </div>
-                            <div className="flex items-center gap-1.5 text-[11px]">
-                              <span className="text-[10px]">📅</span>
-                              <span className="font-black text-indigo-600 tabular-nums">{fmt(dayData.bookings)}</span>
-                              <span className="text-gray-400">bookings</span>
-                            </div>
-                          </div>
-                          <div className="text-[9px] text-gray-300 mt-2 italic">{dayData.phoneHours}hrs calling</div>
-                        </>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ))
-            : closingWeeks.map((week, wi) => (
-                <div key={wi} className="grid grid-cols-5 border-b border-gray-100 last:border-b-0">
-                  {week.map((dayData, di) => (
-                    <div
-                      key={di}
-                      className={`border-r border-gray-100 last:border-r-0 p-2.5 min-h-[140px] ${
-                        dayData
-                          ? dayData.meetingsAttended > 0
-                            ? "hover:bg-emerald-50/30 transition-colors"
-                            : "hover:bg-slate-50 transition-colors"
-                          : "bg-gray-50/50"
-                      }`}
-                    >
-                      {dayData && (
-                        <>
-                          <div className="text-xs font-bold text-gray-400 mb-2">{dayData.day}</div>
-                          {dayData.meetingsAttended > 0 ? (
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-1.5 text-[11px]">
-                                <span className="text-[10px]">📋</span>
-                                <span className="font-bold text-slate-700 tabular-nums">{fmt(dayData.meetingsScheduled)}</span>
-                                <span className="text-gray-400">scheduled</span>
+            ? leadGenWeeks.map((week, wi) => {
+                const firstDay = week.find((d) => d !== null);
+                const weekNum = firstDay ? firstDay.weekNumber : 0;
+                const weekBookings = weeklyBookingTotals[weekNum] || 0;
+                const lastDayInWeek = [...week].reverse().find((d) => d !== null);
+                const cumulativeBookings = lastDayInWeek ? cumulativeBookingsByDay[lastDayInWeek.day] || 0 : 0;
+
+                return (
+                  <div key={wi}>
+                    <div className="grid grid-cols-5 border-b border-gray-100">
+                      {week.map((dayData, di) => (
+                        <div
+                          key={di}
+                          className={`border-r border-gray-100 last:border-r-0 p-2.5 min-h-[120px] ${
+                            dayData ? "hover:bg-slate-50 transition-colors" : "bg-gray-50/50"
+                          }`}
+                        >
+                          {dayData && (
+                            <>
+                              <div className="text-xs font-bold text-gray-400 mb-2">{dayData.day}</div>
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-1.5 text-[11px]">
+                                  <span className="text-[10px]">📞</span>
+                                  <span className="font-bold text-slate-700 tabular-nums">{Math.round(dayData.calls)}</span>
+                                  <span className="text-gray-400">calls</span>
+                                </div>
+                                <div className="flex items-center gap-1.5 text-[11px]">
+                                  <span className="text-[10px]">🔗</span>
+                                  <span className="font-bold text-slate-700 tabular-nums">{Math.round(dayData.connects)}</span>
+                                  <span className="text-gray-400">connects</span>
+                                </div>
+                                <div className="flex items-center gap-1.5 text-[11px]">
+                                  <span className="text-[10px]">📅</span>
+                                  <span className="font-black text-indigo-600 tabular-nums">{fmt(dayData.bookings)}</span>
+                                  <span className="text-gray-400">bookings</span>
+                                </div>
                               </div>
-                              <div className="flex items-center gap-1.5 text-[11px]">
-                                <span className="text-[10px]">🤝</span>
-                                <span className="font-black text-emerald-600 tabular-nums">{fmt(dayData.meetingsAttended)}</span>
-                                <span className="text-gray-400">attended</span>
-                              </div>
-                              <div className="flex items-center gap-1.5 text-[11px]">
-                                <span className="text-[10px]">🏆</span>
-                                <span className="font-bold text-slate-700 tabular-nums">{fmt(dayData.deals)}</span>
-                                <span className="text-gray-400">deals</span>
-                              </div>
-                              <div className="flex items-center gap-1.5 text-[11px]">
-                                <span className="text-[10px]">💰</span>
-                                <span className="font-black text-emerald-600 tabular-nums">{fmtCurrency(dayData.revenue)}</span>
-                                <span className="text-gray-400">revenue</span>
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="text-[10px] text-gray-300 italic mt-4">No meetings</div>
+                              <div className="text-[9px] text-gray-300 mt-2 italic">{dayData.phoneHours}hrs calling</div>
+                            </>
                           )}
-                        </>
-                      )}
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              ))
+                    {/* Weekly total row */}
+                    <div className="bg-indigo-50 border-b border-indigo-100 px-4 py-1.5 flex justify-end items-center gap-6">
+                      <span className="text-[10px] font-bold text-indigo-400 uppercase">Week {weekNum}</span>
+                      <span className="text-xs font-black text-indigo-600 tabular-nums">📅 {fmt(weekBookings)} bookings</span>
+                      <span className="text-[10px] text-gray-400">|</span>
+                      <span className="text-[10px] font-bold text-gray-400 uppercase">MTD</span>
+                      <span className="text-xs font-black text-slate-700 tabular-nums">{fmt(cumulativeBookings)} bookings</span>
+                    </div>
+                  </div>
+                );
+              })
+            : closingWeeks.map((week, wi) => {
+                const firstDay = week.find((d) => d !== null);
+                const weekNum = firstDay ? firstDay.weekNumber : 0;
+                const weekRev = weeklyRevenueTotals[weekNum] || 0;
+                const lastDayInWeek = [...week].reverse().find((d) => d !== null);
+                const cumulativeAtWeekEnd = lastDayInWeek ? cumulativeRevenueByDay[lastDayInWeek.day] || 0 : 0;
+
+                return (
+                  <div key={wi}>
+                    <div className="grid grid-cols-5 border-b border-gray-100">
+                      {week.map((dayData, di) => (
+                        <div
+                          key={di}
+                          className={`border-r border-gray-100 last:border-r-0 p-2.5 min-h-[140px] ${
+                            dayData
+                              ? dayData.meetingsAttended > 0
+                                ? "hover:bg-emerald-50/30 transition-colors"
+                                : "hover:bg-slate-50 transition-colors"
+                              : "bg-gray-50/50"
+                          }`}
+                        >
+                          {dayData && (
+                            <>
+                              <div className="text-xs font-bold text-gray-400 mb-2">{dayData.day}</div>
+                              {dayData.meetingsAttended > 0 ? (
+                                <div className="space-y-1">
+                                  <div className="flex items-center gap-1.5 text-[11px]">
+                                    <span className="text-[10px]">📋</span>
+                                    <span className="font-bold text-slate-700 tabular-nums">{fmt(dayData.meetingsScheduled)}</span>
+                                    <span className="text-gray-400">scheduled</span>
+                                  </div>
+                                  <div className="flex items-center gap-1.5 text-[11px]">
+                                    <span className="text-[10px]">🤝</span>
+                                    <span className="font-black text-emerald-600 tabular-nums">{fmt(dayData.meetingsAttended)}</span>
+                                    <span className="text-gray-400">attended</span>
+                                  </div>
+                                  <div className="flex items-center gap-1.5 text-[11px]">
+                                    <span className="text-[10px]">🏆</span>
+                                    <span className="font-bold text-slate-700 tabular-nums">{fmt(dayData.deals)}</span>
+                                    <span className="text-gray-400">deals</span>
+                                  </div>
+                                  <div className="flex items-center gap-1.5 text-[11px]">
+                                    <span className="text-[10px]">💰</span>
+                                    <span className="font-black text-emerald-600 tabular-nums">{fmtCurrency(dayData.revenue)}</span>
+                                    <span className="text-gray-400">revenue</span>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="text-[10px] text-gray-300 italic mt-4">No meetings</div>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    {/* Weekly total + cumulative row */}
+                    <div className="bg-emerald-50 border-b border-emerald-100 px-4 py-1.5 flex justify-end items-center gap-6">
+                      <span className="text-[10px] font-bold text-emerald-400 uppercase">Week {weekNum}</span>
+                      <span className="text-xs font-black text-emerald-600 tabular-nums">💰 {fmtCurrency(weekRev)}</span>
+                      <span className="text-[10px] text-gray-400">|</span>
+                      <span className="text-[10px] font-bold text-gray-400 uppercase">MTD</span>
+                      <span className="text-xs font-black text-slate-700 tabular-nums">{fmtCurrency(cumulativeAtWeekEnd)}</span>
+                    </div>
+                  </div>
+                );
+              })
           }
+
+          {/* Monthly total footer */}
+          <div className="bg-slate-800 px-4 py-3 flex justify-end items-center gap-4">
+            <span className="text-xs font-bold text-slate-400 uppercase">Monthly Total</span>
+            {activeTab === "leadgen" ? (
+              <span className="text-sm font-black text-white tabular-nums">📅 {fmt(monthlyBookings)} bookings</span>
+            ) : (
+              <span className="text-sm font-black text-emerald-400 tabular-nums">💰 {fmtCurrency(monthlyRevenue)}</span>
+            )}
+          </div>
         </div>
 
         {/* ─── Conversion Funnel Reference ─── */}
@@ -571,12 +690,12 @@ export default function ProjectionsPage() {
               </thead>
               <tbody>
                 {[
-                  { emoji: "📞", label: "Calls", perHour: PER_HOUR.calls, perDay: dailyCalls, rate: "—", from: "—" },
-                  { emoji: "🔗", label: "Connects", perHour: PER_HOUR.connects, perDay: dailyConnects, rate: `${((PER_HOUR.connects / PER_HOUR.calls) * 100).toFixed(1)}%`, from: "of Calls", color: "text-sky-600" },
-                  { emoji: "📅", label: "Bookings", perHour: PER_HOUR.bookings, perDay: dailyBookings, rate: `${((PER_HOUR.bookings / PER_HOUR.connects) * 100).toFixed(0)}%`, from: "of Connects", color: "text-indigo-600" },
-                  { emoji: "🤝", label: "Attended", perHour: PER_HOUR.bookings * ATTENDANCE_RATE, perDay: dailyAttended, rate: "60%", from: "of Bookings", color: "text-emerald-600" },
-                  { emoji: "🏆", label: "Deals", perHour: PER_HOUR.bookings * ATTENDANCE_RATE * CLOSE_RATE, perDay: dailyDeals, rate: "50%", from: "of Attended", color: "text-amber-600" },
-                  { emoji: "💰", label: "Revenue", perHour: PER_HOUR.bookings * ATTENDANCE_RATE * CLOSE_RATE * dealValue, perDay: dailyRevenue, rate: `${fmtCurrency(dealValue)}/deal`, from: "per month", color: "text-green-600" },
+                  { emoji: "📞", label: "Calls", perHour: BASE_CALLS_PER_HOUR, perDay: dailyCalls, rate: "—", from: "—" },
+                  { emoji: "🔗", label: "Connects", perHour: BASE_CONNECTS_PER_HOUR, perDay: dailyConnects, rate: `${((BASE_CONNECTS_PER_HOUR / BASE_CALLS_PER_HOUR) * 100).toFixed(1)}%`, from: "of Calls", color: "text-sky-600" },
+                  { emoji: "📅", label: "Bookings", perHour: bookingsPerHour, perDay: dailyBookings, rate: `${((bookingsPerHour / BASE_CONNECTS_PER_HOUR) * 100).toFixed(0)}%`, from: "of Connects", color: "text-indigo-600" },
+                  { emoji: "🤝", label: "Attended", perHour: bookingsPerHour * ATTENDANCE_RATE, perDay: dailyAttended, rate: "60%", from: "of Bookings", color: "text-emerald-600" },
+                  { emoji: "🏆", label: "Deals", perHour: bookingsPerHour * ATTENDANCE_RATE * CLOSE_RATE, perDay: dailyDeals, rate: "50%", from: "of Attended", color: "text-amber-600" },
+                  { emoji: "💰", label: "Revenue", perHour: bookingsPerHour * ATTENDANCE_RATE * CLOSE_RATE * dealValue, perDay: dailyRevenue, rate: `${fmtCurrency(dealValue)}/deal`, from: "per month", color: "text-green-600" },
                 ].map((row) => (
                   <tr key={row.label} className="border-b border-gray-100">
                     <td className="py-2 font-medium text-gray-700">{row.emoji} {row.label}</td>
