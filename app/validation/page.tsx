@@ -444,6 +444,7 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [rejectMode, setRejectMode] = useState<Record<string, boolean>>({});
+  const [showFuture, setShowFuture] = useState(false);
 
   const pendingBookings = bookings.filter((b) => b.status === "pending");
   const today = toISODate(new Date());
@@ -655,18 +656,40 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
 
           {/* ── Section 2: Today's Bookings (validate tomorrow) ── */}
           {todayBookings.length > 0 && (
-            <div>
-              <div className="mb-4 pb-2 border-b-2 border-slate-300">
-                <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
+            <div className="border-2 border-dashed border-slate-300 rounded-2xl p-5 bg-slate-50/50">
+              {/* Warning banner */}
+              <div className="bg-amber-50 border border-amber-300 rounded-xl p-4 mb-4 flex items-start gap-3">
+                <span className="text-2xl">⛔</span>
+                <div>
+                  <h3 className="text-sm font-bold text-amber-800">Do NOT Call These Yet</h3>
+                  <p className="text-xs text-amber-700 mt-0.5">
+                    These {todayBookings.length} booking{todayBookings.length !== 1 ? "s were" : " was"} made <strong>today</strong> — they need to be validated <strong>tomorrow</strong>, not today.
+                    Calling the same day the booking is made is too soon.
+                  </p>
+                </div>
+              </div>
+
+              {/* Collapsed header */}
+              <button
+                onClick={() => setShowFuture(!showFuture)}
+                className="w-full flex items-center justify-between text-left"
+              >
+                <h3 className="text-base font-bold text-slate-500 flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full bg-slate-400"></span>
                   Future Validation Calls
-                  <span className="text-sm font-normal text-slate-500">— Today&apos;s Bookings to be Validated Tomorrow ({todayBookings.length})</span>
+                  <span className="text-sm font-normal text-slate-400">— Today&apos;s Bookings to be Validated Tomorrow ({todayBookings.length})</span>
                 </h3>
-                <p className="text-xs text-slate-400 mt-1">These bookings were made today — don&apos;t call until tomorrow</p>
-              </div>
-              <div className="space-y-6 opacity-80">
-                {renderBuddyGroups(todayGroups)}
-              </div>
+                <span className="text-xs font-semibold text-slate-400 px-3 py-1 bg-white border border-slate-200 rounded-lg">
+                  {showFuture ? "Hide ▲" : "Preview ▼"}
+                </span>
+              </button>
+
+              {/* Collapsible content */}
+              {showFuture && (
+                <div className="mt-4 space-y-6 opacity-50 pointer-events-none select-none">
+                  {renderBuddyGroups(todayGroups)}
+                </div>
+              )}
             </div>
           )}
         </div>
