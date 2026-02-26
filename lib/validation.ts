@@ -15,6 +15,7 @@ export interface Booking {
   validation_date?: string;
   validation_note?: string;
   observation_date?: string;
+  na_date?: string;
   created_at: string;
 }
 
