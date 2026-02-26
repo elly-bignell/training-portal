@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { usePersistedState } from "@/hooks/usePersistedState";
 import Link from "next/link";
 import PasswordGate from "@/components/PasswordGate";
 
@@ -105,13 +105,13 @@ function FunnelInput({ value, onChange, step = 0.1, min = 0, prefix, suffix, wid
 
 function ProjectionsContent() {
   const [activeTab, setActiveTab] = useState<"leadgen" | "closing">("leadgen");
-  const [phoneHours, setPhoneHours] = useLocalStorage("proj-phoneHours", DEFAULT_HOURS);
-  const [dealValue, setDealValue] = useLocalStorage("proj-dealValue", DEFAULT_DEAL_VALUE);
-  const [callsPerHour, setCallsPerHour] = useLocalStorage("proj-callsPerHour", DEFAULT_CALLS_PER_HOUR);
-  const [connectsPerHour, setConnectsPerHour] = useLocalStorage("proj-connectsPerHour", DEFAULT_CONNECTS_PER_HOUR);
-  const [bookingsPerHour, setBookingsPerHour] = useLocalStorage("proj-bookingsPerHour", DEFAULT_BOOKINGS_PER_HOUR);
-  const [attendanceRate, setAttendanceRate] = useLocalStorage("proj-attendanceRate", DEFAULT_ATTENDANCE_RATE);
-  const [closeRate, setCloseRate] = useLocalStorage("proj-closeRate", DEFAULT_CLOSE_RATE);
+  const [phoneHours, setPhoneHours] = usePersistedState("proj-phoneHours", DEFAULT_HOURS);
+  const [dealValue, setDealValue] = usePersistedState("proj-dealValue", DEFAULT_DEAL_VALUE);
+  const [callsPerHour, setCallsPerHour] = usePersistedState("proj-callsPerHour", DEFAULT_CALLS_PER_HOUR);
+  const [connectsPerHour, setConnectsPerHour] = usePersistedState("proj-connectsPerHour", DEFAULT_CONNECTS_PER_HOUR);
+  const [bookingsPerHour, setBookingsPerHour] = usePersistedState("proj-bookingsPerHour", DEFAULT_BOOKINGS_PER_HOUR);
+  const [attendanceRate, setAttendanceRate] = usePersistedState("proj-attendanceRate", DEFAULT_ATTENDANCE_RATE);
+  const [closeRate, setCloseRate] = usePersistedState("proj-closeRate", DEFAULT_CLOSE_RATE);
 
   const today = new Date();
   const [viewMonth, setViewMonth] = useState(today.getMonth());
