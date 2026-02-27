@@ -240,7 +240,7 @@ function ProjectionsContent() {
               <div className="flex items-center gap-3 mb-3">
                 <button onClick={() => setBookingsPerHour(Math.max(0.1, Math.round((bookingsPerHour - 0.1) * 100) / 100))} className="w-10 h-10 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-lg">−</button>
                 <div className="text-center">
-                  <input type="number" value={bookingsPerHour} onChange={(e) => setBookingsPerHour(Math.max(0, parseFloat(e.target.value) || 0))} step={0.1} min={0} className="w-20 text-center text-4xl font-black text-slate-900 tabular-nums bg-transparent border-b-2 border-gray-200 focus:border-slate-900 outline-none" />
+                  <input type="number" value={bookingsPerHour} onChange={(e) => setBookingsPerHour(Math.max(0, parseFloat(e.target.value) || 0))} step={0.1} min={0} className="w-28 text-center text-4xl font-black text-slate-900 tabular-nums bg-transparent border-b-2 border-gray-200 focus:border-slate-900 outline-none" />
                   <div className="text-[10px] text-gray-400">bookings/hr</div>
                 </div>
                 <button onClick={() => setBookingsPerHour(Math.round((bookingsPerHour + 0.1) * 100) / 100)} className="w-10 h-10 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-lg">+</button>
