@@ -60,6 +60,9 @@ function CommissionsContent() {
   const [closeRate] = usePersistedState("proj-closeRate", DEFAULT_CLOSE_RATE);
   const [dealValue] = usePersistedState("proj-dealValue", DEFAULT_DEAL_VALUE);
 
+  // ── Commission rate modifier (persisted) ──
+  const [commissionPct, setCommissionPct] = usePersistedState("comm-ratePct", 100);
+
   // ── Local state ──
   const today = new Date();
   const [viewMonth, setViewMonth] = useState(today.getMonth());
@@ -71,7 +74,11 @@ function CommissionsContent() {
   const businessDays = getBusinessDays(viewYear, viewMonth);
   const monthlyDeals = dealsPerDay * businessDays;
   const monthlyRevenue = revenuePerDay * businessDays;
-  const { tier, rate, commission } = getCommissionTier(monthlyRevenue);
+  const tierResult = getCommissionTier(monthlyRevenue);
+  const tier = tierResult.tier;
+  const rate = tierResult.rate;
+  const commissionFull = tierResult.commission;
+  const commission = commissionFull * (commissionPct / 100);
 
   // ── 12-month view ──
   const monthlyBreakdown = useMemo(() => {
@@ -80,9 +87,9 @@ function CommissionsContent() {
       const rev = revenuePerDay * bd;
       const deals = dealsPerDay * bd;
       const c = getCommissionTier(rev);
-      return { month: m, businessDays: bd, revenue: rev, deals, ...c };
+      return { month: m, businessDays: bd, revenue: rev, deals, tier: c.tier, rate: c.rate, commissionFull: c.commission, commission: c.commission * (commissionPct / 100) };
     });
-  }, [viewYear, revenuePerDay, dealsPerDay]);
+  }, [viewYear, revenuePerDay, dealsPerDay, commissionPct]);
 
   const yearlyRevenue = monthlyBreakdown.reduce((s, m) => s + m.revenue, 0);
   const yearlyCommission = monthlyBreakdown.reduce((s, m) => s + m.commission, 0);
@@ -160,25 +167,66 @@ function CommissionsContent() {
           </div>
         </div>
 
+        {/* Commission Rate Modifier */}
+        <div className="bg-white rounded-2xl border-2 border-indigo-200 shadow-sm p-5">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">⚙️</span>
+              <div>
+                <h2 className="text-sm font-bold text-slate-700">Commission Rate</h2>
+                <p className="text-[10px] text-slate-400">Adjust the % of commission you receive (e.g. 100% = full, 50% = half)</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1">
+                {[50, 60, 70, 80, 90, 100].map((p) => (
+                  <button key={p} onClick={() => setCommissionPct(p)}
+                    className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all ${commissionPct === p ? "bg-indigo-600 text-white shadow-md" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}>
+                    {p}%
+                  </button>
+                ))}
+              </div>
+              <div className="flex items-center gap-1.5 border-l border-gray-200 pl-3">
+                <input
+                  type="number"
+                  value={commissionPct}
+                  onChange={(e) => setCommissionPct(Math.max(0, Math.min(100, Number(e.target.value) || 0)))}
+                  min={0} max={100} step={1}
+                  className="w-20 text-center text-lg font-black text-indigo-700 tabular-nums bg-indigo-50 border-2 border-indigo-200 rounded-lg px-2 py-1.5 focus:border-indigo-500 focus:bg-white outline-none"
+                />
+                <span className="text-lg font-bold text-indigo-400">%</span>
+              </div>
+            </div>
+          </div>
+          {commissionPct < 100 && (
+            <div className="mt-3 px-3 py-2 bg-indigo-50 rounded-lg text-xs text-indigo-700">
+              💡 At <span className="font-bold">{commissionPct}%</span> rate, your commissions are scaled to <span className="font-bold">{commissionPct}%</span> of the full tier amount.
+              {tier > 0 && <span> E.g. Tier {tier} full = {fmtCurrency(commissionFull)} → you receive <span className="font-bold">{fmtCurrency(commission)}</span>.</span>}
+            </div>
+          )}
+        </div>
+
         {/* Commission Tier Table */}
         <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
           <h2 className="text-lg font-bold text-slate-800 mb-1">How Your Commissions Work</h2>
           <p className="text-xs text-slate-400 mb-5">Once you generate $2,500 in sales revenue, you unlock commissions. Tiers range from 10% to 50%.</p>
 
           <div className="overflow-hidden rounded-xl border border-gray-200">
-            <div className="grid grid-cols-5 bg-slate-800 text-white text-[11px] font-bold uppercase tracking-wider">
+            <div className={`grid ${commissionPct < 100 ? "grid-cols-6" : "grid-cols-5"} bg-slate-800 text-white text-[11px] font-bold uppercase tracking-wider`}>
               <div className="px-4 py-3 text-center">Commission Tier</div>
               <div className="px-4 py-3 text-center">Sales Revenue ($)</div>
               <div className="px-4 py-3 text-center">Units<br /><span className="font-normal text-slate-400">@ ${dealValue} deal value</span></div>
               <div className="px-4 py-3 text-center text-emerald-300">Commission Rate (%)</div>
-              <div className="px-4 py-3 text-center text-emerald-300">Commission Rate ($)</div>
+              <div className="px-4 py-3 text-center text-emerald-300">Commission @ 100%</div>
+              {commissionPct < 100 && <div className="px-4 py-3 text-center text-indigo-300">Commission @ {commissionPct}%</div>}
             </div>
             {COMMISSION_TIERS.map((t, i) => {
               const isActive = tier === t.tier;
               const commissionAmount = t.minRevenue * t.rate;
+              const adjustedAmount = commissionAmount * (commissionPct / 100);
               const units = Math.round(t.minRevenue / dealValue);
               return (
-                <div key={t.tier} className={`grid grid-cols-5 border-t border-gray-100 ${isActive ? "bg-emerald-50 ring-2 ring-emerald-400 ring-inset" : i % 2 === 0 ? "bg-white" : "bg-gray-50/50"}`}>
+                <div key={t.tier} className={`grid ${commissionPct < 100 ? "grid-cols-6" : "grid-cols-5"} border-t border-gray-100 ${isActive ? "bg-emerald-50 ring-2 ring-emerald-400 ring-inset" : i % 2 === 0 ? "bg-white" : "bg-gray-50/50"}`}>
                   <div className="px-4 py-4 flex items-center justify-center">
                     <span className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm text-white ${isActive ? "bg-emerald-500 ring-2 ring-emerald-300" : "bg-slate-400"}`}>{t.tier}</span>
                   </div>
@@ -186,6 +234,7 @@ function CommissionsContent() {
                   <div className="px-4 py-4 text-center text-gray-500">{units}</div>
                   <div className={`px-4 py-4 text-center font-bold text-lg ${isActive ? "text-emerald-600" : "text-emerald-500"}`}>{Math.round(t.rate * 100)}%</div>
                   <div className={`px-4 py-4 text-center font-bold text-lg ${isActive ? "text-emerald-700" : "text-emerald-600"}`}>{fmtCurrency(commissionAmount)}</div>
+                  {commissionPct < 100 && <div className={`px-4 py-4 text-center font-bold text-lg ${isActive ? "text-indigo-700" : "text-indigo-500"}`}>{fmtCurrency(adjustedAmount)}</div>}
                 </div>
               );
             })}
@@ -236,13 +285,20 @@ function CommissionsContent() {
                       Your sales revenue of <span className="font-bold text-slate-900">{fmtCurrency(monthlyRevenue)}</span> qualifies for
                     </p>
                     <p className="text-sm">
-                      <span className={`font-bold ${tc.text}`}>Tier {tier}</span> commission rate of <span className={`font-bold ${tc.text}`}>{Math.round(rate * 100)}%</span>.
+                      <span className={`font-bold ${tc.text}`}>Tier {tier}</span> commission rate of <span className={`font-bold ${tc.text}`}>{Math.round(rate * 100)}%</span>
+                      {commissionPct < 100 && <span className="text-indigo-600"> × {commissionPct}% rate</span>}.
                     </p>
                   </div>
                 </div>
+                {commissionPct < 100 && (
+                  <div className="flex items-baseline gap-2 mb-1">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase w-36">Full (100%):</span>
+                    <span className="text-lg font-bold text-gray-400 line-through">{fmtCurrency(commissionFull)}</span>
+                  </div>
+                )}
                 <div className="flex items-baseline gap-2">
-                  <span className="text-sm font-bold text-gray-600 uppercase">Total Commission:</span>
-                  <span className={`text-4xl font-black ${tc.text}`}>{fmtCurrency(commission)}</span>
+                  <span className="text-sm font-bold text-gray-600 uppercase">{commissionPct < 100 ? `Your Commission (${commissionPct}%):` : "Total Commission:"}</span>
+                  <span className={`text-4xl font-black ${commissionPct < 100 ? "text-indigo-700" : tc.text}`}>{fmtCurrency(commission)}</span>
                 </div>
               </div>
             ) : (
@@ -307,12 +363,13 @@ function CommissionsContent() {
                 const nextTier = COMMISSION_TIERS[tier];
                 const revenueGap = nextTier.minRevenue - monthlyRevenue;
                 const additionalDealsNeeded = revenueGap / dealValue;
-                const commGain = (monthlyRevenue * nextTier.rate) - commission;
+                const nextFullComm = monthlyRevenue * nextTier.rate;
+                const commGain = (nextFullComm * (commissionPct / 100)) - commission;
                 return (
                   <div className="mt-4 p-4 bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl text-white">
                     <div className="text-xs font-bold text-slate-300 uppercase mb-1">🎯 Next Tier Unlock</div>
                     <p className="text-sm">Close <span className="font-bold text-emerald-400">{Math.ceil(additionalDealsNeeded)} more deal{Math.ceil(additionalDealsNeeded) === 1 ? "" : "s"}</span> ({fmtCurrency(revenueGap)} revenue) to reach <span className="font-bold text-emerald-400">Tier {nextTier.tier}</span>.</p>
-                    <p className="text-xs text-slate-400 mt-1">That would bump your commission from {fmtCurrency(commission)} to <span className="font-bold text-emerald-400">{fmtCurrency(commission + commGain)}</span> (+{fmtCurrency(commGain)}).</p>
+                    <p className="text-xs text-slate-400 mt-1">That would bump your commission from {fmtCurrency(commission)} to <span className="font-bold text-emerald-400">{fmtCurrency(commission + commGain)}</span> (+{fmtCurrency(commGain)}){commissionPct < 100 ? ` at ${commissionPct}% rate` : ""}.</p>
                   </div>
                 );
               })()}
@@ -333,7 +390,7 @@ function CommissionsContent() {
                 <div className="text-lg font-black text-slate-800">{fmtCurrency(yearlyRevenue)}</div>
               </div>
               <div className="text-right">
-                <div className="text-[10px] font-bold text-gray-400 uppercase">Annual Commission</div>
+                <div className="text-[10px] font-bold text-gray-400 uppercase">Annual Commission{commissionPct < 100 ? ` (${commissionPct}%)` : ""}</div>
                 <div className="text-lg font-black text-emerald-600">{fmtCurrency(yearlyCommission)}</div>
               </div>
             </div>
@@ -407,7 +464,7 @@ function CommissionsContent() {
             <div>
               <span className="text-slate-400">Your commission:</span>
               <div className={`font-bold text-2xl ${tier > 0 ? "text-emerald-400" : "text-gray-400"}`}>{fmtCurrency(commission)}</div>
-              <span className="text-[10px] text-slate-500">{tier > 0 ? `${fmtCurrency(monthlyRevenue)} × ${Math.round(rate * 100)}%` : "—"}</span>
+              <span className="text-[10px] text-slate-500">{tier > 0 ? `${fmtCurrency(monthlyRevenue)} × ${Math.round(rate * 100)}%${commissionPct < 100 ? ` × ${commissionPct}%` : ""}` : "—"}</span>
             </div>
           </div>
         </div>
