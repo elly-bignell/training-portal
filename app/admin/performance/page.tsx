@@ -213,7 +213,7 @@ function PerformanceDashboardContent() {
               <p className="text-slate-400 text-[11px]">Daily team target: 72 calls · 40 connected · 7 bookings · 3 meetings · 1.5 units · $600 rev</p>
             </div>
           </div>
-          <div className="flex items-center gap-2"><Link href="/admin/performance-summary" className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 transition-colors">📊 vs Projections</Link><Link href="/roadmap" className="text-xs text-slate-400 hover:text-white">Standards →</Link></div>
+          <div className="flex items-center gap-2"><Link href="/admin/performance-summary" className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 transition-colors">📊 vs Projections</Link><div className="flex items-center gap-2"><Link href="/admin/performance-summary" className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 transition-colors">📊 vs Projections</Link><Link href="/roadmap" className="text-xs text-slate-400 hover:text-white">Standards →</Link></div></div>
         </div>
       </header>
 

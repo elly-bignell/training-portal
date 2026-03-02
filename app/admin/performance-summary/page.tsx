@@ -21,7 +21,7 @@ interface DailyRecord {
 
 type Metric = "calls_made" | "calls" | "bookings" | "meetings" | "units" | "revenue";
 
-// ─── Projection defaults (must match projections page) ───
+// ─── Projection defaults (must match projections page localStorage keys) ───
 const DEFAULT_CALLS_PER_HOUR = 18;
 const DEFAULT_CONNECTS_PER_HOUR = 10;
 const DEFAULT_BOOKINGS_PER_HOUR = 1.5;
@@ -30,22 +30,40 @@ const DEFAULT_CLOSE_RATE = 0.5;
 const DEFAULT_HOURS = 3.5;
 const DEFAULT_DEAL_VALUE = 400;
 
-// ─── Buddy pairs ───
+// ─── Buddy pairs (no Tom — he's running his own race) ───
 const buddyPairs = [
-  { label: "Lucas & Cindy", color: "indigo", members: ["lucas-tirri", "cindy-rose-rondez-manrique"] },
-  { label: "Felipe & Connie", color: "pink", members: ["felipe-garcia", "connie-matthews"] },
-  { label: "Dylan & Krishna", color: "amber", members: ["dylan-munro", "krishna-patel"] },
-  { label: "Tom", color: "slate", members: ["thomas-rennie"] },
+  {
+    label: "Lucas & Cindy",
+    color: "indigo",
+    members: ["lucas-tirri", "cindy-rose-rondez-manrique"],
+    leadGen: "cindy-rose-rondez-manrique",
+    closer: "lucas-tirri",
+  },
+  {
+    label: "Felipe & Connie",
+    color: "pink",
+    members: ["felipe-garcia", "connie-matthews"],
+    leadGen: "connie-matthews",
+    closer: "felipe-garcia",
+  },
+  {
+    label: "Dylan & Krishna",
+    color: "amber",
+    members: ["dylan-munro", "krishna-patel"],
+    leadGen: "krishna-patel",
+    closer: "dylan-munro",
+  },
 ];
 
 const allSlugs = buddyPairs.flatMap((p) => p.members);
 
 // ─── Metrics we compare ───
+// Projections are PER TEAM (1 lead genner + 1 closer = 1 team)
 const compMetrics: { key: Metric; label: string; emoji: string; projKey: string }[] = [
   { key: "calls_made", label: "Calls", emoji: "📞", projKey: "calls" },
   { key: "calls", label: "Connected", emoji: "🔗", projKey: "connects" },
   { key: "bookings", label: "Bookings", emoji: "📅", projKey: "bookings" },
-  { key: "meetings", label: "Meetings", emoji: "🤝", projKey: "attended" },
+  { key: "meetings", label: "Attended", emoji: "🤝", projKey: "attended" },
   { key: "units", label: "Deals", emoji: "🏆", projKey: "deals" },
   { key: "revenue", label: "Revenue", emoji: "💰", projKey: "revenue" },
 ];
@@ -101,16 +119,16 @@ function getShortName(slug: string): string {
 }
 
 function fmtVal(v: number, metric: Metric): string {
-  if (metric === "revenue") return v >= 0 ? `$${Math.round(v).toLocaleString()}` : `-$${Math.abs(Math.round(v)).toLocaleString()}`;
+  if (metric === "revenue") return "$" + Math.round(Math.abs(v)).toLocaleString();
   if (metric === "units") return v % 1 !== 0 ? v.toFixed(1) : v.toString();
   return Math.round(v).toString();
 }
 
 function fmtVar(v: number, metric: Metric): string {
   const prefix = v >= 0 ? "+" : "";
-  if (metric === "revenue") return v >= 0 ? `+$${Math.round(v).toLocaleString()}` : `-$${Math.abs(Math.round(v)).toLocaleString()}`;
-  if (metric === "units") return v % 1 !== 0 ? `${prefix}${v.toFixed(1)}` : `${prefix}${v}`;
-  return `${prefix}${Math.round(v)}`;
+  if (metric === "revenue") return v >= 0 ? "+$" + Math.round(v).toLocaleString() : "-$" + Math.abs(Math.round(v)).toLocaleString();
+  if (metric === "units") return v % 1 !== 0 ? prefix + v.toFixed(1) : prefix + v;
+  return prefix + Math.round(v);
 }
 
 function pctOf(actual: number, projected: number): number {
@@ -118,14 +136,12 @@ function pctOf(actual: number, projected: number): number {
   return (actual / projected) * 100;
 }
 
-// ─── Traffic light ───
 function trafficLight(pct: number): { bg: string; text: string; label: string; dot: string } {
   if (pct >= 100) return { bg: "bg-emerald-50", text: "text-emerald-700", label: "On Track", dot: "bg-emerald-500" };
   if (pct >= 75) return { bg: "bg-amber-50", text: "text-amber-700", label: "Behind", dot: "bg-amber-500" };
   return { bg: "bg-red-50", text: "text-red-600", label: "Off Track", dot: "bg-red-500" };
 }
 
-// ─── Trend arrow ───
 function trendArrow(thisWeekPct: number, lastWeekPct: number | null): { icon: string; label: string; color: string } {
   if (lastWeekPct === null) return { icon: "—", label: "First week", color: "text-gray-400" };
   const diff = thisWeekPct - lastWeekPct;
@@ -134,12 +150,10 @@ function trendArrow(thisWeekPct: number, lastWeekPct: number | null): { icon: st
   return { icon: "→", label: "Steady", color: "text-gray-500" };
 }
 
-// ─── Color configs ───
-const teamColors: Record<string, { header: string; light: string; accent: string; border: string }> = {
-  indigo: { header: "bg-indigo-600", light: "bg-indigo-50", accent: "text-indigo-700", border: "border-indigo-200" },
-  pink: { header: "bg-pink-600", light: "bg-pink-50", accent: "text-pink-700", border: "border-pink-200" },
-  amber: { header: "bg-amber-500", light: "bg-amber-50", accent: "text-amber-700", border: "border-amber-200" },
-  slate: { header: "bg-slate-600", light: "bg-slate-50", accent: "text-slate-700", border: "border-slate-200" },
+const teamColors: Record<string, { header: string; light: string; border: string }> = {
+  indigo: { header: "bg-indigo-600", light: "bg-indigo-50", border: "border-indigo-200" },
+  pink: { header: "bg-pink-600", light: "bg-pink-50", border: "border-pink-200" },
+  amber: { header: "bg-amber-500", light: "bg-amber-50", border: "border-amber-200" },
 };
 
 // ═══════════════════════════════════════════
@@ -150,7 +164,6 @@ function PerformanceSummaryContent() {
   const [allData, setAllData] = useState<Map<string, DailyRecord[]>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
 
-  // Read projections from localStorage (same keys as /projections)
   const [phoneHours] = usePersistedState("proj-phoneHours", DEFAULT_HOURS);
   const [callsPerHour] = usePersistedState("proj-callsPerHour", DEFAULT_CALLS_PER_HOUR);
   const [connectsPerHour] = usePersistedState("proj-connectsPerHour", DEFAULT_CONNECTS_PER_HOUR);
@@ -161,8 +174,8 @@ function PerformanceSummaryContent() {
 
   const currentWeek = getCurrentWeek();
 
-  // Per-person daily projections
-  const projPerPersonDaily = useMemo(() => {
+  // Per-TEAM daily projections (projections page = 1 team output)
+  const projTeamDaily = useMemo(() => {
     const dailyBookings = phoneHours * bookingsPerHour;
     const dailyAttended = dailyBookings * attendanceRate;
     const dailyDeals = dailyAttended * closeRate;
@@ -183,7 +196,7 @@ function PerformanceSummaryContent() {
       await Promise.all(
         allSlugs.map(async (slug) => {
           try {
-            const res = await fetch(`/api/activity/all?trainee_slug=${slug}`);
+            const res = await fetch("/api/activity/all?trainee_slug=" + slug);
             const json = await res.json();
             dataMap.set(slug, json.records || []);
           } catch {
@@ -216,14 +229,12 @@ function PerformanceSummaryContent() {
     return dates.reduce((sum, d) => sum + getValue(slug, d, metric), 0);
   };
 
-  // Get projected weekly total for a team
-  const getTeamWeeklyProjected = (memberCount: number, weekNum: number, projKey: string): number => {
+  const getTeamWeeklyProjected = (weekNum: number, projKey: string): number => {
     const daysElapsed = weekNum < currentWeek ? 5 : getWorkingDaysElapsed(weekNum);
-    const perPersonDaily = (projPerPersonDaily as any)[projKey] || 0;
-    return perPersonDaily * memberCount * daysElapsed;
+    const teamDaily = (projTeamDaily as any)[projKey] || 0;
+    return teamDaily * daysElapsed;
   };
 
-  // Build weekly scorecard data per team
   const teamScorecards = useMemo(() => {
     const weeksToShow = Array.from({ length: currentWeek + 1 }, (_, i) => i);
 
@@ -232,13 +243,12 @@ function PerformanceSummaryContent() {
         const daysElapsed = weekNum < currentWeek ? 5 : getWorkingDaysElapsed(weekNum);
         const metricData = compMetrics.map((m) => {
           const actual = getTeamWeekTotal(pair.members, weekNum, m.key);
-          const projected = getTeamWeeklyProjected(pair.members.length, weekNum, m.projKey);
+          const projected = getTeamWeeklyProjected(weekNum, m.projKey);
           const pct = pctOf(actual, projected);
           const variance = actual - projected;
           return { ...m, actual, projected, pct, variance, daysElapsed };
         });
 
-        // Overall score: average of all metric percentages (weighted towards bookings/deals/revenue)
         const weights: Record<string, number> = { calls_made: 0.5, calls: 0.5, bookings: 2, meetings: 1.5, units: 2, revenue: 2.5 };
         const weightedSum = metricData.reduce((s, md) => s + md.pct * (weights[md.key] || 1), 0);
         const totalWeight = metricData.reduce((s, md) => s + (weights[md.key] || 1), 0);
@@ -247,28 +257,24 @@ function PerformanceSummaryContent() {
         return { weekNum, daysElapsed, metricData, overallPct };
       });
 
-      // Trends: compare each week's overall % to previous
       const weekDataWithTrend = weekData.map((wd, idx) => {
         const prevPct = idx > 0 ? weekData[idx - 1].overallPct : null;
         const trend = trendArrow(wd.overallPct, prevPct);
         return { ...wd, trend };
       });
 
-      // Per-person breakdown for current week
       const personBreakdown = pair.members.map((slug) => {
+        const role = slug === pair.leadGen ? "Lead Gen" : "Closer";
         const data = compMetrics.map((m) => {
           const actual = getPersonWeekTotal(slug, currentWeek, m.key);
-          const daysElapsed = getWorkingDaysElapsed(currentWeek);
-          const projected = (projPerPersonDaily as any)[m.projKey] * daysElapsed;
-          const pct = pctOf(actual, projected);
-          return { ...m, actual, projected, pct };
+          return { ...m, actual };
         });
-        return { slug, name: getShortName(slug), data };
+        return { slug, name: getShortName(slug), role, data };
       });
 
       return { pair, weekData: weekDataWithTrend, personBreakdown };
     });
-  }, [allData, currentWeek, projPerPersonDaily]);
+  }, [allData, currentWeek, projTeamDaily]);
 
   if (isLoading) {
     return (
@@ -281,9 +287,17 @@ function PerformanceSummaryContent() {
     );
   }
 
+  const weeklyProj = {
+    calls: Math.round(projTeamDaily.calls * 5),
+    connects: Math.round(projTeamDaily.connects * 5),
+    bookings: Math.round(projTeamDaily.bookings * 5),
+    attended: +(projTeamDaily.attended * 5).toFixed(1),
+    deals: +(projTeamDaily.deals * 5).toFixed(1),
+    revenue: Math.round(projTeamDaily.revenue * 5),
+  };
+
   return (
     <main className="min-h-screen bg-slate-100">
-      {/* Header */}
       <header className="bg-slate-900 text-white">
         <div className="max-w-[1400px] mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -296,7 +310,7 @@ function PerformanceSummaryContent() {
               <div>
                 <h1 className="text-lg font-bold flex items-center gap-2">📊 Performance vs Projections</h1>
                 <p className="text-slate-400 text-[11px]">
-                  Weekly scorecard · Projected: {phoneHours}hrs × {bookingsPerHour} bkgs/hr × {Math.round(attendanceRate * 100)}% att × {Math.round(closeRate * 100)}% close × ${dealValue}
+                  Weekly team target: {weeklyProj.calls} calls · {weeklyProj.connects} conn · {weeklyProj.bookings} bkgs · {weeklyProj.attended} att · {weeklyProj.deals} deals · ${weeklyProj.revenue.toLocaleString()} rev
                 </p>
               </div>
             </div>
@@ -314,28 +328,27 @@ function PerformanceSummaryContent() {
 
       <div className="max-w-[1400px] mx-auto px-4 py-5 space-y-6">
 
-        {/* ═══ TEAM CARDS ═══ */}
         {teamScorecards.map(({ pair, weekData, personBreakdown }) => {
-          const tc = teamColors[pair.color] || teamColors.slate;
+          const tc = teamColors[pair.color] || teamColors.indigo;
           const latestWeek = weekData[weekData.length - 1];
           const latestTL = latestWeek ? trafficLight(latestWeek.overallPct) : trafficLight(0);
 
           return (
             <div key={pair.label} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-
-              {/* Sticky team header */}
-              <div className={`${tc.header} text-white px-5 py-3 sticky top-0 z-30`}>
+              <div className={tc.header + " text-white px-5 py-3 sticky top-0 z-30"}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <h2 className="text-base font-bold">{pair.label}</h2>
-                    <span className="text-white/60 text-xs">{pair.members.map(getShortName).join(" + ")}</span>
+                    <span className="text-white/60 text-xs">
+                      {getShortName(pair.leadGen)} (LG) + {getShortName(pair.closer)} (C)
+                    </span>
                   </div>
                   {latestWeek && (
                     <div className="flex items-center gap-3">
-                      <span className={`text-xs font-bold ${latestWeek.trend.color} bg-white/90 px-2 py-0.5 rounded-full`}>
+                      <span className={latestWeek.trend.color + " text-xs font-bold bg-white/90 px-2 py-0.5 rounded-full"}>
                         {latestWeek.trend.icon} {latestWeek.trend.label}
                       </span>
-                      <span className={`text-xs font-bold bg-white/90 px-2 py-0.5 rounded-full ${latestTL.text}`}>
+                      <span className={latestTL.text + " text-xs font-bold bg-white/90 px-2 py-0.5 rounded-full"}>
                         {Math.round(latestWeek.overallPct)}% of target
                       </span>
                     </div>
@@ -343,30 +356,18 @@ function PerformanceSummaryContent() {
                 </div>
               </div>
 
-              {/* Week-on-week grid */}
               <div className="overflow-x-auto">
                 <table className="w-full text-[11px]">
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-200">
                       <th className="text-left px-3 py-2 text-gray-500 font-semibold text-[10px] uppercase tracking-wide w-[90px]">Week</th>
                       {compMetrics.map((m) => (
-                        <th key={m.key} className="text-center px-2 py-2 text-gray-500 font-semibold text-[10px] uppercase tracking-wide" colSpan={2}>
+                        <th key={m.key} className="text-center px-2 py-2 text-gray-500 font-semibold text-[10px] uppercase tracking-wide min-w-[110px]">
                           {m.emoji} {m.label}
                         </th>
                       ))}
                       <th className="text-center px-2 py-2 text-gray-500 font-semibold text-[10px] uppercase tracking-wide w-[70px]">Score</th>
                       <th className="text-center px-2 py-2 text-gray-500 font-semibold text-[10px] uppercase tracking-wide w-[60px]">Trend</th>
-                    </tr>
-                    <tr className="bg-gray-50/50 border-b border-gray-100">
-                      <th></th>
-                      {compMetrics.map((m) => (
-                        <React.Fragment key={m.key}>
-                          <th className="text-center px-1 py-1 text-gray-400 font-normal text-[9px]">Act</th>
-                          <th className="text-center px-1 py-1 text-gray-400 font-normal text-[9px]">Proj</th>
-                        </React.Fragment>
-                      ))}
-                      <th></th>
-                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -379,7 +380,7 @@ function PerformanceSummaryContent() {
                       return (
                         <tr
                           key={wd.weekNum}
-                          className={`border-b border-gray-100 ${isNow ? "bg-[#E6017D]/5" : ""} ${!hasData ? "opacity-40" : ""}`}
+                          className={"border-b border-gray-100 " + (isNow ? "bg-[#E6017D]/5 " : "") + (!hasData ? "opacity-40" : "")}
                         >
                           <td className="px-3 py-2.5 font-semibold text-gray-700 whitespace-nowrap">
                             {wc.shortLabel}
@@ -389,20 +390,30 @@ function PerformanceSummaryContent() {
                           {wd.metricData.map((md) => {
                             const mtl = trafficLight(md.pct);
                             return (
-                              <React.Fragment key={md.key}>
-                                <td className={`px-1.5 py-2.5 text-center tabular-nums font-bold ${md.actual > 0 ? mtl.text : "text-gray-300"} ${md.actual > 0 ? mtl.bg : ""}`}>
-                                  {md.actual > 0 ? fmtVal(md.actual, md.key) : "–"}
-                                </td>
-                                <td className="px-1.5 py-2.5 text-center tabular-nums text-gray-400">
-                                  {fmtVal(md.projected, md.key)}
-                                </td>
-                              </React.Fragment>
+                              <td key={md.key} className={"px-2 py-2.5 text-center " + (md.actual > 0 ? mtl.bg : "")}>
+                                {md.actual > 0 ? (
+                                  <div>
+                                    <span className={"font-bold tabular-nums " + mtl.text}>
+                                      {fmtVal(md.actual, md.key)}
+                                    </span>
+                                    <span className="text-gray-400 mx-0.5">/</span>
+                                    <span className="text-gray-400 tabular-nums">
+                                      {fmtVal(md.projected, md.key)}
+                                    </span>
+                                    <div className={"text-[9px] font-semibold tabular-nums " + (md.variance >= 0 ? "text-emerald-600" : "text-red-500")}>
+                                      {fmtVar(md.variance, md.key)}
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <span className="text-gray-300">–</span>
+                                )}
+                              </td>
                             );
                           })}
                           <td className="px-2 py-2.5 text-center">
                             {hasData ? (
-                              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${tl.bg} ${tl.text}`}>
-                                <span className={`w-1.5 h-1.5 rounded-full ${tl.dot}`}></span>
+                              <span className={"inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold " + tl.bg + " " + tl.text}>
+                                <span className={"w-1.5 h-1.5 rounded-full " + tl.dot}></span>
                                 {Math.round(wd.overallPct)}%
                               </span>
                             ) : (
@@ -411,7 +422,7 @@ function PerformanceSummaryContent() {
                           </td>
                           <td className="px-2 py-2.5 text-center">
                             {hasData ? (
-                              <span className={`text-sm font-bold ${wd.trend.color}`} title={wd.trend.label}>
+                              <span className={"text-sm font-bold " + wd.trend.color} title={wd.trend.label}>
                                 {wd.trend.icon}
                               </span>
                             ) : (
@@ -425,32 +436,30 @@ function PerformanceSummaryContent() {
                 </table>
               </div>
 
-              {/* Current week per-person breakdown */}
-              <div className={`${tc.light} border-t ${tc.border} px-5 py-3`}>
+              <div className={tc.light + " border-t " + tc.border + " px-5 py-3"}>
                 <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-2">
                   This Week — Individual ({weekConfig[currentWeek]?.shortLabel})
                 </div>
-                <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${pair.members.length}, 1fr)` }}>
+                <div className="grid grid-cols-2 gap-3">
                   {personBreakdown.map((pb) => (
                     <div key={pb.slug} className="bg-white rounded-lg border border-gray-200 px-3 py-2">
-                      <div className="font-bold text-sm text-gray-800 mb-1.5">
-                        <Link href={`/scorecard/${pb.slug}`} className="hover:text-[#E6017D] transition-colors">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <Link href={"/scorecard/" + pb.slug} className="font-bold text-sm text-gray-800 hover:text-[#E6017D] transition-colors">
                           {pb.name}
                         </Link>
+                        <span className={"text-[9px] font-bold px-1.5 py-0.5 rounded-full " + (pb.role === "Lead Gen" ? "bg-blue-100 text-blue-600" : "bg-emerald-100 text-emerald-600")}>
+                          {pb.role}
+                        </span>
                       </div>
                       <div className="grid grid-cols-3 gap-x-3 gap-y-1">
-                        {pb.data.map((md) => {
-                          const mtl = trafficLight(md.pct);
-                          return (
-                            <div key={md.key} className="flex items-center gap-1">
-                              <span className="text-[10px]">{md.emoji}</span>
-                              <span className={`text-[11px] font-bold tabular-nums ${md.actual > 0 ? mtl.text : "text-gray-300"}`}>
-                                {md.actual > 0 ? fmtVal(md.actual, md.key) : "0"}
-                              </span>
-                              <span className="text-[9px] text-gray-400">/{fmtVal(md.projected, md.key)}</span>
-                            </div>
-                          );
-                        })}
+                        {pb.data.map((md) => (
+                          <div key={md.key} className="flex items-center gap-1">
+                            <span className="text-[10px]">{md.emoji}</span>
+                            <span className={"text-[11px] font-bold tabular-nums " + (md.actual > 0 ? "text-gray-800" : "text-gray-300")}>
+                              {md.actual > 0 ? fmtVal(md.actual, md.key) : "0"}
+                            </span>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   ))}
@@ -460,11 +469,20 @@ function PerformanceSummaryContent() {
           );
         })}
 
-        {/* Projection source info */}
-        <div className="text-center text-[10px] text-gray-400 py-2">
-          Projections sourced from{" "}
-          <Link href="/projections" className="underline hover:text-gray-600">/projections</Link>
-          {" "}· Per-person daily: {fmtVal(projPerPersonDaily.calls, "calls_made")} calls · {fmtVal(projPerPersonDaily.connects, "calls")} conn · {fmtVal(projPerPersonDaily.bookings, "bookings")} bkgs · {fmtVal(projPerPersonDaily.attended, "meetings")} meet · {fmtVal(projPerPersonDaily.deals, "units")} deals · {fmtVal(projPerPersonDaily.revenue, "revenue")} rev
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <div className="text-xs font-bold text-gray-500 mb-2">Projection Inputs (per team/day)</div>
+          <div className="grid grid-cols-3 sm:grid-cols-7 gap-3 text-center text-[11px]">
+            <div><div className="text-gray-400">Phone hrs</div><div className="font-bold text-gray-800">{phoneHours}</div></div>
+            <div><div className="text-gray-400">Calls/hr</div><div className="font-bold text-gray-800">{callsPerHour}</div></div>
+            <div><div className="text-gray-400">Conn/hr</div><div className="font-bold text-gray-800">{connectsPerHour}</div></div>
+            <div><div className="text-gray-400">Bkgs/hr</div><div className="font-bold text-gray-800">{bookingsPerHour}</div></div>
+            <div><div className="text-gray-400">Attend %</div><div className="font-bold text-gray-800">{Math.round(attendanceRate * 100)}%</div></div>
+            <div><div className="text-gray-400">Close %</div><div className="font-bold text-gray-800">{Math.round(closeRate * 100)}%</div></div>
+            <div><div className="text-gray-400">Deal val</div><div className="font-bold text-gray-800">${dealValue}</div></div>
+          </div>
+          <div className="text-[10px] text-gray-400 mt-2 text-center">
+            Change these on the <Link href="/projections" className="underline hover:text-gray-600">Projections page</Link> — this page updates automatically
+          </div>
         </div>
       </div>
     </main>
