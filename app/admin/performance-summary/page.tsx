@@ -21,6 +21,30 @@ interface DailyRecord {
 
 type Metric = "calls_made" | "calls" | "bookings" | "meetings" | "units" | "revenue";
 
+interface MetricResult {
+  key: Metric;
+  label: string;
+  emoji: string;
+  projKey: string;
+  teamActual: number;
+  projected: number;
+  pct: number;
+  variance: number;
+  closerVal: number;
+  lgVal: number;
+  closerPct: number;
+  lgPct: number;
+  daysElapsed: number;
+}
+
+interface WeekData {
+  weekNum: number;
+  daysElapsed: number;
+  metricData: MetricResult[];
+  overallPct: number;
+  trend: { icon: string; label: string; color: string };
+}
+
 // ─── Projection defaults ───
 const DEFAULT_CALLS_PER_HOUR = 18;
 const DEFAULT_CONNECTS_PER_HOUR = 10;
@@ -146,11 +170,123 @@ function trendArrow(thisP: number, lastP: number | null): { icon: string; label:
   return { icon: "→", label: "Steady", color: "text-gray-500" };
 }
 
-const teamColors: Record<string, { header: string; headerRing: string; light: string; border: string; closerBg: string; lgBg: string }> = {
-  indigo: { header: "bg-indigo-600", headerRing: "ring-indigo-400", light: "bg-indigo-50", border: "border-indigo-200", closerBg: "bg-indigo-100 text-indigo-700", lgBg: "bg-indigo-50 text-indigo-600" },
-  pink: { header: "bg-pink-600", headerRing: "ring-pink-400", light: "bg-pink-50", border: "border-pink-200", closerBg: "bg-pink-100 text-pink-700", lgBg: "bg-pink-50 text-pink-600" },
-  amber: { header: "bg-amber-500", headerRing: "ring-amber-400", light: "bg-amber-50", border: "border-amber-200", closerBg: "bg-amber-100 text-amber-700", lgBg: "bg-amber-50 text-amber-600" },
+const teamColors: Record<string, { header: string; light: string; border: string; tab: string; tabActive: string }> = {
+  indigo: { header: "bg-indigo-600", light: "bg-indigo-50", border: "border-indigo-200", tab: "text-indigo-600 hover:bg-indigo-50", tabActive: "bg-indigo-600 text-white" },
+  pink: { header: "bg-pink-600", light: "bg-pink-50", border: "border-pink-200", tab: "text-pink-600 hover:bg-pink-50", tabActive: "bg-pink-600 text-white" },
+  amber: { header: "bg-amber-500", light: "bg-amber-50", border: "border-amber-200", tab: "text-amber-600 hover:bg-amber-50", tabActive: "bg-amber-500 text-white" },
 };
+
+// ═══════════════════════════════════════════
+// EXEC SUMMARY GENERATOR
+// ═══════════════════════════════════════════
+
+function generateExecSummary(
+  wd: WeekData,
+  closerName: string,
+  lgName: string,
+  currentWeek: number,
+  projTeamDaily: Record<string, number>,
+): string[] {
+  const lines: string[] = [];
+  const hasData = wd.metricData.some((md) => md.teamActual > 0);
+  if (!hasData) {
+    lines.push("No data recorded yet.");
+    return lines;
+  }
+
+  const isLive = wd.weekNum === currentWeek;
+  const dayLabel = isLive ? wd.daysElapsed + " of 5 days" : "5 of 5 days (complete)";
+
+  // 1. Overall status
+  const overallTL = trafficLight(wd.overallPct);
+  const overallWord = wd.overallPct >= 100 ? "on track" : wd.overallPct >= 75 ? "slightly behind" : "off track";
+  lines.push("📋 STATUS: Team is " + overallWord + " at " + Math.round(wd.overallPct) + "% of target (" + dayLabel + ")." + (isLive ? " Projections prorated to days elapsed." : ""));
+
+  // 2. Cut-through analysis
+  // Expected cut-throughs from projections: calls → connects, connects → bookings, bookings → attended, attended → deals
+  const calls = wd.metricData.find((m) => m.key === "calls_made");
+  const connects = wd.metricData.find((m) => m.key === "calls");
+  const bookings = wd.metricData.find((m) => m.key === "bookings");
+  const attended = wd.metricData.find((m) => m.key === "meetings");
+  const deals = wd.metricData.find((m) => m.key === "units");
+  const revenue = wd.metricData.find((m) => m.key === "revenue");
+
+  // Actual cut-through rates
+  const actualConnRate = calls && calls.teamActual > 0 ? (connects?.teamActual || 0) / calls.teamActual : 0;
+  const actualBkgRate = connects && connects.teamActual > 0 ? (bookings?.teamActual || 0) / connects.teamActual : 0;
+  const actualAttRate = bookings && bookings.teamActual > 0 ? (attended?.teamActual || 0) / bookings.teamActual : 0;
+  const actualCloseRate = attended && attended.teamActual > 0 ? (deals?.teamActual || 0) / attended.teamActual : 0;
+
+  // Expected cut-through rates from projections
+  const expConnRate = projTeamDaily.calls > 0 ? projTeamDaily.connects / projTeamDaily.calls : 0;
+  const expBkgRate = projTeamDaily.connects > 0 ? projTeamDaily.bookings / projTeamDaily.connects : 0;
+  const expAttRate = projTeamDaily.bookings > 0 ? projTeamDaily.attended / projTeamDaily.bookings : 0;
+  const expCloseRate = projTeamDaily.attended > 0 ? projTeamDaily.deals / projTeamDaily.attended : 0;
+
+  lines.push("");
+  lines.push("📊 CUT-THROUGH RATES (actual vs expected):");
+
+  const rateCheck = (label: string, actual: number, expected: number): string => {
+    const aPct = Math.round(actual * 100);
+    const ePct = Math.round(expected * 100);
+    const diff = aPct - ePct;
+    const status = diff >= 0 ? "✅" : diff >= -5 ? "⚠️" : "❌";
+    const diffStr = diff >= 0 ? "+" + diff + "pp" : diff + "pp";
+    return status + " " + label + ": " + aPct + "% (expected " + ePct + "%) " + diffStr;
+  };
+
+  if (calls && calls.teamActual > 0) lines.push(rateCheck("Calls → Connected", actualConnRate, expConnRate));
+  if (connects && connects.teamActual > 0) lines.push(rateCheck("Connected → Bookings", actualBkgRate, expBkgRate));
+  if (bookings && bookings.teamActual > 0) lines.push(rateCheck("Bookings → Attended", actualAttRate, expAttRate));
+  if (attended && attended.teamActual > 0) lines.push(rateCheck("Attended → Closed", actualCloseRate, expCloseRate));
+
+  // 3. Ahead / Behind breakdown
+  const ahead = wd.metricData.filter((md) => md.pct >= 100 && md.teamActual > 0);
+  const behind = wd.metricData.filter((md) => md.pct < 100 && md.teamActual > 0);
+
+  lines.push("");
+  if (ahead.length > 0) {
+    lines.push("✅ AHEAD on: " + ahead.map((m) => m.emoji + " " + m.label + " (" + fmtVal(m.teamActual, m.key) + " vs " + fmtVal(m.projected, m.key) + " target, " + fmtVar(m.variance, m.key) + ")").join(", "));
+  }
+  if (behind.length > 0) {
+    lines.push("❌ BEHIND on: " + behind.map((m) => m.emoji + " " + m.label + " (" + fmtVal(m.teamActual, m.key) + " vs " + fmtVal(m.projected, m.key) + " target, " + fmtVar(m.variance, m.key) + ")").join(", "));
+  }
+
+  // 4. Contribution split
+  lines.push("");
+  lines.push("👥 CONTRIBUTION SPLIT:");
+  const keyMetrics = wd.metricData.filter((m) => ["bookings", "meetings", "units", "revenue"].includes(m.key) && m.teamActual > 0);
+  for (const m of keyMetrics) {
+    const cPct = Math.round(m.closerPct);
+    const lPct = Math.round(m.lgPct);
+    const dominant = cPct > lPct ? closerName : lPct > cPct ? lgName : "Even";
+    lines.push(
+      m.emoji + " " + m.label + ": " + closerName + " " + fmtVal(m.closerVal, m.key) + " (" + cPct + "%) · " +
+      lgName + " " + fmtVal(m.lgVal, m.key) + " (" + lPct + "%)" +
+      (Math.abs(cPct - lPct) > 20 ? " ← " + dominant + " carrying" : "")
+    );
+  }
+
+  // 5. Trend
+  if (wd.trend.icon !== "—") {
+    lines.push("");
+    lines.push("📈 TREND: " + wd.trend.icon + " " + wd.trend.label + " vs previous week.");
+  }
+
+  // 6. Week-end wrap-up (only for completed weeks)
+  if (!isLive && wd.weekNum < currentWeek) {
+    lines.push("");
+    if (wd.overallPct >= 100) {
+      lines.push("🏁 WRAP-UP: Strong week. Team met or exceeded targets across " + ahead.length + " of " + (ahead.length + behind.length) + " metrics.");
+    } else if (wd.overallPct >= 75) {
+      lines.push("🏁 WRAP-UP: Reasonable week but gaps remain. Focus areas for next week: " + behind.map((m) => m.label.toLowerCase()).join(", ") + ".");
+    } else {
+      lines.push("🏁 WRAP-UP: Below expectations. " + behind.length + " of " + (ahead.length + behind.length) + " metrics missed. Key gaps: " + behind.slice(0, 3).map((m) => m.label.toLowerCase() + " (" + Math.round(m.pct) + "%)").join(", ") + ".");
+    }
+  }
+
+  return lines;
+}
 
 // ═══════════════════════════════════════════
 // MAIN
@@ -159,6 +295,8 @@ const teamColors: Record<string, { header: string; headerRing: string; light: st
 function PerformanceSummaryContent() {
   const [allData, setAllData] = useState<Map<string, DailyRecord[]>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
+  // Track selected exec summary tab per team
+  const [selectedTabs, setSelectedTabs] = useState<Record<string, number>>({});
 
   const [phoneHours] = usePersistedState("proj-phoneHours", DEFAULT_HOURS);
   const [callsPerHour] = usePersistedState("proj-callsPerHour", DEFAULT_CALLS_PER_HOUR);
@@ -170,7 +308,6 @@ function PerformanceSummaryContent() {
 
   const currentWeek = getCurrentWeek();
 
-  // Per-TEAM daily projections
   const projTeamDaily = useMemo(() => {
     const dailyBookings = phoneHours * bookingsPerHour;
     const dailyAttended = dailyBookings * attendanceRate;
@@ -202,6 +339,11 @@ function PerformanceSummaryContent() {
       );
       setAllData(dataMap);
       setIsLoading(false);
+
+      // Default all tabs to current week
+      const tabs: Record<string, number> = {};
+      buddyPairs.forEach((p) => { tabs[p.label] = getCurrentWeek(); });
+      setSelectedTabs(tabs);
     };
     fetchAll();
   }, []);
@@ -230,25 +372,18 @@ function PerformanceSummaryContent() {
       const closerName = getShortName(pair.closer);
       const lgName = getShortName(pair.leadGen);
 
-      const weekData = weeksToShow.map((weekNum) => {
+      const weekData: WeekData[] = weeksToShow.map((weekNum, idx) => {
         const daysElapsed = weekNum < currentWeek ? 5 : getWorkingDaysElapsed(weekNum);
-
-        const metricData = compMetrics.map((m) => {
+        const metricData: MetricResult[] = compMetrics.map((m) => {
           const closerVal = getPersonWeekTotal(pair.closer, weekNum, m.key);
           const lgVal = getPersonWeekTotal(pair.leadGen, weekNum, m.key);
           const teamActual = closerVal + lgVal;
           const projected = getTeamWeeklyProjected(weekNum, m.projKey);
           const pct = pctOf(teamActual, projected);
           const variance = teamActual - projected;
-
-          // Contribution percentages
           const closerPct = teamActual > 0 ? (closerVal / teamActual) * 100 : 0;
           const lgPct = teamActual > 0 ? (lgVal / teamActual) * 100 : 0;
-
-          return {
-            ...m, teamActual, projected, pct, variance, daysElapsed,
-            closerVal, lgVal, closerPct, lgPct,
-          };
+          return { ...m, teamActual, projected, pct, variance, closerVal, lgVal, closerPct, lgPct, daysElapsed };
         });
 
         const weights: Record<string, number> = { calls_made: 0.5, calls: 0.5, bookings: 2, meetings: 1.5, units: 2, revenue: 2.5 };
@@ -256,10 +391,11 @@ function PerformanceSummaryContent() {
         const totalWeight = metricData.reduce((s, md) => s + (weights[md.key] || 1), 0);
         const overallPct = totalWeight > 0 ? weightedSum / totalWeight : 0;
 
-        return { weekNum, daysElapsed, metricData, overallPct };
+        return { weekNum, daysElapsed, metricData, overallPct, trend: { icon: "—", label: "", color: "" } };
       });
 
-      const weekDataWithTrend = weekData.map((wd, idx) => {
+      // Add trends
+      const weekDataWithTrend: WeekData[] = weekData.map((wd, idx) => {
         const prevPct = idx > 0 ? weekData[idx - 1].overallPct : null;
         return { ...wd, trend: trendArrow(wd.overallPct, prevPct) };
       });
@@ -320,10 +456,22 @@ function PerformanceSummaryContent() {
 
       <div className="max-w-[1500px] mx-auto px-4 py-5 space-y-6">
 
+        {/* Score explanation */}
+        <div className="bg-white rounded-lg border border-gray-200 px-4 py-2 text-[10px] text-gray-500 flex items-center gap-4">
+          <span className="font-bold text-gray-600">Score = weighted avg across all metrics</span>
+          <span>📞🔗 Calls/Connected × 0.5</span>
+          <span>📅 Bookings × 2</span>
+          <span>🤝 Attended × 1.5</span>
+          <span>🏆 Deals × 2</span>
+          <span>💰 Revenue × 2.5</span>
+        </div>
+
         {teamScorecards.map(({ pair, closerName, lgName, weekData }) => {
           const tc = teamColors[pair.color] || teamColors.indigo;
           const latestWeek = weekData[weekData.length - 1];
           const latestTL = latestWeek ? trafficLight(latestWeek.overallPct) : trafficLight(0);
+          const activeTab = selectedTabs[pair.label] ?? currentWeek;
+          const activeWeekData = weekData.find((w) => w.weekNum === activeTab);
 
           return (
             <div key={pair.label} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
@@ -334,8 +482,8 @@ function PerformanceSummaryContent() {
                   <div className="flex items-center gap-3">
                     <h2 className="text-base font-bold">{pair.label}</h2>
                     <div className="flex items-center gap-2 text-xs">
-                      <span className="bg-white/20 px-2 py-0.5 rounded-full">{closerName} <span className="opacity-60">Closer</span></span>
-                      <span className="bg-white/20 px-2 py-0.5 rounded-full">{lgName} <span className="opacity-60">Lead Gen</span></span>
+                      <span className="bg-white/20 px-2 py-0.5 rounded-full"><span className="inline-block w-2 h-2 rounded-full bg-emerald-400 mr-1"></span>{closerName} <span className="opacity-60">Closer</span></span>
+                      <span className="bg-white/20 px-2 py-0.5 rounded-full"><span className="inline-block w-2 h-2 rounded-full bg-blue-400 mr-1"></span>{lgName} <span className="opacity-60">Lead Gen</span></span>
                     </div>
                   </div>
                   {latestWeek && (
@@ -351,7 +499,7 @@ function PerformanceSummaryContent() {
                 </div>
               </div>
 
-              {/* Table */}
+              {/* Scorecard table */}
               <div className="overflow-x-auto">
                 <table className="w-full text-[11px]">
                   <thead>
@@ -370,65 +518,53 @@ function PerformanceSummaryContent() {
                     {weekData.map((wd) => {
                       const wc = weekConfig[wd.weekNum];
                       const isNow = wd.weekNum === currentWeek;
+                      const isSelected = wd.weekNum === activeTab;
                       const tl = trafficLight(wd.overallPct);
                       const hasData = wd.metricData.some((md) => md.teamActual > 0);
 
                       return (
                         <tr
                           key={wd.weekNum}
-                          className={"border-b border-gray-100 " + (isNow ? "bg-[#E6017D]/5 " : "") + (!hasData ? "opacity-40" : "")}
+                          className={
+                            "border-b border-gray-100 cursor-pointer transition-colors " +
+                            (isSelected ? "ring-2 ring-inset ring-slate-400 " : "") +
+                            (isNow ? "bg-[#E6017D]/5 " : "") +
+                            (!hasData ? "opacity-40 " : "hover:bg-gray-50/70 ")
+                          }
+                          onClick={() => setSelectedTabs((prev) => ({ ...prev, [pair.label]: wd.weekNum }))}
                         >
                           <td className="px-3 py-3 font-semibold text-gray-700 whitespace-nowrap align-top">
-                            {wc.shortLabel}
-                            {isNow && <span className="ml-1 text-[8px] bg-[#E6017D] text-white px-1 py-0.5 rounded font-bold align-middle">NOW</span>}
-                            {isNow && wd.daysElapsed < 5 && <div className="text-gray-400 text-[9px]">{wd.daysElapsed} of 5 days</div>}
+                            <div className="flex items-center gap-1">
+                              {isSelected && <span className="text-[8px]">▶</span>}
+                              {wc.shortLabel}
+                            </div>
+                            {isNow && <span className="text-[8px] bg-[#E6017D] text-white px-1 py-0.5 rounded font-bold">NOW</span>}
+                            {isNow && wd.daysElapsed < 5 && <div className="text-gray-400 text-[9px]">{wd.daysElapsed}/5 days</div>}
                           </td>
 
                           {wd.metricData.map((md) => {
                             const mtl = trafficLight(md.pct);
                             const hasVal = md.teamActual > 0;
-
                             return (
                               <td key={md.key} className={"px-1.5 py-2 text-center align-top " + (hasVal ? mtl.bg : "")}>
                                 {hasVal ? (
                                   <div>
-                                    {/* Team total vs projected */}
                                     <div className="flex items-center justify-center gap-1">
-                                      <span className={"text-sm font-black tabular-nums " + mtl.text}>
-                                        {fmtVal(md.teamActual, md.key)}
-                                      </span>
+                                      <span className={"text-sm font-black tabular-nums " + mtl.text}>{fmtVal(md.teamActual, md.key)}</span>
                                       <span className="text-gray-300">/</span>
-                                      <span className="text-gray-400 tabular-nums text-[10px]">
-                                        {fmtVal(md.projected, md.key)}
-                                      </span>
+                                      <span className="text-gray-400 tabular-nums text-[10px]">{fmtVal(md.projected, md.key)}</span>
                                     </div>
-
-                                    {/* Variance */}
                                     <div className={"text-[9px] font-semibold tabular-nums " + (md.variance >= 0 ? "text-emerald-600" : "text-red-500")}>
                                       {fmtVar(md.variance, md.key)}
                                     </div>
-
-                                    {/* Per-person split bar */}
-                                    <div className="mt-1.5 mx-auto" style={{ maxWidth: "110px" }}>
+                                    <div className="mt-1 mx-auto" style={{ maxWidth: "100px" }}>
                                       <div className="flex h-1.5 rounded-full overflow-hidden bg-gray-200">
-                                        <div
-                                          className="bg-emerald-500 transition-all"
-                                          style={{ width: md.closerPct + "%" }}
-                                          title={closerName + ": " + fmtVal(md.closerVal, md.key)}
-                                        />
-                                        <div
-                                          className="bg-blue-400 transition-all"
-                                          style={{ width: md.lgPct + "%" }}
-                                          title={lgName + ": " + fmtVal(md.lgVal, md.key)}
-                                        />
+                                        <div className="bg-emerald-500 transition-all" style={{ width: md.closerPct + "%" }} title={closerName + ": " + fmtVal(md.closerVal, md.key)} />
+                                        <div className="bg-blue-400 transition-all" style={{ width: md.lgPct + "%" }} title={lgName + ": " + fmtVal(md.lgVal, md.key)} />
                                       </div>
                                       <div className="flex justify-between mt-0.5 text-[9px] tabular-nums">
-                                        <span className="text-emerald-600 font-semibold" title={closerName}>
-                                          {fmtVal(md.closerVal, md.key)}
-                                        </span>
-                                        <span className="text-blue-500 font-semibold" title={lgName}>
-                                          {fmtVal(md.lgVal, md.key)}
-                                        </span>
+                                        <span className="text-emerald-600 font-semibold">{fmtVal(md.closerVal, md.key)}</span>
+                                        <span className="text-blue-500 font-semibold">{fmtVal(md.lgVal, md.key)}</span>
                                       </div>
                                     </div>
                                   </div>
@@ -451,9 +587,7 @@ function PerformanceSummaryContent() {
                           </td>
                           <td className="px-2 py-3 text-center align-top">
                             {hasData ? (
-                              <span className={"text-sm font-bold " + wd.trend.color} title={wd.trend.label}>
-                                {wd.trend.icon}
-                              </span>
+                              <span className={"text-sm font-bold " + wd.trend.color} title={wd.trend.label}>{wd.trend.icon}</span>
                             ) : (
                               <span className="text-gray-300">–</span>
                             )}
@@ -465,11 +599,73 @@ function PerformanceSummaryContent() {
                 </table>
               </div>
 
-              {/* Legend for the split bar */}
-              <div className="px-5 py-2 border-t border-gray-100 flex items-center gap-4 text-[10px] text-gray-500">
+              {/* Split legend */}
+              <div className="px-5 py-1.5 border-t border-gray-100 flex items-center gap-4 text-[10px] text-gray-500">
                 <span className="font-semibold">Split:</span>
                 <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm bg-emerald-500"></span> {closerName} (Closer)</span>
                 <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm bg-blue-400"></span> {lgName} (Lead Gen)</span>
+                <span className="ml-auto text-gray-400 italic">Click a week row to see exec summary</span>
+              </div>
+
+              {/* ═══ TABBED EXEC SUMMARY ═══ */}
+              <div className={tc.light + " border-t " + tc.border}>
+
+                {/* Week tabs */}
+                <div className="flex items-center gap-1 px-5 pt-3 pb-0 overflow-x-auto">
+                  {weekData.map((wd) => {
+                    const wc = weekConfig[wd.weekNum];
+                    const isActive = wd.weekNum === activeTab;
+                    const hasData = wd.metricData.some((md) => md.teamActual > 0);
+                    const isLive = wd.weekNum === currentWeek;
+                    const tl = trafficLight(wd.overallPct);
+
+                    return (
+                      <button
+                        key={wd.weekNum}
+                        onClick={() => setSelectedTabs((prev) => ({ ...prev, [pair.label]: wd.weekNum }))}
+                        className={
+                          "px-3 py-1.5 rounded-t-lg text-xs font-bold transition-colors whitespace-nowrap " +
+                          (isActive ? tc.tabActive + " " : hasData ? tc.tab + " " : "text-gray-400 ") +
+                          (!hasData ? "opacity-40 " : "")
+                        }
+                      >
+                        {wc.shortLabel}
+                        {isLive && <span className="ml-1 text-[8px] opacity-70">●</span>}
+                        {!isActive && hasData && (
+                          <span className={"ml-1 inline-block w-1.5 h-1.5 rounded-full " + tl.dot}></span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Exec summary content */}
+                {activeWeekData && (
+                  <div className="px-5 pb-4 pt-2">
+                    <div className="bg-white rounded-xl border border-gray-200 p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-sm font-bold text-gray-800">
+                          {activeTab === currentWeek ? "📋 Live Summary" : "📋 Week Summary"} — {weekConfig[activeTab]?.label}
+                          {activeTab === currentWeek && <span className="ml-2 text-[10px] font-normal text-gray-400">(updates as data comes in)</span>}
+                          {activeTab < currentWeek && <span className="ml-2 text-[10px] font-normal text-gray-400">(final)</span>}
+                        </h3>
+                        <span className={
+                          "text-xs font-bold px-2 py-0.5 rounded-full " +
+                          trafficLight(activeWeekData.overallPct).bg + " " +
+                          trafficLight(activeWeekData.overallPct).text
+                        }>
+                          {Math.round(activeWeekData.overallPct)}% of target
+                        </span>
+                      </div>
+
+                      <div className="font-mono text-[11px] leading-relaxed text-gray-700 whitespace-pre-wrap">
+                        {generateExecSummary(activeWeekData, closerName, lgName, currentWeek, projTeamDaily).map((line, i) => (
+                          <div key={i} className={line === "" ? "h-2" : ""}>{line}</div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           );
