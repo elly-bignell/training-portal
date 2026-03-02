@@ -204,12 +204,11 @@ function ProjectionsContent() {
                 <p className="text-sm text-slate-400">Projected lead generation &amp; closing targets per person</p>
               </div>
             </div>
-            <Link
-              href="/forecast"
-              className="px-4 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2"
-            >
-              📈 Team Forecast →
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link href="/commissions-sales-staff" className="px-3 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-colors">💰 Sales Team Comms</Link>
+              <Link href="/commissions-lead-gen" className="px-3 py-2 bg-pink-600 text-white text-sm font-semibold rounded-lg hover:bg-pink-700 transition-colors">🎁 Lead Gen Comms</Link>
+              <Link href="/forecast" className="px-4 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2">📈 Team Forecast →</Link>
+            </div>
           </div>
         </div>
       </header>
