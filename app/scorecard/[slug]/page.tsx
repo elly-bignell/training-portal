@@ -35,7 +35,7 @@ function ScorecardPageContent() {
   }
 
   const showSeniorEaster = isSenior(slug);
-  const showJuniorEaster = isJunior(slug);
+  const showJuniorEaster = false; // isJunior(slug) — enable when ready
 
   return (
     <main className="min-h-screen bg-slate-100">
