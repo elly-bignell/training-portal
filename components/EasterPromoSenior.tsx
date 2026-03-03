@@ -37,7 +37,7 @@ export default function EasterPromoSenior({ traineeSlug, traineeName }: Props) {
             <span className="text-xl sm:text-2xl">🐣</span>
             <div>
               <h2 className="text-base sm:text-lg font-bold">Easter Promotion</h2>
-              <p className="text-pink-100 text-[10px] sm:text-xs">3 Mar – 1 Apr • Extension: 9–17 Apr</p>
+              <p className="text-pink-100 text-[10px] sm:text-xs">3 Mar – 1 Apr</p>
             </div>
           </div>
           <div className="text-right">
