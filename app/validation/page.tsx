@@ -446,7 +446,7 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
   const [rejectMode, setRejectMode] = useState<Record<string, boolean>>({});
   const [showFuture, setShowFuture] = useState(false);
 
-  const pendingBookings = bookings.filter((b) => b.status === "pending");
+  const pendingBookings = bookings.filter((b) => b.status === "pending" && ((b as any).na_count || 0) < 2);
   const today = toISODate(new Date());
 
   // Split pending bookings: yesterday & older vs today
@@ -769,6 +769,13 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
   const validated = filtered.filter((b) => b.status === "validated");
   const rejected = filtered.filter((b) => b.status === "rejected");
 
+  // NA × 2 bookings — removed from validation queue
+  const na2All = bookings.filter((b) => b.status === "pending" && ((b as any).na_count || 0) >= 2);
+  const na2Filtered = na2All.filter((b) => {
+    if (staffFilter !== "all" && b.staff_member !== staffFilter) return false;
+    return true;
+  });
+
   // N/A calls: pending bookings that were marked N/A on the selected date (or have any na_count if no date filter)
   const naCalls = bookings.filter((b) => {
     if (staffFilter !== "all" && b.staff_member !== staffFilter) return false;
@@ -900,6 +907,31 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
                 <h4 className="font-semibold text-sm text-slate-800">{b.business_name}</h4>
                 <p className="text-xs text-slate-500 mt-1">👤 {b.staff_member} · 🤝 {b.buddy}</p>
                 {b.contact_name && <p className="text-xs text-slate-400 mt-0.5">📇 {b.contact_name} {b.contact_phone ? `· 📞 ${b.contact_phone}` : ""}</p>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {/* NA × 2 — Removed from Queue */}
+      {na2Filtered.length > 0 && (
+        <div className="mt-6">
+          <h3 className="text-sm font-bold text-orange-700 mb-3 flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-orange-500"></span>
+            📞 NA × 2 — Removed from Queue ({na2Filtered.length})
+          </h3>
+          <p className="text-xs text-gray-400 mb-3">Called twice with no answer — removed from the validation queue.</p>
+          <div className="grid grid-cols-2 gap-3">
+            {na2Filtered.map((b) => (
+              <div key={b.id} className="rounded-lg border-2 border-orange-200 bg-orange-50/50 p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-[10px] font-bold rounded-full uppercase">
+                    📞 NA × {(b as any).na_count || 0}
+                  </span>
+                  <span className="text-[10px] text-gray-400">{formatDate(b.booking_date)}</span>
+                </div>
+                <h4 className="font-semibold text-sm text-slate-800">{b.business_name}</h4>
+                <p className="text-xs text-slate-500 mt-1">👤 {b.staff_member} · 🤝 {b.buddy}</p>
+                {b.contact_name && <p className="text-xs text-slate-400 mt-0.5">📇 {b.contact_name} {b.contact_phone ? ` · 📞 ${b.contact_phone}` : ""}</p>}
               </div>
             ))}
           </div>
