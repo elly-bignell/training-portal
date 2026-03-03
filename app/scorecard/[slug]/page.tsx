@@ -5,8 +5,11 @@
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { getTraineeBySlug } from "@/data/trainees";
+import { isSenior, isJunior } from "@/data/buddyPairs";
 import PasswordGate from "@/components/PasswordGate";
 import Scorecard from "@/components/Scorecard";
+import EasterPromoSenior from "@/components/EasterPromoSenior";
+import EasterPromoJunior from "@/components/EasterPromoJunior";
 
 function ScorecardPageContent() {
   const params = useParams();
@@ -30,6 +33,9 @@ function ScorecardPageContent() {
       </main>
     );
   }
+
+  const showSeniorEaster = isSenior(slug);
+  const showJuniorEaster = isJunior(slug);
 
   return (
     <main className="min-h-screen bg-slate-100">
@@ -72,12 +78,21 @@ function ScorecardPageContent() {
         </div>
       </header>
 
-      {/* Scorecard */}
-      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
+      {/* Scorecard + Easter Promotion */}
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6">
+        {/* Existing Scorecard — untouched */}
         <Scorecard traineeSlug={slug} traineeName={trainee.name} />
+
+        {/* Easter Promotion Section */}
+        {showSeniorEaster && (
+          <EasterPromoSenior traineeSlug={slug} traineeName={trainee.name} />
+        )}
+        {showJuniorEaster && (
+          <EasterPromoJunior traineeSlug={slug} />
+        )}
         
         {/* Quick link back to training */}
-        <div className="mt-4 sm:mt-6 text-center">
+        <div className="text-center">
           <Link
             href={`/trainees/${slug}`}
             className="inline-flex items-center gap-2 text-xs sm:text-sm text-slate-500 hover:text-slate-700 transition-colors"
