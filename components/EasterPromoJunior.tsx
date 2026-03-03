@@ -24,7 +24,7 @@ export default function EasterPromoJunior({ traineeSlug, traineeName }: Props) {
     );
   }
 
-  const commission = totals.quodo_bookings * 100;
+  const commission = Math.max(totals.quodo_bookings, today.quodo_bookings) * 100;
 
   return (
     <div className="bg-white rounded-xl shadow-sm border-2 border-pink-200 overflow-hidden">
