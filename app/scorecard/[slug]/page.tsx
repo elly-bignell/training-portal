@@ -88,7 +88,7 @@ function ScorecardPageContent() {
           <EasterPromoSenior traineeSlug={slug} traineeName={trainee.name} />
         )}
         {showJuniorEaster && (
-          <EasterPromoJunior traineeSlug={slug} />
+          <EasterPromoJunior traineeSlug={slug} traineeName={trainee.name} />
         )}
         
         {/* Quick link back to training */}

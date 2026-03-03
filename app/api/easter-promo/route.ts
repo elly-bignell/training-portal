@@ -19,22 +19,18 @@ function getAdelaideDate(): string {
 }
 
 // GET - Fetch easter promo data
-// ?trainee_slug=xxx — today's record for this trainee
-// ?trainee_slug=xxx&all=true — all records for this trainee across promo period
-// ?senior_slug=xxx&buddy_totals=true — get buddy's closed count from this senior
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const traineeSlug = searchParams.get("trainee_slug");
-  const seniorSlug = searchParams.get("senior_slug");
-  const buddyTotals = searchParams.get("buddy_totals");
   const all = searchParams.get("all");
+  const allTeam = searchParams.get("all_team");
   const date = searchParams.get("date") || getAdelaideDate();
 
   try {
-    if (buddyTotals && seniorSlug) {
-      // Fetch total promo_closes_buddy for a specific senior across the whole promo
-      const filterFormula = `AND({trainee_slug} = "${seniorSlug}", OR(AND({date} >= "${PROMO_START}", {date} <= "${PROMO_END}"), AND({date} >= "${EXTENSION_START}", {date} <= "${EXTENSION_END}")))`;
-      
+    // Fetch ALL team data (for admin summary)
+    if (allTeam) {
+      const filterFormula = `OR(AND({date} >= "${PROMO_START}", {date} <= "${PROMO_END}"), AND({date} >= "${EXTENSION_START}", {date} <= "${EXTENSION_END}"))`;
+
       const response = await fetch(
         `${AIRTABLE_URL}?filterByFormula=${encodeURIComponent(filterFormula)}`,
         {
@@ -49,12 +45,18 @@ export async function GET(request: NextRequest) {
       if (!response.ok) throw new Error(`Airtable error: ${response.status}`);
       const data = await response.json();
 
-      const totalBuddyCloses = data.records.reduce(
-        (sum: number, r: any) => sum + (r.fields.promo_closes_buddy || 0),
-        0
-      );
+      const records = data.records.map((r: any) => ({
+        id: r.id,
+        trainee_slug: r.fields.trainee_slug,
+        trainee_name: r.fields.trainee_name,
+        date: r.fields.date,
+        pitches: r.fields.pitches || 0,
+        promo_closes_own: r.fields.promo_closes_own || 0,
+        promo_closes_buddy: r.fields.promo_closes_buddy || 0,
+        quodo_bookings: r.fields.quodo_bookings || 0,
+      }));
 
-      return NextResponse.json({ totalBuddyCloses });
+      return NextResponse.json({ records });
     }
 
     if (!traineeSlug) {
@@ -64,10 +66,8 @@ export async function GET(request: NextRequest) {
     let filterFormula: string;
 
     if (all) {
-      // All records for this trainee during promo period
       filterFormula = `AND({trainee_slug} = "${traineeSlug}", OR(AND({date} >= "${PROMO_START}", {date} <= "${PROMO_END}"), AND({date} >= "${EXTENSION_START}", {date} <= "${EXTENSION_END}")))`;
     } else {
-      // Single day
       filterFormula = `AND({trainee_slug} = "${traineeSlug}", {date} = "${date}")`;
     }
 
@@ -92,6 +92,7 @@ export async function GET(request: NextRequest) {
         pitches: r.fields.pitches || 0,
         promo_closes_own: r.fields.promo_closes_own || 0,
         promo_closes_buddy: r.fields.promo_closes_buddy || 0,
+        quodo_bookings: r.fields.quodo_bookings || 0,
       }));
 
       const totals = records.reduce(
@@ -99,8 +100,9 @@ export async function GET(request: NextRequest) {
           pitches: acc.pitches + r.pitches,
           promo_closes_own: acc.promo_closes_own + r.promo_closes_own,
           promo_closes_buddy: acc.promo_closes_buddy + r.promo_closes_buddy,
+          quodo_bookings: acc.quodo_bookings + r.quodo_bookings,
         }),
-        { pitches: 0, promo_closes_own: 0, promo_closes_buddy: 0 }
+        { pitches: 0, promo_closes_own: 0, promo_closes_buddy: 0, quodo_bookings: 0 }
       );
 
       return NextResponse.json({ records, totals });
@@ -115,6 +117,7 @@ export async function GET(request: NextRequest) {
         pitches: record.fields.pitches || 0,
         promo_closes_own: record.fields.promo_closes_own || 0,
         promo_closes_buddy: record.fields.promo_closes_buddy || 0,
+        quodo_bookings: record.fields.quodo_bookings || 0,
       });
     }
 
@@ -124,6 +127,7 @@ export async function GET(request: NextRequest) {
       pitches: 0,
       promo_closes_own: 0,
       promo_closes_buddy: 0,
+      quodo_bookings: 0,
     });
   } catch (error) {
     console.error("Error fetching easter promo data:", error);
@@ -135,7 +139,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { trainee_slug, trainee_name, pitches, promo_closes_own, promo_closes_buddy } = body;
+    const { trainee_slug, trainee_name, pitches, promo_closes_own, promo_closes_buddy, quodo_bookings } = body;
     const date = body.date || getAdelaideDate();
 
     if (!trainee_slug) {
@@ -165,6 +169,7 @@ export async function POST(request: NextRequest) {
       pitches: pitches || 0,
       promo_closes_own: promo_closes_own || 0,
       promo_closes_buddy: promo_closes_buddy || 0,
+      quodo_bookings: quodo_bookings || 0,
       last_updated: new Date().toISOString(),
     };
 

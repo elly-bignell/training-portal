@@ -6,12 +6,14 @@ interface EasterPromoDaily {
   pitches: number;
   promo_closes_own: number;
   promo_closes_buddy: number;
+  quodo_bookings: number;
 }
 
 interface EasterPromoTotals {
   pitches: number;
   promo_closes_own: number;
   promo_closes_buddy: number;
+  quodo_bookings: number;
 }
 
 export function useEasterPromo(traineeSlug: string, traineeName: string) {
@@ -19,11 +21,13 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
     pitches: 0,
     promo_closes_own: 0,
     promo_closes_buddy: 0,
+    quodo_bookings: 0,
   });
   const [totals, setTotals] = useState<EasterPromoTotals>({
     pitches: 0,
     promo_closes_own: 0,
     promo_closes_buddy: 0,
+    quodo_bookings: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -37,6 +41,7 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
           pitches: data.pitches || 0,
           promo_closes_own: data.promo_closes_own || 0,
           promo_closes_buddy: data.promo_closes_buddy || 0,
+          quodo_bookings: data.quodo_bookings || 0,
         });
       }
     } catch (e) {
@@ -98,28 +103,4 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
   );
 
   return { today, totals, isLoading, isSaving, increment, refresh: () => { fetchToday(); fetchTotals(); } };
-}
-
-// Separate hook for juniors to fetch their buddy close count
-export function useBuddyCloses(seniorSlug: string) {
-  const [totalCloses, setTotalCloses] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const fetch_ = useCallback(async () => {
-    try {
-      const res = await fetch(`/api/easter-promo?senior_slug=${seniorSlug}&buddy_totals=true`);
-      const data = await res.json();
-      if (data && !data.error) {
-        setTotalCloses(data.totalBuddyCloses || 0);
-      }
-    } catch (e) {
-      console.error("Error fetching buddy closes:", e);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [seniorSlug]);
-
-  useEffect(() => { fetch_(); }, [fetch_]);
-
-  return { totalCloses, isLoading, refresh: fetch_ };
 }
