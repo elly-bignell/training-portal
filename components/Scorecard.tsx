@@ -351,8 +351,8 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
               weeklyTarget={weeklyStandard.units}
               color="bg-gradient-to-br from-pink-500 to-[#E6017D]"
               icon="🎯"
-              onIncrement={() => incrementMetric("units", 1)}
-              onDecrement={() => incrementMetric("units", -1)}
+              onIncrement={() => incrementMetric("units", 0.5)}
+              onDecrement={() => incrementMetric("units", -0.5)}
               allowDecimal
               isSaving={isSaving}
             />
