@@ -1,6 +1,6 @@
 // hooks/useEasterPromo.ts
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 interface EasterPromoDaily {
   pitches: number;
@@ -32,17 +32,23 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
+  // Ref to track latest today values — prevents stale closure on rapid +1 taps
+  const todayRef = useRef(today);
+  todayRef.current = today;
+
   const fetchToday = useCallback(async () => {
     try {
       const res = await fetch(`/api/easter-promo?trainee_slug=${traineeSlug}`);
       const data = await res.json();
       if (data && !data.error) {
-        setToday({
+        const fresh = {
           pitches: data.pitches || 0,
           promo_closes_own: data.promo_closes_own || 0,
           promo_closes_buddy: data.promo_closes_buddy || 0,
           quodo_bookings: data.quodo_bookings || 0,
-        });
+        };
+        setToday(fresh);
+        todayRef.current = fresh;
       }
     } catch (e) {
       console.error("Error fetching easter promo today:", e);
@@ -83,24 +89,38 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
             ...data,
           }),
         });
-        await fetchTotals();
+        // Re-fetch BOTH today and totals from Airtable after save
+        await Promise.all([fetchToday(), fetchTotals()]);
       } catch (e) {
         console.error("Error saving easter promo:", e);
       } finally {
         setIsSaving(false);
       }
     },
-    [traineeSlug, traineeName, fetchTotals]
+    [traineeSlug, traineeName, fetchToday, fetchTotals]
   );
 
   const increment = useCallback(
     async (field: keyof EasterPromoDaily, amount: number = 1) => {
-      const updated = { ...today, [field]: Math.max(0, today[field] + amount) };
+      // Read from ref (always latest) instead of stale closure
+      const current = todayRef.current;
+      const updated = { ...current, [field]: Math.max(0, current[field] + amount) };
       setToday(updated);
+      todayRef.current = updated;
       await save(updated);
     },
-    [today, save]
+    [save]
   );
 
-  return { today, totals, isLoading, isSaving, increment, refresh: () => { fetchToday(); fetchTotals(); } };
+  return {
+    today,
+    totals,
+    isLoading,
+    isSaving,
+    increment,
+    refresh: () => {
+      fetchToday();
+      fetchTotals();
+    },
+  };
 }
