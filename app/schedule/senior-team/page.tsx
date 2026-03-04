@@ -175,29 +175,29 @@ export default function SeniorTeamSchedulePage() {
                     ))}
                   </tr>
 
-                  {/* 1:30–2:30 — Meeting 4 */}
+                  {/* 1:30–2:00 — Confirm Tomorrow Appts */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">1:30pm</td>
                     {DAYS.map((day) => (
+                      <td key={day} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
+                        <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Confirm Tomorrow Appts</div>
+                        <div className="text-[10px] text-gray-500 mt-1">1:30–2:00pm · 30min</div>
+                        <div className="text-[10px] text-sky-600 font-medium mt-1">Call or text depending on validation status</div>
+                      </td>
+                    ))}
+                  </tr>
+
+                  {/* 2:00–3:00 — Meeting 4 */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:00pm</td>
+                    {DAYS.map((day) => (
                       <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-emerald-50">
                         <div className="bg-emerald-100 text-emerald-700 rounded px-2 py-2 text-xs font-semibold">🤝 Meeting 4</div>
-                        <div className="text-[10px] text-gray-500 mt-1">1:30–2:30pm · 1hr</div>
+                        <div className="text-[10px] text-gray-500 mt-1">2:00–3:00pm · 1hr</div>
                       </td>
                     ))}
                   </tr>
-                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:00pm</td></tr>
-
-                  {/* 2:30–3:00 — Confirmation Calls */}
-                  <tr>
-                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:30pm</td>
-                    {DAYS.map((day) => (
-                      <td key={day} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
-                        <div className="bg-sky-100 text-sky-700 rounded px-2 py-1.5 text-xs font-semibold">📞 Confirmation Calls</div>
-                        <div className="text-[10px] text-gray-500 mt-1">2:30–3:00pm · 30min</div>
-                        <div className="text-[10px] text-sky-600 font-medium mt-1">Confirm tomorrow&apos;s meetings</div>
-                      </td>
-                    ))}
-                  </tr>
+                  <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">2:30pm</td></tr>
 
                   {/* 3:00–4:00 — Deal Calls */}
                   <tr>
@@ -245,7 +245,7 @@ export default function SeniorTeamSchedulePage() {
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-violet-100 border border-violet-200"></span><span className="text-gray-600">Briefing</span></div>
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-emerald-100 border border-emerald-200"></span><span className="text-gray-600">Meetings</span></div>
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-amber-100 border border-amber-200"></span><span className="text-gray-600">Validation</span></div>
-              <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-sky-100 border border-sky-200"></span><span className="text-gray-600">Confirmation</span></div>
+              <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-sky-100 border border-sky-200"></span><span className="text-gray-600">Confirm Appts</span></div>
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-pink-100 border border-pink-200"></span><span className="text-gray-600">Deal Calls</span></div>
             </div>
           </div>
@@ -302,15 +302,15 @@ export default function SeniorTeamSchedulePage() {
                     <td className="py-2 text-center text-gray-400">1:00–1:30</td>
                     <td className="py-2 text-right text-gray-400">30min</td>
                   </tr>
+                  <tr className="border-b border-gray-100 bg-sky-50/50">
+                    <td className="py-2 text-sky-700 font-medium">📞 Confirm Appts</td>
+                    <td className="py-2 text-center text-gray-600">1:30–2:00</td>
+                    <td className="py-2 text-right text-sky-700 font-semibold">30min</td>
+                  </tr>
                   <tr className="border-b border-gray-100 bg-emerald-50/50">
                     <td className="py-2 text-emerald-700 font-medium">🤝 Meeting 4</td>
-                    <td className="py-2 text-center text-gray-600">1:30–2:30</td>
+                    <td className="py-2 text-center text-gray-600">2:00–3:00</td>
                     <td className="py-2 text-right text-emerald-700 font-semibold">1hr</td>
-                  </tr>
-                  <tr className="border-b border-gray-100 bg-sky-50/50">
-                    <td className="py-2 text-sky-700 font-medium">📞 Confirmation Calls</td>
-                    <td className="py-2 text-center text-gray-600">2:30–3:00</td>
-                    <td className="py-2 text-right text-sky-700 font-semibold">30min</td>
                   </tr>
                   <tr className="border-b border-gray-100 bg-pink-50/50">
                     <td className="py-2 text-pink-700 font-medium">💰 Deal Calls</td>
@@ -330,7 +330,7 @@ export default function SeniorTeamSchedulePage() {
                   <tr className="border-t-2 border-gray-200">
                     <td className="py-2 text-gray-900 font-bold">Daily Total</td>
                     <td className="py-2 text-center text-gray-600 font-semibold">8:30–5:30</td>
-                    <td className="py-2 text-right text-gray-900 font-bold">5 meetings + 2hrs calls + 1hr admin</td>
+                    <td className="py-2 text-right text-gray-900 font-bold">5 meetings</td>
                   </tr>
                 </tbody>
               </table>
@@ -353,7 +353,7 @@ export default function SeniorTeamSchedulePage() {
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-700 leading-relaxed"><strong>Confirmation calls (2:30pm)</strong> — confirm all meetings booked for tomorrow are still attending</p>
+                  <p className="text-xs text-gray-700 leading-relaxed"><strong>Confirm tomorrow appts (1:30pm)</strong> — call or text tomorrow&apos;s meetings to confirm attendance</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
@@ -445,6 +445,43 @@ export default function SeniorTeamSchedulePage() {
                 </Link>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Priority Checklist */}
+        <div className="bg-white rounded-xl shadow-sm border-2 border-amber-200 p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-lg">⚡</span>
+            <div>
+              <h2 className="text-sm font-bold text-slate-800">Your Buddy Is Your Priority</h2>
+              <p className="text-[10px] text-gray-500">If a meeting drops out, follow this checklist in order</p>
+            </div>
+          </div>
+          <div className="space-y-3">
+            <div className="flex items-start gap-3 p-3 bg-amber-50 rounded-lg border border-amber-100">
+              <span className="w-6 h-6 rounded-full bg-amber-200 text-amber-800 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">1</span>
+              <div>
+                <p className="text-sm font-semibold text-gray-800">Check in with your buddy</p>
+                <p className="text-xs text-gray-600 mt-0.5">Are they ahead or behind on bookings? If behind, this is your opportunity to pitch in and help them hit their targets.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 p-3 bg-amber-50 rounded-lg border border-amber-100">
+              <span className="w-6 h-6 rounded-full bg-amber-200 text-amber-800 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</span>
+              <div>
+                <p className="text-sm font-semibold text-gray-800">Pull a task forward</p>
+                <p className="text-xs text-gray-600 mt-0.5">Condense a later task into the free slot — validation calls, confirm tomorrow&apos;s appts, or deal calls. This frees up time later in the day to jump on booking calls if your buddy needs support.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 p-3 bg-amber-50 rounded-lg border border-amber-100">
+              <span className="w-6 h-6 rounded-full bg-amber-200 text-amber-800 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</span>
+              <div>
+                <p className="text-sm font-semibold text-gray-800">Need to do something outside this schedule?</p>
+                <p className="text-xs text-gray-600 mt-0.5">Call Elly for approval first. No exceptions.</p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-4 p-3 bg-slate-800 rounded-lg text-center">
+            <p className="text-xs text-white font-semibold">Your buddy&apos;s success is your success. If they need bookings, that&apos;s your #1 job.</p>
           </div>
         </div>
 
