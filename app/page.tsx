@@ -326,6 +326,12 @@ function HomeContent() {
                     <span className="text-gray-600">Activity Scorecard</span>
                     <Link href={`/scorecard/${trainee.slug}`} className="text-blue-600 hover:underline">Open →</Link>
                   </div>
+                  {["lucas-tirri", "felipe-garcia", "dylan-munro"].includes(trainee.slug) && (
+                  <div className="flex items-center justify-between p-2 bg-amber-50 rounded sm:col-span-2">
+                    <span className="text-gray-600">📅 Daily Schedule</span>
+                    <Link href="/schedule/senior-team" className="text-blue-600 hover:underline">Open →</Link>
+                  </div>
+                  )}
                 </div>
               </div>
               );
