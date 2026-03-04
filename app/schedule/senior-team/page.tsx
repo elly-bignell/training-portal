@@ -206,7 +206,7 @@ export default function SeniorTeamSchedulePage() {
                       <td key={day} rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-pink-50">
                         <div className="bg-pink-100 text-pink-700 rounded px-2 py-2 text-xs font-semibold">💰 Deal Calls</div>
                         <div className="text-[10px] text-gray-500 mt-1">3:00–4:00pm · 1hr</div>
-                        <div className="text-[10px] text-pink-600 font-medium mt-1">Load &amp; close — follow up warm leads</div>
+                        <div className="text-[10px] text-pink-600 font-medium mt-1">Load &amp; close</div>
                       </td>
                     ))}
                   </tr>
@@ -361,7 +361,7 @@ export default function SeniorTeamSchedulePage() {
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-700 leading-relaxed">Revenue split 50/50 with buddy during buddy weeks — junior&apos;s half goes towards their monthly target</p>
+                  <p className="text-xs text-gray-700 leading-relaxed">Revenue split 50/50 with buddy during buddy weeks — lead gen&apos;s half goes towards their monthly target</p>
                 </div>
               </div>
             </div>
