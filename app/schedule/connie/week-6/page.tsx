@@ -24,9 +24,31 @@ function ConnieWeek6Content() {
                 <p className="text-sm text-slate-400">Week 6 — Final Buddy Week · Mon 30 Mar – Fri 3 Apr 2026</p>
               </div>
             </div>
-            <span className="px-3 py-1 bg-slate-700 text-slate-300 text-xs font-semibold rounded-full">
-              Week 6 — Final Buddy Week
-            </span>
+            <div className="flex items-center gap-2">
+
+              <Link href={`/schedule/connie/week-5`} className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-semibold rounded-lg transition-colors">
+
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+
+                Week 5
+
+              </Link>
+
+              <span className="px-3 py-1.5 bg-slate-700 text-slate-300 text-xs font-semibold rounded-full">
+
+                Week 6 — Final Buddy Week
+
+              </span>
+
+              <Link href={`/schedule/connie/week-7`} className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-semibold rounded-lg transition-colors">
+
+                Week 7
+
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+
+              </Link>
+
+            </div>
           </div>
         </div>
       </header>
@@ -89,7 +111,6 @@ function ConnieWeek6Content() {
                         <div className="bg-sky-100 text-sky-700 rounded px-2 py-2 text-xs font-semibold">📞 Call Block 1</div>
                         <div className="text-[10px] text-gray-500 mt-1">9:30am–12:30pm · 3hrs</div>
                         <div className="text-[10px] text-sky-600 font-semibold mt-1">Target: 3 bookings</div>
-                        <div className="text-[10px] text-amber-600 font-medium mt-1">🔍 Buddy runs validation calls on previous day&apos;s bookings</div>
                       </td>
                     ))}
                   </tr>

@@ -24,9 +24,31 @@ function ConnieWeek5Content() {
                 <p className="text-sm text-slate-400">Week 5 — Stepping Up · Mon 23 Mar – Fri 27 Mar 2026</p>
               </div>
             </div>
-            <span className="px-3 py-1 bg-slate-700 text-slate-300 text-xs font-semibold rounded-full">
-              Week 5 — Buddy Lead
-            </span>
+            <div className="flex items-center gap-2">
+
+              <Link href={`/schedule/connie/week-4`} className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-semibold rounded-lg transition-colors">
+
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+
+                Week 4
+
+              </Link>
+
+              <span className="px-3 py-1.5 bg-slate-700 text-slate-300 text-xs font-semibold rounded-full">
+
+                Week 5 — Buddy Lead
+
+              </span>
+
+              <Link href={`/schedule/connie/week-6`} className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-semibold rounded-lg transition-colors">
+
+                Week 6
+
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+
+              </Link>
+
+            </div>
           </div>
         </div>
       </header>
@@ -89,7 +111,6 @@ function ConnieWeek5Content() {
                         <div className="bg-sky-100 text-sky-700 rounded px-2 py-2 text-xs font-semibold">📞 Call Block 1</div>
                         <div className="text-[10px] text-gray-500 mt-1">9:30am–12:30pm · 3hrs</div>
                         <div className="text-[10px] text-sky-600 font-semibold mt-1">Target: 3 bookings</div>
-                        <div className="text-[10px] text-amber-600 font-medium mt-1">🔍 Buddy runs validation calls on previous day&apos;s bookings</div>
                       </td>
                     ))}
                   </tr>
