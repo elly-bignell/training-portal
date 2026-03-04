@@ -468,12 +468,19 @@ export default function SeniorTeamSchedulePage() {
             <div className="flex items-start gap-3 p-3 bg-amber-50 rounded-lg border border-amber-100">
               <span className="w-6 h-6 rounded-full bg-amber-200 text-amber-800 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</span>
               <div>
-                <p className="text-sm font-semibold text-gray-800">Pull a task forward</p>
-                <p className="text-xs text-gray-600 mt-0.5">Condense a later task into the free slot — validation calls, confirm tomorrow&apos;s appts, or deal calls. This frees up time later in the day to jump on booking calls if your buddy needs support.</p>
+                <p className="text-sm font-semibold text-gray-800">Can a meeting fill that spot?</p>
+                <p className="text-xs text-gray-600 mt-0.5">If you have a meeting later in the day, bring it forward to close the gap. Keep your schedule tight.</p>
               </div>
             </div>
             <div className="flex items-start gap-3 p-3 bg-amber-50 rounded-lg border border-amber-100">
               <span className="w-6 h-6 rounded-full bg-amber-200 text-amber-800 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</span>
+              <div>
+                <p className="text-sm font-semibold text-gray-800">Pull a task forward to free up time</p>
+                <p className="text-xs text-gray-600 mt-0.5">Condense validation calls or confirm appts into the gap. This frees up time later for you to jump on booking calls if your buddy needs support.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 p-3 bg-amber-50 rounded-lg border border-amber-100">
+              <span className="w-6 h-6 rounded-full bg-amber-200 text-amber-800 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">4</span>
               <div>
                 <p className="text-sm font-semibold text-gray-800">Need to do something outside this schedule?</p>
                 <p className="text-xs text-gray-600 mt-0.5">Call Elly for approval first. No exceptions.</p>
