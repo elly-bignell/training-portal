@@ -2,10 +2,11 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { trainees } from "@/data/trainees";
 import PasswordGate from "@/components/PasswordGate";
+import { usePersistedState } from "@/hooks/usePersistedState";
 
 // ─── Types ───
 interface DailyRecord {
@@ -20,6 +21,15 @@ interface DailyRecord {
 
 type Metric = "calls_made" | "calls" | "bookings" | "meetings" | "units" | "revenue";
 
+// ─── Projection defaults (same as projections page) ───
+const DEFAULT_CALLS_PER_HOUR = 18;
+const DEFAULT_CONNECTS_PER_HOUR = 10;
+const DEFAULT_BOOKINGS_PER_HOUR = 1.5;
+const DEFAULT_ATTENDANCE_RATE = 0.5;
+const DEFAULT_CLOSE_RATE = 0.5;
+const DEFAULT_HOURS = 3.5;
+const DEFAULT_DEAL_VALUE = 400;
+
 // ─── Buddy pairs ───
 const buddyPairs = [
   { label: "Lucas & Cindy", members: ["lucas-tirri", "cindy-rose-rondez-manrique"] },
@@ -29,16 +39,6 @@ const buddyPairs = [
 ];
 
 const allSlugs = buddyPairs.flatMap((p) => p.members);
-
-// ─── Daily team targets (same for every team, including Tom solo) ───
-const dailyTeamTargets: Record<Metric, number> = {
-  calls_made: 72,
-  calls: 40,
-  bookings: 7,
-  meetings: 3,
-  units: 1.5,
-  revenue: 600,
-};
 
 // ─── Metrics config ───
 const metrics: { key: Metric; label: string; shortLabel: string; format: (v: number) => string }[] = [
@@ -88,7 +88,6 @@ function getCurrentWeek(): number {
   return 0;
 }
 
-// ─── Cell colour for individual values ───
 function getCellBg(actual: number, target: number): string {
   if (target === 0 || actual === 0) return "";
   const pct = (actual / target) * 100;
@@ -97,7 +96,6 @@ function getCellBg(actual: number, target: number): string {
   return "bg-red-50 text-red-600";
 }
 
-// ─── Variance colour ───
 function getVarClass(variance: number): string {
   if (variance > 0) return "text-emerald-600 font-semibold";
   if (variance === 0) return "text-gray-400";
@@ -115,11 +113,15 @@ function formatVar(v: number, metric: Metric): string {
   return `${prefix}${v}`;
 }
 
-// ─── Get short first name ───
 function getShortName(slug: string): string {
   const t = trainees.find((t) => t.slug === slug);
   if (!t) return slug;
   return t.name.split(" ")[0];
+}
+
+function fmtTarget(v: number): string {
+  if (Number.isInteger(v)) return v.toString();
+  return v % 1 !== 0 ? v.toFixed(1) : v.toString();
 }
 
 // ─── Main Component ───
@@ -127,6 +129,31 @@ function PerformanceDashboardContent() {
   const [allData, setAllData] = useState<Map<string, DailyRecord[]>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
   const [collapsedWeeks, setCollapsedWeeks] = useState<Set<number>>(new Set());
+
+  // ─── Pull from same persisted state as projections page ───
+  const [phoneHours] = usePersistedState("proj-phoneHours", DEFAULT_HOURS);
+  const [callsPerHour] = usePersistedState("proj-callsPerHour", DEFAULT_CALLS_PER_HOUR);
+  const [connectsPerHour] = usePersistedState("proj-connectsPerHour", DEFAULT_CONNECTS_PER_HOUR);
+  const [bookingsPerHour] = usePersistedState("proj-bookingsPerHour", DEFAULT_BOOKINGS_PER_HOUR);
+  const [attendanceRate] = usePersistedState("proj-attendanceRate", DEFAULT_ATTENDANCE_RATE);
+  const [closeRate] = usePersistedState("proj-closeRate", DEFAULT_CLOSE_RATE);
+  const [dealValue] = usePersistedState("proj-dealValue", DEFAULT_DEAL_VALUE);
+
+  // ─── Computed daily team targets from projections ───
+  const dailyTeamTargets: Record<Metric, number> = useMemo(() => {
+    const dailyBookings = phoneHours * bookingsPerHour;
+    const dailyAttended = dailyBookings * attendanceRate;
+    const dailyDeals = dailyAttended * closeRate;
+    const dailyRevenue = dailyDeals * dealValue;
+    return {
+      calls_made: Math.round(phoneHours * callsPerHour),
+      calls: Math.round(phoneHours * connectsPerHour),
+      bookings: Math.round(dailyBookings * 10) / 10,
+      meetings: Math.round(dailyAttended * 10) / 10,
+      units: Math.round(dailyDeals * 10) / 10,
+      revenue: Math.round(dailyRevenue),
+    };
+  }, [phoneHours, callsPerHour, connectsPerHour, bookingsPerHour, attendanceRate, closeRate, dealValue]);
 
   const currentWeek = getCurrentWeek();
 
@@ -210,25 +237,40 @@ function PerformanceDashboardContent() {
             </Link>
             <div>
               <h1 className="text-lg font-bold">Performance Dashboard</h1>
-              <p className="text-slate-400 text-[11px]">Daily team target: 72 calls · 40 connected · 7 bookings · 3 meetings · 1.5 units · $600 rev</p>
+              <p className="text-slate-400 text-[11px]">
+                Daily team target: {fmtTarget(dailyTeamTargets.calls_made)} calls · {fmtTarget(dailyTeamTargets.calls)} connected · {fmtTarget(dailyTeamTargets.bookings)} bookings · {fmtTarget(dailyTeamTargets.meetings)} meetings · {fmtTarget(dailyTeamTargets.units)} units · ${dailyTeamTargets.revenue.toLocaleString()} rev
+              </p>
+              <p className="text-slate-500 text-[10px]">
+                Targets from <Link href="/projections" className="underline hover:text-slate-300">Projections</Link>: {phoneHours}hrs × {callsPerHour} calls/hr · {connectsPerHour} conn/hr · {bookingsPerHour} bkgs/hr · {Math.round(attendanceRate * 100)}% attend · {Math.round(closeRate * 100)}% close · ${dealValue}/deal
+              </p>
             </div>
           </div>
-          <div className="flex items-center gap-2"><Link href="/admin/performance-summary" className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 transition-colors">📊 vs Projections</Link><div className="flex items-center gap-2"><Link href="/admin/performance-summary" className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 transition-colors">📊 vs Projections</Link><div className="flex items-center gap-2"><Link href="/admin/performance-summary" className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 transition-colors">📊 vs Projections</Link><div className="flex items-center gap-2"><Link href="/admin/performance-summary" className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 transition-colors">📊 vs Projections</Link><Link href="/roadmap" className="text-xs text-slate-400 hover:text-white">Standards →</Link></div></div></div></div>
+          <div className="flex items-center gap-2">
+            <Link href="/admin/performance-summary" className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 transition-colors">
+              📊 vs Projections
+            </Link>
+            <Link href="/projections" className="px-3 py-1.5 bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg hover:bg-slate-600 transition-colors">
+              ⚙️ Edit Projections
+            </Link>
+            <Link href="/roadmap" className="text-xs text-slate-400 hover:text-white">
+              Standards →
+            </Link>
+          </div>
         </div>
       </header>
 
       {/* Table */}
       <div className="max-w-[1900px] mx-auto px-3 py-3">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" style={{ maxHeight: "calc(100vh - 160px)", overflowY: "auto" }}>
             <table className="w-full text-[11px] border-collapse" style={{ minWidth: "1100px" }}>
-              <thead>
+              <thead className="sticky top-0 z-40">
                 {/* Row 1: Buddy pair group headers */}
                 <tr className="bg-slate-800">
-                  <th className="sticky left-0 z-20 bg-slate-800 text-left px-2 py-2 text-slate-400 text-[10px] font-semibold uppercase tracking-wide w-[100px] border-r border-slate-700" rowSpan={2}>
+                  <th className="sticky left-0 z-50 bg-slate-800 text-left px-2 py-2 text-slate-400 text-[10px] font-semibold uppercase tracking-wide w-[100px] border-r border-slate-700" rowSpan={2}>
                     Day
                   </th>
-                  <th className="sticky left-[100px] z-20 bg-slate-800 text-center px-1 py-2 text-slate-400 text-[10px] font-semibold uppercase tracking-wide w-[56px] border-r border-slate-700" rowSpan={2}>
+                  <th className="sticky left-[100px] z-50 bg-slate-800 text-center px-1 py-2 text-slate-400 text-[10px] font-semibold uppercase tracking-wide w-[56px] border-r border-slate-700" rowSpan={2}>
                     Metric
                   </th>
                   {buddyPairs.map((pair, pIdx) => (
@@ -441,7 +483,10 @@ function PerformanceDashboardContent() {
           <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-emerald-50 border border-emerald-200"></span> ≥100%</span>
           <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-amber-50 border border-amber-200"></span> ≥75%</span>
           <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-red-50 border border-red-200"></span> &lt;75%</span>
-          <span className="ml-2 font-semibold">±Var = team actual − daily target ({dailyTeamTargets.calls_made}/{dailyTeamTargets.calls}/{dailyTeamTargets.bookings}/{dailyTeamTargets.meetings}/{dailyTeamTargets.units}/${dailyTeamTargets.revenue})</span>
+          <span className="ml-2 font-semibold">±Var = team actual − daily target ({fmtTarget(dailyTeamTargets.calls_made)}/{fmtTarget(dailyTeamTargets.calls)}/{fmtTarget(dailyTeamTargets.bookings)}/{fmtTarget(dailyTeamTargets.meetings)}/{fmtTarget(dailyTeamTargets.units)}/${dailyTeamTargets.revenue})</span>
+          <span className="ml-auto text-gray-400">
+            Targets from <Link href="/projections" className="underline hover:text-gray-600">Projections page</Link>
+          </span>
         </div>
       </div>
     </main>
