@@ -46,7 +46,7 @@ const metrics: { key: Metric; label: string; shortLabel: string; format: (v: num
   { key: "calls", label: "Connected", shortLabel: "Conn", format: (v) => v.toString() },
   { key: "bookings", label: "Bookings", shortLabel: "Book", format: (v) => v.toString() },
   { key: "meetings", label: "Meetings", shortLabel: "Meet", format: (v) => v.toString() },
-  { key: "units", label: "Sales Units", shortLabel: "Units", format: (v) => v % 1 !== 0 ? v.toFixed(1) : v.toString() },
+  { key: "units", label: "Sales Units", shortLabel: "Units", format: (v) => v % 1 !== 0 ? (Math.round(v * 100) / 100).toFixed(1) : v.toString() },
   { key: "revenue", label: "Revenue", shortLabel: "Rev", format: (v) => v > 0 ? `$${v.toLocaleString()}` : "$0" },
 ];
 
@@ -102,7 +102,8 @@ function getVarClass(variance: number): string {
   return "text-red-500 font-semibold";
 }
 
-function formatVar(v: number, metric: Metric): string {
+function formatVar(rawV: number, metric: Metric): string {
+  const v = Math.round(rawV * 100) / 100;
   const prefix = v > 0 ? "+" : "";
   if (metric === "revenue") {
     return v >= 0 ? `+$${v.toLocaleString()}` : `-$${Math.abs(v).toLocaleString()}`;
@@ -383,7 +384,7 @@ function PerformanceDashboardContent() {
 
                                   {buddyPairs.map((pair, pIdx) => {
                                     const teamTotal = getTeamDayTotal(pair.members, date, m.key);
-                                    const variance = teamTotal - target;
+                                    const variance = Math.round((teamTotal - target) * 100) / 100;
                                     const isLast = pIdx < buddyPairs.length - 1;
 
                                     return (
@@ -439,7 +440,7 @@ function PerformanceDashboardContent() {
                                 </td>
                                 {buddyPairs.map((pair, pIdx) => {
                                   const teamWeekTotal = getTeamWeekTotal(pair.members, weekNum, m.key);
-                                  const weekVar = teamWeekTotal - weeklyTarget;
+                                  const weekVar = Math.round((teamWeekTotal - weeklyTarget) * 100) / 100;
                                   const isLast = pIdx < buddyPairs.length - 1;
 
                                   return (
