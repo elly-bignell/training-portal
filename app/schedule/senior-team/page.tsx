@@ -101,7 +101,6 @@ export default function SeniorTeamSchedulePage() {
                       <td key={day} className="p-2 text-center border border-gray-200 align-middle bg-slate-50">
                         <div className="bg-slate-200 text-slate-700 rounded px-2 py-1.5 text-xs font-semibold">📋 Deal Admin</div>
                         <div className="text-[10px] text-gray-500 mt-1">8:30–9:00am · 30min</div>
-                        <div className="text-[10px] text-slate-600 font-medium mt-1">CRM updates · pipeline notes · prep for day</div>
                       </td>
                     ))}
                   </tr>
@@ -232,7 +231,6 @@ export default function SeniorTeamSchedulePage() {
                       <td key={day} className="p-2 text-center border border-gray-200 align-middle bg-slate-50">
                         <div className="bg-slate-200 text-slate-700 rounded px-2 py-1.5 text-xs font-semibold">📋 Deal Admin</div>
                         <div className="text-[10px] text-gray-500 mt-1">5:00–5:30pm · 30min</div>
-                        <div className="text-[10px] text-slate-600 font-medium mt-1">End-of-day CRM · update pipeline · log outcomes</div>
                       </td>
                     ))}
                   </tr>
