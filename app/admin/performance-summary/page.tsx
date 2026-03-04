@@ -7,6 +7,7 @@ import Link from "next/link";
 import { trainees } from "@/data/trainees";
 import PasswordGate from "@/components/PasswordGate";
 import { usePersistedState } from "@/hooks/usePersistedState";
+import EasterPromoAdmin from "@/components/EasterPromoAdmin";
 
 // ─── Types ───
 interface DailyRecord {
@@ -197,27 +198,20 @@ function generateExecSummary(
   const isLive = wd.weekNum === currentWeek;
   const dayLabel = isLive ? wd.daysElapsed + " of 5 days" : "5 of 5 days (complete)";
 
-  // 1. Overall status
-  const overallTL = trafficLight(wd.overallPct);
   const overallWord = wd.overallPct >= 100 ? "on track" : wd.overallPct >= 75 ? "slightly behind" : "off track";
   lines.push("📋 STATUS: Team is " + overallWord + " at " + Math.round(wd.overallPct) + "% of target (" + dayLabel + ")." + (isLive ? " Projections prorated to days elapsed." : ""));
 
-  // 2. Cut-through analysis
-  // Expected cut-throughs from projections: calls → connects, connects → bookings, bookings → attended, attended → deals
   const calls = wd.metricData.find((m) => m.key === "calls_made");
   const connects = wd.metricData.find((m) => m.key === "calls");
   const bookings = wd.metricData.find((m) => m.key === "bookings");
   const attended = wd.metricData.find((m) => m.key === "meetings");
   const deals = wd.metricData.find((m) => m.key === "units");
-  const revenue = wd.metricData.find((m) => m.key === "revenue");
 
-  // Actual cut-through rates
   const actualConnRate = calls && calls.teamActual > 0 ? (connects?.teamActual || 0) / calls.teamActual : 0;
   const actualBkgRate = connects && connects.teamActual > 0 ? (bookings?.teamActual || 0) / connects.teamActual : 0;
   const actualAttRate = bookings && bookings.teamActual > 0 ? (attended?.teamActual || 0) / bookings.teamActual : 0;
   const actualCloseRate = attended && attended.teamActual > 0 ? (deals?.teamActual || 0) / attended.teamActual : 0;
 
-  // Expected cut-through rates from projections
   const expConnRate = projTeamDaily.calls > 0 ? projTeamDaily.connects / projTeamDaily.calls : 0;
   const expBkgRate = projTeamDaily.connects > 0 ? projTeamDaily.bookings / projTeamDaily.connects : 0;
   const expAttRate = projTeamDaily.bookings > 0 ? projTeamDaily.attended / projTeamDaily.bookings : 0;
@@ -240,7 +234,6 @@ function generateExecSummary(
   if (bookings && bookings.teamActual > 0) lines.push(rateCheck("Bookings → Attended", actualAttRate, expAttRate));
   if (attended && attended.teamActual > 0) lines.push(rateCheck("Attended → Closed", actualCloseRate, expCloseRate));
 
-  // 3. Ahead / Behind breakdown
   const ahead = wd.metricData.filter((md) => md.pct >= 100 && md.teamActual > 0);
   const behind = wd.metricData.filter((md) => md.pct < 100 && md.teamActual > 0);
 
@@ -252,7 +245,6 @@ function generateExecSummary(
     lines.push("❌ BEHIND on: " + behind.map((m) => m.emoji + " " + m.label + " (" + fmtVal(m.teamActual, m.key) + " vs " + fmtVal(m.projected, m.key) + " target, " + fmtVar(m.variance, m.key) + ")").join(", "));
   }
 
-  // 4. Contribution split
   lines.push("");
   lines.push("👥 CONTRIBUTION SPLIT:");
   const keyMetrics = wd.metricData.filter((m) => ["bookings", "meetings", "units", "revenue"].includes(m.key) && m.teamActual > 0);
@@ -267,13 +259,11 @@ function generateExecSummary(
     );
   }
 
-  // 5. Trend
   if (wd.trend.icon !== "—") {
     lines.push("");
     lines.push("📈 TREND: " + wd.trend.icon + " " + wd.trend.label + " vs previous week.");
   }
 
-  // 6. Week-end wrap-up (only for completed weeks)
   if (!isLive && wd.weekNum < currentWeek) {
     lines.push("");
     if (wd.overallPct >= 100) {
@@ -295,8 +285,8 @@ function generateExecSummary(
 function PerformanceSummaryContent() {
   const [allData, setAllData] = useState<Map<string, DailyRecord[]>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
-  // Track selected exec summary tab per team
   const [selectedTabs, setSelectedTabs] = useState<Record<string, number>>({});
+  const [pageTab, setPageTab] = useState<"performance" | "easter">("performance");
 
   const [phoneHours] = usePersistedState("proj-phoneHours", DEFAULT_HOURS);
   const [callsPerHour] = usePersistedState("proj-callsPerHour", DEFAULT_CALLS_PER_HOUR);
@@ -340,7 +330,6 @@ function PerformanceSummaryContent() {
       setAllData(dataMap);
       setIsLoading(false);
 
-      // Default all tabs to current week
       const tabs: Record<string, number> = {};
       buddyPairs.forEach((p) => { tabs[p.label] = getCurrentWeek(); });
       setSelectedTabs(tabs);
@@ -394,7 +383,6 @@ function PerformanceSummaryContent() {
         return { weekNum, daysElapsed, metricData, overallPct, trend: { icon: "—", label: "", color: "" } };
       });
 
-      // Add trends
       const weekDataWithTrend: WeekData[] = weekData.map((wd, idx) => {
         const prevPct = idx > 0 ? weekData[idx - 1].overallPct : null;
         return { ...wd, trend: trendArrow(wd.overallPct, prevPct) };
@@ -404,7 +392,7 @@ function PerformanceSummaryContent() {
     });
   }, [allData, currentWeek, projTeamDaily]);
 
-  if (isLoading) {
+  if (isLoading && pageTab === "performance") {
     return (
       <main className="min-h-screen bg-slate-100 flex items-center justify-center">
         <div className="flex items-center gap-2 text-gray-500">
@@ -436,258 +424,307 @@ function PerformanceSummaryContent() {
                 </svg>
               </Link>
               <div>
-                <h1 className="text-lg font-bold flex items-center gap-2">📊 Performance vs Projections</h1>
-                <p className="text-slate-400 text-[11px]">
-                  Weekly team target: {weeklyProj.calls} calls · {weeklyProj.connects} conn · {weeklyProj.bookings} bkgs · {weeklyProj.attended} att · {weeklyProj.deals} deals · ${weeklyProj.revenue.toLocaleString()} rev
-                </p>
+                <h1 className="text-lg font-bold flex items-center gap-2">
+                  {pageTab === "performance" ? "📊 Performance vs Projections" : "🐣 Easter Promotion"}
+                </h1>
+                {pageTab === "performance" && (
+                  <p className="text-slate-400 text-[11px]">
+                    Weekly team target: {weeklyProj.calls} calls · {weeklyProj.connects} conn · {weeklyProj.bookings} bkgs · {weeklyProj.attended} att · {weeklyProj.deals} deals · ${weeklyProj.revenue.toLocaleString()} rev
+                  </p>
+                )}
+                {pageTab === "easter" && (
+                  <p className="text-slate-400 text-[11px]">
+                    3rd March – 1st April 2026 • 10 express build spots • $100 lead gen commission per deal
+                  </p>
+                )}
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Link href="/projections" className="px-3 py-1.5 bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg hover:bg-slate-600 transition-colors">
-                ⚙️ Edit Projections
-              </Link>
-              <Link href="/admin/performance" className="px-3 py-1.5 bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg hover:bg-slate-600 transition-colors">
-                📋 Full Data →
-              </Link>
+              {pageTab === "performance" && (
+                <>
+                  <Link href="/projections" className="px-3 py-1.5 bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg hover:bg-slate-600 transition-colors">
+                    ⚙️ Edit Projections
+                  </Link>
+                  <Link href="/admin/performance" className="px-3 py-1.5 bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg hover:bg-slate-600 transition-colors">
+                    📋 Full Data →
+                  </Link>
+                </>
+              )}
             </div>
+          </div>
+
+          {/* ═══ PAGE TABS ═══ */}
+          <div className="flex items-center gap-1 mt-3 border-t border-slate-700 pt-3">
+            <button
+              onClick={() => setPageTab("performance")}
+              className={
+                "px-4 py-2 rounded-lg text-sm font-semibold transition-colors " +
+                (pageTab === "performance"
+                  ? "bg-white text-slate-900"
+                  : "text-slate-400 hover:text-white hover:bg-slate-700")
+              }
+            >
+              📊 Performance
+            </button>
+            <button
+              onClick={() => setPageTab("easter")}
+              className={
+                "px-4 py-2 rounded-lg text-sm font-semibold transition-colors " +
+                (pageTab === "easter"
+                  ? "bg-gradient-to-r from-pink-500 to-[#E6017D] text-white"
+                  : "text-slate-400 hover:text-white hover:bg-slate-700")
+              }
+            >
+              🐣 Easter Promotion
+            </button>
           </div>
         </div>
       </header>
 
-      <div className="max-w-[1500px] mx-auto px-4 py-5 space-y-6">
-
-        {/* Score explanation */}
-        <div className="bg-white rounded-lg border border-gray-200 px-4 py-2 text-[10px] text-gray-500 flex items-center gap-4">
-          <span className="font-bold text-gray-600">Score = weighted avg across all metrics</span>
-          <span>📞🔗 Calls/Connected × 0.5</span>
-          <span>📅 Bookings × 2</span>
-          <span>🤝 Attended × 1.5</span>
-          <span>🏆 Deals × 2</span>
-          <span>💰 Revenue × 2.5</span>
+      {/* ═══ EASTER PROMOTION TAB ═══ */}
+      {pageTab === "easter" && (
+        <div className="max-w-[1500px] mx-auto px-4 py-5">
+          <EasterPromoAdmin />
         </div>
+      )}
 
-        {teamScorecards.map(({ pair, closerName, lgName, weekData }) => {
-          const tc = teamColors[pair.color] || teamColors.indigo;
-          const latestWeek = weekData[weekData.length - 1];
-          const latestTL = latestWeek ? trafficLight(latestWeek.overallPct) : trafficLight(0);
-          const activeTab = selectedTabs[pair.label] ?? currentWeek;
-          const activeWeekData = weekData.find((w) => w.weekNum === activeTab);
+      {/* ═══ PERFORMANCE TAB (existing content, unchanged) ═══ */}
+      {pageTab === "performance" && (
+        <div className="max-w-[1500px] mx-auto px-4 py-5 space-y-6">
 
-          return (
-            <div key={pair.label} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+          {/* Score explanation */}
+          <div className="bg-white rounded-lg border border-gray-200 px-4 py-2 text-[10px] text-gray-500 flex items-center gap-4">
+            <span className="font-bold text-gray-600">Score = weighted avg across all metrics</span>
+            <span>📞🔗 Calls/Connected × 0.5</span>
+            <span>📅 Bookings × 2</span>
+            <span>🤝 Attended × 1.5</span>
+            <span>🏆 Deals × 2</span>
+            <span>💰 Revenue × 2.5</span>
+          </div>
 
-              {/* Sticky team header */}
-              <div className={tc.header + " text-white px-5 py-3 sticky top-0 z-30"}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <h2 className="text-base font-bold">{pair.label}</h2>
-                    <div className="flex items-center gap-2 text-xs">
-                      <span className="bg-white/20 px-2 py-0.5 rounded-full"><span className="inline-block w-2 h-2 rounded-full bg-emerald-400 mr-1"></span>{closerName} <span className="opacity-60">Closer</span></span>
-                      <span className="bg-white/20 px-2 py-0.5 rounded-full"><span className="inline-block w-2 h-2 rounded-full bg-blue-400 mr-1"></span>{lgName} <span className="opacity-60">Lead Gen</span></span>
-                    </div>
-                  </div>
-                  {latestWeek && (
+          {teamScorecards.map(({ pair, closerName, lgName, weekData }) => {
+            const tc = teamColors[pair.color] || teamColors.indigo;
+            const latestWeek = weekData[weekData.length - 1];
+            const latestTL = latestWeek ? trafficLight(latestWeek.overallPct) : trafficLight(0);
+            const activeTab = selectedTabs[pair.label] ?? currentWeek;
+            const activeWeekData = weekData.find((w) => w.weekNum === activeTab);
+
+            return (
+              <div key={pair.label} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+
+                {/* Sticky team header */}
+                <div className={tc.header + " text-white px-5 py-3 sticky top-0 z-30"}>
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <span className={latestWeek.trend.color + " text-xs font-bold bg-white/90 px-2 py-0.5 rounded-full"}>
-                        {latestWeek.trend.icon} {latestWeek.trend.label}
-                      </span>
-                      <span className={latestTL.text + " text-xs font-bold bg-white/90 px-2 py-0.5 rounded-full"}>
-                        {Math.round(latestWeek.overallPct)}% of target
-                      </span>
+                      <h2 className="text-base font-bold">{pair.label}</h2>
+                      <div className="flex items-center gap-2 text-xs">
+                        <span className="bg-white/20 px-2 py-0.5 rounded-full"><span className="inline-block w-2 h-2 rounded-full bg-emerald-400 mr-1"></span>{closerName} <span className="opacity-60">Closer</span></span>
+                        <span className="bg-white/20 px-2 py-0.5 rounded-full"><span className="inline-block w-2 h-2 rounded-full bg-blue-400 mr-1"></span>{lgName} <span className="opacity-60">Lead Gen</span></span>
+                      </div>
+                    </div>
+                    {latestWeek && (
+                      <div className="flex items-center gap-3">
+                        <span className={latestWeek.trend.color + " text-xs font-bold bg-white/90 px-2 py-0.5 rounded-full"}>
+                          {latestWeek.trend.icon} {latestWeek.trend.label}
+                        </span>
+                        <span className={latestTL.text + " text-xs font-bold bg-white/90 px-2 py-0.5 rounded-full"}>
+                          {Math.round(latestWeek.overallPct)}% of target
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Scorecard table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-[11px]">
+                    <thead>
+                      <tr className="bg-gray-50 border-b border-gray-200">
+                        <th className="text-left px-3 py-2 text-gray-500 font-semibold text-[10px] uppercase tracking-wide w-[80px]">Week</th>
+                        {compMetrics.map((m) => (
+                          <th key={m.key} className="text-center px-1 py-2 text-gray-500 font-semibold text-[10px] uppercase tracking-wide min-w-[130px]">
+                            {m.emoji} {m.label}
+                          </th>
+                        ))}
+                        <th className="text-center px-2 py-2 text-gray-500 font-semibold text-[10px] uppercase tracking-wide w-[60px]">Score</th>
+                        <th className="text-center px-2 py-2 text-gray-500 font-semibold text-[10px] uppercase tracking-wide w-[50px]">Trend</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {weekData.map((wd) => {
+                        const wc = weekConfig[wd.weekNum];
+                        const isNow = wd.weekNum === currentWeek;
+                        const isSelected = wd.weekNum === activeTab;
+                        const tl = trafficLight(wd.overallPct);
+                        const hasData = wd.metricData.some((md) => md.teamActual > 0);
+
+                        return (
+                          <tr
+                            key={wd.weekNum}
+                            className={
+                              "border-b border-gray-100 cursor-pointer transition-colors " +
+                              (isSelected ? "ring-2 ring-inset ring-slate-400 " : "") +
+                              (isNow ? "bg-[#E6017D]/5 " : "") +
+                              (!hasData ? "opacity-40 " : "hover:bg-gray-50/70 ")
+                            }
+                            onClick={() => setSelectedTabs((prev) => ({ ...prev, [pair.label]: wd.weekNum }))}
+                          >
+                            <td className="px-3 py-3 font-semibold text-gray-700 whitespace-nowrap align-top">
+                              <div className="flex items-center gap-1">
+                                {isSelected && <span className="text-[8px]">▶</span>}
+                                {wc.shortLabel}
+                              </div>
+                              {isNow && <span className="text-[8px] bg-[#E6017D] text-white px-1 py-0.5 rounded font-bold">NOW</span>}
+                              {isNow && wd.daysElapsed < 5 && <div className="text-gray-400 text-[9px]">{wd.daysElapsed}/5 days</div>}
+                            </td>
+
+                            {wd.metricData.map((md) => {
+                              const mtl = trafficLight(md.pct);
+                              const hasVal = md.teamActual > 0;
+                              return (
+                                <td key={md.key} className={"px-1.5 py-2 text-center align-top " + (hasVal ? mtl.bg : "")}>
+                                  {hasVal ? (
+                                    <div>
+                                      <div className="flex items-center justify-center gap-1">
+                                        <span className={"text-sm font-black tabular-nums " + mtl.text}>{fmtVal(md.teamActual, md.key)}</span>
+                                        <span className="text-gray-300">/</span>
+                                        <span className="text-gray-400 tabular-nums text-[10px]">{fmtVal(md.projected, md.key)}</span>
+                                      </div>
+                                      <div className={"text-[9px] font-semibold tabular-nums " + (md.variance >= 0 ? "text-emerald-600" : "text-red-500")}>
+                                        {fmtVar(md.variance, md.key)}
+                                      </div>
+                                      <div className="mt-1 mx-auto" style={{ maxWidth: "100px" }}>
+                                        <div className="flex h-1.5 rounded-full overflow-hidden bg-gray-200">
+                                          <div className="bg-emerald-500 transition-all" style={{ width: md.closerPct + "%" }} title={closerName + ": " + fmtVal(md.closerVal, md.key)} />
+                                          <div className="bg-blue-400 transition-all" style={{ width: md.lgPct + "%" }} title={lgName + ": " + fmtVal(md.lgVal, md.key)} />
+                                        </div>
+                                        <div className="flex justify-between mt-0.5 text-[9px] tabular-nums">
+                                          <span className="text-emerald-600 font-semibold">{fmtVal(md.closerVal, md.key)}</span>
+                                          <span className="text-blue-500 font-semibold">{fmtVal(md.lgVal, md.key)}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <span className="text-gray-300">–</span>
+                                  )}
+                                </td>
+                              );
+                            })}
+
+                            <td className="px-2 py-3 text-center align-top">
+                              {hasData ? (
+                                <span className={"inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold " + tl.bg + " " + tl.text}>
+                                  <span className={"w-1.5 h-1.5 rounded-full " + tl.dot}></span>
+                                  {Math.round(wd.overallPct)}%
+                                </span>
+                              ) : (
+                                <span className="text-gray-300">–</span>
+                              )}
+                            </td>
+                            <td className="px-2 py-3 text-center align-top">
+                              {hasData ? (
+                                <span className={"text-sm font-bold " + wd.trend.color} title={wd.trend.label}>{wd.trend.icon}</span>
+                              ) : (
+                                <span className="text-gray-300">–</span>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Split legend */}
+                <div className="px-5 py-1.5 border-t border-gray-100 flex items-center gap-4 text-[10px] text-gray-500">
+                  <span className="font-semibold">Split:</span>
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm bg-emerald-500"></span> {closerName} (Closer)</span>
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm bg-blue-400"></span> {lgName} (Lead Gen)</span>
+                  <span className="ml-auto text-gray-400 italic">Click a week row to see exec summary</span>
+                </div>
+
+                {/* ═══ TABBED EXEC SUMMARY ═══ */}
+                <div className={tc.light + " border-t " + tc.border}>
+
+                  {/* Week tabs */}
+                  <div className="flex items-center gap-1 px-5 pt-3 pb-0 overflow-x-auto">
+                    {weekData.map((wd) => {
+                      const wc = weekConfig[wd.weekNum];
+                      const isActive = wd.weekNum === activeTab;
+                      const hasData = wd.metricData.some((md) => md.teamActual > 0);
+                      const isLive = wd.weekNum === currentWeek;
+                      const tl = trafficLight(wd.overallPct);
+
+                      return (
+                        <button
+                          key={wd.weekNum}
+                          onClick={() => setSelectedTabs((prev) => ({ ...prev, [pair.label]: wd.weekNum }))}
+                          className={
+                            "px-3 py-1.5 rounded-t-lg text-xs font-bold transition-colors whitespace-nowrap " +
+                            (isActive ? tc.tabActive + " " : hasData ? tc.tab + " " : "text-gray-400 ") +
+                            (!hasData ? "opacity-40 " : "")
+                          }
+                        >
+                          {wc.shortLabel}
+                          {isLive && <span className="ml-1 text-[8px] opacity-70">●</span>}
+                          {!isActive && hasData && (
+                            <span className={"ml-1 inline-block w-1.5 h-1.5 rounded-full " + tl.dot}></span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Exec summary content */}
+                  {activeWeekData && (
+                    <div className="px-5 pb-4 pt-2">
+                      <div className="bg-white rounded-xl border border-gray-200 p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="text-sm font-bold text-gray-800">
+                            {activeTab === currentWeek ? "📋 Live Summary" : "📋 Week Summary"} — {weekConfig[activeTab]?.label}
+                            {activeTab === currentWeek && <span className="ml-2 text-[10px] font-normal text-gray-400">(updates as data comes in)</span>}
+                            {activeTab < currentWeek && <span className="ml-2 text-[10px] font-normal text-gray-400">(final)</span>}
+                          </h3>
+                          <span className={
+                            "text-xs font-bold px-2 py-0.5 rounded-full " +
+                            trafficLight(activeWeekData.overallPct).bg + " " +
+                            trafficLight(activeWeekData.overallPct).text
+                          }>
+                            {Math.round(activeWeekData.overallPct)}% of target
+                          </span>
+                        </div>
+
+                        <div className="font-mono text-[11px] leading-relaxed text-gray-700 whitespace-pre-wrap">
+                          {generateExecSummary(activeWeekData, closerName, lgName, currentWeek, projTeamDaily).map((line, i) => (
+                            <div key={i} className={line === "" ? "h-2" : ""}>{line}</div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
               </div>
+            );
+          })}
 
-              {/* Scorecard table */}
-              <div className="overflow-x-auto">
-                <table className="w-full text-[11px]">
-                  <thead>
-                    <tr className="bg-gray-50 border-b border-gray-200">
-                      <th className="text-left px-3 py-2 text-gray-500 font-semibold text-[10px] uppercase tracking-wide w-[80px]">Week</th>
-                      {compMetrics.map((m) => (
-                        <th key={m.key} className="text-center px-1 py-2 text-gray-500 font-semibold text-[10px] uppercase tracking-wide min-w-[130px]">
-                          {m.emoji} {m.label}
-                        </th>
-                      ))}
-                      <th className="text-center px-2 py-2 text-gray-500 font-semibold text-[10px] uppercase tracking-wide w-[60px]">Score</th>
-                      <th className="text-center px-2 py-2 text-gray-500 font-semibold text-[10px] uppercase tracking-wide w-[50px]">Trend</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {weekData.map((wd) => {
-                      const wc = weekConfig[wd.weekNum];
-                      const isNow = wd.weekNum === currentWeek;
-                      const isSelected = wd.weekNum === activeTab;
-                      const tl = trafficLight(wd.overallPct);
-                      const hasData = wd.metricData.some((md) => md.teamActual > 0);
-
-                      return (
-                        <tr
-                          key={wd.weekNum}
-                          className={
-                            "border-b border-gray-100 cursor-pointer transition-colors " +
-                            (isSelected ? "ring-2 ring-inset ring-slate-400 " : "") +
-                            (isNow ? "bg-[#E6017D]/5 " : "") +
-                            (!hasData ? "opacity-40 " : "hover:bg-gray-50/70 ")
-                          }
-                          onClick={() => setSelectedTabs((prev) => ({ ...prev, [pair.label]: wd.weekNum }))}
-                        >
-                          <td className="px-3 py-3 font-semibold text-gray-700 whitespace-nowrap align-top">
-                            <div className="flex items-center gap-1">
-                              {isSelected && <span className="text-[8px]">▶</span>}
-                              {wc.shortLabel}
-                            </div>
-                            {isNow && <span className="text-[8px] bg-[#E6017D] text-white px-1 py-0.5 rounded font-bold">NOW</span>}
-                            {isNow && wd.daysElapsed < 5 && <div className="text-gray-400 text-[9px]">{wd.daysElapsed}/5 days</div>}
-                          </td>
-
-                          {wd.metricData.map((md) => {
-                            const mtl = trafficLight(md.pct);
-                            const hasVal = md.teamActual > 0;
-                            return (
-                              <td key={md.key} className={"px-1.5 py-2 text-center align-top " + (hasVal ? mtl.bg : "")}>
-                                {hasVal ? (
-                                  <div>
-                                    <div className="flex items-center justify-center gap-1">
-                                      <span className={"text-sm font-black tabular-nums " + mtl.text}>{fmtVal(md.teamActual, md.key)}</span>
-                                      <span className="text-gray-300">/</span>
-                                      <span className="text-gray-400 tabular-nums text-[10px]">{fmtVal(md.projected, md.key)}</span>
-                                    </div>
-                                    <div className={"text-[9px] font-semibold tabular-nums " + (md.variance >= 0 ? "text-emerald-600" : "text-red-500")}>
-                                      {fmtVar(md.variance, md.key)}
-                                    </div>
-                                    <div className="mt-1 mx-auto" style={{ maxWidth: "100px" }}>
-                                      <div className="flex h-1.5 rounded-full overflow-hidden bg-gray-200">
-                                        <div className="bg-emerald-500 transition-all" style={{ width: md.closerPct + "%" }} title={closerName + ": " + fmtVal(md.closerVal, md.key)} />
-                                        <div className="bg-blue-400 transition-all" style={{ width: md.lgPct + "%" }} title={lgName + ": " + fmtVal(md.lgVal, md.key)} />
-                                      </div>
-                                      <div className="flex justify-between mt-0.5 text-[9px] tabular-nums">
-                                        <span className="text-emerald-600 font-semibold">{fmtVal(md.closerVal, md.key)}</span>
-                                        <span className="text-blue-500 font-semibold">{fmtVal(md.lgVal, md.key)}</span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <span className="text-gray-300">–</span>
-                                )}
-                              </td>
-                            );
-                          })}
-
-                          <td className="px-2 py-3 text-center align-top">
-                            {hasData ? (
-                              <span className={"inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold " + tl.bg + " " + tl.text}>
-                                <span className={"w-1.5 h-1.5 rounded-full " + tl.dot}></span>
-                                {Math.round(wd.overallPct)}%
-                              </span>
-                            ) : (
-                              <span className="text-gray-300">–</span>
-                            )}
-                          </td>
-                          <td className="px-2 py-3 text-center align-top">
-                            {hasData ? (
-                              <span className={"text-sm font-bold " + wd.trend.color} title={wd.trend.label}>{wd.trend.icon}</span>
-                            ) : (
-                              <span className="text-gray-300">–</span>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Split legend */}
-              <div className="px-5 py-1.5 border-t border-gray-100 flex items-center gap-4 text-[10px] text-gray-500">
-                <span className="font-semibold">Split:</span>
-                <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm bg-emerald-500"></span> {closerName} (Closer)</span>
-                <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm bg-blue-400"></span> {lgName} (Lead Gen)</span>
-                <span className="ml-auto text-gray-400 italic">Click a week row to see exec summary</span>
-              </div>
-
-              {/* ═══ TABBED EXEC SUMMARY ═══ */}
-              <div className={tc.light + " border-t " + tc.border}>
-
-                {/* Week tabs */}
-                <div className="flex items-center gap-1 px-5 pt-3 pb-0 overflow-x-auto">
-                  {weekData.map((wd) => {
-                    const wc = weekConfig[wd.weekNum];
-                    const isActive = wd.weekNum === activeTab;
-                    const hasData = wd.metricData.some((md) => md.teamActual > 0);
-                    const isLive = wd.weekNum === currentWeek;
-                    const tl = trafficLight(wd.overallPct);
-
-                    return (
-                      <button
-                        key={wd.weekNum}
-                        onClick={() => setSelectedTabs((prev) => ({ ...prev, [pair.label]: wd.weekNum }))}
-                        className={
-                          "px-3 py-1.5 rounded-t-lg text-xs font-bold transition-colors whitespace-nowrap " +
-                          (isActive ? tc.tabActive + " " : hasData ? tc.tab + " " : "text-gray-400 ") +
-                          (!hasData ? "opacity-40 " : "")
-                        }
-                      >
-                        {wc.shortLabel}
-                        {isLive && <span className="ml-1 text-[8px] opacity-70">●</span>}
-                        {!isActive && hasData && (
-                          <span className={"ml-1 inline-block w-1.5 h-1.5 rounded-full " + tl.dot}></span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Exec summary content */}
-                {activeWeekData && (
-                  <div className="px-5 pb-4 pt-2">
-                    <div className="bg-white rounded-xl border border-gray-200 p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-sm font-bold text-gray-800">
-                          {activeTab === currentWeek ? "📋 Live Summary" : "📋 Week Summary"} — {weekConfig[activeTab]?.label}
-                          {activeTab === currentWeek && <span className="ml-2 text-[10px] font-normal text-gray-400">(updates as data comes in)</span>}
-                          {activeTab < currentWeek && <span className="ml-2 text-[10px] font-normal text-gray-400">(final)</span>}
-                        </h3>
-                        <span className={
-                          "text-xs font-bold px-2 py-0.5 rounded-full " +
-                          trafficLight(activeWeekData.overallPct).bg + " " +
-                          trafficLight(activeWeekData.overallPct).text
-                        }>
-                          {Math.round(activeWeekData.overallPct)}% of target
-                        </span>
-                      </div>
-
-                      <div className="font-mono text-[11px] leading-relaxed text-gray-700 whitespace-pre-wrap">
-                        {generateExecSummary(activeWeekData, closerName, lgName, currentWeek, projTeamDaily).map((line, i) => (
-                          <div key={i} className={line === "" ? "h-2" : ""}>{line}</div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
+          {/* Projection source */}
+          <div className="bg-white rounded-xl border border-gray-200 p-4">
+            <div className="text-xs font-bold text-gray-500 mb-2">Projection Inputs (per team/day)</div>
+            <div className="grid grid-cols-3 sm:grid-cols-7 gap-3 text-center text-[11px]">
+              <div><div className="text-gray-400">Phone hrs</div><div className="font-bold text-gray-800">{phoneHours}</div></div>
+              <div><div className="text-gray-400">Calls/hr</div><div className="font-bold text-gray-800">{callsPerHour}</div></div>
+              <div><div className="text-gray-400">Conn/hr</div><div className="font-bold text-gray-800">{connectsPerHour}</div></div>
+              <div><div className="text-gray-400">Bkgs/hr</div><div className="font-bold text-gray-800">{bookingsPerHour}</div></div>
+              <div><div className="text-gray-400">Attend %</div><div className="font-bold text-gray-800">{Math.round(attendanceRate * 100)}%</div></div>
+              <div><div className="text-gray-400">Close %</div><div className="font-bold text-gray-800">{Math.round(closeRate * 100)}%</div></div>
+              <div><div className="text-gray-400">Deal val</div><div className="font-bold text-gray-800">${dealValue}</div></div>
             </div>
-          );
-        })}
-
-        {/* Projection source */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <div className="text-xs font-bold text-gray-500 mb-2">Projection Inputs (per team/day)</div>
-          <div className="grid grid-cols-3 sm:grid-cols-7 gap-3 text-center text-[11px]">
-            <div><div className="text-gray-400">Phone hrs</div><div className="font-bold text-gray-800">{phoneHours}</div></div>
-            <div><div className="text-gray-400">Calls/hr</div><div className="font-bold text-gray-800">{callsPerHour}</div></div>
-            <div><div className="text-gray-400">Conn/hr</div><div className="font-bold text-gray-800">{connectsPerHour}</div></div>
-            <div><div className="text-gray-400">Bkgs/hr</div><div className="font-bold text-gray-800">{bookingsPerHour}</div></div>
-            <div><div className="text-gray-400">Attend %</div><div className="font-bold text-gray-800">{Math.round(attendanceRate * 100)}%</div></div>
-            <div><div className="text-gray-400">Close %</div><div className="font-bold text-gray-800">{Math.round(closeRate * 100)}%</div></div>
-            <div><div className="text-gray-400">Deal val</div><div className="font-bold text-gray-800">${dealValue}</div></div>
-          </div>
-          <div className="text-[10px] text-gray-400 mt-2 text-center">
-            Change these on the <Link href="/projections" className="underline hover:text-gray-600">Projections page</Link> — this page updates automatically
+            <div className="text-[10px] text-gray-400 mt-2 text-center">
+              Change these on the <Link href="/projections" className="underline hover:text-gray-600">Projections page</Link> — this page updates automatically
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </main>
   );
 }
