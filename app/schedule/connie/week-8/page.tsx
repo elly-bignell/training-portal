@@ -4,9 +4,32 @@
 
 import Link from "next/link";
 import PasswordGate from "@/components/PasswordGate";
+import { usePersistedState } from "@/hooks/usePersistedState";
 
 function ConnieWeek8Content() {
   const days = ["Mon 13 Apr", "Tue 14 Apr", "Wed 15 Apr", "Thu 16 Apr", "Fri 17 Apr"];
+
+  const WEEK_PHONE_HOURS = 6;
+  const BLOCK1_HOURS = 3;
+  const BLOCK2_HOURS = 3;
+
+  const [callsPerHour] = usePersistedState("proj-callsPerHour", 18);
+  const [connectsPerHour] = usePersistedState("proj-connectsPerHour", 10);
+  const [bookingsPerHour] = usePersistedState("proj-bookingsPerHour", 1);
+  const [attendanceRate] = usePersistedState("proj-attendanceRate", 0.35);
+  const [closeRate] = usePersistedState("proj-closeRate", 0.55);
+  const [dealValue] = usePersistedState("proj-dealValue", 400);
+
+  const dailyCalls = Math.round(WEEK_PHONE_HOURS * callsPerHour);
+  const dailyConnects = Math.round(WEEK_PHONE_HOURS * connectsPerHour);
+  const dailyBookings = Math.round(WEEK_PHONE_HOURS * bookingsPerHour * 10) / 10;
+  const dailyAttended = Math.round(dailyBookings * attendanceRate * 10) / 10;
+  const dailyDeals = Math.round(dailyAttended * closeRate * 100) / 100;
+  const dailyRevenue = Math.round(dailyDeals * dealValue);
+  const block1Bookings = Math.round(BLOCK1_HOURS * bookingsPerHour * 10) / 10;
+  const block2Bookings = Math.round(BLOCK2_HOURS * bookingsPerHour * 10) / 10;
+  const fmt = (v) => (v % 1 !== 0 ? v.toFixed(1) : v.toString());
+
 
   return (
     <main className="min-h-screen bg-slate-100">
@@ -46,15 +69,15 @@ function ConnieWeek8Content() {
           </div>
           <div className="grid grid-cols-6 gap-4">
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">50</div>
+              <div className="text-2xl font-bold">{dailyCalls}</div>
               <div className="text-[10px] text-slate-400 uppercase">Calls</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">28</div>
+              <div className="text-2xl font-bold">{dailyConnects}</div>
               <div className="text-[10px] text-slate-400 uppercase">Connects</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">5</div>
+              <div className="text-2xl font-bold">{fmt(dailyBookings)}</div>
               <div className="text-[10px] text-slate-400 uppercase">Bookings</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
@@ -62,11 +85,11 @@ function ConnieWeek8Content() {
               <div className="text-[10px] text-slate-400 uppercase">Meetings</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">1</div>
+              <div className="text-2xl font-bold">{fmt(dailyDeals)}</div>
               <div className="text-[10px] text-slate-400 uppercase">Deals</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">$400</div>
+              <div className="text-2xl font-bold">{`${dailyRevenue.toLocaleString()}`}</div>
               <div className="text-[10px] text-slate-400 uppercase">Revenue</div>
             </div>
           </div>
@@ -94,7 +117,7 @@ function ConnieWeek8Content() {
                       <td key={day} rowSpan={6} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
                         <div className="bg-sky-100 text-sky-700 rounded px-2 py-2 text-xs font-semibold">📞 Call Block 1</div>
                         <div className="text-[10px] text-gray-500 mt-1">9:30am–12:30pm · 3hrs</div>
-                        <div className="text-[10px] text-sky-600 font-semibold mt-1">Target: 3 bookings</div>
+                        <div className="text-[10px] text-sky-600 font-semibold mt-1">Target: {fmt(block1Bookings)} bookings</div>
                       </td>
                     ))}
                   </tr>
@@ -142,7 +165,7 @@ function ConnieWeek8Content() {
                       <td key={day} rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
                         <div className="bg-sky-100 text-sky-700 rounded px-2 py-2 text-xs font-semibold">📞 Call Block 2</div>
                         <div className="text-[10px] text-gray-500 mt-1">2:30–4:00pm · 1.5hrs</div>
-                        <div className="text-[10px] text-sky-600 font-semibold mt-1">Target: 2 bookings</div>
+                        <div className="text-[10px] text-sky-600 font-semibold mt-1">Target: {fmt(block2Bookings)} bookings</div>
                       </td>
                     ))}
                   </tr>
@@ -203,7 +226,7 @@ function ConnieWeek8Content() {
                   <tr className="border-b border-gray-100 bg-sky-50/50">
                     <td className="py-2 text-sky-700 font-medium">📞 Call Block 1</td>
                     <td className="py-2 text-center text-gray-600">9:30–12:30</td>
-                    <td className="py-2 text-right text-sky-700 font-semibold">3 bookings</td>
+                    <td className="py-2 text-right text-sky-700 font-semibold">{fmt(block1Bookings)} bookings</td>
                   </tr>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 text-indigo-700 font-medium">🗣️ Zoom Checkpoint</td>
@@ -223,7 +246,7 @@ function ConnieWeek8Content() {
                   <tr className="border-b border-gray-100 bg-sky-50/50">
                     <td className="py-2 text-sky-700 font-medium">📞 Call Block 2</td>
                     <td className="py-2 text-center text-gray-600">2:30–4:00</td>
-                    <td className="py-2 text-right text-sky-700 font-semibold">2 bookings</td>
+                    <td className="py-2 text-right text-sky-700 font-semibold">{fmt(block2Bookings)} bookings</td>
                   </tr>
                   <tr className="border-b border-gray-100 bg-emerald-50/50">
                     <td className="py-2 text-emerald-700 font-medium">📋 Meeting (Solo) 2</td>
@@ -237,8 +260,8 @@ function ConnieWeek8Content() {
                   </tr>
                   <tr className="border-t-2 border-gray-200">
                     <td className="py-2 text-gray-900 font-bold">Daily Total</td>
-                    <td className="py-2 text-center text-gray-600 font-semibold">4.5hrs calls + 2 meetings</td>
-                    <td className="py-2 text-right text-gray-900 font-bold">5 bookings</td>
+                    <td className="py-2 text-center text-gray-600 font-semibold">{WEEK_PHONE_HOURS}hrs calls + 2 meetings</td>
+                    <td className="py-2 text-right text-gray-900 font-bold">{fmt(dailyBookings)} bookings</td>
                   </tr>
                 </tbody>
               </table>
@@ -294,24 +317,24 @@ function ConnieWeek8Content() {
               </h2>
               <div className="space-y-2 text-xs">
                 <div className="flex justify-between p-2 bg-indigo-50 rounded">
-                  <span className="text-indigo-700 font-medium">18 calls per hour</span>
-                  <span className="text-indigo-900 font-bold">= 10 connects</span>
+                  <span className="text-indigo-700 font-medium">{callsPerHour} calls per hour</span>
+                  <span className="text-indigo-900 font-bold">= {connectsPerHour} connects</span>
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
-                  <span className="text-gray-700 font-medium">10 connects</span>
-                  <span className="text-gray-900 font-bold">= 2 bookings (20%)</span>
+                  <span className="text-gray-700 font-medium">{connectsPerHour} connects</span>
+                  <span className="text-gray-900 font-bold">= {bookingsPerHour} bookings ({connectsPerHour > 0 ? Math.round((bookingsPerHour / connectsPerHour) * 100) : 0}%)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
-                  <span className="text-gray-700 font-medium">2 bookings</span>
-                  <span className="text-gray-900 font-bold">= 1 attended (50%)</span>
+                  <span className="text-gray-700 {/* bookings */}
+                  <span className="text-gray-900 font-bold">= 1 attended ({Math.round(attendanceRate * 100)}%)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
                   <span className="text-gray-700 font-medium">2 attended</span>
-                  <span className="text-gray-900 font-bold">= 1.5 deals (50%)</span>
+                  <span className="text-gray-900 font-bold">= 1 deal ({Math.round(closeRate * 100)}%)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-emerald-50 rounded">
-                  <span className="text-emerald-700 font-medium">1.5 deals</span>
-                  <span className="text-emerald-900 font-bold">= $400 revenue</span>
+                  <span className="text-emerald-700 font-medium">1 deal</span>
+                  <span className="text-emerald-900 font-bold">= ${dealValue} revenue</span>
                 </div>
               </div>
             </div>
