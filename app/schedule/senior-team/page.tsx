@@ -94,6 +94,18 @@ export default function SeniorTeamSchedulePage() {
                 </thead>
                 <tbody>
 
+                  {/* 8:30–9:00 — Deal Admin */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">8:30am</td>
+                    {DAYS.map((day) => (
+                      <td key={day} className="p-2 text-center border border-gray-200 align-middle bg-slate-50">
+                        <div className="bg-slate-200 text-slate-700 rounded px-2 py-1.5 text-xs font-semibold">📋 Deal Admin</div>
+                        <div className="text-[10px] text-gray-500 mt-1">8:30–9:00am · 30min</div>
+                        <div className="text-[10px] text-slate-600 font-medium mt-1">CRM updates · pipeline notes · prep for day</div>
+                      </td>
+                    ))}
+                  </tr>
+
                   {/* 9:00–9:30 — Briefing */}
                   <tr>
                     <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">9:00am</td>
@@ -213,12 +225,25 @@ export default function SeniorTeamSchedulePage() {
                   </tr>
                   <tr><td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:30pm</td></tr>
 
+                  {/* 5:00–5:30 — Deal Admin */}
+                  <tr>
+                    <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">5:00pm</td>
+                    {DAYS.map((day) => (
+                      <td key={day} className="p-2 text-center border border-gray-200 align-middle bg-slate-50">
+                        <div className="bg-slate-200 text-slate-700 rounded px-2 py-1.5 text-xs font-semibold">📋 Deal Admin</div>
+                        <div className="text-[10px] text-gray-500 mt-1">5:00–5:30pm · 30min</div>
+                        <div className="text-[10px] text-slate-600 font-medium mt-1">End-of-day CRM · update pipeline · log outcomes</div>
+                      </td>
+                    ))}
+                  </tr>
+
                 </tbody>
               </table>
             </div>
 
             {/* Legend */}
             <div className="mt-6 pt-4 border-t border-gray-100 flex flex-wrap gap-4 text-xs">
+              <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-slate-200 border border-slate-300"></span><span className="text-gray-600">Deal Admin</span></div>
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-violet-100 border border-violet-200"></span><span className="text-gray-600">Briefing</span></div>
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-emerald-100 border border-emerald-200"></span><span className="text-gray-600">Meetings</span></div>
               <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-amber-100 border border-amber-200"></span><span className="text-gray-600">Validation</span></div>
@@ -244,6 +269,11 @@ export default function SeniorTeamSchedulePage() {
                   </tr>
                 </thead>
                 <tbody>
+                  <tr className="border-b border-gray-100 bg-slate-50/50">
+                    <td className="py-2 text-slate-700 font-medium">📋 Deal Admin</td>
+                    <td className="py-2 text-center text-gray-600">8:30–9:00</td>
+                    <td className="py-2 text-right text-slate-700 font-semibold">30min</td>
+                  </tr>
                   <tr className="border-b border-gray-100 bg-violet-50/50">
                     <td className="py-2 text-violet-700 font-medium">☕ Buddy Briefing</td>
                     <td className="py-2 text-center text-gray-600">9:00–9:30</td>
@@ -294,10 +324,15 @@ export default function SeniorTeamSchedulePage() {
                     <td className="py-2 text-center text-gray-600">4:00–5:00</td>
                     <td className="py-2 text-right text-emerald-700 font-semibold">1hr</td>
                   </tr>
+                  <tr className="border-b border-gray-100 bg-slate-50/50">
+                    <td className="py-2 text-slate-700 font-medium">📋 Deal Admin</td>
+                    <td className="py-2 text-center text-gray-600">5:00–5:30</td>
+                    <td className="py-2 text-right text-slate-700 font-semibold">30min</td>
+                  </tr>
                   <tr className="border-t-2 border-gray-200">
                     <td className="py-2 text-gray-900 font-bold">Daily Total</td>
-                    <td className="py-2 text-center text-gray-600 font-semibold">9:00–5:00</td>
-                    <td className="py-2 text-right text-gray-900 font-bold">5 meetings + 2hrs calls</td>
+                    <td className="py-2 text-center text-gray-600 font-semibold">8:30–5:30</td>
+                    <td className="py-2 text-right text-gray-900 font-bold">5 meetings + 2hrs calls + 1hr admin</td>
                   </tr>
                 </tbody>
               </table>
