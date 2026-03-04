@@ -335,11 +335,11 @@ function ConnieWeek2Content() {
                   <span className="text-gray-900 font-bold">= {bookingsPerHour} bookings ({connectsPerHour > 0 ? Math.round((bookingsPerHour / connectsPerHour) * 100) : 0}%)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
-                  <span className="text-gray-700 font-medium">2 bookings</span>
+                  <span className="text-gray-700 font-medium">{bookingsPerHour} bookings</span>
                   <span className="text-gray-900 font-bold">= 1 attended ({Math.round(attendanceRate * 100)}%)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
-                  <span className="text-gray-700 font-medium">2 attended</span>
+                  <span className="text-gray-700 font-medium">{bookingsPerHour} attended</span>
                   <span className="text-gray-900 font-bold">= 1 deal ({Math.round(closeRate * 100)}%)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-emerald-50 rounded">

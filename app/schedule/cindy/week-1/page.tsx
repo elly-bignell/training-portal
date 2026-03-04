@@ -28,7 +28,7 @@ function CindyWeek1Content() {
   const dailyRevenue = Math.round(dailyDeals * dealValue);
   const block1Bookings = Math.round(BLOCK1_HOURS * bookingsPerHour * 10) / 10;
   const block2Bookings = Math.round(BLOCK2_HOURS * bookingsPerHour * 10) / 10;
-  const fmt = (v) => (v % 1 !== 0 ? v.toFixed(1) : v.toString());
+  const fmt = (v: number) => (v % 1 !== 0 ? v.toFixed(1) : v.toString());
 
 
   return (
@@ -308,19 +308,19 @@ function CindyWeek1Content() {
               </h2>
               <div className="space-y-2 text-xs">
                 <div className="flex justify-between p-2 bg-indigo-50 rounded">
-                  <span className="text-indigo-700 font-medium">18 calls per hour</span>
+                  <span className="text-indigo-700 font-medium">{callsPerHour} calls per hour</span>
                   <span className="text-indigo-900 font-bold">= {connectsPerHour} connects</span>
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
                   <span className="text-gray-700 font-medium">{connectsPerHour} connects</span>
-                  <span className="text-gray-900 font-bold">= ≈ 1.75 bookings (18%)</span>
+                  <span className="text-gray-900 font-bold">= {bookingsPerHour} bookings ({connectsPerHour > 0 ? Math.round((bookingsPerHour / connectsPerHour) * 100) : 0}%)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
-                  <span className="text-gray-700 {/* bookings */}
-                  <span className="text-gray-900 font-bold">= ≈ 3 attended (43%)</span>
+                  <span className="text-gray-700 font-medium">{bookingsPerHour} bookings</span>
+                  <span className="text-gray-900 font-bold">= 1 attended ({Math.round(attendanceRate * 100)}%)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
-                  <span className="text-gray-700 font-medium">2 attended</span>
+                  <span className="text-gray-700 font-medium">{bookingsPerHour} attended</span>
                   <span className="text-gray-900 font-bold">= 1 deal ({Math.round(closeRate * 100)}%)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-emerald-50 rounded">
