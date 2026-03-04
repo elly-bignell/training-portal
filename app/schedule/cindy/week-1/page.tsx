@@ -4,9 +4,32 @@
 
 import Link from "next/link";
 import PasswordGate from "@/components/PasswordGate";
+import { usePersistedState } from "@/hooks/usePersistedState";
 
 function CindyWeek1Content() {
   const days = ["Mon 23 Feb", "Tue 24 Feb", "Wed 25 Feb", "Thu 26 Feb", "Fri 27 Feb"];
+
+  const WEEK_PHONE_HOURS = 6;
+  const BLOCK1_HOURS = 3;
+  const BLOCK2_HOURS = 3;
+
+  const [callsPerHour] = usePersistedState("proj-callsPerHour", 18);
+  const [connectsPerHour] = usePersistedState("proj-connectsPerHour", 10);
+  const [bookingsPerHour] = usePersistedState("proj-bookingsPerHour", 1);
+  const [attendanceRate] = usePersistedState("proj-attendanceRate", 0.35);
+  const [closeRate] = usePersistedState("proj-closeRate", 0.55);
+  const [dealValue] = usePersistedState("proj-dealValue", 400);
+
+  const dailyCalls = Math.round(WEEK_PHONE_HOURS * callsPerHour);
+  const dailyConnects = Math.round(WEEK_PHONE_HOURS * connectsPerHour);
+  const dailyBookings = Math.round(WEEK_PHONE_HOURS * bookingsPerHour * 10) / 10;
+  const dailyAttended = Math.round(dailyBookings * attendanceRate * 10) / 10;
+  const dailyDeals = Math.round(dailyAttended * closeRate * 100) / 100;
+  const dailyRevenue = Math.round(dailyDeals * dealValue);
+  const block1Bookings = Math.round(BLOCK1_HOURS * bookingsPerHour * 10) / 10;
+  const block2Bookings = Math.round(BLOCK2_HOURS * bookingsPerHour * 10) / 10;
+  const fmt = (v) => (v % 1 !== 0 ? v.toFixed(1) : v.toString());
+
 
   return (
     <main className="min-h-screen bg-slate-100">
@@ -66,27 +89,27 @@ function CindyWeek1Content() {
           </div>
           <div className="grid grid-cols-6 gap-4">
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">72</div>
+              <div className="text-2xl font-bold">{dailyCalls}</div>
               <div className="text-[10px] text-slate-400 uppercase">Calls</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">40</div>
+              <div className="text-2xl font-bold">{dailyConnects}</div>
               <div className="text-[10px] text-slate-400 uppercase">Connects</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">7</div>
+              <div className="text-2xl font-bold">{fmt(dailyBookings)}</div>
               <div className="text-[10px] text-slate-400 uppercase">Bookings</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">3</div>
+              <div className="text-2xl font-bold">{fmt(dailyAttended)}</div>
               <div className="text-[10px] text-slate-400 uppercase">Attended</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">1.5</div>
+              <div className="text-2xl font-bold">{fmt(dailyDeals)}</div>
               <div className="text-[10px] text-slate-400 uppercase">Deals</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold">$600</div>
+              <div className="text-2xl font-bold">{`${dailyRevenue.toLocaleString()}`}</div>
               <div className="text-[10px] text-slate-400 uppercase">Revenue</div>
             </div>
           </div>
@@ -119,7 +142,7 @@ function CindyWeek1Content() {
                       <td key={day} rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
                         <div className="bg-sky-100 text-sky-700 rounded px-2 py-2 text-xs font-semibold">📞 Call Block 1</div>
                         <div className="text-[10px] text-gray-500 mt-1">9:30am–1:00pm · 3.5hrs</div>
-                        <div className="text-[10px] text-sky-600 font-semibold mt-1">Target: 3–4 bookings</div>
+                        <div className="text-[10px] text-sky-600 font-semibold mt-1">Target: {fmt(block1Bookings)} bookings</div>
                       </td>
                     ))}
                   </tr>
@@ -157,7 +180,7 @@ function CindyWeek1Content() {
                       <td key={day} rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-sky-50">
                         <div className="bg-sky-100 text-sky-700 rounded px-2 py-2 text-xs font-semibold">📞 Call Block 2</div>
                         <div className="text-[10px] text-gray-500 mt-1">2:00–5:30pm · 3.5hrs</div>
-                        <div className="text-[10px] text-sky-600 font-semibold mt-1">Target: 3–4 bookings</div>
+                        <div className="text-[10px] text-sky-600 font-semibold mt-1">Target: {fmt(block2Bookings)} bookings</div>
                       </td>
                     ))}
                   </tr>
@@ -212,7 +235,7 @@ function CindyWeek1Content() {
                   <tr className="border-b border-gray-100 bg-sky-50/50">
                     <td className="py-2 text-sky-700 font-medium">📞 Call Block 1</td>
                     <td className="py-2 text-center text-gray-600">9:30–1:00</td>
-                    <td className="py-2 text-right text-sky-700 font-semibold">3–4 bookings</td>
+                    <td className="py-2 text-right text-sky-700 font-semibold">{fmt(block2Bookings)} bookings</td>
                   </tr>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 text-indigo-700 font-medium">🗣️ Zoom Checkpoint</td>
@@ -236,8 +259,8 @@ function CindyWeek1Content() {
                   </tr>
                   <tr className="border-t-2 border-gray-200">
                     <td className="py-2 text-gray-900 font-bold">Daily Total</td>
-                    <td className="py-2 text-center text-gray-600 font-semibold">7hrs calls</td>
-                    <td className="py-2 text-right text-gray-900 font-bold">6–7 bookings</td>
+                    <td className="py-2 text-center text-gray-600 font-semibold">{WEEK_PHONE_HOURS}hrs calls</td>
+                    <td className="py-2 text-right text-gray-900 font-bold">{fmt(dailyBookings)} bookings</td>
                   </tr>
                 </tbody>
               </table>
@@ -268,7 +291,7 @@ function CindyWeek1Content() {
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
-                  <p className="text-xs text-gray-700 leading-relaxed">18 calls per hour = 10 connects ≈ 1.75 bookings (18% booking rate)</p>
+                  <p className="text-xs text-gray-700 leading-relaxed">{callsPerHour} calls per hour = 10 connects ≈ 1.75 bookings (18% booking rate)</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 flex-shrink-0"></div>
@@ -286,23 +309,23 @@ function CindyWeek1Content() {
               <div className="space-y-2 text-xs">
                 <div className="flex justify-between p-2 bg-indigo-50 rounded">
                   <span className="text-indigo-700 font-medium">18 calls per hour</span>
-                  <span className="text-indigo-900 font-bold">= 10 connects</span>
+                  <span className="text-indigo-900 font-bold">= {connectsPerHour} connects</span>
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
-                  <span className="text-gray-700 font-medium">10 connects</span>
+                  <span className="text-gray-700 font-medium">{connectsPerHour} connects</span>
                   <span className="text-gray-900 font-bold">= ≈ 1.75 bookings (18%)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
-                  <span className="text-gray-700 font-medium">7 bookings</span>
+                  <span className="text-gray-700 {/* bookings */}
                   <span className="text-gray-900 font-bold">= ≈ 3 attended (43%)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
                   <span className="text-gray-700 font-medium">2 attended</span>
-                  <span className="text-gray-900 font-bold">= 1.5 deals (50%)</span>
+                  <span className="text-gray-900 font-bold">= 1 deal ({Math.round(closeRate * 100)}%)</span>
                 </div>
                 <div className="flex justify-between p-2 bg-emerald-50 rounded">
-                  <span className="text-emerald-700 font-medium">1.5 deals</span>
-                  <span className="text-emerald-900 font-bold">= $400 revenue</span>
+                  <span className="text-emerald-700 font-medium">1 deal</span>
+                  <span className="text-emerald-900 font-bold">= ${dealValue} revenue</span>
                 </div>
               </div>
             </div>
