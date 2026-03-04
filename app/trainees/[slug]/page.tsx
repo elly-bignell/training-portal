@@ -16,8 +16,14 @@ function TraineeDashboardContent() {
   const slug = params.slug as string;
   const trainee = getTraineeBySlug(slug);
 
+  // Customer service team: exclude Module 4 (sales-specific)
+  const EXCLUDE_MODULE_4_SLUGS = ["jeremy-valiente"];
+  const filteredProgram = EXCLUDE_MODULE_4_SLUGS.includes(slug)
+    ? trainingProgram.filter((m) => m.id !== "module-4")
+    : trainingProgram;
+
   // Get all checklist item IDs for overall progress calculation (excluding section headers)
-  const allChecklistIds = trainingProgram.flatMap((module) =>
+  const allChecklistIds = filteredProgram.flatMap((module) =>
     module.checklist.filter((item) => !item.isSection).map((item) => item.id)
   );
 
@@ -177,7 +183,7 @@ function TraineeDashboardContent() {
               of {allChecklistIds.length} tasks completed
             </span>
             <span>
-              📚 {trainingProgram.length} modules
+              📚 {filteredProgram.length} modules
             </span>
             {progress.lastUpdated && (
               <span className="text-gray-400">
@@ -194,7 +200,7 @@ function TraineeDashboardContent() {
             Quick Jump
           </h3>
           <div className="flex flex-wrap gap-2">
-            {trainingProgram.map((module, index) => {
+            {filteredProgram.map((module, index) => {
               const moduleIds = module.checklist.filter((item) => !item.isSection).map((item) => item.id);
               const moduleProg = getModuleProgress(moduleIds);
               return (
@@ -217,7 +223,7 @@ function TraineeDashboardContent() {
 
         {/* Module Cards */}
         <div className="space-y-6">
-          {trainingProgram.map((module) => {
+          {filteredProgram.map((module) => {
             const moduleIds = module.checklist.filter((item) => !item.isSection).map((item) => item.id);
             const moduleProgress = getModuleProgress(moduleIds);
 

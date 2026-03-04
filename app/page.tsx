@@ -339,6 +339,34 @@ function HomeContent() {
           </div>
         </div>
 
+          {/* Customer Service Team Quick Access */}
+          <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3 mt-6">Customer Service Team Quick Access</h3>
+          <div className="space-y-4">
+            {["jeremy-valiente"].map(s => trainees.find(t => t.slug === s)!).filter(Boolean).map((trainee) => {
+              return (
+              <div key={trainee.slug} className="border border-gray-200 rounded-lg p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-teal-600 flex items-center justify-center text-white font-bold text-sm">
+                    {trainee.name.split(" ").map((n: string) => n[0]).join("").slice(0, 2)}
+                  </div>
+                  <h3 className="font-semibold text-gray-800">{trainee.name}</h3>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                    <span className="text-gray-600">Training Dashboard</span>
+                    <Link href={`/trainees/${trainee.slug}`} className="text-blue-600 hover:underline">Open →</Link>
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                    <span className="text-gray-600">Activity Scorecard</span>
+                    <Link href={`/scorecard/${trainee.slug}`} className="text-blue-600 hover:underline">Open →</Link>
+                  </div>
+                </div>
+              </div>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Trainee Cards */}
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-gray-800">

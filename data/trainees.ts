@@ -51,6 +51,12 @@ export const trainees: Trainee[] = [
     slug: "krishna-patel",
     startDate: "2024-01-15",
   },
+  {
+    id: "jeremy-valiente",
+    name: "Jeremy Valiente",
+    slug: "jeremy-valiente",
+    startDate: "2026-03-04",
+  },
 ];
 
 export function getTraineeBySlug(slug: string): Trainee | undefined {
