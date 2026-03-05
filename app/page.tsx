@@ -337,7 +337,6 @@ function HomeContent() {
               );
             })}
           </div>
-        </div>
 
           {/* Customer Service Team Quick Access */}
           <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3 mt-6">Customer Service Team Quick Access</h3>
