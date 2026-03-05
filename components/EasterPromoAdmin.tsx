@@ -39,7 +39,7 @@ export default function EasterPromoAdmin() {
       await Promise.all(
         allSlugs.map(async (slug) => {
           try {
-            const res = await fetch("/api/easter-promo?trainee_slug=" + slug + "&totals=true");
+            const res = await fetch("/api/easter-promo?trainee_slug=" + slug + "&all=true");
             const data = await res.json();
             results[slug] = {
               pitches: data.totals?.pitches || 0,
