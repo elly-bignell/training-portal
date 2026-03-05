@@ -24,7 +24,6 @@ export default function EasterPromoJunior({ traineeSlug, traineeName }: Props) {
     );
   }
 
-  const commission = Math.max(totals.quodo_bookings, today.quodo_bookings) * 100;
 
   return (
     <div className="bg-white rounded-xl shadow-sm border-2 border-pink-200 overflow-hidden">
@@ -74,17 +73,34 @@ export default function EasterPromoJunior({ traineeSlug, traineeName }: Props) {
           </div>
         </div>
 
-        {/* Commission Counter */}
-        <div className="rounded-xl p-4 sm:p-6 bg-gradient-to-br from-emerald-500 to-emerald-600 text-center relative overflow-hidden">
-          <div className="absolute top-3 right-3 text-3xl sm:text-4xl opacity-20">💰</div>
-          <div className="text-[10px] sm:text-xs font-semibold text-white/80 uppercase tracking-wider mb-1">
-            Easter Promotion Commission Opportunity
+        {/* Commission Tiles */}
+        <div className="grid grid-cols-2 gap-3">
+          {/* Today's Commission */}
+          <div className="rounded-xl p-3 sm:p-4 bg-gradient-to-br from-emerald-500 to-emerald-600 text-center relative overflow-hidden">
+            <div className="absolute top-2 right-2 text-2xl sm:text-3xl opacity-20">💰</div>
+            <div className="text-[9px] sm:text-[10px] font-semibold text-white/80 uppercase tracking-wider mb-1">
+              Today&apos;s Commission
+            </div>
+            <div className="text-2xl sm:text-3xl font-bold text-white mb-0.5">
+              ${(today.quodo_bookings * 100).toLocaleString()}
+            </div>
+            <div className="text-[10px] sm:text-xs text-white/60">
+              ({today.quodo_bookings} booking{today.quodo_bookings !== 1 ? "s" : ""} today)
+            </div>
           </div>
-          <div className="text-4xl sm:text-5xl font-bold text-white mb-1">
-            ${commission.toLocaleString()}
-          </div>
-          <div className="text-sm text-white/70">
-            {totals.quodo_bookings} Quodo booking{totals.quodo_bookings !== 1 ? "s" : ""} that close = ${commission} extra
+
+          {/* Cumulative Commission */}
+          <div className="rounded-xl p-3 sm:p-4 bg-gradient-to-br from-amber-500 to-orange-500 text-center relative overflow-hidden">
+            <div className="absolute top-2 right-2 text-2xl sm:text-3xl opacity-20">🏆</div>
+            <div className="text-[9px] sm:text-[10px] font-semibold text-white/80 uppercase tracking-wider mb-1">
+              Promo Total
+            </div>
+            <div className="text-2xl sm:text-3xl font-bold text-white mb-0.5">
+              ${(totals.quodo_bookings * 100).toLocaleString()}
+            </div>
+            <div className="text-[10px] sm:text-xs text-white/60">
+              ({totals.quodo_bookings} booking{totals.quodo_bookings !== 1 ? "s" : ""} total)
+            </div>
           </div>
         </div>
       </div>
