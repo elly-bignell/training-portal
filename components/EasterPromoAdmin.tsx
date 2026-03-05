@@ -195,11 +195,54 @@ export default function EasterPromoAdmin() {
         </div>
       </div>
 
-      {/* Lead Gen Leaderboard */}
+      {/* Commissions Leaderboard — based on confirmed closes */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white px-5 py-3">
+          <h3 className="text-base font-bold flex items-center gap-2">💰 Commissions Leaderboard</h3>
+          <p className="text-emerald-200 text-[11px]">$100 confirmed per Quodo booking that was closed by buddy</p>
+        </div>
+        <div className="divide-y divide-gray-100">
+          {(() => {
+            const commBoard = pairConfig
+              .map((p) => {
+                const closes = totalsMap[p.senior]?.promo_closes_buddy || 0;
+                return { slug: p.junior, name: p.juniorName, closes, commission: closes * 100 };
+              })
+              .sort((a, b) => b.closes - a.closes);
+            const maxCloses = commBoard[0]?.closes || 0;
+            return commBoard.map((entry, idx) => {
+              const medal = idx === 0 ? "🥇" : idx === 1 ? "🥈" : "🥉";
+              const barWidth = maxCloses > 0 ? Math.max(5, (entry.closes / maxCloses) * 100) : 5;
+              return (
+                <div key={entry.slug} className="px-5 py-4 flex items-center gap-4">
+                  <span className="text-2xl">{medal}</span>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-bold text-gray-800">{entry.name}</span>
+                      <span className="text-sm font-bold text-emerald-600">${entry.commission.toLocaleString()}</span>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full transition-all"
+                        style={{ width: barWidth + "%" }}
+                      />
+                    </div>
+                    <div className="text-[10px] text-gray-400 mt-1">
+                      {entry.closes} confirmed close{entry.closes !== 1 ? "s" : ""}
+                    </div>
+                  </div>
+                </div>
+              );
+            });
+          })()}
+        </div>
+      </div>
+
+      {/* Bookings Leaderboard — total Quodo bookings */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-5 py-3">
-          <h3 className="text-base font-bold flex items-center gap-2">🏆 Lead Gen Commission Leaderboard</h3>
-          <p className="text-purple-200 text-[11px]">+$100 per Quodo booking that converts to a deal</p>
+          <h3 className="text-base font-bold flex items-center gap-2">📅 Bookings Leaderboard</h3>
+          <p className="text-purple-200 text-[11px]">Total Quodo bookings made during the Easter promotion</p>
         </div>
         <div className="divide-y divide-gray-100">
           {stats.leaderboard.map((entry, idx) => {
@@ -215,7 +258,7 @@ export default function EasterPromoAdmin() {
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-sm font-bold text-gray-800">{entry.name}</span>
-                    <span className="text-sm font-bold text-emerald-600">${entry.commission.toLocaleString()}</span>
+                    <span className="text-sm font-bold text-purple-600">{entry.bookings}</span>
                   </div>
                   <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div
