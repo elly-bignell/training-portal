@@ -5,7 +5,7 @@ import { Module } from "@/types";
 export const trainingProgram: Module[] = [
   {
     id: "module-1",
-    title: "MODULE 1 — Company & Culture (Estimated: 70 mins)",
+    title: "MODULE 1 — Company & Culture",
     purpose:
       "Build belief and understanding of company context. Learn who we are, why clients trust us, and our approach to success.",
     proficiency: [
@@ -72,7 +72,7 @@ export const trainingProgram: Module[] = [
   },
   {
     id: "module-2",
-    title: "MODULE 2 — Marketing Sweet: Our Brand for Existing Websites (Estimated: 5 hrs 8 mins)",
+    title: "MODULE 2 — Marketing Sweet: Our Brand for Existing Websites",
     purpose:
       "Learn about our membership products and extras through M-Quote, our quoting and sales system.",
     proficiency: [
@@ -484,7 +484,7 @@ export const trainingProgram: Module[] = [
   },
   {
     id: "module-3",
-    title: "MODULE 3 — Quodo: Our Brand for Replacing Websites (Estimated: 45 mins)",
+    title: "MODULE 3 — Quodo: Our Brand for Replacing Websites",
     purpose:
       "Master the Quodo product offering, understand the plan ladder and pricing, and learn how to match clients to the right plan.",
     proficiency: [
@@ -634,7 +634,7 @@ export const trainingProgram: Module[] = [
   },
   {
     id: "module-4",
-    title: "MODULE 4 — Call Scripts & Additional Resources (Estimated: 50 mins)",
+    title: "MODULE 4 — Call Scripts & Additional Resources",
     purpose:
       "Familiarise yourself with the cold call script and additional sales resources to build confidence and consistency on calls.",
     proficiency: [
