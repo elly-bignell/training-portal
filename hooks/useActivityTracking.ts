@@ -87,6 +87,7 @@ export function getDayOfWeek(): number {
 }
 
 export function useActivityTracking(traineeSlug: string, traineeName: string) {
+  const lastFetchDateRef = { current: getAdelaideDate() };
   const [todayActivity, setTodayActivity] = useState<DailyActivity>({
     calls_made: 0,
     calls: 0,
@@ -106,6 +107,7 @@ export function useActivityTracking(traineeSlug: string, traineeName: string) {
       const response = await fetch(`/api/activity?trainee_slug=${traineeSlug}`);
       const data = await response.json();
       if (data && !data.error) {
+        lastFetchDateRef.current = getAdelaideDate();
         setTodayActivity({
           calls_made: data.calls_made || 0,
           calls: data.calls || 0,
@@ -175,9 +177,24 @@ export function useActivityTracking(traineeSlug: string, traineeName: string) {
     [traineeSlug, traineeName, currentWeek, fetchWeeklyActivity]
   );
 
-  // Increment a metric
+  // Increment a metric (with day-change protection)
   const incrementMetric = useCallback(
     async (metric: keyof DailyActivity, amount: number = 1) => {
+      // Check if the date has changed since we last fetched data
+      const now = getAdelaideDate();
+      if (now !== lastFetchDateRef.current) {
+        // Day changed! Reset to zeros, then re-fetch fresh data
+        const fresh: DailyActivity = { calls_made: 0, calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 };
+        const newActivity = { ...fresh, [metric]: amount };
+        setTodayActivity(newActivity);
+        lastFetchDateRef.current = now;
+        await saveActivity(newActivity);
+        // Also refresh weekly data for the new day
+        const week = getCurrentWeekNumber();
+        setCurrentWeek(week);
+        await fetchWeeklyActivity(week);
+        return;
+      }
       const newActivity = {
         ...todayActivity,
         [metric]: todayActivity[metric] + amount,
@@ -185,12 +202,21 @@ export function useActivityTracking(traineeSlug: string, traineeName: string) {
       setTodayActivity(newActivity);
       await saveActivity(newActivity);
     },
-    [todayActivity, saveActivity]
+    [todayActivity, saveActivity, fetchWeeklyActivity]
   );
 
-  // Set a metric directly (for revenue input)
+  // Set a metric directly (for revenue input, with day-change protection)
   const setMetric = useCallback(
     async (metric: keyof DailyActivity, value: number) => {
+      const now = getAdelaideDate();
+      if (now !== lastFetchDateRef.current) {
+        const fresh: DailyActivity = { calls_made: 0, calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 };
+        const newActivity = { ...fresh, [metric]: value };
+        setTodayActivity(newActivity);
+        lastFetchDateRef.current = now;
+        await saveActivity(newActivity);
+        return;
+      }
       const newActivity = {
         ...todayActivity,
         [metric]: value,
