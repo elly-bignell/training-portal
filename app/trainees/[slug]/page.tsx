@@ -22,6 +22,14 @@ function TraineeDashboardContent() {
     ? trainingProgram.filter((m) => m.id !== "module-4")
     : trainingProgram;
 
+  // Customer service: softer proficiency wording per module
+  const CS_PROFICIENCY_OVERRIDES: Record<string, string[]> = {
+    "module-1": ["Gained a deeper understanding of who we are"],
+    "module-2": ["Understanding of Marketing Sweet"],
+    "module-3": ["Understanding of Quodo"],
+  };
+  const isCSApplicant = EXCLUDE_MODULE_4_SLUGS.includes(slug);
+
   // Get all checklist item IDs for overall progress calculation (excluding section headers)
   const allChecklistIds = filteredProgram.flatMap((module) =>
     module.checklist.filter((item) => !item.isSection).map((item) => item.id)
@@ -230,12 +238,15 @@ function TraineeDashboardContent() {
             return (
               <div key={module.id} id={module.id}>
                 <ModuleCard
-                  module={module}
+                  module={isCSApplicant && CS_PROFICIENCY_OVERRIDES[module.id]
+                    ? { ...module, proficiency: CS_PROFICIENCY_OVERRIDES[module.id] }
+                    : module}
                   checkedItems={progress.checkedItems}
                   notes={progress.notes}
                   onToggleItem={handleToggleItem}
                   onUpdateNotes={handleUpdateNotes}
                   moduleProgress={moduleProgress}
+                  proficiencyLabel={isCSApplicant ? "After reviewing these resources, you will have gained an:" : undefined}
                 />
               </div>
             );
@@ -250,7 +261,7 @@ function TraineeDashboardContent() {
               <h2 className="text-lg font-semibold text-gray-800">Resource Reflection</h2>
             </div>
             <p className="text-sm text-gray-500 mb-5">
-              Before your Q&amp;A session, sit with these three questions. No need to write anything down — just come ready to talk through them.
+              After reviewing the resources, sit with these three questions:
             </p>
             <div className="space-y-4">
               <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-400">
@@ -263,7 +274,7 @@ function TraineeDashboardContent() {
               </div>
               <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-400">
                 <p className="text-sm font-medium text-gray-700">What questions do you still have about us?</p>
-                <p className="text-xs text-gray-400 mt-1">Bring them to the session — there&apos;s no such thing as a bad one.</p>
+                <p className="text-xs text-gray-400 mt-1">After this, it&apos;s your turn to interview us.</p>
               </div>
             </div>
           </div>

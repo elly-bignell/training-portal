@@ -14,6 +14,7 @@ interface ModuleCardProps {
   onToggleItem: (itemId: string) => void;
   onUpdateNotes: (moduleId: string, content: string) => void;
   moduleProgress: number;
+  proficiencyLabel?: string;
 }
 
 function QuestionnaireBlock({ questionnaire }: { questionnaire: Questionnaire }) {
@@ -73,6 +74,7 @@ export default function ModuleCard({
   onToggleItem,
   onUpdateNotes,
   moduleProgress,
+  proficiencyLabel,
 }: ModuleCardProps) {
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -135,7 +137,7 @@ export default function ModuleCard({
           {/* Proficiency Requirements */}
           <div className="mt-4">
             <h4 className="text-sm font-semibold text-gray-700 mb-2">
-              🎯 By the end of this module, you should be able to:
+              {proficiencyLabel ?? "🎯 By the end of this module, you should be able to:"}
             </h4>
             <ul className="list-disc list-inside space-y-1 text-sm text-gray-600 ml-2">
               {module.proficiency.map((item, index) => (
