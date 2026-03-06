@@ -166,7 +166,7 @@ const QUESTIONS = [
   {
     id: "successVision",
     type: "textarea",
-    label: "Tell us why we should hire you, and where you see yourself in the next 1–2 years.",
+    label: "Tell us why we should hire you, and where you see yourself professionally in the next 1–2 years?",
     helper: "A few sentences is perfect.",
     placeholder: "Share your thoughts here...",
     required: true,
