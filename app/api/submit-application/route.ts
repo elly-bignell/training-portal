@@ -138,7 +138,7 @@ export async function POST(req: NextRequest) {
 
     // Send email via Resend
     const emailHtml = buildEmailHtml(finalBody);
-    await fetch("https://api.resend.com/emails", {
+    const emailRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${RESEND_API_KEY}`,
@@ -151,8 +151,11 @@ export async function POST(req: NextRequest) {
         html: emailHtml,
       }),
     });
-
-    return NextResponse.json({ success: true });
+    const emailData = await emailRes.json();
+    if (!emailRes.ok) {
+      return NextResponse.json({ success: true, emailError: emailData });
+    }
+    return NextResponse.json({ success: true, emailId: emailData.id });
   } catch (err) {
     console.error("Submission error:", err);
     return NextResponse.json({ error: "Internal server error", detail: String(err) }, { status: 500 });
