@@ -208,7 +208,7 @@ export default function RennieDealTracker({ date }: { date: string }) {
 
                   {/* Delete */}
                   <button
-                    onClick={() => handleDeleteDeal(deal.id)}
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDeleteDeal(deal.id); }}
                     className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 transition-all p-1"
                     title="Remove deal"
                   >
@@ -240,7 +240,7 @@ export default function RennieDealTracker({ date }: { date: string }) {
                   return (
                     <button
                       key={c.slug}
-                      onClick={() => setSelectedCloser(c.slug)}
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSelectedCloser(c.slug); }}
                       className={
                         "px-3 py-2 rounded-lg text-xs font-semibold transition-all border " +
                         (isSelected
@@ -292,14 +292,14 @@ export default function RennieDealTracker({ date }: { date: string }) {
             {/* Actions */}
             <div className="flex items-center gap-2 pt-1">
               <button
-                onClick={handleAddDeal}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddDeal(); }}
                 disabled={isSaving || !dealValue || parseFloat(dealValue) <= 0}
                 className="flex-1 py-2 bg-slate-700 text-white text-xs font-bold rounded-lg hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 {isSaving ? "Saving..." : "Log Deal"}
               </button>
               <button
-                onClick={() => {
+                onClick={(e) => { e.preventDefault(); e.stopPropagation();
                   setShowForm(false);
                   setDealValue("");
                   setNotes("");
@@ -313,7 +313,7 @@ export default function RennieDealTracker({ date }: { date: string }) {
           </div>
         ) : (
           <button
-            onClick={() => setShowForm(true)}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowForm(true); }}
             className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-sm font-semibold text-gray-500 hover:border-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-all"
           >
             + Log a Deal
