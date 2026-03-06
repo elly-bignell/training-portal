@@ -1,6 +1,5 @@
 "use client";
 
-import PasswordGate from "@/components/PasswordGate";
 
 import { useState, useRef } from "react";
 
@@ -247,7 +246,7 @@ function RankingQuestion({
   );
 }
 
-function QuestionnaireContent() {
+export default function ApplyPage() {
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [otherText, setOtherText] = useState("");
@@ -522,13 +521,5 @@ function QuestionnaireContent() {
         </div>
       </div>
     </main>
-  );
-}
-
-export default function QuestionnairePage() {
-  return (
-    <PasswordGate>
-      <QuestionnaireContent />
-    </PasswordGate>
   );
 }
