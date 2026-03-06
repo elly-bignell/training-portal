@@ -342,6 +342,7 @@ function HomeContent() {
           <div className="space-y-4">
             {(() => {
               const CS_APPLICANT_SLUGS = ["dasha-axenova", "lily-stollery", "sanjana-aneja"];
+              const NO_SCORECARD_SLUGS = ["dasha-axenova", "lily-stollery", "sanjana-aneja", "jeremy-valiente"];
               return ["jeremy-valiente", "dasha-axenova", "lily-stollery", "sanjana-aneja"]
                 .map(s => trainees.find(t => t.slug === s)!)
                 .filter(Boolean)
@@ -356,6 +357,7 @@ function HomeContent() {
                         <div>
                           <h3 className="font-semibold text-gray-800">{trainee.name}</h3>
                           {isApplicant && <span className="text-xs text-amber-600 font-medium">Applicant — closes 6pm Sun 8 Mar</span>}
+                          {trainee.slug === "jeremy-valiente" && <span className="text-xs text-amber-600 font-medium">Closes 6pm Mon 9 Mar</span>}
                         </div>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
@@ -363,7 +365,7 @@ function HomeContent() {
                           <span className="text-gray-600">Training Dashboard</span>
                           <Link href={`/trainees/${trainee.slug}`} className="text-blue-600 hover:underline">Open →</Link>
                         </div>
-                        {!isApplicant && (
+                        {!NO_SCORECARD_SLUGS.includes(trainee.slug) && (
                           <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
                             <span className="text-gray-600">Activity Scorecard</span>
                             <Link href={`/scorecard/${trainee.slug}`} className="text-blue-600 hover:underline">Open →</Link>
