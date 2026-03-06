@@ -106,7 +106,6 @@ function ScorecardPageContent() {
         {slug === "thomas-rennie" && <RennieDealTracker date={new Date().toLocaleDateString("en-CA")} />}
         {isSenior(slug) && <ScorecardRulesSenior slug={slug} />}
         {isJunior(slug) && <ScorecardRulesJunior slug={slug} />}
-            Back to Training Modules
           </Link>
         </div>
       </div>
