@@ -8,7 +8,7 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY!;
 const NOTIFY_EMAILS = [
   "elly@marketingsweet.com.au",
   "trent@marketingsweet.com.au",
-  "hr@marketingsweet.com.au",
+  "hr@quodo.com.au",
 ];
 
 const QUESTION_LABELS: Record<string, string> = {
