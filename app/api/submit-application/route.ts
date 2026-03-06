@@ -5,11 +5,7 @@ const AIRTABLE_BASE_ID = "appuSHXFTvvlEEY2r";
 const AIRTABLE_TABLE_ID = "tbljoYOAUAYJMZL2h";
 const RESEND_API_KEY = process.env.RESEND_API_KEY!;
 
-const NOTIFY_EMAILS = [
-  "elly@marketingsweet.com.au",
-  "trent@marketingsweet.com.au",
-  "hr@quodo.com.au",
-];
+const NOTIFY_EMAILS = ["hr@marketingsweet.com.au"];
 
 const QUESTION_LABELS: Record<string, string> = {
   name: "Applicant Full Name",
