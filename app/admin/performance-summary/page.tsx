@@ -8,6 +8,7 @@ import { trainees } from "@/data/trainees";
 import PasswordGate from "@/components/PasswordGate";
 import { usePersistedState } from "@/hooks/usePersistedState";
 import EasterPromoAdmin from "@/components/EasterPromoAdmin";
+import RenniePerformanceSection from "@/components/RenniePerformanceSection";
 
 // ─── Types ───
 interface DailyRecord {
@@ -707,6 +708,9 @@ function PerformanceSummaryContent() {
             );
           })}
 
+
+          {/* ═══ TOM RENNIE (solo + handoffs) ═══ */}
+          <RenniePerformanceSection projTeamDaily={projTeamDaily} />
           {/* Projection source */}
           <div className="bg-white rounded-xl border border-gray-200 p-4">
             <div className="text-xs font-bold text-gray-500 mb-2">Projection Inputs (per team/day)</div>
