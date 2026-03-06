@@ -13,7 +13,7 @@ const QUESTIONS = [
   {
     id: "workExperience",
     type: "multiselect",
-    label: "Outside of your university studies, what work experience have you had?",
+    label: "What work experience have you had?",
     options: [
       "Hospitality / customer service",
       "Retail",
@@ -42,7 +42,7 @@ const QUESTIONS = [
   {
     id: "expectedStay",
     type: "single",
-    label: "If you were successful in this role, how long would you realistically expect to remain with the company?",
+    label: "How long are you looking to stay with a company long-term?",
     options: [
       "3–6 months",
       "6–12 months",
@@ -55,19 +55,20 @@ const QUESTIONS = [
   {
     id: "salaryExpectation",
     type: "single",
-    label: "What annual salary range would you expect for this position?",
+    label: "What starting annual salary are you expecting?",
     options: [
-      "Below $50,000",
-      "$50,000 – $55,000",
-      "$55,000 – $60,000",
-      "$60,000 – $65,000",
-      "$65,000+",
+      "$40,000",
+      "$50,000",
+      "$60,000",
+      "$70,000",
+      "$80,000",
+      "$90,000+",
     ],
   },
   {
     id: "salaryReview",
     type: "single",
-    label: "How often do you believe salary reviews typically occur in a professional role?",
+    label: "How often would you expect your wage to be reviewed?",
     options: [
       "Every 3 months",
       "Every 6 months",
@@ -152,7 +153,7 @@ const QUESTIONS = [
   {
     id: "successVision",
     type: "textarea",
-    label: "If you were successful in this role, what would success look like for you after 12 months?",
+    label: "Tell us why we should hire you, and where you see yourself in the next 1–2 years.",
     helper: "A few sentences is perfect.",
     placeholder: "Share your thoughts here...",
     required: true,
@@ -279,12 +280,7 @@ export default function ApplyPage() {
       setAnswer(current_arr.filter((v) => v !== val));
     } else {
       if (maxSelect && current_arr.length >= maxSelect) return;
-      // Handle "Other" for work experience
-      if (val === "Other") {
-        setAnswer([...current_arr, val]);
-      } else {
-        setAnswer([...current_arr, val]);
-      }
+      setAnswer([...current_arr, val]);
     }
   };
 
@@ -302,7 +298,6 @@ export default function ApplyPage() {
     setSubmitting(true);
     setError("");
 
-    // Merge "Other" text into work experience answer
     const finalAnswers = { ...answers };
     if (
       Array.isArray(finalAnswers.workExperience) &&
