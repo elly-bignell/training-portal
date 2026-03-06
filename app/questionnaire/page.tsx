@@ -154,7 +154,20 @@ const QUESTIONS = [
     ],
   },
   {
-    id: "preparedToLearn",
+    id: "startAvailability",
+    type: "single",
+    label: "If you were successful for the position, how soon would you be able to start?",
+    options: [
+      "Immediately",
+      "1 week",
+      "2 weeks",
+      "3 weeks",
+      "4 weeks",
+      "Other — I'll need to discuss with you",
+    ],
+  },
+  {
+    id: "preparedToLearn",,
     type: "single",
     label: "If we were to provide additional resources about our company, would you be prepared to learn more during the application process?",
     options: [

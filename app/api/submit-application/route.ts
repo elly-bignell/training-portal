@@ -21,6 +21,7 @@ const QUESTION_LABELS: Record<string, string> = {
   workApproach: "Approach to Work",
   research: "Research Before Applying",
   successVision: "Success After 12 Months",
+  startAvailability: "Start Availability",
   preparedToLearn: "Prepared to Learn More",
 };
 
@@ -115,6 +116,7 @@ export async function POST(req: NextRequest) {
       "Approach to Work": finalBody.workApproach || "",
       "Research Before Applying": finalBody.research || "",
       "Success After 12 Months": finalBody.successVision || "",
+      "Start Availability": finalBody.startAvailability || "",
       "Prepared to Learn More": finalBody.preparedToLearn || "",
     };
 
