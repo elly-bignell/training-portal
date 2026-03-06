@@ -49,7 +49,7 @@ function buildEmailHtml(body: Record<string, string | string[]>): string {
             ${label}
           </td>
           <td style="padding: 12px 16px; border-bottom: 1px solid #e5e7eb; font-size: 13px; color: #111827; vertical-align: top; ${isMultiLine ? "white-space: pre-line;" : ""}">
-            ${isMultiLine && key === "careerPriorities" 
+            ${isMultiLine && key === "careerPriorities"
               ? (value as string[]).map((item, i) => `${i + 1}. ${item}`).join("<br>")
               : formatted}
           </td>
@@ -60,32 +60,19 @@ function buildEmailHtml(body: Record<string, string | string[]>): string {
   return `
     <!DOCTYPE html>
     <html>
-    <head>
-      <meta charset="utf-8">
-      <title>Applicant Questionnaire Submission</title>
-    </head>
+    <head><meta charset="utf-8"><title>Applicant Questionnaire Submission</title></head>
     <body style="margin: 0; padding: 0; background: #f3f4f6; font-family: Arial, sans-serif;">
       <div style="max-width: 700px; margin: 32px auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        
-        <!-- Header -->
         <div style="background: #1d4ed8; padding: 24px 32px;">
           <h1 style="margin: 0; color: white; font-size: 20px;">New Applicant Questionnaire Submission</h1>
           <p style="margin: 6px 0 0; color: #bfdbfe; font-size: 14px;">
             Submitted by <strong>${body.name}</strong> on ${new Date().toLocaleDateString("en-AU", { weekday: "long", year: "numeric", month: "long", day: "numeric" })} at ${new Date().toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" })}
           </p>
         </div>
-
-        <!-- Print note -->
         <div style="background: #eff6ff; padding: 12px 32px; border-bottom: 1px solid #dbeafe;">
           <p style="margin: 0; font-size: 12px; color: #1d4ed8;">📄 This email is print-ready — use your browser's print function to save as PDF for the interview.</p>
         </div>
-
-        <!-- Answers table -->
-        <table style="width: 100%; border-collapse: collapse; margin: 0;">
-          ${rows}
-        </table>
-
-        <!-- Footer -->
+        <table style="width: 100%; border-collapse: collapse; margin: 0;">${rows}</table>
         <div style="padding: 20px 32px; background: #f9fafb; border-top: 1px solid #e5e7eb;">
           <p style="margin: 0; font-size: 12px; color: #9ca3af;">Marketing Sweet · Applicant Questionnaire System</p>
         </div>
@@ -99,7 +86,6 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    // Merge "Other" text into work experience
     const finalBody = { ...body };
     if (
       Array.isArray(finalBody.workExperience) &&
@@ -134,7 +120,6 @@ export async function POST(req: NextRequest) {
       "Success After 12 Months": finalBody.successVision || "",
     };
 
-    // Submit to Airtable
     const airtableRes = await fetch(
       `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`,
       {
@@ -149,14 +134,13 @@ export async function POST(req: NextRequest) {
 
     if (!airtableRes.ok) {
       const err = await airtableRes.json();
-      console.error("Airtable error:", err);
-      return NextResponse.json({ error: "Airtable submission failed" }, { status: 500 });
+      // Return the actual Airtable error for debugging
+      return NextResponse.json({ error: "Airtable submission failed", detail: err }, { status: 500 });
     }
 
     // Send email via Resend
     const emailHtml = buildEmailHtml(finalBody);
-
-    const emailRes = await fetch("https://api.resend.com/emails", {
+    await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${RESEND_API_KEY}`,
@@ -170,15 +154,9 @@ export async function POST(req: NextRequest) {
       }),
     });
 
-    if (!emailRes.ok) {
-      const err = await emailRes.json();
-      console.error("Resend error:", err);
-      // Don't fail the whole submission if email fails
-    }
-
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("Submission error:", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error", detail: String(err) }, { status: 500 });
   }
 }
