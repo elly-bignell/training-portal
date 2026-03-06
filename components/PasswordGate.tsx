@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { isValidPassword, hasMasterAccess } from "@/data/passwords";
+import { isValidPassword, hasMasterAccess, getPasswordExpiry } from "@/data/passwords";
 
 interface PasswordGateProps {
   children: React.ReactNode;
@@ -73,7 +73,12 @@ export default function PasswordGate({
       // Trainee pages accept master OR their specific password
       isValid = isValidPassword(password, traineeSlug);
       if (!isValid) {
-        setError("Invalid password. Please try again.");
+        const expiry = getPasswordExpiry(password, traineeSlug);
+        if (expiry) {
+          setError(expiry);
+        } else {
+          setError("Invalid password. Please try again.");
+        }
       }
     }
 
