@@ -242,7 +242,6 @@ function TraineeDashboardContent() {
           })}
         </div>
 
-
         {/* Resource Reflection — Customer Service applicants only */}
         {EXCLUDE_MODULE_4_SLUGS.includes(slug) && (
           <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -260,67 +259,11 @@ function TraineeDashboardContent() {
               </div>
               <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-400">
                 <p className="text-sm font-medium text-gray-700">If you did a little digging — who do you think our main competitors are?</p>
-                <p className="text-xs text-gray-400 mt-1">We haven't listed them. See what you can find.</p>
+                <p className="text-xs text-gray-400 mt-1">We haven&apos;t listed them. See what you can find.</p>
               </div>
               <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-400">
                 <p className="text-sm font-medium text-gray-700">What questions do you still have about us?</p>
-                <p className="text-xs text-gray-400 mt-1">Bring them to the session — there's no such thing as a bad one.</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-
-        {/* Resource Reflection — Customer Service applicants only */}
-        {EXCLUDE_MODULE_4_SLUGS.includes(slug) && (
-          <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-lg">💡</span>
-              <h2 className="text-lg font-semibold text-gray-800">Resource Reflection</h2>
-            </div>
-            <p className="text-sm text-gray-500 mb-5">
-              Before your Q&amp;A session, sit with these three questions. No need to write anything down — just come ready to talk through them.
-            </p>
-            <div className="space-y-4">
-              <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-400">
-                <p className="text-sm font-medium text-gray-700">What makes Marketing Sweet &amp; Quodo genuinely different?</p>
-                <p className="text-xs text-gray-400 mt-1">Think about what stood out to you in Module 1.</p>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-400">
-                <p className="text-sm font-medium text-gray-700">If you did a little digging — who do you think our main competitors are?</p>
-                <p className="text-xs text-gray-400 mt-1">We haven't listed them. See what you can find.</p>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-400">
-                <p className="text-sm font-medium text-gray-700">What questions do you still have about us?</p>
-                <p className="text-xs text-gray-400 mt-1">Bring them to the session — there's no such thing as a bad one.</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-
-        {/* Resource Reflection — Customer Service applicants only */}
-        {EXCLUDE_MODULE_4_SLUGS.includes(slug) && (
-          <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-lg">💡</span>
-              <h2 className="text-lg font-semibold text-gray-800">Resource Reflection</h2>
-            </div>
-            <p className="text-sm text-gray-500 mb-5">
-              Before your Q&amp;A session, sit with these three questions. No need to write anything down — just come ready to talk through them.
-            </p>
-            <div className="space-y-4">
-              <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-400">
-                <p className="text-sm font-medium text-gray-700">What makes Marketing Sweet &amp; Quodo genuinely different?</p>
-                <p className="text-xs text-gray-400 mt-1">Think about what stood out to you in Module 1.</p>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-400">
-                <p className="text-sm font-medium text-gray-700">If you did a little digging — who do you think our main competitors are?</p>
-                <p className="text-xs text-gray-400 mt-1">We haven't listed them. See what you can find.</p>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-400">
-                <p className="text-sm font-medium text-gray-700">What questions do you still have about us?</p>
-                <p className="text-xs text-gray-400 mt-1">Bring them to the session — there's no such thing as a bad one.</p>
+                <p className="text-xs text-gray-400 mt-1">Bring them to the session — there&apos;s no such thing as a bad one.</p>
               </div>
             </div>
           </div>
