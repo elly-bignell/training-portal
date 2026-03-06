@@ -17,7 +17,8 @@ function TraineeDashboardContent() {
   const trainee = getTraineeBySlug(slug);
 
   // Customer service team: exclude Module 4 (sales-specific)
-  const EXCLUDE_MODULE_4_SLUGS = ["jeremy-valiente"];
+  const EXCLUDE_MODULE_4_SLUGS = ["jeremy-valiente", "dasha-axenova", "lily-stollery", "sanjana-aneja"];
+  const CS_APPLICANT_SLUGS = ["dasha-axenova", "lily-stollery", "sanjana-aneja"];
   const filteredProgram = EXCLUDE_MODULE_4_SLUGS.includes(slug)
     ? trainingProgram.filter((m) => m.id !== "module-4")
     : trainingProgram;
@@ -252,6 +253,14 @@ function TraineeDashboardContent() {
             );
           })}
         </div>
+
+        {/* Expiry notice for applicants */}
+        {CS_APPLICANT_SLUGS.includes(slug) && (
+          <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center gap-3">
+            <span className="text-amber-500 text-xl">⏰</span>
+            <p className="text-sm text-amber-800 font-medium">These resources will close at 6pm Sunday 8 March.</p>
+          </div>
+        )}
 
         {/* Resource Reflection — Customer Service applicants only */}
         {EXCLUDE_MODULE_4_SLUGS.includes(slug) && (
