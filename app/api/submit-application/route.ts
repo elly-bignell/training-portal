@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN!;
 const AIRTABLE_BASE_ID = "appuSHXFTvvlEEY2r";
-const AIRTABLE_TABLE_ID = "tbljoYOAUAYJMZL2h";
+const AIRTABLE_TABLE_ID = "tblwaqqTetvu4bzri";
 const RESEND_API_KEY = process.env.RESEND_API_KEY!;
 
 const NOTIFY_EMAILS = [
