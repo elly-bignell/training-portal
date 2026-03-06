@@ -25,6 +25,7 @@ const QUESTION_LABELS: Record<string, string> = {
   workApproach: "Approach to Work",
   research: "Research Before Applying",
   successVision: "Success After 12 Months",
+  preparedToLearn: "Prepared to Learn More",
 };
 
 function formatAnswer(key: string, value: string | string[]): string {
@@ -118,6 +119,7 @@ export async function POST(req: NextRequest) {
       "Approach to Work": finalBody.workApproach || "",
       "Research Before Applying": finalBody.research || "",
       "Success After 12 Months": finalBody.successVision || "",
+      "Prepared to Learn More": finalBody.preparedToLearn || "",
     };
 
     const airtableRes = await fetch(

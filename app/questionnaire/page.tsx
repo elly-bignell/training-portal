@@ -42,7 +42,7 @@ const QUESTIONS = [
   {
     id: "expectedStay",
     type: "single",
-    label: "How long are you looking to stay with a company long-term?",
+    label: "If successful, how long would you be planning to stay with our company?",
     options: [
       "3–6 months",
       "6–12 months",
@@ -148,6 +148,16 @@ const QUESTIONS = [
       "I briefly looked at the company website",
       "I explored the website and services",
       "I researched the company and industry in detail",
+    ],
+  },
+  {
+    id: "preparedToLearn",
+    type: "single",
+    label: "If we were to provide additional resources about our company, would you be prepared to learn more during the application process?",
+    options: [
+      "Yes absolutely",
+      "Maybe — depends how much",
+      "Not really — I\'ve done enough research",
     ],
   },
   {
