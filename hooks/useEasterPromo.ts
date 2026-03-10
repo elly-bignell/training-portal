@@ -89,8 +89,8 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
             ...data,
           }),
         });
-        // Re-fetch BOTH today and totals from Airtable after save
-        await Promise.all([fetchToday(), fetchTotals()]);
+        // Only re-fetch totals — today stays as optimistic update to avoid Airtable race condition
+        await fetchTotals();
       } catch (e) {
         console.error("Error saving easter promo:", e);
       } finally {
