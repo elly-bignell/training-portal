@@ -7,7 +7,7 @@ const printStyles = `
     body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .no-print { display: none !important; }
     .page-wrap { padding: 16px !important; background: white !important; }
-    .card, .table-wrap { box-shadow: none !important; break-inside: avoid; }
+    .card, .table-wrap, .scorecard { box-shadow: none !important; break-inside: avoid; }
   }
 `;
 
@@ -53,10 +53,74 @@ function ValBar({ validated, rejected, pending, total }) {
         <div style={{ width: pct(pending, total) + "%", background: "#94a3b8" }} />
       </div>
       <div style={{ display: "flex", gap: 10, marginTop: 5, fontSize: 11, flexWrap: "wrap" }}>
-        <span style={{ color: C.green }}>✓ {validated} validated ({pct(validated, total)}%)</span>
-        <span style={{ color: C.red }}>✗ {rejected} rejected ({pct(rejected, total)}%)</span>
-        <span style={{ color: C.slate }}>◌ {pending} pending</span>
+        <span style={{ color: C.green }}>&#x2713; {validated} validated ({pct(validated, total)}%)</span>
+        <span style={{ color: C.red }}>&#x2715; {rejected} rejected ({pct(rejected, total)}%)</span>
+        <span style={{ color: C.slate }}>&#9675; {pending} pending</span>
       </div>
+    </div>
+  );
+}
+
+function ScorecardRow({ label, value, subLabel, highlight }) {
+  return (
+    <div style={{
+      display: "flex", justifyContent: "space-between", alignItems: "center",
+      padding: "9px 0", borderBottom: "1px solid #f1f5f9",
+    }}>
+      <div>
+        <div style={{ fontSize: 13, color: highlight ? C.heading : C.muted, fontWeight: highlight ? 600 : 400 }}>{label}</div>
+        {subLabel && <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 1 }}>{subLabel}</div>}
+      </div>
+      <div style={{
+        fontFamily: "monospace", fontSize: 15, fontWeight: 700,
+        color: highlight ? C.green : C.heading,
+        background: highlight ? C.greenBg : "#f8fafc",
+        border: "1px solid " + (highlight ? C.greenMid : C.border),
+        padding: "3px 10px", borderRadius: 6, minWidth: 60, textAlign: "right",
+      }}>
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function Scorecard({ t }) {
+  const d = t.totalDays;
+  const fd = t.fieldDays;
+  return (
+    <div className="scorecard" style={{
+      background: C.cardBg, border: "1px solid " + C.border, borderRadius: 12,
+      padding: "20px 22px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+    }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+        <div>
+          <div style={{ fontSize: 17, fontWeight: 700, color: C.heading }}>{t.name}</div>
+          <div style={{ fontSize: 11, color: C.muted }}>Daily Scorecard</div>
+        </div>
+        <div style={{ textAlign: "right" }}>
+          <div style={{ fontSize: 11, fontFamily: "monospace", background: "#f1f5f9", border: "1px solid " + C.border, padding: "3px 8px", borderRadius: 6, color: C.slate }}>
+            {d} active days
+          </div>
+        </div>
+      </div>
+
+      <ScorecardRow label="Bookings / day"       value={fmtN(t.bookings / d)} />
+      <ScorecardRow label="Meetings attended / day" value={fmtN(t.meetings / d)} />
+      <ScorecardRow label="Connected calls / day" value={fmtN(t.connectedCalls / d)} />
+      <ScorecardRow label="Total calls / day"     value={fmtN(t.totalCalls / fd)}  subLabel="Field days only" />
+      <ScorecardRow label="Validation rate"       value={t.valRate + "%"}           subLabel="Validated / contacted" />
+      <ScorecardRow
+        label="Revenue / day (50%)"
+        value={fmt$(t.revenueHalved / d)}
+        subLabel="As booked — buddy closes other 50%"
+        highlight={t.revenueHalved > 0}
+      />
+      <ScorecardRow
+        label="Units / day (50%)"
+        value={fmtN(t.unitsHalved / d)}
+        subLabel="As booked — buddy closes other 50%"
+        highlight={t.unitsHalved > 0}
+      />
     </div>
   );
 }
@@ -82,39 +146,23 @@ function TraineeCard({ t, all }) {
         </div>
       </div>
       <div style={{ background: t.revenue > 0 ? C.greenBg : "#f8fafc", border: "1px solid " + (t.revenue > 0 ? C.greenMid : C.border), borderRadius: 8, padding: "12px 14px", marginBottom: 14 }}>
-        <div style={{ fontSize: 10, color: t.revenue > 0 ? C.green : C.muted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 3 }}>Revenue</div>
+        <div style={{ fontSize: 10, color: t.revenue > 0 ? C.green : C.muted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 3 }}>Total Revenue (actual)</div>
         <div style={{ fontSize: 24, fontWeight: 700, fontFamily: "monospace", color: t.revenue > 0 ? C.green : "#cbd5e1" }}>{fmt$(t.revenue)}</div>
         <div style={{ fontSize: 11, color: t.units > 0 ? C.green : "#cbd5e1", marginTop: 2 }}>{t.units} {t.units === 1 ? "deal" : "deals"} closed</div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 14 }}>
         {[
-          { label: "Meetings",    val: t.meetings,                        maxKey: "meetings",       color: "#7c3aed" },
-          { label: "Bookings",    val: t.bookings,                        maxKey: "bookings",       color: C.blue },
+          { label: "Meetings",    val: t.meetings,                        maxKey: "meetings",       color: "#7c3aed", raw: t.meetings },
+          { label: "Bookings",    val: t.bookings,                        maxKey: "bookings",       color: C.blue,    raw: t.bookings },
           { label: "Connected",   val: t.connectedCalls.toLocaleString(), maxKey: "connectedCalls", color: "#0284c7", raw: t.connectedCalls },
           { label: "Total Calls", val: t.totalCalls.toLocaleString(),     maxKey: "totalCalls",     color: "#0891b2", raw: t.totalCalls },
         ].map((s) => (
           <div key={s.label} style={{ background: "#f8fafc", border: "1px solid " + C.border, borderRadius: 8, padding: "10px 12px" }}>
             <div style={{ fontSize: 10, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 3 }}>{s.label}</div>
             <div style={{ fontFamily: "monospace", fontSize: 16, fontWeight: 600, color: C.heading }}>{s.val}</div>
-            <MiniBar value={s.raw !== undefined ? s.raw : s.val} max={bestOf(all, s.maxKey)} color={s.color} />
+            <MiniBar value={s.raw} max={bestOf(all, s.maxKey)} color={s.color} />
           </div>
         ))}
-      </div>
-      <div style={{ background: "#f8fafc", border: "1px solid " + C.border, borderRadius: 8, padding: "10px 14px", marginBottom: 14 }}>
-        <div style={{ fontSize: 10, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>Per Active Day</div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
-          {[
-            { label: "Bookings",  val: fmtN(t.bookingsPerDay) },
-            { label: "Connected", val: fmtN(t.connectedCallsPerDay) },
-            { label: "Calls",     val: fmtN(t.totalCallsPerDay) },
-            { label: "Val. Rate", val: t.valRate + "%" },
-          ].map((item) => (
-            <div key={item.label} style={{ display: "flex", justifyContent: "space-between", fontSize: 12 }}>
-              <span style={{ color: C.muted }}>{item.label}</span>
-              <span style={{ fontFamily: "monospace", fontWeight: 600, color: C.heading }}>{item.val}</span>
-            </div>
-          ))}
-        </div>
       </div>
       <div style={{ borderTop: "1px solid " + C.border, paddingTop: 12 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
@@ -153,6 +201,12 @@ export default function SnapshotPage() {
       const res  = await fetch("/api/snapshot-data", { cache: "no-store" });
       const json = await res.json();
       if (!json.ok) throw new Error(json.error || "Unknown error");
+      // Attach halved values for scorecard
+      json.trainees = json.trainees.map((t) => ({
+        ...t,
+        revenueHalved: t.revenue / 2,
+        unitsHalved:   t.units   / 2,
+      }));
       setData(json);
       setLastRefresh(new Date());
     } catch (e) {
@@ -176,22 +230,24 @@ export default function SnapshotPage() {
       <style>{printStyles}</style>
       <div className="page-wrap" style={{ minHeight: "100vh", background: "#f1f5f9", padding: "36px 24px", fontFamily: "system-ui, sans-serif" }}>
         <div style={{ maxWidth: 1020, margin: "0 auto" }}>
+
+          {/* Header */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28, flexWrap: "wrap", gap: 16 }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
                 <Badge>Admin · Field Performance</Badge>
-                {data && <span style={{ fontSize: 11, color: C.muted }}>{data.periodStart} → {data.periodEnd}</span>}
+                {data && <span style={{ fontSize: 11, color: C.muted }}>{data.periodStart} &#8594; {data.periodEnd}</span>}
               </div>
               <h1 style={{ margin: 0, fontSize: 26, fontWeight: 700, color: C.heading, letterSpacing: "-0.02em" }}>Trainee Snapshot</h1>
-              <p style={{ margin: "4px 0 0", fontSize: 13, color: C.muted }}>Week 3 in field · 2 full calling weeks complete · Buddy model — units & revenue at 50% in Airtable</p>
+              <p style={{ margin: "4px 0 0", fontSize: 13, color: C.muted }}>Week 3 in field · 2 full calling weeks complete · Buddy model</p>
             </div>
             <div className="no-print" style={{ display: "flex", gap: 10, alignItems: "center" }}>
               {lastRefresh && <span style={{ fontSize: 11, color: "#94a3b8" }}>{lastRefresh.toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" })}</span>}
               <button onClick={load} disabled={loading} style={{ padding: "8px 14px", fontSize: 13, borderRadius: 8, cursor: loading ? "not-allowed" : "pointer", border: "1px solid " + C.border, background: C.cardBg, color: C.muted, fontWeight: 500 }}>
-                {loading ? "↻ Loading…" : "↻ Refresh"}
+                {loading ? "Loading..." : "Refresh"}
               </button>
               <button onClick={() => window.print()} style={{ padding: "8px 16px", fontSize: 13, borderRadius: 8, cursor: "pointer", border: "none", background: C.heading, color: "#fff", fontWeight: 600 }}>
-                ↓ Download PDF
+                Download PDF
               </button>
             </div>
           </div>
@@ -203,14 +259,32 @@ export default function SnapshotPage() {
             </div>
           )}
 
-          {loading && !data && <div style={{ textAlign: "center", padding: "80px 0", color: C.muted }}>Loading live data…</div>}
+          {loading && !data && <div style={{ textAlign: "center", padding: "80px 0", color: C.muted }}>Loading live data...</div>}
 
+          {/* Overview cards */}
           {trainees.length > 0 && (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 18 }}>
-              {trainees.map((t) => <TraineeCard key={t.slug} t={t} all={trainees} />)}
-            </div>
+            <>
+              <div style={{ fontSize: 11, fontWeight: 600, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>Overview</div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 28 }}>
+                {trainees.map((t) => <TraineeCard key={t.slug} t={t} all={trainees} />)}
+              </div>
+            </>
           )}
 
+          {/* Daily scorecards */}
+          {trainees.length > 0 && (
+            <>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>Daily Scorecards</div>
+                <div style={{ fontSize: 11, color: "#94a3b8" }}>All metrics per active working day · Revenue &amp; units shown at 50% (trainee books, buddy closes)</div>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 28 }}>
+                {trainees.map((t) => <Scorecard key={t.slug} t={t} />)}
+              </div>
+            </>
+          )}
+
+          {/* Full comparison table */}
           {trainees.length > 0 && (
             <div className="table-wrap" style={{ background: C.cardBg, border: "1px solid " + C.border, borderRadius: 12, overflow: "hidden", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", marginBottom: 14 }}>
               <div style={{ padding: "13px 20px", borderBottom: "1px solid " + C.border, background: C.rowAlt }}>
@@ -225,7 +299,7 @@ export default function SnapshotPage() {
                 </thead>
                 <tbody>
                   <tr style={{ borderBottom: "1px solid " + C.border }}>
-                    <td style={{ padding: "11px 20px", fontSize: 13, color: C.muted }}>Active Days<div style={{ fontSize: 10, color: "#94a3b8", marginTop: 1 }}>Excl. absences & public holidays</div></td>
+                    <td style={{ padding: "11px 20px", fontSize: 13, color: C.muted }}>Active Days<div style={{ fontSize: 10, color: "#94a3b8", marginTop: 1 }}>Excl. absences and public holidays</div></td>
                     {trainees.map((t) => (
                       <td key={t.name} style={{ padding: "11px 20px", textAlign: "right", fontFamily: "monospace", fontSize: 13, color: C.heading }}>
                         {t.totalDays}
@@ -238,12 +312,12 @@ export default function SnapshotPage() {
                     ))}
                   </tr>
                   {[
-                    { label: "Sales Revenue",      key: "revenue",        fmt: fmt$,                      primary: true, note: "Actual value (Airtable × 2)" },
-                    { label: "Sales Units",         key: "units",          fmt: (v) => v,                  primary: true, note: "Actual deals (Airtable × 2)" },
-                    { label: "Meetings Attended",   key: "meetings",       fmt: (v) => v },
-                    { label: "Total Bookings",      key: "bookings",       fmt: (v) => v.toLocaleString() },
-                    { label: "Connected Calls",     key: "connectedCalls", fmt: (v) => v.toLocaleString() },
-                    { label: "Total Calls Dialled", key: "totalCalls",     fmt: (v) => v.toLocaleString(), note: "Field weeks only" },
+                    { label: "Sales Revenue (actual)",  key: "revenue",        fmt: fmt$,                      primary: true, note: "Doubled from Airtable — actual closed value" },
+                    { label: "Sales Units (actual)",    key: "units",          fmt: (v) => v,                  primary: true, note: "Doubled from Airtable — actual deals closed" },
+                    { label: "Meetings Attended",       key: "meetings",       fmt: (v) => v },
+                    { label: "Total Bookings",          key: "bookings",       fmt: (v) => v.toLocaleString() },
+                    { label: "Connected Calls",         key: "connectedCalls", fmt: (v) => v.toLocaleString() },
+                    { label: "Total Calls Dialled",     key: "totalCalls",     fmt: (v) => v.toLocaleString(), note: "Field weeks only" },
                   ].map((m) => {
                     const bv = bestOf(trainees, m.key);
                     return (
@@ -258,31 +332,34 @@ export default function SnapshotPage() {
                           const isBest = v === bv && bv > 0;
                           return (
                             <td key={t.name} style={{ padding: "11px 20px", textAlign: "right", fontFamily: "monospace", fontSize: 13, fontWeight: isBest ? 700 : 400, color: isBest ? (m.primary ? C.green : C.blue) : v === 0 ? "#cbd5e1" : C.heading }}>
-                              {m.fmt(v)}{isBest && <span style={{ fontSize: 8, marginLeft: 4, opacity: 0.5 }}>▲</span>}
+                              {m.fmt(v)}{isBest && <span style={{ fontSize: 8, marginLeft: 4, opacity: 0.5 }}>&#9650;</span>}
                             </td>
                           );
                         })}
                       </tr>
                     );
                   })}
-                  <SectionDivider label="Daily Averages" colSpan={trainees.length + 1} />
+                  <SectionDivider label="Daily Averages (per active day)" colSpan={trainees.length + 1} />
                   {[
-                    { label: "Bookings / day",        key: "bookingsPerDay",       fmt: (v) => fmtN(v) },
-                    { label: "Connected calls / day",  key: "connectedCallsPerDay", fmt: (v) => fmtN(v) },
-                    { label: "Total calls / day",      key: "totalCallsPerDay",     fmt: (v) => fmtN(v), note: "Field days only" },
+                    { label: "Bookings / day",          key: "bookingsPerDay",       fmt: (v) => fmtN(v) },
+                    { label: "Connected calls / day",   key: "connectedCallsPerDay", fmt: (v) => fmtN(v) },
+                    { label: "Total calls / day",       key: "totalCallsPerDay",     fmt: (v) => fmtN(v), note: "Field days only" },
+                    { label: "Revenue / day (50%)",     key: "revenueHalved",        fmt: (v, t) => fmt$(v / t.totalDays), note: "As booked by trainee" },
+                    { label: "Units / day (50%)",       key: "unitsHalved",          fmt: (v, t) => fmtN(v / t.totalDays), note: "As booked by trainee" },
                   ].map((m, i, arr) => {
-                    const bv = bestOf(trainees, m.key);
+                    const vals = trainees.map((t) => m.fmt ? (m.key === "revenueHalved" || m.key === "unitsHalved" ? t[m.key] / t.totalDays : t[m.key]) : t[m.key]);
+                    const bv = Math.max(...trainees.map((t) => m.key === "revenueHalved" || m.key === "unitsHalved" ? t[m.key] / t.totalDays : t[m.key]));
                     return (
                       <tr key={m.key} style={{ borderBottom: i < arr.length - 1 ? "1px solid " + C.border : "none" }}>
                         <td style={{ padding: "11px 20px", fontSize: 13, color: C.muted }}>
                           {m.label}{m.note && <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 1 }}>{m.note}</div>}
                         </td>
                         {trainees.map((t) => {
-                          const v = t[m.key];
+                          const v = m.key === "revenueHalved" || m.key === "unitsHalved" ? t[m.key] / t.totalDays : t[m.key];
                           const isBest = v === bv && bv > 0;
                           return (
                             <td key={t.name} style={{ padding: "11px 20px", textAlign: "right", fontFamily: "monospace", fontSize: 13, color: isBest ? C.blue : C.heading, fontWeight: isBest ? 700 : 400 }}>
-                              {m.fmt(v)}{isBest && <span style={{ fontSize: 8, marginLeft: 4, opacity: 0.4 }}>▲</span>}
+                              {m.key === "revenueHalved" ? fmt$(v) : fmtN(v)}{isBest && <span style={{ fontSize: 8, marginLeft: 4, opacity: 0.4 }}>&#9650;</span>}
                             </td>
                           );
                         })}
@@ -296,7 +373,7 @@ export default function SnapshotPage() {
                     { label: "Rejected",        key: "valRejected",    fmt: (v, t) => v + " (" + pct(v, t.valTotal) + "%)", color: C.red, lowerIsBetter: true },
                     { label: "Pending",         key: "valPending",     fmt: (v, t) => v + " (" + pct(v, t.valTotal) + "%)", color: C.slate },
                     { label: "Contact Rate",    key: "valContactRate", fmt: (v)    => v + "%", color: "#0284c7" },
-                    { label: "Validation Rate", key: "valRate",        fmt: (v)    => v + "%", color: C.green, note: "Validated ÷ contacted (excl. pending)" },
+                    { label: "Validation Rate", key: "valRate",        fmt: (v)    => v + "%", color: C.green, note: "Validated / contacted (excl. pending)" },
                   ].map((m, i, arr) => {
                     const bv = m.lowerIsBetter ? Math.min(...trainees.map((t) => t[m.key])) : bestOf(trainees, m.key);
                     return (
@@ -309,7 +386,7 @@ export default function SnapshotPage() {
                           const isBest = v === bv && bv > 0;
                           return (
                             <td key={t.name} style={{ padding: "10px 20px", textAlign: "right", fontFamily: "monospace", fontSize: 13, color: m.color || C.heading, fontWeight: isBest ? 700 : 400 }}>
-                              {m.fmt(v, t)}{isBest && <span style={{ fontSize: 8, marginLeft: 4, opacity: 0.4 }}>▲</span>}
+                              {m.fmt(v, t)}{isBest && <span style={{ fontSize: 8, marginLeft: 4, opacity: 0.4 }}>&#9650;</span>}
                             </td>
                           );
                         })}
@@ -320,8 +397,9 @@ export default function SnapshotPage() {
               </table>
             </div>
           )}
+
           <div style={{ marginTop: 14, fontSize: 11, color: "#94a3b8", textAlign: "center" }}>
-            Revenue & units doubled from Airtable values · Buddies closing on trainees' behalf · {today}
+            Revenue and units doubled from Airtable values · Scorecards show 50% (trainee contribution) · {today}
             {lastRefresh && <span className="no-print"> · Auto-refreshes every 5 min</span>}
           </div>
         </div>
