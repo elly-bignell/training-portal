@@ -79,7 +79,7 @@ export default function EasterPromoJunior({ traineeSlug, traineeName }: Props) {
           <div className="rounded-xl p-3 sm:p-4 bg-gradient-to-br from-emerald-500 to-emerald-600 text-center relative overflow-hidden">
             <div className="absolute top-2 right-2 text-2xl sm:text-3xl opacity-20">💰</div>
             <div className="text-[9px] sm:text-[10px] font-semibold text-white/80 uppercase tracking-wider mb-1">
-              Today&apos;s Commission
+              Today&apos;s Commission Opportunity Generated
             </div>
             <div className="text-2xl sm:text-3xl font-bold text-white mb-0.5">
               ${(today.quodo_bookings * 100).toLocaleString()}
