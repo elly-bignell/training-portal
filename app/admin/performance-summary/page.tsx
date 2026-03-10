@@ -710,7 +710,7 @@ function PerformanceSummaryContent() {
 
 
           {/* ═══ TOM RENNIE (solo + handoffs) ═══ */}
-          <RenniePerformanceSection projTeamDaily={projTeamDaily} />
+          <RennieDealTracker date={new Date().toLocaleDateString("en-CA", { timeZone: "Australia/Adelaide" })} />
           {/* Projection source */}
           <div className="bg-white rounded-xl border border-gray-200 p-4">
             <div className="text-xs font-bold text-gray-500 mb-2">Projection Inputs (per team/day)</div>
