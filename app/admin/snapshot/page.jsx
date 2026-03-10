@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 import { useEffect, useState, useCallback } from "react";
+import PasswordGate from "@/components/PasswordGate";
 
 const printStyles = `
   @media print {
@@ -226,7 +227,7 @@ export default function SnapshotPage() {
   const today    = new Date().toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" });
 
   return (
-    <>
+    <PasswordGate requireMaster>
       <style>{printStyles}</style>
       <div className="page-wrap" style={{ minHeight: "100vh", background: "#f1f5f9", padding: "36px 24px", fontFamily: "system-ui, sans-serif" }}>
         <div style={{ maxWidth: 1020, margin: "0 auto" }}>
@@ -404,6 +405,6 @@ export default function SnapshotPage() {
           </div>
         </div>
       </div>
-    </>
+    </PasswordGate>
   );
 }
