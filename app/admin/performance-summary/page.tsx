@@ -8,7 +8,7 @@ import { trainees } from "@/data/trainees";
 import PasswordGate from "@/components/PasswordGate";
 import { usePersistedState } from "@/hooks/usePersistedState";
 import EasterPromoAdmin from "@/components/EasterPromoAdmin";
-import RenniePerformanceSection from "@/components/RennieDealTracker";
+import RennieDealTracker from "@/components/RennieDealTracker";
 
 // ─── Types ───
 interface DailyRecord {
