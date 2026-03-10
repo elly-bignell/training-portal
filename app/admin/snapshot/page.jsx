@@ -150,6 +150,7 @@ function TraineeCard({ t, all }) {
         <div style={{ fontSize: 10, color: t.revenue > 0 ? C.green : C.muted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 3 }}>Total Revenue (actual)</div>
         <div style={{ fontSize: 24, fontWeight: 700, fontFamily: "monospace", color: t.revenue > 0 ? C.green : "#cbd5e1" }}>{fmt$(t.revenue)}</div>
         <div style={{ fontSize: 11, color: t.units > 0 ? C.green : "#cbd5e1", marginTop: 2 }}>{t.units} {t.units === 1 ? "deal" : "deals"} closed</div>
+        <div style={{ fontSize: 11, color: t.revenue > 0 ? C.green : "#cbd5e1", marginTop: 4, fontWeight: 600 }}>@ 50% = {fmt$(t.revenue / 2)}</div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 14 }}>
         {[
