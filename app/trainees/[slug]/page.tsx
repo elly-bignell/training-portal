@@ -318,6 +318,8 @@ export default function TraineeDashboard() {
   const params = useParams();
   const slug = params.slug as string;
   
+  if (!slug) return null;
+  
   return (
     <PasswordGate traineeSlug={slug}>
       <TraineeDashboardContent />
