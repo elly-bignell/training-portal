@@ -350,7 +350,7 @@ function HomeContent() {
           <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3 mt-6">Customer Service Team Quick Access</h3>
           <div className="space-y-4">
             {(() => {
-              const CS_APPLICANT_SLUGS = [];
+              const CS_APPLICANT_SLUGS: string[] = [];
               const NO_SCORECARD_SLUGS = ["dasha-axenova", "jeremy-valiente"];
               return ["jeremy-valiente", "dasha-axenova"]
                 .map(s => trainees.find(t => t.slug === s)!)
