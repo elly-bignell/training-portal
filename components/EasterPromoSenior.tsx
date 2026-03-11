@@ -13,6 +13,8 @@ interface Props {
 export default function EasterPromoSenior({ traineeSlug, traineeName }: Props) {
   const { today, totals, isLoading, isSaving, increment } = useEasterPromo(traineeSlug, traineeName);
   const buddyName = getBuddyName(traineeSlug);
+  // Short name for labels (e.g. "LT" for Lucas Tirri)
+  const initials = traineeName.split(" ").map((n) => n[0]).join("").toUpperCase();
 
   if (isLoading) {
     return (
@@ -25,8 +27,10 @@ export default function EasterPromoSenior({ traineeSlug, traineeName }: Props) {
     );
   }
 
-  const totalCloses = totals.promo_closes_own + totals.promo_closes_buddy;
-  const todayCloses = today.promo_closes_own + today.promo_closes_buddy;
+  const totalExpress = totals.express_closes_own + totals.express_closes_buddy;
+  const totalStandard = totals.standard_closes_own + totals.standard_closes_buddy;
+  const totalCloses = totalExpress + totalStandard;
+  const totalBuddyCloses = totals.express_closes_buddy + totals.standard_closes_buddy;
 
   return (
     <div className="bg-white rounded-xl shadow-sm border-2 border-pink-200 overflow-hidden">
@@ -54,7 +58,7 @@ export default function EasterPromoSenior({ traineeSlug, traineeName }: Props) {
       </div>
 
       <div className="p-3 sm:p-4 space-y-3">
-        {/* Today's Pitches */}
+        {/* Pitches Today */}
         <div className="rounded-xl p-3 sm:p-4 bg-gradient-to-br from-amber-500 to-amber-600 relative overflow-hidden">
           <div className="absolute top-2 right-2 text-2xl sm:text-3xl opacity-20">🎯</div>
           <div className="text-[10px] sm:text-xs font-semibold text-white/80 uppercase tracking-wide mb-0.5">
@@ -82,71 +86,147 @@ export default function EasterPromoSenior({ traineeSlug, traineeName }: Props) {
           </div>
         </div>
 
-        {/* Closes - split by booking source */}
-        <div className="grid grid-cols-2 gap-2 sm:gap-3">
-          {/* My Booking → Closed */}
-          <div className="rounded-xl p-3 sm:p-4 bg-gradient-to-br from-emerald-500 to-emerald-600 relative overflow-hidden">
-            <div className="absolute top-2 right-2 text-2xl sm:text-3xl opacity-20">💰</div>
-            <div className="text-[10px] sm:text-xs font-semibold text-white/80 uppercase tracking-wide mb-0.5">
-              Closed — My Booking
-            </div>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-2xl sm:text-3xl font-bold text-white">{today.promo_closes_own}</span>
-              <span className="text-[10px] sm:text-xs text-white/60">Total: {totals.promo_closes_own}</span>
-            </div>
-            <div className="flex gap-1.5 sm:gap-2">
-              <button
-                onClick={() => increment("promo_closes_own", -1)}
-                disabled={today.promo_closes_own <= 0 || isSaving}
-                className="flex-1 py-1.5 sm:py-2 rounded-lg bg-white/20 text-white text-sm font-semibold hover:bg-white/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                −1
-              </button>
-              <button
-                onClick={() => increment("promo_closes_own", 1)}
-                disabled={isSaving}
-                className="flex-1 py-1.5 sm:py-2 rounded-lg bg-white text-emerald-700 text-sm font-semibold hover:bg-white/90 transition-colors disabled:opacity-50"
-              >
-                +1
-              </button>
+        {/* ═══ 7 DAY EXPRESS CLOSES ═══ */}
+        <div className="rounded-xl border-2 border-pink-200 overflow-hidden">
+          <div className="bg-pink-50 px-3 py-1.5 border-b border-pink-200">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-pink-700 uppercase tracking-wide">⚡ 7 Day Express Build</span>
+              <span className="text-[10px] text-pink-500 font-semibold">Uses promo spots · {totalExpress} closed</span>
             </div>
           </div>
+          <div className="grid grid-cols-2 gap-0">
+            {/* Express — Own booking */}
+            <div className="p-3 sm:p-4 bg-gradient-to-br from-emerald-500 to-emerald-600 relative overflow-hidden">
+              <div className="text-[9px] sm:text-[10px] font-bold text-white/80 uppercase tracking-wide mb-0.5 leading-tight">
+                Express — Closed ({initials} Booking)
+              </div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-2xl sm:text-3xl font-bold text-white">{today.express_closes_own}</span>
+                <span className="text-[10px] text-white/60">Total: {totals.express_closes_own}</span>
+              </div>
+              <div className="flex gap-1.5">
+                <button
+                  onClick={() => increment("express_closes_own", -1)}
+                  disabled={today.express_closes_own <= 0 || isSaving}
+                  className="flex-1 py-1.5 rounded-lg bg-white/20 text-white text-sm font-semibold hover:bg-white/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  −1
+                </button>
+                <button
+                  onClick={() => increment("express_closes_own", 1)}
+                  disabled={isSaving}
+                  className="flex-1 py-1.5 rounded-lg bg-white text-emerald-700 text-sm font-semibold hover:bg-white/90 transition-colors disabled:opacity-50"
+                >
+                  +1
+                </button>
+              </div>
+            </div>
 
-          {/* Buddy's Booking → Closed */}
-          <div className="rounded-xl p-3 sm:p-4 bg-gradient-to-br from-purple-500 to-purple-600 relative overflow-hidden">
-            <div className="absolute top-2 right-2 text-2xl sm:text-3xl opacity-20">🤝</div>
-            <div className="text-[10px] sm:text-xs font-semibold text-white/80 uppercase tracking-wide mb-0.5">
-              Closed — {buddyName}&apos;s Booking
+            {/* Express — Buddy booking */}
+            <div className="p-3 sm:p-4 bg-gradient-to-br from-purple-500 to-purple-600 relative overflow-hidden">
+              <div className="text-[9px] sm:text-[10px] font-bold text-white/80 uppercase tracking-wide mb-0.5 leading-tight">
+                Express — Closed ({buddyName} Booking)
+              </div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-2xl sm:text-3xl font-bold text-white">{today.express_closes_buddy}</span>
+                <span className="text-[10px] text-white/60">Total: {totals.express_closes_buddy}</span>
+              </div>
+              <div className="flex gap-1.5">
+                <button
+                  onClick={() => increment("express_closes_buddy", -1)}
+                  disabled={today.express_closes_buddy <= 0 || isSaving}
+                  className="flex-1 py-1.5 rounded-lg bg-white/20 text-white text-sm font-semibold hover:bg-white/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  −1
+                </button>
+                <button
+                  onClick={() => increment("express_closes_buddy", 1)}
+                  disabled={isSaving}
+                  className="flex-1 py-1.5 rounded-lg bg-white text-purple-700 text-sm font-semibold hover:bg-white/90 transition-colors disabled:opacity-50"
+                >
+                  +1
+                </button>
+              </div>
             </div>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-2xl sm:text-3xl font-bold text-white">{today.promo_closes_buddy}</span>
-              <span className="text-[10px] sm:text-xs text-white/60">Total: {totals.promo_closes_buddy}</span>
+          </div>
+        </div>
+
+        {/* ═══ STANDARD BUILD CLOSES ═══ */}
+        <div className="rounded-xl border-2 border-slate-200 overflow-hidden">
+          <div className="bg-slate-50 px-3 py-1.5 border-b border-slate-200">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-600 uppercase tracking-wide">🏗️ Standard Build</span>
+              <span className="text-[10px] text-slate-400 font-semibold">No spot used · {totalStandard} closed</span>
             </div>
-            <div className="flex gap-1.5 sm:gap-2">
-              <button
-                onClick={() => increment("promo_closes_buddy", -1)}
-                disabled={today.promo_closes_buddy <= 0 || isSaving}
-                className="flex-1 py-1.5 sm:py-2 rounded-lg bg-white/20 text-white text-sm font-semibold hover:bg-white/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                −1
-              </button>
-              <button
-                onClick={() => increment("promo_closes_buddy", 1)}
-                disabled={isSaving}
-                className="flex-1 py-1.5 sm:py-2 rounded-lg bg-white text-purple-700 text-sm font-semibold hover:bg-white/90 transition-colors disabled:opacity-50"
-              >
-                +1
-              </button>
+          </div>
+          <div className="grid grid-cols-2 gap-0">
+            {/* Standard — Own booking */}
+            <div className="p-3 sm:p-4 bg-gradient-to-br from-sky-500 to-sky-600 relative overflow-hidden">
+              <div className="text-[9px] sm:text-[10px] font-bold text-white/80 uppercase tracking-wide mb-0.5 leading-tight">
+                Standard — Closed ({initials} Booking)
+              </div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-2xl sm:text-3xl font-bold text-white">{today.standard_closes_own}</span>
+                <span className="text-[10px] text-white/60">Total: {totals.standard_closes_own}</span>
+              </div>
+              <div className="flex gap-1.5">
+                <button
+                  onClick={() => increment("standard_closes_own", -1)}
+                  disabled={today.standard_closes_own <= 0 || isSaving}
+                  className="flex-1 py-1.5 rounded-lg bg-white/20 text-white text-sm font-semibold hover:bg-white/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  −1
+                </button>
+                <button
+                  onClick={() => increment("standard_closes_own", 1)}
+                  disabled={isSaving}
+                  className="flex-1 py-1.5 rounded-lg bg-white text-sky-700 text-sm font-semibold hover:bg-white/90 transition-colors disabled:opacity-50"
+                >
+                  +1
+                </button>
+              </div>
+            </div>
+
+            {/* Standard — Buddy booking */}
+            <div className="p-3 sm:p-4 bg-gradient-to-br from-teal-500 to-teal-600 relative overflow-hidden">
+              <div className="text-[9px] sm:text-[10px] font-bold text-white/80 uppercase tracking-wide mb-0.5 leading-tight">
+                Standard — Closed ({buddyName} Booking)
+              </div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-2xl sm:text-3xl font-bold text-white">{today.standard_closes_buddy}</span>
+                <span className="text-[10px] text-white/60">Total: {totals.standard_closes_buddy}</span>
+              </div>
+              <div className="flex gap-1.5">
+                <button
+                  onClick={() => increment("standard_closes_buddy", -1)}
+                  disabled={today.standard_closes_buddy <= 0 || isSaving}
+                  className="flex-1 py-1.5 rounded-lg bg-white/20 text-white text-sm font-semibold hover:bg-white/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  −1
+                </button>
+                <button
+                  onClick={() => increment("standard_closes_buddy", 1)}
+                  disabled={isSaving}
+                  className="flex-1 py-1.5 rounded-lg bg-white text-teal-700 text-sm font-semibold hover:bg-white/90 transition-colors disabled:opacity-50"
+                >
+                  +1
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Summary footer */}
-        <div className="bg-gray-50 rounded-lg px-3 py-2 flex flex-wrap gap-3 text-[10px] sm:text-xs text-gray-500">
-          <span>🎯 Pitches: {totals.pitches}</span>
-          <span>💰 Total Closes: {totalCloses}</span>
-          <span>📊 Conversion: {totals.pitches > 0 ? Math.round((totalCloses / totals.pitches) * 100) : 0}%</span>
-          <span>🤝 {buddyName}&apos;s bookings closed: {totals.promo_closes_buddy}</span>
+        <div className="bg-gray-50 rounded-lg px-3 py-2 space-y-1">
+          <div className="flex flex-wrap gap-3 text-[10px] sm:text-xs text-gray-500">
+            <span>🎯 Pitches: {totals.pitches}</span>
+            <span>⚡ Express: {totalExpress}</span>
+            <span>🏗️ Standard: {totalStandard}</span>
+            <span>📊 Conversion: {totals.pitches > 0 ? Math.round((totalCloses / totals.pitches) * 100) : 0}%</span>
+          </div>
+          <div className="text-[10px] text-gray-400">
+            🤝 {buddyName}&apos;s bookings closed: {totalBuddyCloses} (express: {totals.express_closes_buddy}, standard: {totals.standard_closes_buddy}) · +${totalBuddyCloses * 100} commission
+          </div>
         </div>
       </div>
     </div>

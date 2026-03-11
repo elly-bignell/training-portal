@@ -14,8 +14,28 @@ const PROMO_END = "2026-04-01";
 const EXTENSION_START = "2026-04-09";
 const EXTENSION_END = "2026-04-17";
 
+const PROMO_FIELDS = [
+  "pitches",
+  "express_closes_own",
+  "express_closes_buddy",
+  "standard_closes_own",
+  "standard_closes_buddy",
+  "quodo_bookings",
+] as const;
+
 function getAdelaideDate(): string {
   return new Date().toLocaleDateString("en-CA", { timeZone: "Australia/Adelaide" });
+}
+
+function extractFields(fields: any) {
+  return {
+    pitches: fields.pitches || 0,
+    express_closes_own: fields.express_closes_own || 0,
+    express_closes_buddy: fields.express_closes_buddy || 0,
+    standard_closes_own: fields.standard_closes_own || 0,
+    standard_closes_buddy: fields.standard_closes_buddy || 0,
+    quodo_bookings: fields.quodo_bookings || 0,
+  };
 }
 
 // GET - Fetch easter promo data
@@ -23,6 +43,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const traineeSlug = searchParams.get("trainee_slug");
   const all = searchParams.get("all");
+  const totalsOnly = searchParams.get("totals");
   const allTeam = searchParams.get("all_team");
   const date = searchParams.get("date") || getAdelaideDate();
 
@@ -50,10 +71,7 @@ export async function GET(request: NextRequest) {
         trainee_slug: r.fields.trainee_slug,
         trainee_name: r.fields.trainee_name,
         date: r.fields.date,
-        pitches: r.fields.pitches || 0,
-        promo_closes_own: r.fields.promo_closes_own || 0,
-        promo_closes_buddy: r.fields.promo_closes_buddy || 0,
-        quodo_bookings: r.fields.quodo_bookings || 0,
+        ...extractFields(r.fields),
       }));
 
       return NextResponse.json({ records });
@@ -65,7 +83,7 @@ export async function GET(request: NextRequest) {
 
     let filterFormula: string;
 
-    if (all) {
+    if (all || totalsOnly) {
       filterFormula = `AND({trainee_slug} = "${traineeSlug}", OR(AND({date} >= "${PROMO_START}", {date} <= "${PROMO_END}"), AND({date} >= "${EXTENSION_START}", {date} <= "${EXTENSION_END}")))`;
     } else {
       filterFormula = `AND({trainee_slug} = "${traineeSlug}", {date} = "${date}")`;
@@ -85,24 +103,21 @@ export async function GET(request: NextRequest) {
     if (!response.ok) throw new Error(`Airtable error: ${response.status}`);
     const data = await response.json();
 
-    if (all) {
+    if (all || totalsOnly) {
       const records = data.records.map((r: any) => ({
         id: r.id,
         date: r.fields.date,
-        pitches: r.fields.pitches || 0,
-        promo_closes_own: r.fields.promo_closes_own || 0,
-        promo_closes_buddy: r.fields.promo_closes_buddy || 0,
-        quodo_bookings: r.fields.quodo_bookings || 0,
+        ...extractFields(r.fields),
       }));
 
       const totals = records.reduce(
-        (acc: any, r: any) => ({
-          pitches: acc.pitches + r.pitches,
-          promo_closes_own: acc.promo_closes_own + r.promo_closes_own,
-          promo_closes_buddy: acc.promo_closes_buddy + r.promo_closes_buddy,
-          quodo_bookings: acc.quodo_bookings + r.quodo_bookings,
-        }),
-        { pitches: 0, promo_closes_own: 0, promo_closes_buddy: 0, quodo_bookings: 0 }
+        (acc: any, r: any) => {
+          for (const f of PROMO_FIELDS) {
+            acc[f] = (acc[f] || 0) + (r[f] || 0);
+          }
+          return acc;
+        },
+        {} as any
       );
 
       return NextResponse.json({ records, totals });
@@ -114,10 +129,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         id: record.id,
         date: record.fields.date,
-        pitches: record.fields.pitches || 0,
-        promo_closes_own: record.fields.promo_closes_own || 0,
-        promo_closes_buddy: record.fields.promo_closes_buddy || 0,
-        quodo_bookings: record.fields.quodo_bookings || 0,
+        ...extractFields(record.fields),
       });
     }
 
@@ -125,8 +137,10 @@ export async function GET(request: NextRequest) {
       exists: false,
       date,
       pitches: 0,
-      promo_closes_own: 0,
-      promo_closes_buddy: 0,
+      express_closes_own: 0,
+      express_closes_buddy: 0,
+      standard_closes_own: 0,
+      standard_closes_buddy: 0,
       quodo_bookings: 0,
     });
   } catch (error) {
@@ -139,7 +153,16 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { trainee_slug, trainee_name, pitches, promo_closes_own, promo_closes_buddy, quodo_bookings } = body;
+    const {
+      trainee_slug,
+      trainee_name,
+      pitches,
+      express_closes_own,
+      express_closes_buddy,
+      standard_closes_own,
+      standard_closes_buddy,
+      quodo_bookings,
+    } = body;
     const date = body.date || getAdelaideDate();
 
     if (!trainee_slug) {
@@ -162,13 +185,15 @@ export async function POST(request: NextRequest) {
     const checkData = await checkResponse.json();
     const existingRecord = checkData.records?.[0];
 
-    const fields = {
+    const fields: Record<string, any> = {
       trainee_slug,
       trainee_name: trainee_name || trainee_slug,
       date,
       pitches: pitches || 0,
-      promo_closes_own: promo_closes_own || 0,
-      promo_closes_buddy: promo_closes_buddy || 0,
+      express_closes_own: express_closes_own || 0,
+      express_closes_buddy: express_closes_buddy || 0,
+      standard_closes_own: standard_closes_own || 0,
+      standard_closes_buddy: standard_closes_buddy || 0,
       quodo_bookings: quodo_bookings || 0,
       last_updated: new Date().toISOString(),
     };

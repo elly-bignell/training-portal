@@ -4,51 +4,53 @@ import { useState, useEffect, useCallback, useRef } from "react";
 
 interface EasterPromoDaily {
   pitches: number;
-  promo_closes_own: number;
-  promo_closes_buddy: number;
+  express_closes_own: number;
+  express_closes_buddy: number;
+  standard_closes_own: number;
+  standard_closes_buddy: number;
   quodo_bookings: number;
 }
 
 interface EasterPromoTotals {
   pitches: number;
-  promo_closes_own: number;
-  promo_closes_buddy: number;
+  express_closes_own: number;
+  express_closes_buddy: number;
+  standard_closes_own: number;
+  standard_closes_buddy: number;
   quodo_bookings: number;
 }
 
+const EMPTY_DAILY: EasterPromoDaily = {
+  pitches: 0,
+  express_closes_own: 0,
+  express_closes_buddy: 0,
+  standard_closes_own: 0,
+  standard_closes_buddy: 0,
+  quodo_bookings: 0,
+};
+
 export function useEasterPromo(traineeSlug: string, traineeName: string) {
-  const [today, setToday] = useState<EasterPromoDaily>({
-    pitches: 0,
-    promo_closes_own: 0,
-    promo_closes_buddy: 0,
-    quodo_bookings: 0,
-  });
-  const [totals, setTotals] = useState<EasterPromoTotals>({
-    pitches: 0,
-    promo_closes_own: 0,
-    promo_closes_buddy: 0,
-    quodo_bookings: 0,
-  });
+  const [today, setToday] = useState<EasterPromoDaily>({ ...EMPTY_DAILY });
+  const [totals, setTotals] = useState<EasterPromoTotals>({ ...EMPTY_DAILY });
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-
-  // Ref to track latest today values — prevents stale closure on rapid +1 taps
-  const todayRef = useRef(today);
-  todayRef.current = today;
+  const todayRef = useRef<EasterPromoDaily>({ ...EMPTY_DAILY });
 
   const fetchToday = useCallback(async () => {
     try {
       const res = await fetch(`/api/easter-promo?trainee_slug=${traineeSlug}`);
       const data = await res.json();
       if (data && !data.error) {
-        const fresh = {
+        const d: EasterPromoDaily = {
           pitches: data.pitches || 0,
-          promo_closes_own: data.promo_closes_own || 0,
-          promo_closes_buddy: data.promo_closes_buddy || 0,
+          express_closes_own: data.express_closes_own || 0,
+          express_closes_buddy: data.express_closes_buddy || 0,
+          standard_closes_own: data.standard_closes_own || 0,
+          standard_closes_buddy: data.standard_closes_buddy || 0,
           quodo_bookings: data.quodo_bookings || 0,
         };
-        setToday(fresh);
-        todayRef.current = fresh;
+        setToday(d);
+        todayRef.current = d;
       }
     } catch (e) {
       console.error("Error fetching easter promo today:", e);
@@ -89,8 +91,7 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
             ...data,
           }),
         });
-        // Only re-fetch totals — today stays as optimistic update to avoid Airtable race condition
-        await fetchTotals();
+        await Promise.all([fetchToday(), fetchTotals()]);
       } catch (e) {
         console.error("Error saving easter promo:", e);
       } finally {
@@ -102,7 +103,6 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
 
   const increment = useCallback(
     async (field: keyof EasterPromoDaily, amount: number = 1) => {
-      // Read from ref (always latest) instead of stale closure
       const current = todayRef.current;
       const updated = { ...current, [field]: Math.max(0, current[field] + amount) };
       setToday(updated);
@@ -112,15 +112,32 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
     [save]
   );
 
-  return {
-    today,
-    totals,
-    isLoading,
-    isSaving,
-    increment,
-    refresh: () => {
-      fetchToday();
-      fetchTotals();
-    },
-  };
+  return { today, totals, isLoading, isSaving, increment, refresh: () => { fetchToday(); fetchTotals(); } };
+}
+
+// Hook for juniors — fetches their senior's buddy closes (express + standard)
+export function useBuddyCloses(seniorSlug: string) {
+  const [expressCloses, setExpressCloses] = useState(0);
+  const [standardCloses, setStandardCloses] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetch_ = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/easter-promo?trainee_slug=${seniorSlug}&all=true`);
+      const data = await res.json();
+      if (data && !data.error && data.totals) {
+        setExpressCloses(data.totals.express_closes_buddy || 0);
+        setStandardCloses(data.totals.standard_closes_buddy || 0);
+      }
+    } catch (e) {
+      console.error("Error fetching buddy closes:", e);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [seniorSlug]);
+
+  useEffect(() => { fetch_(); }, [fetch_]);
+
+  const totalCloses = expressCloses + standardCloses;
+  return { totalCloses, expressCloses, standardCloses, isLoading, refresh: fetch_ };
 }
