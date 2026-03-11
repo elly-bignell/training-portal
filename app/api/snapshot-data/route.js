@@ -88,7 +88,7 @@ export async function GET() {
 
     let validationRecords = [];
     try {
-      validationRecords = await fetchAirtableAll(VALIDATION_TABLE, `{Booking Date} >= '${PERIOD_START}'`);
+      validationRecords = await fetchAirtableAll(VALIDATION_TABLE, `{booking_date} >= '${PERIOD_START}'`);
     } catch (e) { console.error("Bookings fetch failed:", e.message); }
 
     const stats = {};
@@ -112,7 +112,7 @@ export async function GET() {
 
     for (const record of validationRecords) {
       const f         = record.fields;
-      const staffName = (f["Staff Member"] || "").trim();
+      const staffName = (f["staff_member"] || "").trim();
       if (!staffName) continue;
       const matchedSlug = Object.entries(TRAINEES).find(([, t]) =>
         t.staffMatchNames.some((n) =>
@@ -121,7 +121,7 @@ export async function GET() {
         )
       )?.[0];
       if (!matchedSlug || !stats[matchedSlug]) continue;
-      const status = (f["Status"] || "").toLowerCase().trim();
+      const status = (f["status"] || "").toLowerCase().trim();
       stats[matchedSlug].valTotal++;
       if      (status === "validated") stats[matchedSlug].valValidated++;
       else if (status === "rejected")  stats[matchedSlug].valRejected++;
