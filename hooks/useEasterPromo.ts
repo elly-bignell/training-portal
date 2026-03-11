@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback, useRef } from "react";
 
 interface EasterPromoDaily {
   pitches: number;
+  pipe_own: number;
+  pipe_buddy: number;
   express_closes_own: number;
   express_closes_buddy: number;
   standard_closes_own: number;
@@ -11,17 +13,12 @@ interface EasterPromoDaily {
   quodo_bookings: number;
 }
 
-interface EasterPromoTotals {
-  pitches: number;
-  express_closes_own: number;
-  express_closes_buddy: number;
-  standard_closes_own: number;
-  standard_closes_buddy: number;
-  quodo_bookings: number;
-}
+interface EasterPromoTotals extends EasterPromoDaily {}
 
-const EMPTY_DAILY: EasterPromoDaily = {
+const EMPTY: EasterPromoDaily = {
   pitches: 0,
+  pipe_own: 0,
+  pipe_buddy: 0,
   express_closes_own: 0,
   express_closes_buddy: 0,
   standard_closes_own: 0,
@@ -30,11 +27,11 @@ const EMPTY_DAILY: EasterPromoDaily = {
 };
 
 export function useEasterPromo(traineeSlug: string, traineeName: string) {
-  const [today, setToday] = useState<EasterPromoDaily>({ ...EMPTY_DAILY });
-  const [totals, setTotals] = useState<EasterPromoTotals>({ ...EMPTY_DAILY });
+  const [today, setToday] = useState<EasterPromoDaily>({ ...EMPTY });
+  const [totals, setTotals] = useState<EasterPromoTotals>({ ...EMPTY });
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const todayRef = useRef<EasterPromoDaily>({ ...EMPTY_DAILY });
+  const todayRef = useRef<EasterPromoDaily>({ ...EMPTY });
 
   const fetchToday = useCallback(async () => {
     try {
@@ -43,6 +40,8 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
       if (data && !data.error) {
         const d: EasterPromoDaily = {
           pitches: data.pitches || 0,
+          pipe_own: data.pipe_own || 0,
+          pipe_buddy: data.pipe_buddy || 0,
           express_closes_own: data.express_closes_own || 0,
           express_closes_buddy: data.express_closes_buddy || 0,
           standard_closes_own: data.standard_closes_own || 0,

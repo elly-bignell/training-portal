@@ -13,7 +13,6 @@ interface Props {
 export default function EasterPromoSenior({ traineeSlug, traineeName }: Props) {
   const { today, totals, isLoading, isSaving, increment } = useEasterPromo(traineeSlug, traineeName);
   const buddyName = getBuddyName(traineeSlug);
-  // Short name for labels (e.g. "LT" for Lucas Tirri)
   const initials = traineeName.split(" ").map((n) => n[0]).join("").toUpperCase();
 
   if (isLoading) {
@@ -31,6 +30,7 @@ export default function EasterPromoSenior({ traineeSlug, traineeName }: Props) {
   const totalStandard = totals.standard_closes_own + totals.standard_closes_buddy;
   const totalCloses = totalExpress + totalStandard;
   const totalBuddyCloses = totals.express_closes_buddy + totals.standard_closes_buddy;
+  const totalPipe = totals.pipe_own + totals.pipe_buddy;
 
   return (
     <div className="bg-white rounded-xl shadow-sm border-2 border-pink-200 overflow-hidden">
@@ -58,7 +58,7 @@ export default function EasterPromoSenior({ traineeSlug, traineeName }: Props) {
       </div>
 
       <div className="p-3 sm:p-4 space-y-3">
-        {/* Pitches Today */}
+        {/* ═══ PITCHES TODAY ═══ */}
         <div className="rounded-xl p-3 sm:p-4 bg-gradient-to-br from-amber-500 to-amber-600 relative overflow-hidden">
           <div className="absolute top-2 right-2 text-2xl sm:text-3xl opacity-20">🎯</div>
           <div className="text-[10px] sm:text-xs font-semibold text-white/80 uppercase tracking-wide mb-0.5">
@@ -86,6 +86,71 @@ export default function EasterPromoSenior({ traineeSlug, traineeName }: Props) {
           </div>
         </div>
 
+        {/* ═══ ADDED TO PIPE ═══ */}
+        <div className="rounded-xl border-2 border-orange-200 overflow-hidden">
+          <div className="bg-orange-50 px-3 py-1.5 border-b border-orange-200">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-orange-700 uppercase tracking-wide">📋 Added to Pipe</span>
+              <span className="text-[10px] text-orange-500 font-semibold">{totalPipe} total</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-0">
+            {/* Pipe — Own booking */}
+            <div className="p-3 sm:p-4 bg-gradient-to-br from-orange-400 to-orange-500 relative overflow-hidden">
+              <div className="text-[9px] sm:text-[10px] font-bold text-white/80 uppercase tracking-wide mb-0.5 leading-tight">
+                {initials} Booking
+              </div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-2xl sm:text-3xl font-bold text-white">{today.pipe_own}</span>
+                <span className="text-[10px] text-white/60">Total: {totals.pipe_own}</span>
+              </div>
+              <div className="flex gap-1.5">
+                <button
+                  onClick={() => increment("pipe_own", -1)}
+                  disabled={today.pipe_own <= 0 || isSaving}
+                  className="flex-1 py-1.5 rounded-lg bg-white/20 text-white text-sm font-semibold hover:bg-white/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  −1
+                </button>
+                <button
+                  onClick={() => increment("pipe_own", 1)}
+                  disabled={isSaving}
+                  className="flex-1 py-1.5 rounded-lg bg-white text-orange-700 text-sm font-semibold hover:bg-white/90 transition-colors disabled:opacity-50"
+                >
+                  +1
+                </button>
+              </div>
+            </div>
+
+            {/* Pipe — Buddy booking */}
+            <div className="p-3 sm:p-4 bg-gradient-to-br from-yellow-500 to-amber-500 relative overflow-hidden">
+              <div className="text-[9px] sm:text-[10px] font-bold text-white/80 uppercase tracking-wide mb-0.5 leading-tight">
+                {buddyName} Booking
+              </div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-2xl sm:text-3xl font-bold text-white">{today.pipe_buddy}</span>
+                <span className="text-[10px] text-white/60">Total: {totals.pipe_buddy}</span>
+              </div>
+              <div className="flex gap-1.5">
+                <button
+                  onClick={() => increment("pipe_buddy", -1)}
+                  disabled={today.pipe_buddy <= 0 || isSaving}
+                  className="flex-1 py-1.5 rounded-lg bg-white/20 text-white text-sm font-semibold hover:bg-white/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  −1
+                </button>
+                <button
+                  onClick={() => increment("pipe_buddy", 1)}
+                  disabled={isSaving}
+                  className="flex-1 py-1.5 rounded-lg bg-white text-amber-700 text-sm font-semibold hover:bg-white/90 transition-colors disabled:opacity-50"
+                >
+                  +1
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* ═══ 7 DAY EXPRESS CLOSES ═══ */}
         <div className="rounded-xl border-2 border-pink-200 overflow-hidden">
           <div className="bg-pink-50 px-3 py-1.5 border-b border-pink-200">
@@ -95,7 +160,6 @@ export default function EasterPromoSenior({ traineeSlug, traineeName }: Props) {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-0">
-            {/* Express — Own booking */}
             <div className="p-3 sm:p-4 bg-gradient-to-br from-emerald-500 to-emerald-600 relative overflow-hidden">
               <div className="text-[9px] sm:text-[10px] font-bold text-white/80 uppercase tracking-wide mb-0.5 leading-tight">
                 Express — Closed ({initials} Booking)
@@ -122,7 +186,6 @@ export default function EasterPromoSenior({ traineeSlug, traineeName }: Props) {
               </div>
             </div>
 
-            {/* Express — Buddy booking */}
             <div className="p-3 sm:p-4 bg-gradient-to-br from-purple-500 to-purple-600 relative overflow-hidden">
               <div className="text-[9px] sm:text-[10px] font-bold text-white/80 uppercase tracking-wide mb-0.5 leading-tight">
                 Express — Closed ({buddyName} Booking)
@@ -160,7 +223,6 @@ export default function EasterPromoSenior({ traineeSlug, traineeName }: Props) {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-0">
-            {/* Standard — Own booking */}
             <div className="p-3 sm:p-4 bg-gradient-to-br from-sky-500 to-sky-600 relative overflow-hidden">
               <div className="text-[9px] sm:text-[10px] font-bold text-white/80 uppercase tracking-wide mb-0.5 leading-tight">
                 Standard — Closed ({initials} Booking)
@@ -187,7 +249,6 @@ export default function EasterPromoSenior({ traineeSlug, traineeName }: Props) {
               </div>
             </div>
 
-            {/* Standard — Buddy booking */}
             <div className="p-3 sm:p-4 bg-gradient-to-br from-teal-500 to-teal-600 relative overflow-hidden">
               <div className="text-[9px] sm:text-[10px] font-bold text-white/80 uppercase tracking-wide mb-0.5 leading-tight">
                 Standard — Closed ({buddyName} Booking)
@@ -220,6 +281,7 @@ export default function EasterPromoSenior({ traineeSlug, traineeName }: Props) {
         <div className="bg-gray-50 rounded-lg px-3 py-2 space-y-1">
           <div className="flex flex-wrap gap-3 text-[10px] sm:text-xs text-gray-500">
             <span>🎯 Pitches: {totals.pitches}</span>
+            <span>📋 In Pipe: {totalPipe}</span>
             <span>⚡ Express: {totalExpress}</span>
             <span>🏗️ Standard: {totalStandard}</span>
             <span>📊 Conversion: {totals.pitches > 0 ? Math.round((totalCloses / totals.pitches) * 100) : 0}%</span>
