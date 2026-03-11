@@ -17,8 +17,8 @@ function TraineeDashboardContent() {
   const trainee = getTraineeBySlug(slug);
 
   // Customer service team: exclude Module 4 (sales-specific)
-  const EXCLUDE_MODULE_4_SLUGS = ["jeremy-valiente", "dasha-axenova", "lily-stollery", "sanjana-aneja"];
-  const CS_APPLICANT_SLUGS = ["dasha-axenova", "lily-stollery", "sanjana-aneja"];
+  const EXCLUDE_MODULE_4_SLUGS = ["jeremy-valiente", "dasha-axenova"];
+  const CS_APPLICANT_SLUGS = ["dasha-axenova"];
   const filteredProgram = EXCLUDE_MODULE_4_SLUGS.includes(slug)
     ? trainingProgram.filter((m) => m.id !== "module-4")
     : trainingProgram;
