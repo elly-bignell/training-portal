@@ -8,6 +8,7 @@ import { trainees } from "@/data/trainees";
 import PasswordGate from "@/components/PasswordGate";
 import { usePersistedState } from "@/hooks/usePersistedState";
 import EasterPromoAdmin from "@/components/EasterPromoAdmin";
+import PrintButton from "@/components/PrintButton";
 import RennieDealTracker from "@/components/RennieDealTracker";
 
 // ─── Types ───
@@ -451,6 +452,7 @@ function PerformanceSummaryContent() {
                   </Link>
                 </>
               )}
+              <PrintButton />
             </div>
           </div>
 
