@@ -350,7 +350,7 @@ function HomeContent() {
           <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3 mt-6">Customer Service Team Quick Access</h3>
           <div className="space-y-4">
             {(() => {
-              const CS_APPLICANT_SLUGS = ["dasha-axenova"];
+              const CS_APPLICANT_SLUGS = [];
               const NO_SCORECARD_SLUGS = ["dasha-axenova", "jeremy-valiente"];
               return ["jeremy-valiente", "dasha-axenova"]
                 .map(s => trainees.find(t => t.slug === s)!)
@@ -366,7 +366,7 @@ function HomeContent() {
                         <div>
                           <h3 className="font-semibold text-gray-800">{trainee.name}</h3>
                           {isApplicant && <span className="text-xs text-amber-600 font-medium">Applicant — closes 6pm Sun 8 Mar</span>}
-                          {trainee.slug === "jeremy-valiente" && <span className="text-xs text-amber-600 font-medium">Closes 6pm Mon 9 Mar</span>}
+                          
                         </div>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
