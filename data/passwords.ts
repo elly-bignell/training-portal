@@ -45,7 +45,7 @@ export const TRAINEE_PASSWORDS: Record<string, (string | TimedPassword)[]> = {
   "cindy-rose-rondez-manrique": ["CManrique0226!"],
   "krishna-patel": ["KPatel0226!"],
   "jeremy-valiente": [{ password: "JValiente0326!", validFrom: "2026-03-06 15:00", validUntil: "2026-03-09 18:00" }],
-  "scott-ainslie": ["SAinslie0326!"],
+  "scott-ainslie": [{ password: "SAinslie0326!", validFrom: "2026-03-11 13:00", validUntil: "2026-03-12 14:00" }],
   "dasha-axenova": [{ password: "DAxenova0326!", validFrom: "2026-03-06 15:00", validUntil: "2026-03-08 18:00" }],
 };
 
