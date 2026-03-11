@@ -125,6 +125,7 @@ export async function GET() {
       stats[matchedSlug].valTotal++;
       if      (status === "validated") stats[matchedSlug].valValidated++;
       else if (status === "rejected")  stats[matchedSlug].valRejected++;
+      else if ((f["na_count"] || 0) >= 2)  stats[matchedSlug].valDoubleNA++;
       else                              stats[matchedSlug].valPending++;
     }
 

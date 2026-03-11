@@ -44,19 +44,21 @@ function MiniBar({ value, max, color = C.blue }) {
   );
 }
 
-function ValBar({ validated, rejected, pending, total }) {
+function ValBar({ validated, rejected, pending, doubleNA, total }) {
   if (!total) return <span style={{ color: "#94a3b8", fontSize: 12 }}>No data</span>;
   return (
     <div>
       <div style={{ display: "flex", height: 8, borderRadius: 99, overflow: "hidden", background: "#e2e8f0" }}>
         <div style={{ width: pct(validated, total) + "%", background: C.green }} />
         <div style={{ width: pct(rejected, total) + "%", background: C.red }} />
+        <div style={{ width: pct(doubleNA, total) + "%", background: "#f97316" }} />
         <div style={{ width: pct(pending, total) + "%", background: "#94a3b8" }} />
       </div>
       <div style={{ display: "flex", gap: 10, marginTop: 5, fontSize: 11, flexWrap: "wrap" }}>
         <span style={{ color: C.green }}>&#x2713; {validated} validated ({pct(validated, total)}%)</span>
         <span style={{ color: C.red }}>&#x2715; {rejected} rejected ({pct(rejected, total)}%)</span>
-        <span style={{ color: C.slate }}>&#9675; {pending} pending</span>
+        {doubleNA > 0 && <span style={{ color: "#f97316" }}>&#x26A0; {doubleNA} 2x NA ({pct(doubleNA, total)}%)</span>}
+        <span style={{ color: C.slate }}>&#9675; {pending} pending (Call 1 + Call 2 when Call 1 NA)</span>
       </div>
     </div>
   );
@@ -170,11 +172,11 @@ function TraineeCard({ t, all }) {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
           <div style={{ fontSize: 10, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em" }}>Validation · {t.valTotal} bookings</div>
           <div style={{ display: "flex", gap: 6 }}>
-            <Badge color={C.blue} bg={C.blueBg}>Contact {t.valContactRate}%</Badge>
+            <Badge color={C.blue} bg={C.blueBg}>Connected to {t.valContactRate}%</Badge>
             <Badge color={valColor} bg={valBg}>Val. {t.valRate}%</Badge>
           </div>
         </div>
-        <ValBar validated={t.valValidated} rejected={t.valRejected} pending={t.valPending} total={t.valTotal} />
+        <ValBar validated={t.valValidated} rejected={t.valRejected} pending={t.valPending} doubleNA={t.valDoubleNA || 0} total={t.valTotal} />
       </div>
     </div>
   );
