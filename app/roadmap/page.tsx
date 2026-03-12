@@ -288,7 +288,7 @@ function getConversions(daily: WeekData["daily"]) {
     callsToBookings: daily.calls > 0 ? Math.round((daily.bookings / daily.calls) * 100) : 0,
     bookingsToMeetings: daily.bookings > 0 ? Math.round((daily.meetings / daily.bookings) * 100) : 0,
     meetingsToUnits: daily.meetings > 0 ? Math.round((daily.units / daily.meetings) * 100) : 0,
-    revenuePerUnit: daily.units > 0 ? daily.revenue / daily.units : 0,
+    revenuePerUnit: 400,
   };
 }
 
@@ -725,8 +725,12 @@ function RoadmapContent() {
                           const weeklyVal = weekly[m.key];
                           const dailyVal = daily[m.key];
                           const isZero = weeklyVal === 0;
-                          const fmtWeekly = m.format === "currency" ? formatCurrency(weeklyVal) : formatNumber(weeklyVal);
-                          const fmtDaily = m.format === "currency" ? formatCurrency(dailyVal) : formatNumber(dailyVal);
+                          // Round display values: units/meetings to nearest int, revenue to nearest $10
+                          const roundedWeekly = m.format === "currency" ? Math.round(weeklyVal / 10) * 10 : Math.round(weeklyVal);
+                          const roundedDaily = m.format === "currency" ? Math.round(dailyVal / 10) * 10 : Math.round(dailyVal);
+                          const fmtWeekly = m.format === "currency" ? formatCurrency(roundedWeekly) : formatNumber(roundedWeekly);
+                          const fmtDaily = m.format === "currency" ? formatCurrency(roundedDaily) : formatNumber(roundedDaily);
+                          const isBuddyMetric = isBuddy && (m.key === "revenue" || m.key === "units" || m.key === "meetings");
                           const isBuddy = w.buddyWeek === true;
                           // Show Rate is index 2 (between Meetings and Bookings) — hide for buddy weeks
                           const hideThisArrow = isBuddy && i === 2;
@@ -734,9 +738,12 @@ function RoadmapContent() {
                           return (
                             <div key={m.key} className="contents">
                               <div className={`rounded-lg p-3 text-center ${styles.metricBg}`}>
-                                <div className="text-[10px] text-slate-500 uppercase tracking-wide font-semibold mb-1">
+                                <div className="text-[10px] text-slate-500 uppercase tracking-wide font-semibold mb-0.5">
                                   {m.label}
                                 </div>
+                                {isBuddyMetric && (
+                                  <div className="text-[8px] text-amber-600 font-bold uppercase tracking-wide mb-1">Led by Buddy</div>
+                                )}
                                 <div className={`text-lg font-bold ${isZero ? "text-slate-300" : styles.textColor}`}>
                                   {fmtWeekly}
                                 </div>
@@ -747,6 +754,11 @@ function RoadmapContent() {
                                 {isBuddy && m.key === "revenue" && weeklyVal > 0 && (
                                   <div className="mt-1 text-[10px] font-normal text-amber-600">
                                     50% put towards your<br />monthly target
+                                  </div>
+                                )}
+                                {isBuddy && m.key === "meetings" && (
+                                  <div className="mt-1 text-[9px] font-bold text-sky-600">
+                                    {w.week <= 4 ? "You attend 1/day" : "You attend 2/day"}
                                   </div>
                                 )}
                               </div>
