@@ -3,6 +3,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
 interface EasterPromoDaily {
+  pitches: number;
+  pipe_own: number;
+  pipe_buddy: number;
   express_closes_own: number;
   express_closes_buddy: number;
   standard_closes_own: number;
@@ -13,6 +16,9 @@ interface EasterPromoDaily {
 interface EasterPromoTotals extends EasterPromoDaily {}
 
 const EMPTY: EasterPromoDaily = {
+  pitches: 0,
+  pipe_own: 0,
+  pipe_buddy: 0,
   express_closes_own: 0,
   express_closes_buddy: 0,
   standard_closes_own: 0,
@@ -34,6 +40,9 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
       const data = await res.json();
       if (data && !data.error) {
         const d: EasterPromoDaily = {
+          pitches: data.pitches || 0,
+          pipe_own: data.pipe_own || 0,
+          pipe_buddy: data.pipe_buddy || 0,
           express_closes_own: data.express_closes_own || 0,
           express_closes_buddy: data.express_closes_buddy || 0,
           standard_closes_own: data.standard_closes_own || 0,
