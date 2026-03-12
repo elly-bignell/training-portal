@@ -92,7 +92,10 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
             ...data,
           }),
         });
-        await Promise.all([fetchToday(), fetchTotals()]);
+        // Don't re-fetch today after save — the optimistic value is correct.
+        // Re-fetching risks Airtable returning stale data and resetting the counter.
+        // Only update campaign totals which aggregate across all days.
+        await fetchTotals();
       } catch (e) {
         console.error("Error saving easter promo:", e);
       } finally {
