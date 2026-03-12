@@ -33,7 +33,7 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
   const [isSaving, setIsSaving] = useState(false);
   const todayRef = useRef<EasterPromoDaily>({ ...EMPTY });
 
-  const fetchToday = useCallback(async () => {
+  const fetchToday = useCallback(async (updateRef = false) => {
     try {
       const res = await fetch(`/api/easter-promo?trainee_slug=${traineeSlug}`);
       const data = await res.json();
@@ -49,7 +49,9 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
           quodo_bookings: data.quodo_bookings || 0,
         };
         setToday(d);
-        todayRef.current = d;
+        if (updateRef) {
+          todayRef.current = d;
+        }
       }
     } catch (e) {
       console.error("Error fetching easter promo today:", e);
@@ -71,7 +73,7 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
   useEffect(() => {
     const load = async () => {
       setIsLoading(true);
-      await Promise.all([fetchToday(), fetchTotals()]);
+      await Promise.all([fetchToday(true), fetchTotals()]);
       setIsLoading(false);
     };
     load();
@@ -111,7 +113,7 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
     [save]
   );
 
-  return { today, totals, isLoading, isSaving, increment, refresh: () => { fetchToday(); fetchTotals(); } };
+  return { today, totals, isLoading, isSaving, increment, refresh: () => { fetchToday(true); fetchTotals(); } };
 }
 
 // Hook for juniors — fetches their senior's buddy closes (express + standard)
