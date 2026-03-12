@@ -147,7 +147,6 @@ export async function POST(request: NextRequest) {
       trainee_slug,
       trainee_name: trainee_name || trainee_slug,
       date,
-      last_updated: new Date().toISOString(),
     };
     for (const f of PROMO_FIELDS) {
       fields[f] = body[f] || 0;
