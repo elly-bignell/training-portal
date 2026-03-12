@@ -14,6 +14,9 @@ const EXTENSION_START = "2026-04-09";
 const EXTENSION_END = "2026-04-17";
 
 const PROMO_FIELDS = [
+  "pitches",
+  "pipe_own",
+  "pipe_buddy",
   "express_closes_own",
   "express_closes_buddy",
   "standard_closes_own",
