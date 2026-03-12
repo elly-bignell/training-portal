@@ -175,8 +175,8 @@ export async function POST(request: NextRequest) {
 
     const data = await response.json();
     return NextResponse.json({ success: true, record: data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error saving easter promo data:", error);
-    return NextResponse.json({ error: "Failed to save easter promo data" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to save easter promo data", detail: error?.message || String(error) }, { status: 500 });
   }
 }
