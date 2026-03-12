@@ -41,7 +41,6 @@ export const TRAINEE_PASSWORDS: Record<string, (string | TimedPassword)[]> = {
   "thomas-rennie": ["TRennie0202!"],
   "lucas-tirri": ["LTirri0202!"],
   "felipe-garcia": ["FGarcia0202!"],
-  "connie-matthews": ["CMatthews0226!", "Connie"],
   "cindy-rose-rondez-manrique": ["CManrique0226!"],
   "krishna-patel": ["KPatel0226!"],
   "jeremy-valiente": ["JValiente0326!"],
