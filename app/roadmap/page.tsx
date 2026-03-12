@@ -14,6 +14,7 @@ interface WeekData {
   phase: "training" | "ramp" | "solo" | "standard" | "maintain";
   label?: string;
   buddyWeek?: boolean;
+  meetingRole?: "buddy_leads" | "trainee_half" | "trainee_leads" | "trainee_solo_buddy_observes" | "trainee_solo";
   daily: {
     revenue: number;
     units: number;
@@ -46,13 +47,13 @@ const weeklyData: WeekData[] = [
     phase: "ramp",
     label: "First Week Out",
     buddyWeek: true,
-    daily: { revenue: 462, units: 1.15, meetings: 2.1, bookings: 6, calls: 60 },
+    meetingRole: "buddy_leads",
+    daily: { revenue: 400, units: 1, meetings: 2, bookings: 6, calls: 60 },
     takeaways: [
-      "6 hours on the phones — 108 dials, 60 connects, 6 bookings/day",
-      "Focus: pipeline building — fill the calendar with quality meetings for your buddy",
-      "6 bookings → 35% attend → 2.1 meetings → 55% close → 1.15 deals → $462/day",
-      "You own: calls, connects, bookings. Your buddy owns: attending + closing",
-      "Plus 1 meeting observation per day — learn the pitch, objections, close",
+      "Buddy takes ALL meetings and closes ALL deals this week",
+      "Your job: 60 connects/day → 6 bookings — fill the calendar for your buddy",
+      "Observe a minimum of 3 meetings for the week — watch, listen, learn",
+      "6 bookings → 33% show → 2 meetings → 50% close → 1 deal → $400/day",
     ],
   },
   {
@@ -62,13 +63,13 @@ const weeklyData: WeekData[] = [
     phase: "ramp",
     label: "Building Pipeline",
     buddyWeek: true,
-    daily: { revenue: 462, units: 1.15, meetings: 2.1, bookings: 6, calls: 60 },
+    meetingRole: "buddy_leads",
+    daily: { revenue: 400, units: 1, meetings: 2, bookings: 6, calls: 60 },
     takeaways: [
-      "6 hours calling — 108 dials, 60 connects, 6 bookings/day",
-      "Same targets as Week 1 — lock in the rhythm and build consistency",
-      "6 bookings → 2.1 attended → 1.15 deals → $462/day (buddy closes)",
-      "You own: calls, connects, bookings. Buddy owns: attending + closing",
-      "Plus 1 meeting observation per day — watch how your buddy handles objections",
+      "Buddy takes ALL meetings and closes ALL deals",
+      "60 connects/day → 6 bookings — lock in the rhythm and build consistency",
+      "Observe 1 meeting per day — watch how your buddy handles objections and closes",
+      "6 bookings → 33% show → 2 meetings → 50% close → 1 deal → $400/day",
     ],
   },
   {
@@ -78,13 +79,13 @@ const weeklyData: WeekData[] = [
     phase: "ramp",
     label: "Consistency",
     buddyWeek: true,
-    daily: { revenue: 462, units: 1.15, meetings: 2.1, bookings: 6, calls: 60 },
+    meetingRole: "buddy_leads",
+    daily: { revenue: 400, units: 1, meetings: 2, bookings: 6, calls: 60 },
     takeaways: [
-      "6 hours calling — same rhythm, locking in consistency",
-      "Your booking quality should be improving — better prospects, fewer no-shows",
-      "6 bookings → 2.1 attended → 1.15 deals → $462/day (buddy closes)",
-      "You own: calls, connects, bookings. Buddy owns: attending + closing",
-      "Plus 1 meeting observation per day — learn from every meeting",
+      "Buddy takes ALL meetings and closes ALL deals",
+      "Same calling targets — your booking quality should be improving",
+      "Observe 1 meeting per day — absorb everything, ask questions after",
+      "6 bookings → 33% show → 2 meetings → 50% close → 1 deal → $400/day",
     ],
   },
   {
@@ -94,13 +95,13 @@ const weeklyData: WeekData[] = [
     phase: "ramp",
     label: "Wrapping Up Phase 1",
     buddyWeek: true,
-    daily: { revenue: 462, units: 1.15, meetings: 2.1, bookings: 6, calls: 60 },
+    meetingRole: "buddy_leads",
+    daily: { revenue: 400, units: 1, meetings: 2, bookings: 6, calls: 60 },
     takeaways: [
-      "6 hours calling — last week at full calling capacity",
-      "Next week you step up — your buddy will start handing you the reins",
-      "6 bookings → 2.1 attended → 1.15 deals → $462/day (buddy closes)",
-      "You own: calls, connects, bookings. Buddy owns: attending + closing",
-      "Plus 1 meeting observation per day — ready to transition next week",
+      "Buddy takes ALL meetings and closes ALL deals — last full buddy week",
+      "Next week you step up — your buddy will start handing you the reins in meetings",
+      "Observe 1 meeting per day — you should know this pitch inside out by now",
+      "6 bookings → 33% show → 2 meetings → 50% close → 1 deal → $400/day",
     ],
   },
   {
@@ -110,12 +111,13 @@ const weeklyData: WeekData[] = [
     phase: "ramp",
     label: "Stepping Up",
     buddyWeek: true,
-    daily: { revenue: 385, units: 0.96, meetings: 1.75, bookings: 5, calls: 50 },
+    meetingRole: "trainee_half",
+    daily: { revenue: 400, units: 1, meetings: 2, bookings: 6, calls: 50 },
     takeaways: [
-      "5 hours calling — 90 dials, 50 connects, 5 bookings/day",
-      "5 bookings → 35% attend → 1.75 meetings → 55% close → 0.96 deals → $385/day",
-      "1 fewer booking but you\'re now in 2 meetings/day — start leading with buddy backup",
-      "You own: calls, connects, bookings + starting to take the reins in meetings",
+      "You start LEADING HALF of each meeting — buddy closes and backs you up",
+      "50 connects/day → 6 bookings, attending 2 meetings/day",
+      "Buddy still closes all deals — focus on nailing your half of the presentation",
+      "6 bookings → 33% show → 2 meetings → 50% close → 1 deal → $400/day",
     ],
   },
   {
@@ -123,14 +125,15 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 30 Mar – Fri 3 Apr",
     startDate: "2026-03-30",
     phase: "ramp",
-    label: "Final Buddy Week",
+    label: "You Lead the Room",
     buddyWeek: true,
-    daily: { revenue: 385, units: 0.96, meetings: 1.75, bookings: 5, calls: 50 },
+    meetingRole: "trainee_leads",
+    daily: { revenue: 400, units: 1, meetings: 2, bookings: 6, calls: 50 },
     takeaways: [
-      "Same as Week 5 — 5 hours calling, 90 dials, 50 connects, 5 bookings/day",
-      "5 bookings → 1.75 attended → 0.96 deals → $385/day",
-      "Last week with buddy support — prove you\'re ready to go solo",
-      "Don\'t cut your buddy prematurely — only go solo with 100% confidence",
+      "You lead 100% of each meeting — buddy is there to observe and close",
+      "50 connects/day → 6 bookings, attending 2 meetings/day",
+      "Prove you're ready to fly solo — take ownership of every part of the presentation",
+      "6 bookings → 33% show → 2 meetings → 50% close → 1 deal → $400/day",
     ],
   },
   {
@@ -139,12 +142,13 @@ const weeklyData: WeekData[] = [
     startDate: "2026-04-06",
     phase: "solo",
     label: "✈️ Flying Solo",
-    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 40 },
+    meetingRole: "trainee_solo_buddy_observes",
+    daily: { revenue: 400, units: 1, meetings: 2, bookings: 4, calls: 30 },
     takeaways: [
-      "Flying solo — 4 hours calling, 72 dials, 40 connects, 4 bookings, 3 meetings/day",
-      "100% of each deal counts towards your target — you own the entire process",
-      "Your follow-up pipeline from buddy weeks feeds your calendar with warm leads",
-      "4 bookings + warm pipeline → 3 meetings → 1.5 deals/day → $600/day, $3,000/week",
+      "You take ALL meetings and manage ALL closes — signed off to fly solo",
+      "Buddy attends 1 of your meetings per day to observe — no assistance",
+      "30 connects/day → 4 bookings → 2 meetings → 1 deal → $400/day",
+      "100% of commission from every deal you book and close is yours",
     ],
   },
   {
@@ -153,12 +157,13 @@ const weeklyData: WeekData[] = [
     startDate: "2026-04-13",
     phase: "standard",
     label: "🎯 The Standard",
-    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 40 },
+    meetingRole: "trainee_solo",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 30 },
     takeaways: [
-      "The Standard — 4 hours calling, 72 dials, 40 connects, 4 bookings, 3 meetings/day",
-      "Fully proficient closed-circuit selling — you own the entire process end to end",
-      "Your warm lead pipeline reduces cold call dependency — follow-ups convert easier",
-      "1.5 deals/day, $600 revenue. The Standard is your floor, not your ceiling",
+      "The Standard — 30 connects/day, 4 bookings, 2 meetings, 1 deal → $500/day",
+      "You own the entire process end-to-end — calls, bookings, meetings, closes",
+      "Your warm lead pipeline reduces cold call dependency week on week",
+      "The Standard is your floor, not your ceiling — commissions are uncapped",
     ],
   },
   {
@@ -166,11 +171,13 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 20 Apr – Fri 24 Apr",
     startDate: "2026-04-20",
     phase: "maintain",
-    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 40 },
+    meetingRole: "trainee_solo",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 30 },
     takeaways: [
-      "Same standard — 4hrs calling, 4 bookings, 3 meetings, 1.5 deals/day",
-      "Your follow-up pipeline is your goldmine — warm leads are your easiest wins",
-      "Increasing booking efficiency means fewer cold dials for the same output",
+      "The Standard is your baseline — now focus on improving efficiency",
+      "Less calls → more bookings as your warm lead pipeline matures",
+      "More opportunities for meetings means more chances to close",
+      "Commissions are uncapped — go over and above to earn more $$$",
     ],
   },
   {
@@ -178,11 +185,13 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 27 Apr – Fri 1 May",
     startDate: "2026-04-27",
     phase: "maintain",
-    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 40 },
+    meetingRole: "trainee_solo",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 30 },
     takeaways: [
-      "Same standard — booking efficiency should be climbing each week",
-      "Pitch strength is your biggest lever — stronger pitch = more bookings from fewer calls",
-      "Every percentage point improvement in close rate is more revenue on the same activity",
+      "Efficiency should be climbing — fewer cold calls for the same output",
+      "Warm leads convert faster: less calls, more bookings, more meetings",
+      "Every improvement in close rate = more revenue on the same activity",
+      "Commissions are uncapped — go over and above to earn more $$$",
     ],
   },
   {
@@ -190,11 +199,13 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 4 May – Fri 8 May",
     startDate: "2026-05-04",
     phase: "maintain",
-    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 40 },
+    meetingRole: "trainee_solo",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 30 },
     takeaways: [
-      "Same standard — time on phones may reduce as booking efficiency increases",
+      "Time on phones may reduce as booking efficiency increases",
+      "Less calls → more bookings → more meetings available each day",
       "Pre-meeting prep separates good from great — research every prospect",
-      "Warm lead follow-ups should be generating bookings with minimal effort",
+      "Commissions are uncapped — go over and above to earn more $$$",
     ],
   },
   {
@@ -203,11 +214,13 @@ const weeklyData: WeekData[] = [
     startDate: "2026-05-11",
     phase: "maintain",
     label: "Quarter Mark",
-    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 40 },
+    meetingRole: "trainee_solo",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 30 },
     takeaways: [
-      "Same standard — your call:booking ratio should be noticeably better than Week 8",
-      "Higher efficiency = opportunity to close MORE deals if you choose to push",
-      "Track prospects that didn\'t close but showed interest — they\'re your next meetings",
+      "3 months in — your call:booking ratio should be noticeably stronger",
+      "Less calls needed → more time in meetings → more opportunities to close",
+      "Track prospects that didn't close — they're your next warm meetings",
+      "Commissions are uncapped — go over and above to earn more $$$",
     ],
   },
   {
@@ -215,11 +228,13 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 18 May – Fri 22 May",
     startDate: "2026-05-18",
     phase: "maintain",
-    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 40 },
+    meetingRole: "trainee_solo",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 30 },
     takeaways: [
-      "Same standard — consistency is king. Same effort, same output, every week",
-      "As efficiency improves, you can reduce time on phones or increase deal volume",
+      "Consistency is king — same effort, improving output every week",
+      "As efficiency improves, less calls → more meetings → bigger pipeline",
       "Close rate should be trending upward as you refine your pitch",
+      "Commissions are uncapped — go over and above to earn more $$$",
     ],
   },
   {
@@ -227,11 +242,13 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 25 May – Fri 29 May",
     startDate: "2026-05-25",
     phase: "maintain",
-    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 40 },
+    meetingRole: "trainee_solo",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 30 },
     takeaways: [
-      "Same standard — 3 months of solo selling under your belt",
-      "Warm leads + repeat referrals start forming a meaningful part of your pipeline",
-      "Higher booking quality means better close rates with the same meeting volume",
+      "3.5 months of solo selling — your pipeline is a well-oiled machine",
+      "Warm leads and referrals now forming a meaningful share of bookings",
+      "Less cold dials needed → more time for high-quality meeting prep",
+      "Commissions are uncapped — go over and above to earn more $$$",
     ],
   },
   {
@@ -239,11 +256,13 @@ const weeklyData: WeekData[] = [
     dateRange: "Mon 1 Jun – Fri 5 Jun",
     startDate: "2026-06-01",
     phase: "maintain",
-    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 40 },
+    meetingRole: "trainee_solo",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 30 },
     takeaways: [
-      "Same standard — pipeline should be self-sustaining with warm leads and referrals",
-      "More bookings per hour means more meetings, more closes, more revenue",
-      "Efficiency gains compound — small improvements each week add up to big results",
+      "Pipeline should be largely self-sustaining with warm leads and referrals",
+      "Fewer cold calls → more capacity for meetings → more revenue potential",
+      "Efficiency gains compound — small improvements add up to big results",
+      "Commissions are uncapped — go over and above to earn more $$$",
     ],
   },
   {
@@ -252,16 +271,18 @@ const weeklyData: WeekData[] = [
     startDate: "2026-06-08",
     phase: "maintain",
     label: "4 Months In",
-    daily: { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 40 },
+    meetingRole: "trainee_solo",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 30 },
     takeaways: [
-      "Same standard — 4 months of consistency. Your pipeline is a machine",
-      "Warm lead efficiency means better call:booking ratios with less effort",
-      "The Standard is your floor — increased efficiency is your opportunity to exceed it",
+      "4 months of consistency — your pipeline is a machine",
+      "The Standard is your floor — choose your own adventure above it",
+      "Less calls → more bookings → more meetings → uncapped earning potential",
+      "Commissions are uncapped — go over and above to earn more $$$",
     ],
   },
 ];
 
-const standardDaily = { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 40 };
+const standardDaily = { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 30 };
 
 function getWeekly(daily: WeekData["daily"]) {
   return {
@@ -297,7 +318,7 @@ function getPercentToStandard(daily: WeekData["daily"]) {
   const unitPct = standardDaily.units > 0 ? Math.min(100, (daily.units / standardDaily.units) * 100) : 100;
   const meetPct = Math.min(100, (daily.meetings / standardDaily.meetings) * 100);
   const bookPct = Math.min(100, (daily.bookings / standardDaily.bookings) * 100);
-  const callPct = Math.min(100, Math.max(0, ((70 - daily.calls) / (70 - standardDaily.calls)) * 100));
+  const callPct = daily.calls === 0 ? 100 : Math.min(100, Math.max(0, (standardDaily.calls / daily.calls) * 100));
   return Math.round((revPct + unitPct + meetPct + bookPct + callPct) / 5);
 }
 
@@ -474,9 +495,9 @@ function RoadmapContent() {
             )}
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Our Standards</h1>
-          <p className="text-lg sm:text-xl font-semibold mt-2" style={{ color: PINK }}>The Roadmap to Achieving 1.5 Deals Per Day</p>
+          <p className="text-lg sm:text-xl font-semibold mt-2" style={{ color: PINK }}>The Roadmap to Achieving 1 Deal Per Day</p>
           <p className="text-slate-400 mt-3">
-            This roadmap covers your first 16 weeks, building up to The Standard by Week 8 and maintaining it beyond.
+            This roadmap covers your first 16 weeks, building up to The Standard (1 deal/day) by Week 8 and maintaining it beyond.
           </p>
         </div>
       </header>
@@ -488,7 +509,7 @@ function RoadmapContent() {
             <span className="text-2xl">🎯</span>
             <h2 className="text-xl font-bold">The Standard — Week 8 Target</h2>
           </div>
-          <p className="text-pink-200 text-sm mb-6">From Week 8 onwards — these are your targets to maintain</p>
+          <p className="text-pink-200 text-sm mb-6">1 deal/day · 2 meetings/day · 4 bookings/day · 30 connects/day</p>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 60px 1fr 60px 1fr 60px 1fr 60px 1fr", alignItems: "center" }}>
             {funnelMetrics.map((m, i) => (
@@ -720,6 +741,47 @@ function RoadmapContent() {
                 ) : (
                   <div className="flex gap-4">
                     <div className="flex-1">
+
+                      {/* Meeting Role Banner */}
+                      {w.meetingRole === "buddy_leads" && (
+                        <div className="mb-3 flex items-center gap-2 px-3 py-2 rounded-lg bg-amber-50 border border-amber-300">
+                          <span className="text-lg">👥</span>
+                          <div>
+                            <span className="text-xs font-bold text-amber-800 uppercase tracking-wide">Buddy leads all meetings &amp; closes all deals</span>
+                            <span className="text-[11px] text-amber-600 ml-2">
+                              {w.week === 1 ? "— observe min. 3 meetings this week" : "— observe 1 meeting per day"}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      {w.meetingRole === "trainee_half" && (
+                        <div className="mb-3 flex items-center gap-2 px-3 py-2 rounded-lg bg-sky-50 border border-sky-300">
+                          <span className="text-lg">🎓</span>
+                          <div>
+                            <span className="text-xs font-bold text-sky-800 uppercase tracking-wide">You lead half of each meeting</span>
+                            <span className="text-[11px] text-sky-600 ml-2">— buddy closes &amp; backs you up · attend 2 meetings/day</span>
+                          </div>
+                        </div>
+                      )}
+                      {w.meetingRole === "trainee_leads" && (
+                        <div className="mb-3 flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-50 border border-indigo-300">
+                          <span className="text-lg">🎤</span>
+                          <div>
+                            <span className="text-xs font-bold text-indigo-800 uppercase tracking-wide">You lead 100% of every meeting</span>
+                            <span className="text-[11px] text-indigo-600 ml-2">— buddy observes &amp; closes · attend 2/day</span>
+                          </div>
+                        </div>
+                      )}
+                      {w.meetingRole === "trainee_solo_buddy_observes" && (
+                        <div className="mb-3 flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-50 border border-emerald-400">
+                          <span className="text-lg">✈️</span>
+                          <div>
+                            <span className="text-xs font-bold text-emerald-800 uppercase tracking-wide">You take all meetings &amp; manage all closes</span>
+                            <span className="text-[11px] text-emerald-600 ml-2">— buddy attends 1 of your meetings/day to observe only</span>
+                          </div>
+                        </div>
+                      )}
+
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 60px 1fr 60px 1fr 60px 1fr 60px 1fr", alignItems: "center" }}>
                         {funnelMetrics.map((m, i) => {
                           const weeklyVal = weekly[m.key];
