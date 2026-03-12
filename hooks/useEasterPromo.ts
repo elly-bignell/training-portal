@@ -32,6 +32,7 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const todayRef = useRef<EasterPromoDaily>({ ...EMPTY });
+  const totalsRef = useRef<EasterPromoTotals>({ ...EMPTY });
 
   const fetchToday = useCallback(async (updateRef = false) => {
     try {
@@ -64,6 +65,7 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
       const data = await res.json();
       if (data && !data.error && data.totals) {
         setTotals(data.totals);
+        totalsRef.current = data.totals;
       }
     } catch (e) {
       console.error("Error fetching easter promo totals:", e);
@@ -111,6 +113,12 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
       const updated = { ...current, [field]: Math.max(0, current[field] + amount) };
       setToday(updated);
       todayRef.current = updated;
+      // Optimistically update totals: swap out old today value for new one
+      const oldFieldVal = current[field] || 0;
+      const newFieldVal = updated[field];
+      const updatedTotals = { ...totalsRef.current, [field]: (totalsRef.current[field] || 0) - oldFieldVal + newFieldVal };
+      setTotals(updatedTotals);
+      totalsRef.current = updatedTotals;
       await save(updated);
     },
     [save]
