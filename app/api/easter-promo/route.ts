@@ -170,7 +170,7 @@ export async function POST(request: NextRequest) {
     if (!response.ok) {
       const errorData = await response.json();
       console.error("Airtable error:", errorData);
-      throw new Error(`Airtable error: ${response.status}`);
+      throw new Error(`Airtable error: ${response.status} | ${JSON.stringify(errorData)}`);
     }
 
     const data = await response.json();
