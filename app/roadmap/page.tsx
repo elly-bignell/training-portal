@@ -730,8 +730,8 @@ function RoadmapContent() {
                           const roundedDaily = m.format === "currency" ? Math.round(dailyVal / 10) * 10 : Math.round(dailyVal);
                           const fmtWeekly = m.format === "currency" ? formatCurrency(roundedWeekly) : formatNumber(roundedWeekly);
                           const fmtDaily = m.format === "currency" ? formatCurrency(roundedDaily) : formatNumber(roundedDaily);
-                          const isBuddyMetric = isBuddy && (m.key === "revenue" || m.key === "units" || m.key === "meetings");
                           const isBuddy = w.buddyWeek === true;
+                          const isBuddyMetric = isBuddy && (m.key === "revenue" || m.key === "units" || m.key === "meetings");
                           // Show Rate is index 2 (between Meetings and Bookings) — hide for buddy weeks
                           const hideThisArrow = isBuddy && i === 2;
 
