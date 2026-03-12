@@ -1,176 +1,162 @@
 #!/usr/bin/env python3
 """Patch roadmap/page.tsx with correct weekly standards.
 
-W1-4:  6hrs, 108 dials, 60 connects, 6 bookings, 1 meeting (observe buddy)
-W5-6:  5hrs, 90 dials, 50 connects, 5 bookings, 2 meetings (taking reins)
-W7:    4hrs, 72 dials, 40 connects, 4 bookings, 3 meetings (flying solo)
-W8-16: Same as W7/8 - The Standard. Increasing efficiencies.
-"""
+Meetings in daily = funnel output (bookings x attend rate), NOT observation slots.
+Observation slots noted in takeaways text only.
 
-import re
+W1-4:  6hrs, 60 connects, 6 bkgs -> 2.1 attended -> 1.15 deals -> $462
+W5-6:  5hrs, 50 connects, 5 bkgs -> 1.75 attended -> 0.96 deals -> $385
+W7-8+: 4hrs, 40 connects, 4 bkgs, 3 meetings, 1.5 deals, $600 (solo)
+"""
 
 filepath = "app/roadmap/page.tsx"
 
 with open(filepath, "r") as f:
-    lines = f.readlines()
-
-content = "".join(lines)
-
-# ═══════════════════════════════════════
-# Helper: replace a week's daily + takeaways
-# ═══════════════════════════════════════
+    content = f.read()
 
 def replace_week(content, week_num, new_daily, new_takeaways):
-    """Find the week block and replace daily + takeaways."""
-    # Pattern: find `week: N,` then find the `daily:` line and `takeaways:` block
-    # We look for the daily line after the specific week number
-    
-    # Find the week marker
     week_marker = f"    week: {week_num},"
     idx = content.find(week_marker)
     if idx == -1:
-        print(f"  ⚠️  Week {week_num} not found, skipping")
+        print(f"  ⚠️  Week {week_num} not found")
         return content
     
-    # Find daily: { ... } after this week marker
     daily_start = content.find("    daily: {", idx)
     if daily_start == -1 or daily_start > idx + 500:
-        print(f"  ⚠️  daily: not found for week {week_num}")
         return content
     daily_end = content.find("},", daily_start) + 2
     
-    # Find takeaways: [ ... ] after daily
     ta_start = content.find("    takeaways: [", daily_end)
     if ta_start == -1 or ta_start > daily_end + 50:
-        print(f"  ⚠️  takeaways: not found for week {week_num}")
         return content
     ta_end = content.find("    ],", ta_start) + 6
     
-    # Build replacement
     daily_str = f"    daily: {{ revenue: {new_daily['revenue']}, units: {new_daily['units']}, meetings: {new_daily['meetings']}, bookings: {new_daily['bookings']}, calls: {new_daily['calls']} }},"
     
     ta_lines = '    takeaways: [\n'
     for t in new_takeaways:
-        escaped = t.replace("'", "\\'")
-        ta_lines += f'      "{escaped}",\n'
+        ta_lines += f'      "{t}",\n'
     ta_lines += '    ],'
     
     replacement = daily_str + "\n" + ta_lines
-    
     content = content[:daily_start] + replacement + content[ta_end:]
-    print(f"  ✅ Week {week_num} updated")
+    print(f"  ✅ Week {week_num}")
     return content
 
 
-# ═══════════════════════════════════════
-# WEEK DEFINITIONS
-# ═══════════════════════════════════════
+# ═══ W1-4: 6hrs, 6 bookings, 2.1 meetings (funnel), 1.15 deals, $462 ═══
+w14 = { "revenue": 462, "units": 1.15, "meetings": 2.1, "bookings": 6, "calls": 60 }
 
-# W1-4: 6hrs calling, 1 meeting observe
-w1_4_daily = { "revenue": 462, "units": 1.15, "meetings": 1, "bookings": 6, "calls": 60 }
-
-w1_takeaways = [
-    "6 hours on the phones — 108 dials, 60 connected calls, 6 bookings/day (1 booking per hour)",
+content = replace_week(content, 1, w14, [
+    "6 hours on the phones — 108 dials, 60 connects, 6 bookings/day",
     "Focus: pipeline building — fill the calendar with quality meetings for your buddy",
-    "1 meeting/day — observe your buddy closing. Learn the pitch, objections, close",
-    "You own: calls, connects, bookings. Your buddy owns: attending meetings + closing deals",
-]
+    "6 bookings → 35% attend → 2.1 meetings → 55% close → 1.15 deals → $462/day",
+    "You own: calls, connects, bookings. Your buddy owns: attending + closing",
+    "Plus 1 meeting observation per day — learn the pitch, objections, close",
+])
 
-w2_takeaways = [
-    "6 hours calling + 1 meeting — 108 dials, 60 connects, 6 bookings/day",
+content = replace_week(content, 2, w14, [
+    "6 hours calling — 108 dials, 60 connects, 6 bookings/day",
     "Same targets as Week 1 — lock in the rhythm and build consistency",
-    "Your pipeline is growing — the bookings you make fill your buddy\\'s calendar",
-    "You own: calls, connects, bookings. Buddy closes: 35% attend x 55% close = ~1.15 deals/day",
-]
+    "6 bookings → 2.1 attended → 1.15 deals → $462/day (buddy closes)",
+    "You own: calls, connects, bookings. Buddy owns: attending + closing",
+    "Plus 1 meeting observation per day — watch how your buddy handles objections",
+])
 
-w3_takeaways = [
-    "6 hours calling + 1 meeting — same rhythm, locking in consistency",
+content = replace_week(content, 3, w14, [
+    "6 hours calling — same rhythm, locking in consistency",
     "Your booking quality should be improving — better prospects, fewer no-shows",
-    "Learn from every meeting — what objections come up, how does your buddy handle them?",
-    "You own: calls, connects, bookings. Buddy closes: ~5.75 deals/week, $2,310 revenue",
-]
+    "6 bookings → 2.1 attended → 1.15 deals → $462/day (buddy closes)",
+    "You own: calls, connects, bookings. Buddy owns: attending + closing",
+    "Plus 1 meeting observation per day — learn from every meeting",
+])
 
-w4_takeaways = [
-    "6 hours calling + 1 meeting — last week at full calling capacity",
-    "Next week you step up to 2 meetings/day — your buddy will start handing you the reins",
-    "Your booking rhythm is locked in — now it\\'s about quality over quantity",
-    "You own: calls, connects, bookings. Buddy closes: ~5.75 deals/week, $2,310 revenue",
-]
+content = replace_week(content, 4, w14, [
+    "6 hours calling — last week at full calling capacity",
+    "Next week you step up — your buddy will start handing you the reins",
+    "6 bookings → 2.1 attended → 1.15 deals → $462/day (buddy closes)",
+    "You own: calls, connects, bookings. Buddy owns: attending + closing",
+    "Plus 1 meeting observation per day — ready to transition next week",
+])
 
-# W5-6: 5hrs calling, 2 meetings taking reins
-w5_6_daily = { "revenue": 385, "units": 0.96, "meetings": 2, "bookings": 5, "calls": 50 }
 
-w5_takeaways = [
-    "5 hours calling + 2 meetings — 90 dials, 50 connects, 5 bookings/day",
-    "2 meetings/day — you start leading the call with buddy backup",
-    "1 fewer booking but 1 more meeting — you\\'re transitioning from pipeline to closing",
-    "You own: calls, connects, bookings. Start taking the reins in meetings",
-]
+# ═══ W5-6: 5hrs, 5 bookings, 1.75 meetings (funnel), 0.96 deals, $385 ═══
+w56 = { "revenue": 385, "units": 0.96, "meetings": 1.75, "bookings": 5, "calls": 50 }
 
-w6_takeaways = [
-    "Same as Week 5 — 5 hours calling, 90 dials, 50 connects, 5 bookings, 2 meetings/day",
-    "This is your last week with buddy support — prove you\\'re ready to go solo",
+content = replace_week(content, 5, w56, [
+    "5 hours calling — 90 dials, 50 connects, 5 bookings/day",
+    "5 bookings → 35% attend → 1.75 meetings → 55% close → 0.96 deals → $385/day",
+    "1 fewer booking but you\\'re now in 2 meetings/day — start leading with buddy backup",
+    "You own: calls, connects, bookings + starting to take the reins in meetings",
+])
+
+content = replace_week(content, 6, w56, [
+    "Same as Week 5 — 5 hours calling, 90 dials, 50 connects, 5 bookings/day",
+    "5 bookings → 1.75 attended → 0.96 deals → $385/day",
+    "Last week with buddy support — prove you\\'re ready to go solo",
     "Don\\'t cut your buddy prematurely — only go solo with 100% confidence",
-    "You own: calls, connects, bookings + starting to close with buddy backup",
-]
+])
 
-# W7: Solo
-w7_daily = { "revenue": 600, "units": 1.5, "meetings": 3, "bookings": 4, "calls": 40 }
 
-w7_takeaways = [
+# ═══ W7: Solo — 4hrs, 4 bookings, 3 meetings, 1.5 deals, $600 ═══
+w7 = { "revenue": 600, "units": 1.5, "meetings": 3, "bookings": 4, "calls": 40 }
+
+content = replace_week(content, 7, w7, [
     "Flying solo — 4 hours calling, 72 dials, 40 connects, 4 bookings, 3 meetings/day",
     "100% of each deal counts towards your target — you own the entire process",
     "Your follow-up pipeline from buddy weeks feeds your calendar with warm leads",
-    "1.5 deals/day x $400 = $600/day, $3,000/week — this is The Standard",
-]
+    "4 bookings + warm pipeline → 3 meetings → 1.5 deals/day → $600/day, $3,000/week",
+])
 
-# W8: The Standard
-w8_daily = { "revenue": 600, "units": 1.5, "meetings": 3, "bookings": 4, "calls": 40 }
 
-w8_takeaways = [
+# ═══ W8: The Standard ═══
+w8 = { "revenue": 600, "units": 1.5, "meetings": 3, "bookings": 4, "calls": 40 }
+
+content = replace_week(content, 8, w8, [
     "The Standard — 4 hours calling, 72 dials, 40 connects, 4 bookings, 3 meetings/day",
     "Fully proficient closed-circuit selling — you own the entire process end to end",
     "Your warm lead pipeline reduces cold call dependency — follow-ups convert easier",
-    "The Standard is your floor, not your ceiling — keep pushing",
-]
+    "1.5 deals/day, $600 revenue. The Standard is your floor, not your ceiling",
+])
 
-# W9-16: Maintain — same daily as W8, varying takeaways about efficiency
-maintain_daily = { "revenue": 600, "units": 1.5, "meetings": 3, "bookings": 4, "calls": 40 }
 
-maintain_takeaways = {
+# ═══ W9-16: Maintain = same daily as W8 ═══
+maintain = { "revenue": 600, "units": 1.5, "meetings": 3, "bookings": 4, "calls": 40 }
+
+maintain_ta = {
     9: [
         "Same standard — 4hrs calling, 4 bookings, 3 meetings, 1.5 deals/day",
         "Your follow-up pipeline is your goldmine — warm leads are your easiest wins",
         "Increasing booking efficiency means fewer cold dials for the same output",
     ],
     10: [
-        "Same standard — your booking efficiency should be climbing each week",
-        "Pitch strength is your biggest lever — a stronger pitch = more bookings from fewer calls",
+        "Same standard — booking efficiency should be climbing each week",
+        "Pitch strength is your biggest lever — stronger pitch = more bookings from fewer calls",
         "Every percentage point improvement in close rate is more revenue on the same activity",
     ],
     11: [
         "Same standard — time on phones may reduce as booking efficiency increases",
-        "Pre-meeting prep separates good from great — research every prospect before you sit down",
+        "Pre-meeting prep separates good from great — research every prospect",
         "Warm lead follow-ups should be generating bookings with minimal effort",
     ],
     12: [
         "Same standard — your call:booking ratio should be noticeably better than Week 8",
         "Higher efficiency = opportunity to close MORE deals if you choose to push",
-        "Track which prospects didn\\'t close but showed interest — they\\'re your next meetings",
+        "Track prospects that didn\\'t close but showed interest — they\\'re your next meetings",
     ],
     13: [
         "Same standard — consistency is king. Same effort, same output, every week",
-        "As efficiency improves, you can either reduce time on phones or increase deal volume",
-        "Your close rate should be trending upward as you refine your pitch and objection handling",
+        "As efficiency improves, you can reduce time on phones or increase deal volume",
+        "Close rate should be trending upward as you refine your pitch",
     ],
     14: [
         "Same standard — 3 months of solo selling under your belt",
-        "Warm leads + repeat referrals start to form a meaningful part of your pipeline",
+        "Warm leads + repeat referrals start forming a meaningful part of your pipeline",
         "Higher booking quality means better close rates with the same meeting volume",
     ],
     15: [
-        "Same standard — your pipeline should be self-sustaining with warm leads and referrals",
-        "Opportunity: more bookings per hour means more meetings, more closes, more revenue",
+        "Same standard — pipeline should be self-sustaining with warm leads and referrals",
+        "More bookings per hour means more meetings, more closes, more revenue",
         "Efficiency gains compound — small improvements each week add up to big results",
     ],
     16: [
@@ -180,55 +166,23 @@ maintain_takeaways = {
     ],
 }
 
-
-# ═══════════════════════════════════════
-# APPLY PATCHES
-# ═══════════════════════════════════════
-
-print("Patching roadmap...")
-print("")
-
-# W1-4
-content = replace_week(content, 1, w1_4_daily, w1_takeaways)
-content = replace_week(content, 2, w1_4_daily, w2_takeaways)
-content = replace_week(content, 3, w1_4_daily, w3_takeaways)
-content = replace_week(content, 4, w1_4_daily, w4_takeaways)
-
-# W5-6
-content = replace_week(content, 5, w5_6_daily, w5_takeaways)
-content = replace_week(content, 6, w5_6_daily, w6_takeaways)
-
-# W7
-content = replace_week(content, 7, w7_daily, w7_takeaways)
-
-# W8
-content = replace_week(content, 8, w8_daily, w8_takeaways)
-
-# W9-16
 for w in range(9, 17):
-    ta = maintain_takeaways.get(w, maintain_takeaways[16])
-    content = replace_week(content, w, maintain_daily, ta)
+    content = replace_week(content, w, maintain, maintain_ta.get(w, maintain_ta[16]))
 
-# Update standardDaily
+
+# ═══ Update standardDaily ═══
 content = content.replace(
     "const standardDaily = { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 20 };",
     "const standardDaily = { revenue: 600, units: 1.5, meetings: 3, bookings: 4, calls: 40 };"
 )
-print("")
-print("  ✅ standardDaily updated (calls: 20 → 40)")
+print("  ✅ standardDaily (calls 20→40)")
 
 with open(filepath, "w") as f:
     f.write(content)
 
-print("")
-print("═══════════════════════════════════════")
-print("✅ Roadmap patched successfully!")
-print("═══════════════════════════════════════")
-print("")
-print("Summary:")
-print("  W1-4:  6hrs, 60 connects, 6 bookings, 1 meeting (observe buddy)")
-print("  W5-6:  5hrs, 50 connects, 5 bookings, 2 meetings (taking reins)")
-print("  W7:    4hrs, 40 connects, 4 bookings, 3 meetings (flying solo)")
-print("  W8-16: Same as W8 — The Standard. Efficiency increasing.")
-print("  standardDaily calls: 20 → 40")
-print("  All takeaways updated with ownership clarity")
+print("\n✅ Roadmap patched!")
+print("\nW1-4:  6hrs, 60 connects, 6 bkgs, 2.1 meetings (funnel), 1.15 deals, $462")
+print("       + 1 observation/day noted in takeaways")
+print("W5-6:  5hrs, 50 connects, 5 bkgs, 1.75 meetings (funnel), 0.96 deals, $385")
+print("       + 2 meetings/day (taking reins) noted in takeaways")
+print("W7-8+: 4hrs, 40 connects, 4 bkgs, 3 meetings, 1.5 deals, $600 (solo)")
