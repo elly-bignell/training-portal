@@ -34,7 +34,7 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
   const todayRef = useRef<EasterPromoDaily>({ ...EMPTY });
   const totalsRef = useRef<EasterPromoTotals>({ ...EMPTY });
 
-  const fetchToday = useCallback(async (updateRef = false) => {
+  const fetchToday = useCallback(async () => {
     try {
       const res = await fetch(`/api/easter-promo?trainee_slug=${traineeSlug}`);
       const data = await res.json();
@@ -50,9 +50,7 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
           quodo_bookings: data.quodo_bookings || 0,
         };
         setToday(d);
-        if (updateRef) {
-          todayRef.current = d;
-        }
+        todayRef.current = d;
       }
     } catch (e) {
       console.error("Error fetching easter promo today:", e);
@@ -75,7 +73,7 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
   useEffect(() => {
     const load = async () => {
       setIsLoading(true);
-      await Promise.all([fetchToday(true), fetchTotals()]);
+      await Promise.all([fetchToday(), fetchTotals()]);
       setIsLoading(false);
     };
     load();
@@ -94,36 +92,46 @@ export function useEasterPromo(traineeSlug: string, traineeName: string) {
             ...data,
           }),
         });
-        // Don't re-fetch anything after save — optimistic updates for both
-        // today and totals are already correct. Airtable can lag and return
-        // stale data, which would revert the display. Manual refresh syncs if needed.
+        // Do NOT re-fetch after save — Airtable lags and returns stale data
+        // which reverts the display. Optimistic updates are already correct.
       } catch (e) {
         console.error("Error saving easter promo:", e);
       } finally {
         setIsSaving(false);
       }
     },
-    [traineeSlug, traineeName, fetchToday, fetchTotals]
+    [traineeSlug, traineeName]
   );
 
   const increment = useCallback(
     async (field: keyof EasterPromoDaily, amount: number = 1) => {
+      // Optimistically update today
       const current = todayRef.current;
       const updated = { ...current, [field]: Math.max(0, current[field] + amount) };
       setToday(updated);
       todayRef.current = updated;
-      // Optimistically update totals: swap out old today value for new one
-      const oldFieldVal = current[field] || 0;
-      const newFieldVal = updated[field];
-      const updatedTotals = { ...totalsRef.current, [field]: (totalsRef.current[field] || 0) - oldFieldVal + newFieldVal };
+
+      // Optimistically update campaign totals
+      const oldVal = current[field] || 0;
+      const newVal = updated[field];
+      const updatedTotals = {
+        ...totalsRef.current,
+        [field]: Math.max(0, (totalsRef.current[field] || 0) - oldVal + newVal),
+      };
       setTotals(updatedTotals);
       totalsRef.current = updatedTotals;
+
       await save(updated);
     },
     [save]
   );
 
-  return { today, totals, isLoading, isSaving, increment, refresh: () => { fetchToday(true); fetchTotals(); } };
+  const refresh = useCallback(() => {
+    fetchToday();
+    fetchTotals();
+  }, [fetchToday, fetchTotals]);
+
+  return { today, totals, isLoading, isSaving, increment, refresh };
 }
 
 // Hook for juniors — fetches their senior's buddy closes (express + standard)
