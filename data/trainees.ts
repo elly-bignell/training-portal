@@ -58,12 +58,6 @@ export const trainees: Trainee[] = [
     startDate: "2026-03-04",
   },
   {
-    id: "scott-ainslie",
-    name: "Scott Ainslie",
-    slug: "scott-ainslie",
-    startDate: "2026-03-11",
-  },
-  {
     id: "dasha-axenova",
     name: "Dasha Axenova",
     slug: "dasha-axenova",
