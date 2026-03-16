@@ -348,7 +348,7 @@ function RoadmapProgress({ trainees, weeklyActivity, currentRoadmapWeek }) {
                 </span>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
-                {metrics.map(m => {
+                {metrics.filter(m => m.key !== "calls").map(m => {
                   const equiv = findEquivWeek(overall[m.key], m.key);
                   const badge = equivBadge(equiv, currentRoadmapWeek);
                   return (
