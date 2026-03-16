@@ -64,12 +64,12 @@ const weeklyData: WeekData[] = [
     label: "Building Pipeline",
     buddyWeek: true,
     meetingRole: "buddy_leads",
-    daily: { revenue: 240, units: 0.6, meetings: 1.5, bookings: 6, calls: 60 },
+    daily: { revenue: 240, units: 0.6, meetings: 1.6, bookings: 6, calls: 60 },
     takeaways: [
       "Buddy takes ALL meetings and closes ALL deals",
       "60 connects/day → 6 bookings — lock in the rhythm and build consistency",
       "Observe 1 meeting per day — watch how your buddy handles objections and closes",
-      "6 bookings → 33% show → 1.5 meetings → 40% close → 0.6 deals → $240/day",
+      "6 bookings → 33% show → 1.6 meetings → 40% close → 0.6 deals → $240/day",
     ],
   },
   {

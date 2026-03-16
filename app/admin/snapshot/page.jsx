@@ -196,7 +196,7 @@ function SectionDivider({ label, colSpan }) {
 // ─── Roadmap week benchmarks (daily targets) ───
 const ROADMAP_WEEKS = [
   { week: 1, label: "Week 1",  start: "2026-02-23", daily: { bookings: 6, meetings: 1,   calls: 60, units: 0.4, revenue: 160 } },
-  { week: 2, label: "Week 2",  start: "2026-03-02", daily: { bookings: 6, meetings: 1.5, calls: 60, units: 0.6, revenue: 240 } },
+  { week: 2, label: "Week 2",  start: "2026-03-02", daily: { bookings: 6, meetings: 1.6, calls: 60, units: 0.6, revenue: 240 } },
   { week: 3, label: "Week 3",  start: "2026-03-09", daily: { bookings: 6, meetings: 2,   calls: 60, units: 1,   revenue: 400 } },
   { week: 4, label: "Week 4",  start: "2026-03-16", daily: { bookings: 6, meetings: 2,   calls: 60, units: 1,   revenue: 400 } },
   { week: 5, label: "Week 5",  start: "2026-03-23", daily: { bookings: 6, meetings: 2,   calls: 50, units: 1,   revenue: 400 } },
