@@ -847,8 +847,8 @@ function RoadmapContent() {
                           const dailyVal = daily[m.key];
                           const isZero = weeklyVal === 0;
                           // Round display values: units/meetings to nearest int, revenue to nearest $10
-                          const roundedWeekly = m.format === "currency" ? Math.round(weeklyVal / 10) * 10 : m.key === "units" ? Math.round(weeklyVal * 10) / 10 : Math.round(weeklyVal);
-                          const roundedDaily = m.format === "currency" ? Math.round(dailyVal / 10) * 10 : m.key === "units" ? Math.round(dailyVal * 10) / 10 : Math.round(dailyVal);
+                          const roundedWeekly = m.format === "currency" ? Math.round(weeklyVal / 10) * 10 : (m.key === "units" || m.key === "meetings") ? Math.round(weeklyVal * 10) / 10 : Math.round(weeklyVal);
+                          const roundedDaily = m.format === "currency" ? Math.round(dailyVal / 10) * 10 : (m.key === "units" || m.key === "meetings") ? Math.round(dailyVal * 10) / 10 : Math.round(dailyVal);
                           const fmtWeekly = m.format === "currency" ? formatCurrency(roundedWeekly) : formatNumber(roundedWeekly);
                           const fmtDaily = m.format === "currency" ? formatCurrency(roundedDaily) : formatNumber(roundedDaily);
                           const isBuddy = w.buddyWeek === true;
