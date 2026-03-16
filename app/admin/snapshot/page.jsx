@@ -215,6 +215,18 @@ function getWkDates(startStr) {
   });
 }
 
+function findWeekStandard(value, metricKey) {
+  if (!value || value === 0) return "N/A";
+  const half = metricKey === "units" || metricKey === "revenue";
+  let matched = 0;
+  for (const rw of ROADMAP_WEEKS) {
+    const target = half ? rw.daily[metricKey] * 0.5 : rw.daily[metricKey];
+    if (value >= target) matched = rw.week;
+  }
+  if (matched === 0) return "N/A";
+  return matched >= 8 ? "W8+" : "W" + matched;
+}
+
 function findEquivWeek(dailyAvg, metricKey) {
   // units/revenue compared at 50% of roadmap target
   const half = metricKey === "units" || metricKey === "revenue";
@@ -317,9 +329,15 @@ function RoadmapProgress({ trainees, weeklyActivity, currentRoadmapWeek }) {
                           const target = m.half ? row.benchmark[m.targetKey] * 0.5 : row.benchmark[m.targetKey];
                           const pctOfTarget = target > 0 ? actual / target : 1;
                           const color = pctOfTarget >= 1 ? C.green : pctOfTarget >= 0.8 ? C.amber : C.red;
+                          const stdTag = findWeekStandard(actual, m.key);
+                          const tagColor = stdTag === "N/A" ? "#94a3b8" : C.green;
+                          const tagBg = stdTag === "N/A" ? "#f1f5f9" : "#dcfce7";
                           return (
                             <td key={m.key} style={{ padding: "9px 16px", textAlign: "right", fontFamily: "monospace" }}>
-                              <span style={{ fontWeight: 700, color }}>{m.fmt(actual)}</span>
+                              <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 6 }}>
+                                <span style={{ fontWeight: 700, color }}>{m.fmt(actual)}</span>
+                                <span style={{ fontSize: 9, fontWeight: 700, color: tagColor, background: tagBg, border: "1px solid " + tagColor + "55", padding: "1px 5px", borderRadius: 4, letterSpacing: "0.04em" }}>{stdTag}</span>
+                              </div>
                               <div style={{ fontSize: 9, color: "#94a3b8", marginTop: 1 }}>tgt {m.fmt(target)}</div>
                             </td>
                           );
@@ -412,7 +430,12 @@ export default function SnapshotPage() {
     fetchActivity();
   }, []);
 
-  const trainees = data?.trainees ?? [];
+  const TRAINEE_ORDER = ["cindy-rose-rondez-manrique", "krishna-patel", "connie-matthews"];
+  const trainees = (data?.trainees ?? []).slice().sort((a, b) => {
+    const ai = TRAINEE_ORDER.indexOf(a.slug);
+    const bi = TRAINEE_ORDER.indexOf(b.slug);
+    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+  });
   const _now = new Date();
   const currentRoadmapWeek = (() => {
     for (let i = ROADMAP_WEEKS.length - 1; i >= 0; i--) {
