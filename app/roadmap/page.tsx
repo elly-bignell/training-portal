@@ -48,12 +48,12 @@ const weeklyData: WeekData[] = [
     label: "First Week Out",
     buddyWeek: true,
     meetingRole: "buddy_leads",
-    daily: { revenue: 400, units: 1, meetings: 2, bookings: 6, calls: 60 },
+    daily: { revenue: 160, units: 0.4, meetings: 1, bookings: 6, calls: 60 },
     takeaways: [
       "Buddy takes ALL meetings and closes ALL deals this week",
       "Your job: 60 connects/day → 6 bookings — fill the calendar for your buddy",
       "Observe a minimum of 3 meetings for the week — watch, listen, learn",
-      "6 bookings → 33% show → 2 meetings → 50% close → 1 deal → $400/day",
+      "6 bookings → 33% show → 1 meeting → 40% close → 0.4 deals → $160/day",
     ],
   },
   {
@@ -64,12 +64,12 @@ const weeklyData: WeekData[] = [
     label: "Building Pipeline",
     buddyWeek: true,
     meetingRole: "buddy_leads",
-    daily: { revenue: 400, units: 1, meetings: 2, bookings: 6, calls: 60 },
+    daily: { revenue: 240, units: 0.6, meetings: 1.5, bookings: 6, calls: 60 },
     takeaways: [
       "Buddy takes ALL meetings and closes ALL deals",
       "60 connects/day → 6 bookings — lock in the rhythm and build consistency",
       "Observe 1 meeting per day — watch how your buddy handles objections and closes",
-      "6 bookings → 33% show → 2 meetings → 50% close → 1 deal → $400/day",
+      "6 bookings → 33% show → 1.5 meetings → 40% close → 0.6 deals → $240/day",
     ],
   },
   {
