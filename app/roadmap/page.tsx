@@ -612,22 +612,24 @@ function RoadmapContent() {
               <h3 className="text-sm font-bold text-indigo-900 mb-1">Rules of Thumb</h3>
               <p className="text-xs text-indigo-700 mb-3">1 hour = 1 meeting <span className="font-bold">OR</span> minimum 1 booking. Week 1: 15% book rate. Week 2+: 20%.</p>
               <div className="bg-white rounded-lg border border-indigo-100 overflow-hidden">
-                <div className="grid grid-cols-3 text-[11px] font-bold text-indigo-900 border-b border-indigo-100">
+                <div className="grid grid-cols-4 text-[11px] font-bold text-indigo-900 border-b border-indigo-100">
                   <div className="px-4 py-2 text-center border-r border-indigo-100">MEETINGS</div>
                   <div className="px-4 py-2 text-center border-r border-indigo-100">BOOKINGS</div>
-                  <div className="px-4 py-2 text-center">CONNECTED CALLS (55% CONNECT RATE)</div>
+                  <div className="px-4 py-2 text-center border-r border-indigo-100">CONNECTED CALLS (10% BOOK RATE)</div>
+                  <div className="px-4 py-2 text-center">CONNECTED CALLS (20% BOOK RATE)</div>
                 </div>
                 {[
-                  { m: 0, b: 7, c: 35 },
-                  { m: 1, b: 6, c: 30 },
-                  { m: 2, b: 5, c: 25 },
-                  { m: 3, b: 4, c: 20 },
-                  { m: 4, b: 3, c: 15 },
+                  { m: 0, b: 7 },
+                  { m: 1, b: 6 },
+                  { m: 2, b: 5 },
+                  { m: 3, b: 4 },
+                  { m: 4, b: 3 },
                 ].map((row, i) => (
-                  <div key={i} className={`grid grid-cols-3 text-sm ${i % 2 === 0 ? "bg-indigo-50/40" : "bg-white"} ${i < 3 ? "border-b border-indigo-50" : ""}`}>
+                  <div key={i} className={`grid grid-cols-4 text-sm ${i % 2 === 0 ? "bg-indigo-50/40" : "bg-white"} ${i < 4 ? "border-b border-indigo-50" : ""}`}>
                     <div className="px-4 py-2.5 text-center font-bold text-indigo-700 border-r border-indigo-100">{row.m}</div>
                     <div className="px-4 py-2.5 text-center font-bold text-indigo-700 border-r border-indigo-100">{row.b}</div>
-                    <div className="px-4 py-2.5 text-center font-bold text-indigo-700">{row.c}</div>
+                    <div className="px-4 py-2.5 text-center font-bold text-indigo-700 border-r border-indigo-100">{row.b * 10}</div>
+                    <div className="px-4 py-2.5 text-center font-bold text-indigo-700">{row.b * 5}</div>
                   </div>
                 ))}
               </div>
