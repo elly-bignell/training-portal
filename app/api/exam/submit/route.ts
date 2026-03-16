@@ -11,7 +11,7 @@ const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY!;
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID!;
 const AIRTABLE_TABLE_NAME = "ExamSubmissions";
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const NOTIFICATION_EMAIL = process.env.EXAM_NOTIFICATION_EMAIL || "elly@marketingsweet.com.au";
+const NOTIFICATION_EMAIL = process.env.NOTIFICATION_EMAIL || "elly@marketingsweet.com.au";
 
 const AIRTABLE_URL = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`;
 
