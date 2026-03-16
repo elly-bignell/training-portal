@@ -195,14 +195,14 @@ function SectionDivider({ label, colSpan }) {
 
 // ─── Roadmap week benchmarks (daily targets) ───
 const ROADMAP_WEEKS = [
-  { week: 1, label: "Week 1",  start: "2026-02-23", daily: { bookings: 6, meetings: 1,   units: 0.4, revenue: 160 } },
-  { week: 2, label: "Week 2",  start: "2026-03-02", daily: { bookings: 6, meetings: 1.5, units: 0.6, revenue: 240 } },
-  { week: 3, label: "Week 3",  start: "2026-03-09", daily: { bookings: 6, meetings: 2,   units: 1,   revenue: 400 } },
-  { week: 4, label: "Week 4",  start: "2026-03-16", daily: { bookings: 6, meetings: 2,   units: 1,   revenue: 400 } },
-  { week: 5, label: "Week 5",  start: "2026-03-23", daily: { bookings: 6, meetings: 2,   units: 1,   revenue: 400 } },
-  { week: 6, label: "Week 6",  start: "2026-03-30", daily: { bookings: 6, meetings: 2,   units: 1,   revenue: 400 } },
-  { week: 7, label: "Week 7",  start: "2026-04-06", daily: { bookings: 4, meetings: 2,   units: 1,   revenue: 400 } },
-  { week: 8, label: "Week 8+", start: "2026-04-13", daily: { bookings: 4, meetings: 2,   units: 1,   revenue: 500 } },
+  { week: 1, label: "Week 1",  start: "2026-02-23", daily: { bookings: 6, meetings: 1,   calls: 60, units: 0.4, revenue: 160 } },
+  { week: 2, label: "Week 2",  start: "2026-03-02", daily: { bookings: 6, meetings: 1.5, calls: 60, units: 0.6, revenue: 240 } },
+  { week: 3, label: "Week 3",  start: "2026-03-09", daily: { bookings: 6, meetings: 2,   calls: 50, units: 1,   revenue: 400 } },
+  { week: 4, label: "Week 4",  start: "2026-03-16", daily: { bookings: 6, meetings: 2,   calls: 50, units: 1,   revenue: 400 } },
+  { week: 5, label: "Week 5",  start: "2026-03-23", daily: { bookings: 6, meetings: 2,   calls: 50, units: 1,   revenue: 400 } },
+  { week: 6, label: "Week 6",  start: "2026-03-30", daily: { bookings: 6, meetings: 2,   calls: 50, units: 1,   revenue: 400 } },
+  { week: 7, label: "Week 7",  start: "2026-04-06", daily: { bookings: 4, meetings: 2,   calls: 30, units: 1,   revenue: 400 } },
+  { week: 8, label: "Week 8+", start: "2026-04-13", daily: { bookings: 4, meetings: 2,   calls: 30, units: 1,   revenue: 500 } },
 ];
 
 const TRAINEE_SLUGS = ["cindy-rose-rondez-manrique", "connie-matthews", "krishna-patel"];
@@ -213,18 +213,6 @@ function getWkDates(startStr) {
     const dt = new Date(Date.UTC(y, m - 1, d + i));
     return dt.toISOString().split("T")[0];
   });
-}
-
-function findWeekStandard(value, metricKey) {
-  if (!value || value === 0) return "N/A";
-  const half = metricKey === "units" || metricKey === "revenue";
-  let matched = 0;
-  for (const rw of ROADMAP_WEEKS) {
-    const target = half ? rw.daily[metricKey] * 0.5 : rw.daily[metricKey];
-    if (value >= target) matched = rw.week;
-  }
-  if (matched === 0) return "N/A";
-  return matched >= 8 ? "W8+" : "W" + matched;
 }
 
 function findEquivWeek(dailyAvg, metricKey) {
@@ -250,10 +238,11 @@ function RoadmapProgress({ trainees, weeklyActivity, currentRoadmapWeek }) {
   if (!trainees.length) return null;
 
   const metrics = [
-    { key: "bookings", label: "Bookings / day",     fmt: (v) => fmtN(v),              targetKey: "bookings", half: false },
-    { key: "meetings", label: "Meetings / day",      fmt: (v) => fmtN(v),              targetKey: "meetings", half: false },
-    { key: "units",    label: "Units / day (50%)",   fmt: (v) => fmtN(v, 2),           targetKey: "units",    half: true  },
-    { key: "revenue",  label: "Revenue / day (50%)", fmt: (v) => fmt$(Math.round(v)),  targetKey: "revenue",  half: true  },
+    { key: "bookings", label: "Bookings / day",     fmt: (v) => fmtN(v),             targetKey: "bookings", half: false, higherIsBetter: true  },
+    { key: "meetings", label: "Meetings / day",     fmt: (v) => fmtN(v),             targetKey: "meetings", half: false, higherIsBetter: true  },
+    { key: "calls",    label: "Connected / day",    fmt: (v) => fmtN(v),             targetKey: "calls",    half: false, higherIsBetter: true  },
+    { key: "units",    label: "Units / day (50%)",  fmt: (v) => fmtN(v, 2),          targetKey: "units",    half: true,  higherIsBetter: true  },
+    { key: "revenue",  label: "Rev / day (50%)",    fmt: (v) => fmt$(Math.round(v)), targetKey: "revenue",  half: true,  higherIsBetter: true  },
   ];
 
   return (
@@ -277,6 +266,7 @@ function RoadmapProgress({ trainees, weeklyActivity, currentRoadmapWeek }) {
             week: rw.week, label: rw.label, days: n,
             bookings: sum("bookings") / n,
             meetings: sum("meetings") / n,
+            calls:    sum("calls")    / n,
             units:    sum("units")    / n * 0.5,
             revenue:  sum("revenue")  / n * 0.5,
             benchmark: rw.daily,
@@ -287,10 +277,11 @@ function RoadmapProgress({ trainees, weeklyActivity, currentRoadmapWeek }) {
 
         // Overall daily avg across all active days
         const overall = {
-          bookings: t.bookings    / t.totalDays,
-          meetings: t.meetings    / t.totalDays,
-          units:    t.unitsHalved / t.totalDays,
-          revenue:  t.revenueHalved / t.totalDays,
+          bookings: t.bookings       / t.totalDays,
+          meetings: t.meetings       / t.totalDays,
+          calls:    t.connectedCalls / t.totalDays,
+          units:    t.unitsHalved    / t.totalDays,
+          revenue:  t.revenueHalved  / t.totalDays,
         };
 
         return (
@@ -329,16 +320,15 @@ function RoadmapProgress({ trainees, weeklyActivity, currentRoadmapWeek }) {
                           const target = m.half ? row.benchmark[m.targetKey] * 0.5 : row.benchmark[m.targetKey];
                           const pctOfTarget = target > 0 ? actual / target : 1;
                           const color = pctOfTarget >= 1 ? C.green : pctOfTarget >= 0.8 ? C.amber : C.red;
-                          const stdTag = findWeekStandard(actual, m.key);
-                          const tagColor = stdTag === "N/A" ? "#94a3b8" : C.green;
-                          const tagBg = stdTag === "N/A" ? "#f1f5f9" : "#dcfce7";
+                          const variance = actual - target;
+                          const varPct = target > 0 ? Math.round((variance / target) * 100) : 0;
+                          const varStr = (variance >= 0 ? "+" : "") + (m.key === "revenue" ? fmt$(Math.round(variance)) : fmtN(Math.abs(variance) < 0.05 ? variance : variance)) + "  " + (varPct >= 0 ? "+" : "") + varPct + "%";
+                          const varColor = variance >= 0 ? C.green : C.red;
                           return (
                             <td key={m.key} style={{ padding: "9px 16px", textAlign: "right", fontFamily: "monospace" }}>
-                              <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 6 }}>
-                                <span style={{ fontWeight: 700, color }}>{m.fmt(actual)}</span>
-                                <span style={{ fontSize: 9, fontWeight: 700, color: tagColor, background: tagBg, border: "1px solid " + tagColor + "55", padding: "1px 5px", borderRadius: 4, letterSpacing: "0.04em" }}>{stdTag}</span>
-                              </div>
+                              <span style={{ fontWeight: 700, color }}>{m.fmt(actual)}</span>
                               <div style={{ fontSize: 9, color: "#94a3b8", marginTop: 1 }}>tgt {m.fmt(target)}</div>
+                              {target > 0 && <div style={{ fontSize: 9, fontWeight: 600, color: varColor, marginTop: 1 }}>{varStr}</div>}
                             </td>
                           );
                         })}
