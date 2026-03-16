@@ -161,8 +161,8 @@ const weeklyData: WeekData[] = [
     daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 30 },
     takeaways: [
       "The Standard — 30 connects/day, 4 bookings, 2 meetings, 1 deal → $500/day",
+      "Average deal value increases from $400 to $500 from this week — your revenue per close goes up",
       "You own the entire process end-to-end — calls, bookings, meetings, closes",
-      "Your warm lead pipeline reduces cold call dependency week on week",
       "The Standard is your floor, not your ceiling — commissions are uncapped",
     ],
   },
