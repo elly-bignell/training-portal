@@ -192,11 +192,180 @@ function SectionDivider({ label, colSpan }) {
   );
 }
 
+
+// ─── Roadmap week benchmarks (daily targets) ───
+const ROADMAP_WEEKS = [
+  { week: 1, label: "Week 1",  start: "2026-02-23", daily: { bookings: 6, meetings: 1,   units: 0.4, revenue: 160 } },
+  { week: 2, label: "Week 2",  start: "2026-03-02", daily: { bookings: 6, meetings: 1.5, units: 0.6, revenue: 240 } },
+  { week: 3, label: "Week 3",  start: "2026-03-09", daily: { bookings: 6, meetings: 2,   units: 1,   revenue: 400 } },
+  { week: 4, label: "Week 4",  start: "2026-03-16", daily: { bookings: 6, meetings: 2,   units: 1,   revenue: 400 } },
+  { week: 5, label: "Week 5",  start: "2026-03-23", daily: { bookings: 6, meetings: 2,   units: 1,   revenue: 400 } },
+  { week: 6, label: "Week 6",  start: "2026-03-30", daily: { bookings: 6, meetings: 2,   units: 1,   revenue: 400 } },
+  { week: 7, label: "Week 7",  start: "2026-04-06", daily: { bookings: 4, meetings: 2,   units: 1,   revenue: 400 } },
+  { week: 8, label: "Week 8+", start: "2026-04-13", daily: { bookings: 4, meetings: 2,   units: 1,   revenue: 500 } },
+];
+
+const TRAINEE_SLUGS = ["cindy-rose-rondez-manrique", "connie-matthews", "krishna-patel"];
+
+function getWkDates(startStr) {
+  const [y, m, d] = startStr.split("-").map(Number);
+  return Array.from({ length: 5 }, (_, i) => {
+    const dt = new Date(Date.UTC(y, m - 1, d + i));
+    return dt.toISOString().split("T")[0];
+  });
+}
+
+function findEquivWeek(dailyAvg, metricKey) {
+  // units/revenue compared at 50% of roadmap target
+  const half = metricKey === "units" || metricKey === "revenue";
+  let matched = 0;
+  for (const rw of ROADMAP_WEEKS) {
+    const target = half ? rw.daily[metricKey] * 0.5 : rw.daily[metricKey];
+    if (dailyAvg >= target) matched = rw.week;
+  }
+  return matched;
+}
+
+function equivBadge(equivWeek, currentWeek) {
+  const lbl = equivWeek === 0 ? "Below Wk 1" : equivWeek >= 8 ? "Week 8+ ✓" : "Week " + equivWeek + (equivWeek >= currentWeek ? " ✓" : "");
+  if (equivWeek === 0)                      return { bg: "#fee2e2", color: "#dc2626", label: lbl };
+  if (equivWeek >= currentWeek)             return { bg: "#dcfce7", color: "#16a34a", label: lbl };
+  if (equivWeek >= currentWeek - 1)         return { bg: "#fef3c7", color: "#d97706", label: lbl };
+  return { bg: "#fee2e2", color: "#dc2626", label: lbl };
+}
+
+function RoadmapProgress({ trainees, weeklyActivity, currentRoadmapWeek }) {
+  if (!trainees.length) return null;
+
+  const metrics = [
+    { key: "bookings", label: "Bookings / day",     fmt: (v) => fmtN(v),              targetKey: "bookings", half: false },
+    { key: "meetings", label: "Meetings / day",      fmt: (v) => fmtN(v),              targetKey: "meetings", half: false },
+    { key: "units",    label: "Units / day (50%)",   fmt: (v) => fmtN(v, 2),           targetKey: "units",    half: true  },
+    { key: "revenue",  label: "Revenue / day (50%)", fmt: (v) => fmt$(Math.round(v)),  targetKey: "revenue",  half: true  },
+  ];
+
+  return (
+    <div style={{ marginBottom: 28 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>Roadmap Progress</div>
+        <div style={{ fontSize: 11, color: "#94a3b8" }}>Week-by-week actuals · green = on/above target · amber = within 80% · red = below 80%</div>
+      </div>
+
+      {trainees.map((t) => {
+        const records = weeklyActivity[t.slug] || [];
+
+        // Build week rows from roadmap week dates
+        const weekRows = ROADMAP_WEEKS.map((rw) => {
+          const dates = getWkDates(rw.start);
+          const dayRecs = dates.map(d => records.find(r => r.date === d)).filter(Boolean);
+          if (dayRecs.length === 0) return null;
+          const n = dayRecs.length;
+          const sum = (k) => dayRecs.reduce((s, r) => s + (Number(r[k]) || 0), 0);
+          return {
+            week: rw.week, label: rw.label, days: n,
+            bookings: sum("bookings") / n,
+            meetings: sum("meetings") / n,
+            units:    sum("units")    / n * 0.5,
+            revenue:  sum("revenue")  / n * 0.5,
+            benchmark: rw.daily,
+          };
+        }).filter(Boolean);
+
+        if (weekRows.length === 0) return null;
+
+        // Overall daily avg across all active days
+        const overall = {
+          bookings: t.bookings    / t.totalDays,
+          meetings: t.meetings    / t.totalDays,
+          units:    t.unitsHalved / t.totalDays,
+          revenue:  t.revenueHalved / t.totalDays,
+        };
+
+        return (
+          <div key={t.slug} style={{ background: C.cardBg, border: "1px solid " + C.border, borderRadius: 12, overflow: "hidden", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", marginBottom: 14 }}>
+
+            {/* Card header */}
+            <div style={{ padding: "12px 20px", borderBottom: "1px solid " + C.border, background: "#f8fafc", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 14, fontWeight: 700, color: C.heading }}>{t.name}</span>
+              <span style={{ fontSize: 11, color: C.muted }}>Daily averages per week · targets shown below each value</span>
+            </div>
+
+            {/* Week-by-week table */}
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+                <thead>
+                  <tr style={{ background: "#f8fafc", borderBottom: "1px solid " + C.border }}>
+                    <th style={{ padding: "8px 16px", textAlign: "left", color: C.muted, fontWeight: 600, fontSize: 10, textTransform: "uppercase", letterSpacing: "0.07em" }}>Week</th>
+                    <th style={{ padding: "8px 10px", textAlign: "center", color: C.muted, fontWeight: 600, fontSize: 10, textTransform: "uppercase", letterSpacing: "0.07em" }}>Days</th>
+                    {metrics.map(m => (
+                      <th key={m.key} style={{ padding: "8px 16px", textAlign: "right", color: C.muted, fontWeight: 600, fontSize: 10, textTransform: "uppercase", letterSpacing: "0.07em" }}>{m.label}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {weekRows.map((row, i) => {
+                    const isCurrent = row.week === currentRoadmapWeek;
+                    return (
+                      <tr key={row.week} style={{ borderBottom: i < weekRows.length - 1 ? "1px solid #f1f5f9" : "none", background: isCurrent ? "rgba(230,1,125,0.04)" : i % 2 === 0 ? C.cardBg : C.rowAlt }}>
+                        <td style={{ padding: "9px 16px", fontWeight: isCurrent ? 700 : 500, color: isCurrent ? "#E6017D" : C.heading, whiteSpace: "nowrap" }}>
+                          {row.label}
+                          {isCurrent && <span style={{ fontSize: 9, background: "#E6017D", color: "#fff", padding: "1px 5px", borderRadius: 4, marginLeft: 6, fontWeight: 700 }}>NOW</span>}
+                        </td>
+                        <td style={{ padding: "9px 10px", textAlign: "center", fontFamily: "monospace", color: C.muted }}>{row.days}</td>
+                        {metrics.map(m => {
+                          const actual = row[m.key];
+                          const target = m.half ? row.benchmark[m.targetKey] * 0.5 : row.benchmark[m.targetKey];
+                          const pctOfTarget = target > 0 ? actual / target : 1;
+                          const color = pctOfTarget >= 1 ? C.green : pctOfTarget >= 0.8 ? C.amber : C.red;
+                          return (
+                            <td key={m.key} style={{ padding: "9px 16px", textAlign: "right", fontFamily: "monospace" }}>
+                              <span style={{ fontWeight: 700, color }}>{m.fmt(actual)}</span>
+                              <div style={{ fontSize: 9, color: "#94a3b8", marginTop: 1 }}>tgt {m.fmt(target)}</div>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Equivalent week mapping */}
+            <div style={{ borderTop: "2px solid " + C.border, padding: "14px 20px", background: "#fafafa" }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
+                Current overall performance — roadmap equivalent
+                <span style={{ fontWeight: 400, marginLeft: 8, textTransform: "none", letterSpacing: 0 }}>
+                  (green = at or ahead of current week · amber = 1 week behind · red = 2+ weeks behind)
+                </span>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
+                {metrics.map(m => {
+                  const equiv = findEquivWeek(overall[m.key], m.key);
+                  const badge = equivBadge(equiv, currentRoadmapWeek);
+                  return (
+                    <div key={m.key} style={{ background: badge.bg, border: "1px solid " + badge.color + "55", borderRadius: 8, padding: "10px 14px" }}>
+                      <div style={{ fontSize: 10, color: C.muted, marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.06em" }}>{m.label}</div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: badge.color }}>{badge.label}</div>
+                      <div style={{ fontSize: 11, fontFamily: "monospace", color: C.slate, marginTop: 3 }}>{m.fmt(overall[m.key])} avg/day</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function SnapshotPage() {
   const [data, setData]               = useState(null);
   const [loading, setLoading]         = useState(true);
   const [error, setError]             = useState(null);
   const [lastRefresh, setLastRefresh] = useState(null);
+  const [weeklyActivity, setWeeklyActivity] = useState({});
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -226,7 +395,31 @@ export default function SnapshotPage() {
     return () => clearInterval(iv);
   }, [load]);
 
+  useEffect(() => {
+    const fetchActivity = async () => {
+      const results = {};
+      await Promise.all(TRAINEE_SLUGS.map(async (slug) => {
+        try {
+          const res = await fetch("/api/activity/all?trainee_slug=" + slug);
+          const json = await res.json();
+          results[slug] = json.records || [];
+        } catch {
+          results[slug] = [];
+        }
+      }));
+      setWeeklyActivity(results);
+    };
+    fetchActivity();
+  }, []);
+
   const trainees = data?.trainees ?? [];
+  const _now = new Date();
+  const currentRoadmapWeek = (() => {
+    for (let i = ROADMAP_WEEKS.length - 1; i >= 0; i--) {
+      if (_now >= new Date(ROADMAP_WEEKS[i].start)) return ROADMAP_WEEKS[i].week;
+    }
+    return 1;
+  })();
   const today    = new Date().toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" });
 
   return (
@@ -286,6 +479,11 @@ export default function SnapshotPage() {
                 {trainees.map((t) => <Scorecard key={t.slug} t={t} />)}
               </div>
             </>
+          )}
+
+          {/* Roadmap Progress */}
+          {trainees.length > 0 && Object.keys(weeklyActivity).length > 0 && (
+            <RoadmapProgress trainees={trainees} weeklyActivity={weeklyActivity} currentRoadmapWeek={currentRoadmapWeek} />
           )}
 
           {/* Full comparison table */}
