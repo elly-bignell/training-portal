@@ -334,6 +334,10 @@ export default function EasterPromoAdmin() {
                       <span className="text-xs text-gray-600">📅 Quodo Bookings</span>
                       <span className="text-sm font-bold text-purple-700">{pair.juniorBookings}</span>
                     </div>
+                    <div className="flex items-center justify-between bg-violet-50 rounded-lg px-3 py-2">
+                      <span className="text-xs text-gray-600">💡 Commission Opportunity</span>
+                      <span className="text-sm font-bold text-violet-700">${(pair.juniorBookings * 100).toLocaleString()}</span>
+                    </div>
                     <div className="flex items-center justify-between bg-emerald-50 rounded-lg px-3 py-2">
                       <span className="text-xs text-gray-600">🤝 Bookings closed (express + standard)</span>
                       <span className="text-sm font-bold text-emerald-700">{pair.buddyCloses}</span>

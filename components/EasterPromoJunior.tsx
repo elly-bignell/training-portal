@@ -99,6 +99,10 @@ export default function EasterPromoJunior({ traineeSlug, traineeName }: Props) {
             <span className="text-2xl sm:text-3xl font-bold text-white">{today.quodo_bookings}</span>
             <span className="text-xs text-white/60">Campaign total: {totals.quodo_bookings}</span>
           </div>
+          <div className="flex items-center justify-between mb-2 bg-white/10 rounded-lg px-2 py-1">
+            <span className="text-xs text-white/80">💡 Commission Opportunity</span>
+            <span className="text-sm font-bold text-white">${(totals.quodo_bookings * 100).toLocaleString()}</span>
+          </div>
           <div className="flex gap-1.5 sm:gap-2">
             <button
               onClick={() => increment("quodo_bookings", -1)}
