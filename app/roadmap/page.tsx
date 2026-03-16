@@ -280,6 +280,63 @@ const weeklyData: WeekData[] = [
       "Commissions are uncapped — go over and above to earn more $$$",
     ],
   },
+  {
+    week: 17,
+    dateRange: "Mon 15 Jun – Fri 19 Jun",
+    startDate: "2026-06-15",
+    phase: "maintain",
+    meetingRole: "trainee_solo",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 30 },
+    takeaways: [
+      "Focus on efficiency — same output with fewer cold calls is a win",
+      "Warm referrals and repeat contacts should be reducing your call volume",
+      "Every meeting you sharpen your pitch — close rates climb over time",
+      "Commissions are uncapped — push above The Standard to earn more",
+    ],
+  },
+  {
+    week: 18,
+    dateRange: "Mon 22 Jun – Fri 26 Jun",
+    startDate: "2026-06-22",
+    phase: "maintain",
+    meetingRole: "trainee_solo",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 30 },
+    takeaways: [
+      "Your pipeline is doing more of the heavy lifting — fewer cold dials needed",
+      "Target fewer calls, more bookings — efficiency is the metric now",
+      "Higher close rates mean the same meetings deliver more revenue",
+      "Commissions are uncapped — every deal above The Standard is pure upside",
+    ],
+  },
+  {
+    week: 19,
+    dateRange: "Mon 29 Jun – Fri 3 Jul",
+    startDate: "2026-06-29",
+    phase: "maintain",
+    meetingRole: "trainee_solo",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 30 },
+    takeaways: [
+      "Nearly 5 months in — The Standard should feel effortless by now",
+      "Your goal: same revenue with less effort, freeing capacity to go above",
+      "Fewer calls to hit target = more energy for higher-value activities",
+      "Commissions are uncapped — back yourself and push for more",
+    ],
+  },
+  {
+    week: 20,
+    dateRange: "Mon 6 Jul – Fri 10 Jul",
+    startDate: "2026-07-06",
+    phase: "maintain",
+    label: "5 Months In",
+    meetingRole: "trainee_solo",
+    daily: { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 30 },
+    takeaways: [
+      "5 months of consistent performance — The Standard is second nature",
+      "Efficiency gains are compounding — less input, same or greater output",
+      "Your close rate and pitch quality are your biggest levers from here",
+      "Commissions are uncapped — the ceiling is yours to set",
+    ],
+  },
 ];
 
 const standardDaily = { revenue: 500, units: 1, meetings: 2, bookings: 4, calls: 30 };
@@ -788,8 +845,8 @@ function RoadmapContent() {
                           const dailyVal = daily[m.key];
                           const isZero = weeklyVal === 0;
                           // Round display values: units/meetings to nearest int, revenue to nearest $10
-                          const roundedWeekly = m.format === "currency" ? Math.round(weeklyVal / 10) * 10 : Math.round(weeklyVal);
-                          const roundedDaily = m.format === "currency" ? Math.round(dailyVal / 10) * 10 : Math.round(dailyVal);
+                          const roundedWeekly = m.format === "currency" ? Math.round(weeklyVal / 10) * 10 : m.key === "units" ? Math.round(weeklyVal * 10) / 10 : Math.round(weeklyVal);
+                          const roundedDaily = m.format === "currency" ? Math.round(dailyVal / 10) * 10 : m.key === "units" ? Math.round(dailyVal * 10) / 10 : Math.round(dailyVal);
                           const fmtWeekly = m.format === "currency" ? formatCurrency(roundedWeekly) : formatNumber(roundedWeekly);
                           const fmtDaily = m.format === "currency" ? formatCurrency(roundedDaily) : formatNumber(roundedDaily);
                           const isBuddy = w.buddyWeek === true;
