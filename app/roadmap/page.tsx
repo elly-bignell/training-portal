@@ -309,7 +309,7 @@ function getConversions(daily: WeekData["daily"]) {
     callsToBookings: daily.calls > 0 ? Math.round((daily.bookings / daily.calls) * 100) : 0,
     bookingsToMeetings: daily.bookings > 0 ? Math.round((daily.meetings / daily.bookings) * 100) : 0,
     meetingsToUnits: daily.meetings > 0 ? Math.round((daily.units / daily.meetings) * 100) : 0,
-    revenuePerUnit: 400,
+    revenuePerUnit: daily.units > 0 ? Math.round(daily.revenue / daily.units) : 0,
   };
 }
 
@@ -917,7 +917,7 @@ function RoadmapContent() {
             <div className="p-4 rounded-lg border" style={{ backgroundColor: `${PINK}08`, borderColor: `${PINK}22` }}>
               <h4 className="font-semibold text-sm mb-2" style={{ color: PINK }}>⚡ Efficiency in Meetings</h4>
               <p className="text-sm text-slate-600">
-                $400 average deal value with a 50% close rate — 3 meetings/day at The Standard.
+                $500 average deal value with a 50% close rate — 3 meetings/day at The Standard.
                 Pre-meeting preparation and strong qualification maximise every slot on your calendar.
               </p>
             </div>
