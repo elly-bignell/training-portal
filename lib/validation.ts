@@ -25,7 +25,7 @@ export const BUDDY_PAIRS: Record<string, string> = {
   "Sydney Arnold": "Felipe Garcia",
   "Cindy Manrique": "Lucas Tirri",
   "Krishna Patel": "Dylan Munro",
-  "Tom Rennie": "Lucas Tirri",
+  "Tom Rennie": "Felipe Garcia",
 };
 
 export const STAFF_MEMBERS = Object.keys(BUDDY_PAIRS);
