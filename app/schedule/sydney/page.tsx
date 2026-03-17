@@ -8,9 +8,16 @@ import PasswordGate from "@/components/PasswordGate";
 function SydneyScheduleContent() {
   const weeks = [
     {
+        "week": 0,
+        "dateRange": "Mon 23 Mar – Fri 27 Mar",
+        "label": "Training Week",
+        "badge": "Observation",
+        "badgeColor": "bg-amber-100 text-amber-700"
+    },
+    {
         "week": 1,
         "dateRange": "Mon 23 Mar – Fri 27 Mar",
-        "label": "Training Week (Observation)",
+        "label": "First Week Out",
         "badge": "Calls Only",
         "badgeColor": "bg-sky-100 text-sky-700"
     },

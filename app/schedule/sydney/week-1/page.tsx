@@ -49,11 +49,10 @@ function SydneyWeek1Content() {
             </div>
             <div className="flex items-center gap-2">
 
-              <span className="px-3 py-1.5 bg-slate-800 text-slate-600 text-xs font-semibold rounded-lg cursor-not-allowed">
-
-                <svg className="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-
-              </span>
+              <Link href="/schedule/sydney/week-0" className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-semibold rounded-lg transition-colors">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                Week 0
+              </Link>
 
               <span className="px-3 py-1.5 bg-slate-700 text-slate-300 text-xs font-semibold rounded-full">
 
@@ -322,7 +321,7 @@ function SydneyWeek1Content() {
                 Quick Links
               </h2>
               <div className="space-y-2">
-                <Link href="/scorecard/sydney-patel" className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-pink-300 hover:bg-pink-50 transition-all group">
+                <Link href="/scorecard/sydney-arnold" className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-pink-300 hover:bg-pink-50 transition-all group">
                   <div className="w-8 h-8 rounded-lg bg-pink-100 flex items-center justify-center text-pink-600 group-hover:bg-pink-200 transition-colors">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -365,7 +364,7 @@ function SydneyWeek1Content() {
 
 export default function SydneyWeek1Page() {
   return (
-    <PasswordGate traineeSlug="sydney-patel">
+    <PasswordGate traineeSlug="sydney-arnold">
       <SydneyWeek1Content />
     </PasswordGate>
   );
