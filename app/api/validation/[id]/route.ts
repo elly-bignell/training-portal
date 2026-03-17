@@ -24,6 +24,7 @@ export async function PATCH(
     if (body.status) fields.status = body.status;
     if (body.validation_date) fields.validation_date = body.validation_date;
     if (body.validation_note !== undefined) fields.validation_note = body.validation_note;
+    if (body.rejection_reason !== undefined) fields.rejection_reason = body.rejection_reason;
     if (body.observation_date) fields.observation_date = body.observation_date;
     if (body.na_date !== undefined) fields.na_date = body.na_date;
     if (body.na_count !== undefined) fields.na_count = body.na_count;
