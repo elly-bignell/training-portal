@@ -131,24 +131,33 @@ const FLOWCHART_DEF = `flowchart TD
     C --> D["🤝 Buddy Calls the Booking\nto Validate Quality"]
     D --> E{"Booking\nQuality?"}
 
-    E -->|"✅ Good"| F["Validated\n<b>Status: Validated</b>"]
+    E -->|"✅ Good"| EG{"Confirmed\nDay & Time?"}
     E -->|"❌ Poor"| G["Rejected\n<b>Status: Rejected</b>\nBuddy writes rejection note"]
+
+    EG -->|"✅ Yes"| F["Validated\n<b>Status: Validated</b>"]
+    EG -->|"🔥 Not Yet"| HTL["Hot Try Later\n<b>Status: Hot Try Later</b>\nInterested — no confirmed time"]
 
     F --> H["📝 Buddy Provides Feedback\nto Staff Member"]
     G --> H
+    HTL --> H
 
     F --> I["📅 Added to Observation Queue"]
+    HTL --> J["📋 Updated in ClickUp\nfor follow-up"]
 
     G --> N["📊 Logged in Daily\nLodgement Dashboard"]
     F --> N
+    HTL --> N
 
     N --> O["📈 Performance Report\nGenerated Weekly"]
-    O --> P["Validation Rate =\nValidated ÷ Total Bookings"]
+    O --> P["Validation Rate =\nValidated ÷ (Validated + Rejected)\n<i>HTL excluded — still a good booking</i>"]
 
     style A fill:#E6017D,stroke:#E6017D,color:#fff
     style B fill:#fef3c7,stroke:#f59e0b,color:#92400e
     style F fill:#d1fae5,stroke:#10b981,color:#065f46
     style G fill:#fee2e2,stroke:#ef4444,color:#991b1b
+    style HTL fill:#ede9fe,stroke:#7c3aed,color:#4c1d95
+    style EG fill:#f3f4f6,stroke:#9ca3af,color:#374151
+    style J fill:#ede9fe,stroke:#7c3aed,color:#4c1d95
 
     style P fill:#fce7f3,stroke:#E6017D,color:#9d174d`;
 
