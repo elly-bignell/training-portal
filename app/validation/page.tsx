@@ -55,7 +55,7 @@ function ValidationContent({ role }: { role: UserRole }) {
     fetchBookings();
   }, [fetchBookings]);
 
-  const pendingCount = bookings.filter((b) => b.status === "pending").length;
+  const pendingCount = bookings.filter((b) => b.status === "pending" && ((b as any).na_count || 0) < 2).length;
   const isFullAccess = role === "admin" || role === "senior";
   const visibleTabs = isFullAccess ? TABS : TABS.filter((t) => t.publicTab);
 
