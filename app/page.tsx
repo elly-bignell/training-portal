@@ -225,7 +225,7 @@ function HomeContent() {
           {/* Trainees */}
           <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">Trainees</h3>
           <div className="space-y-4 mb-6">
-            {trainees.filter((t) => ["krishna-patel", "cindy-rose-rondez-manrique", "connie-matthews"].includes(t.slug)).map((trainee) => {
+            {trainees.filter((t) => ["sydney-arnold", "krishna-patel", "cindy-rose-rondez-manrique", "connie-matthews"].includes(t.slug)).map((trainee) => {
               const module1Attempts = getTraineeExamAttempts(trainee.slug, "exam-module-1");
               const module1Passed = module1Attempts.some((a) => a.passed);
               const module1BestScore = module1Attempts.length > 0
@@ -236,6 +236,7 @@ function HomeContent() {
                 "cindy-rose-rondez-manrique": "cindy",
                 "krishna-patel": "krishna",
                 "connie-matthews": "connie",
+                "sydney-arnold": "sydney",
               };
               const hasSchedule = trainee.slug in scheduleSlug;
 
@@ -393,51 +394,70 @@ function HomeContent() {
           <h2 className="text-lg font-semibold text-gray-800">
             Select Your Dashboard
           </h2>
-          {trainees.map((trainee) => {
-            const progress = getTraineeProgress(trainee.slug);
-            const hasStarted = progress && progress.overall_progress > 0;
-            
-            return (
-              <Link
-                key={trainee.id}
-                href={`/trainees/${trainee.slug}`}
-                className="block bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md hover:border-blue-300 transition-all duration-200"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-lg">
-                      {trainee.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">{trainee.name}</h3>
-                      <div className="text-sm text-gray-500 space-y-0.5">
-                        {hasStarted ? (
-                          <>
-                            <p>Started: {formatAdelaideDate(progress.last_updated, false)}</p>
-                            <p>Last updated: {formatAdelaideDate(progress.last_updated, true)}</p>
-                          </>
-                        ) : (
-                          <p className="text-gray-400 italic">Not started yet</p>
-                        )}
+          {(() => {
+            const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold"];
+            const CS_SLUGS = ["jeremy-valiente", "dasha-axenova"];
+
+            return trainees.map((trainee) => {
+              const progress = getTraineeProgress(trainee.slug);
+              const hasStarted = progress && progress.overall_progress > 0;
+              const isSalesTag = SALES_SLUGS.includes(trainee.slug);
+              const isCSTag = CS_SLUGS.includes(trainee.slug);
+
+              return (
+                <Link
+                  key={trainee.id}
+                  href={`/trainees/${trainee.slug}`}
+                  className="block bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md hover:border-blue-300 transition-all duration-200"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-lg">
+                        {trainee.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h3 className="text-lg font-semibold text-gray-900">{trainee.name}</h3>
+                          {isSalesTag && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-[#E6017D]/10 text-[#E6017D] border border-[#E6017D]/20">
+                              💼 Sales
+                            </span>
+                          )}
+                          {isCSTag && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-200">
+                              🎧 Customer Service
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-sm text-gray-500 space-y-0.5">
+                          {hasStarted ? (
+                            <>
+                              <p>Started: {formatAdelaideDate(progress.last_updated, false)}</p>
+                              <p>Last updated: {formatAdelaideDate(progress.last_updated, true)}</p>
+                            </>
+                          ) : (
+                            <p className="text-gray-400 italic">Not started yet</p>
+                          )}
+                        </div>
                       </div>
                     </div>
+                    <div className="flex items-center gap-4">
+                      {isLoading ? (
+                        <div className="w-16 h-16 flex items-center justify-center">
+                          <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+                        </div>
+                      ) : (
+                        <CircularProgress percentage={progress?.checked_items ? Math.round(Object.values(progress.checked_items).filter(Boolean).length / totalItems * 100) : 0} />
+                      )}
+                      <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    {isLoading ? (
-                      <div className="w-16 h-16 flex items-center justify-center">
-                        <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
-                      </div>
-                    ) : (
-                      <CircularProgress percentage={progress?.checked_items ? Math.round(Object.values(progress.checked_items).filter(Boolean).length / totalItems * 100) : 0} />
-                    )}
-                    <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            });
+          })()}
         </div>
 
         {/* Sales Knowledge Framework */}

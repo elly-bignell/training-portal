@@ -45,6 +45,7 @@ export const TRAINEE_PASSWORDS: Record<string, (string | TimedPassword)[]> = {
   "krishna-patel": ["KPatel0226!"],
   "jeremy-valiente": ["JValiente0326!"],
   "dasha-axenova": ["DAxenova0326!"],
+  "sydney-arnold": ["SArnold0326!"],
 };
 
 // Check if a single password entry matches (handles both string and TimedPassword)

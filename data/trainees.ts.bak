@@ -63,12 +63,6 @@ export const trainees: Trainee[] = [
     slug: "dasha-axenova",
     startDate: "2026-03-06",
   },
-  {
-    id: "sydney-arnold",
-    name: "Sydney Arnold",
-    slug: "sydney-arnold",
-    startDate: "2026-03-17",
-  },
 ];
 
 export function getTraineeBySlug(slug: string): Trainee | undefined {
