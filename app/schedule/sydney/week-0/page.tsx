@@ -48,7 +48,7 @@ function SydneyWeek0Content() {
             <span className="text-lg">🎓</span>
             <h2 className="text-sm font-bold uppercase tracking-wide">Week 0 — Training Week</h2>
           </div>
-          <p className="text-sm text-amber-100">Orientation, system setup, and your first live calls. No booking targets this week — focus on absorbing everything and getting comfortable on the phones.</p>
+          <p className="text-sm text-amber-100">Orientation, system setup, and your first live calls. Booking targets apply during C4C and Supervised Call blocks — your buddy is there to pick up the slack if you need it.</p>
         </div>
 
         {/* Schedule Table */}
@@ -64,18 +64,6 @@ function SydneyWeek0Content() {
                 </tr>
               </thead>
               <tbody>
-
-                {/* ═══ Arrivals ═══ */}
-                <tr className="bg-slate-800/5">
-                  <td className="p-2 font-semibold text-slate-600 border border-gray-200 bg-slate-50 text-xs whitespace-nowrap">✈️ Arrivals</td>
-                  <td className="p-2 text-center border border-gray-200 bg-slate-50">
-                    <div className="text-xs text-slate-700 font-medium">Sydney → Adelaide</div>
-                    <div className="text-[10px] text-slate-500 mt-0.5">Departs 6:40am · Lands 8:15am</div>
-                  </td>
-                  {["Tue","Wed","Thu","Fri"].map((d) => (
-                    <td key={d} className="p-2 text-center border border-gray-200 text-gray-300 text-xs">—</td>
-                  ))}
-                </tr>
 
                 {/* ═══ 8:30am — Debrief (Tue–Fri) ═══ */}
                 <tr>
@@ -106,25 +94,29 @@ function SydneyWeek0Content() {
                       ))}
                     </div>
                   </td>
-                  {/* Tue: Call for Call — rowSpan 4 (9:00–11:00) */}
+                  {/* Tue: Call for Call — rowSpan 4 (9:00–11:00) = 2hrs = 2 bookings */}
                   <td rowSpan={4} className="p-2 text-center border border-gray-200 align-middle bg-indigo-900/5">
                     <div className="bg-indigo-900 text-white rounded px-2 py-2 text-xs font-semibold">📞 Call for Call (C4C)</div>
                     <div className="text-[10px] text-gray-500 mt-1">9:00–11:00am · 2hrs</div>
+                    <div className="text-[10px] text-indigo-300 font-semibold mt-1">Target: 2 bookings</div>
                   </td>
-                  {/* Wed: Call for Call — rowSpan 7 (9:00–12:30) */}
+                  {/* Wed: Call for Call — rowSpan 7 (9:00–12:30) = 3.5hrs = 3 bookings */}
                   <td rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-indigo-900/5">
                     <div className="bg-indigo-900 text-white rounded px-2 py-2 text-xs font-semibold">📞 Call for Call (C4C)</div>
                     <div className="text-[10px] text-gray-500 mt-1">9:00am–12:30pm · 3.5hrs</div>
+                    <div className="text-[10px] text-indigo-300 font-semibold mt-1">Target: 3 bookings</div>
                   </td>
-                  {/* Thu: Call for Call — rowSpan 4 (9:00–11:00) */}
+                  {/* Thu: Call for Call — rowSpan 4 (9:00–11:00) = 2hrs = 2 bookings */}
                   <td rowSpan={4} className="p-2 text-center border border-gray-200 align-middle bg-indigo-900/5">
                     <div className="bg-indigo-900 text-white rounded px-2 py-2 text-xs font-semibold">📞 Call for Call (C4C)</div>
                     <div className="text-[10px] text-gray-500 mt-1">9:00–11:00am · 2hrs</div>
+                    <div className="text-[10px] text-indigo-300 font-semibold mt-1">Target: 2 bookings</div>
                   </td>
-                  {/* Fri: Supervised Calls — rowSpan 2 (9:00–10:00) */}
+                  {/* Fri: Supervised Calls — rowSpan 2 (9:00–10:00) = 1hr = 1 booking */}
                   <td rowSpan={2} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
                     <div className="bg-amber-100 text-amber-800 rounded px-2 py-1.5 text-xs font-semibold">📋 Supervised Calls</div>
                     <div className="text-[10px] text-gray-500 mt-0.5">9:00–10:00am · 1hr</div>
+                    <div className="text-[10px] text-amber-600 font-semibold mt-0.5">Target: 1 booking</div>
                   </td>
                 </tr>
 
@@ -149,23 +141,26 @@ function SydneyWeek0Content() {
                   <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">10:30am</td>
                 </tr>
 
-                {/* 11:00am — Tue/Thu: Supervised Calls start; Fri: Supervised Calls start */}
+                {/* 11:00am — Tue/Thu/Fri: Supervised Calls 1.5hrs = 1 booking */}
                 <tr>
                   <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">11:00am</td>
-                  {/* Tue: Supervised Calls — rowSpan 3 (11:00–12:30) */}
+                  {/* Tue: Supervised Calls — rowSpan 3 (11:00–12:30) = 1.5hrs = 1 booking */}
                   <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
                     <div className="bg-amber-100 text-amber-800 rounded px-2 py-1.5 text-xs font-semibold">📋 Supervised Calls</div>
                     <div className="text-[10px] text-gray-500 mt-0.5">11:00am–12:30pm · 1.5hrs</div>
+                    <div className="text-[10px] text-amber-600 font-semibold mt-0.5">Target: 1 booking</div>
                   </td>
-                  {/* Thu: Supervised Calls — rowSpan 3 (11:00–12:30) */}
+                  {/* Thu: Supervised Calls — rowSpan 3 = 1.5hrs = 1 booking */}
                   <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
                     <div className="bg-amber-100 text-amber-800 rounded px-2 py-1.5 text-xs font-semibold">📋 Supervised Calls</div>
                     <div className="text-[10px] text-gray-500 mt-0.5">11:00am–12:30pm · 1.5hrs</div>
+                    <div className="text-[10px] text-amber-600 font-semibold mt-0.5">Target: 1 booking</div>
                   </td>
-                  {/* Fri: Supervised Calls — rowSpan 3 (11:00–12:30) */}
+                  {/* Fri: Supervised Calls — rowSpan 3 = 1.5hrs = 1 booking */}
                   <td rowSpan={3} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
                     <div className="bg-amber-100 text-amber-800 rounded px-2 py-1.5 text-xs font-semibold">📋 Supervised Calls</div>
                     <div className="text-[10px] text-gray-500 mt-0.5">11:00am–12:30pm · 1.5hrs</div>
+                    <div className="text-[10px] text-amber-600 font-semibold mt-0.5">Target: 1 booking</div>
                   </td>
                 </tr>
 
@@ -215,20 +210,23 @@ function SydneyWeek0Content() {
                     <div className="bg-orange-100 text-orange-800 rounded px-2 py-1.5 text-xs font-semibold">🎭 Role Playing & Scenarios</div>
                     <div className="text-[10px] text-gray-500 mt-0.5">1:30–2:30pm · 1hr</div>
                   </td>
-                  {/* Wed: Supervised Calls — rowSpan 7 (1:30–5:00) */}
+                  {/* Wed: Supervised Calls — rowSpan 7 (1:30–5:00) = 3.5hrs = 3 bookings */}
                   <td rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
                     <div className="bg-amber-100 text-amber-800 rounded px-2 py-2 text-xs font-semibold">📋 Supervised Calls</div>
                     <div className="text-[10px] text-gray-500 mt-1">1:30–5:00pm · 3.5hrs</div>
+                    <div className="text-[10px] text-amber-600 font-semibold mt-1">Target: 3 bookings</div>
                   </td>
-                  {/* Thu: Supervised Calls — rowSpan 7 */}
+                  {/* Thu: Supervised Calls — rowSpan 7 = 3.5hrs = 3 bookings */}
                   <td rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
                     <div className="bg-amber-100 text-amber-800 rounded px-2 py-2 text-xs font-semibold">📋 Supervised Calls</div>
                     <div className="text-[10px] text-gray-500 mt-1">1:30–5:00pm · 3.5hrs</div>
+                    <div className="text-[10px] text-amber-600 font-semibold mt-1">Target: 3 bookings</div>
                   </td>
-                  {/* Fri: Supervised Calls — rowSpan 7 */}
+                  {/* Fri: Supervised Calls — rowSpan 7 = 3.5hrs = 3 bookings */}
                   <td rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-amber-50">
                     <div className="bg-amber-100 text-amber-800 rounded px-2 py-2 text-xs font-semibold">📋 Supervised Calls</div>
                     <div className="text-[10px] text-gray-500 mt-1">1:30–5:00pm · 3.5hrs</div>
+                    <div className="text-[10px] text-amber-600 font-semibold mt-1">Target: 3 bookings</div>
                   </td>
                 </tr>
 
@@ -268,19 +266,6 @@ function SydneyWeek0Content() {
                   <td className="p-2 font-medium text-gray-700 border border-gray-200 bg-gray-50 text-xs whitespace-nowrap">4:30pm</td>
                 </tr>
 
-                {/* ═══ Departures ═══ */}
-                <tr className="bg-slate-800/5">
-                  <td className="p-2 font-semibold text-slate-600 border border-gray-200 bg-slate-50 text-xs whitespace-nowrap">✈️ Departures</td>
-                  {["Mon","Tue","Wed","Thu"].map((d) => (
-                    <td key={d} className="p-2 text-center border border-gray-200 text-gray-300 text-xs">—</td>
-                  ))}
-                  <td className="p-2 text-center border border-gray-200 bg-slate-50">
-                    <div className="text-xs text-slate-700 font-medium">Saturday 28 Mar</div>
-                    <div className="text-[10px] text-slate-500 mt-0.5">Adelaide → Sydney</div>
-                    <div className="text-[10px] text-slate-500">Departs 12:35pm · Arrives 3:00pm</div>
-                  </td>
-                </tr>
-
               </tbody>
             </table>
           </div>
@@ -306,12 +291,12 @@ function SydneyWeek0Content() {
           </h2>
           <div className="space-y-3">
             {[
-              { bold: "No booking targets", rest: " — this week is about getting comfortable with the systems and the phones" },
-              { bold: "Call for Call (C4C)", rest: " — listen and learn alongside the senior team, ask questions between calls" },
-              { bold: "Supervised Calls", rest: " — you're on the phones but with support close by, focus on your pitch and objection handling" },
-              { bold: "Process & Technology (Monday PM)", rest: " — set up all your tools properly from day one so nothing slows you down later" },
-              { bold: "Customer Service session (Tuesday PM)", rest: " — understand what happens after a deal is closed so you can sell with conviction" },
-              { bold: "Find Your Harpoon (Friday AM)", rest: " — a dedicated session to identify your personal sales style and hook" },
+              { bold: "Booking targets apply", rest: " — 1 booking per hour is the expectation across C4C and Supervised Call blocks. Your buddy is there to pick up the slack if needed." },
+              { bold: "Call for Call (C4C)", rest: " — you're calling alongside the senior team. Target 2 bookings in 2hr blocks, 3 bookings in 3.5hr blocks." },
+              { bold: "Supervised Calls", rest: " — target 1 booking per 1–1.5hr block, 3 bookings per 3.5hr block. Focus on pitch and objection handling." },
+              { bold: "Process & Technology (Monday PM)", rest: " — set up all your tools properly from day one so nothing slows you down later." },
+              { bold: "Customer Service session (Tuesday PM)", rest: " — understand what happens after a deal is closed so you can sell with conviction." },
+              { bold: "Find Your Harpoon (Friday AM)", rest: " — a dedicated session to identify your personal sales style and hook." },
             ].map(({ bold, rest }, i) => (
               <div key={i} className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 flex-shrink-0"></div>
