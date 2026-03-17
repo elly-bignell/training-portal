@@ -48,7 +48,7 @@ function SydneyWeek0Content() {
             <span className="text-lg">🎓</span>
             <h2 className="text-sm font-bold uppercase tracking-wide">Week 0 — Training Week</h2>
           </div>
-          <p className="text-sm text-amber-100">Orientation, system setup, and your first live calls. Booking targets apply during C4C and Supervised Call blocks — your buddy is there to pick up the slack if you need it.</p>
+          <p className="text-sm text-amber-100">Orientation, system setup, and your first live calls. Booking targets apply during C4C and Supervised Call blocks — your buddy is there to support you every step of the way.</p>
         </div>
 
         {/* Schedule Table */}
