@@ -17,6 +17,7 @@ export interface Booking {
   observation_date?: string;
   na_date?: string;
   na_count?: number;
+  rejection_reason?: string;
   created_at: string;
 }
 

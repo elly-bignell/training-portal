@@ -445,6 +445,14 @@ function CreateBookingTab({ onCreated, saving, setSaving }: {
 // Buddy sort order — Lucas (Cindy's buddy) first, Felipe (Connie's buddy) second, Dylan (Krishna's buddy) third
 const BUDDY_SORT_ORDER = ["Lucas Tirri", "Felipe Garcia", "Dylan Munro"];
 
+const REJECTION_REASONS = [
+  "Not interested",
+  "Happy with current provider",
+  "Foreign",
+  "Can't afford",
+  "Foreign & can't afford",
+];
+
 function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
   bookings: Booking[];
   onUpdate: () => void;
@@ -454,6 +462,7 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [rejectMode, setRejectMode] = useState<Record<string, boolean>>({});
   const [hotTryLaterMode, setHotTryLaterMode] = useState<Record<string, boolean>>({});
+  const [rejectionReasons, setRejectionReasons] = useState<Record<string, string[]>>({});
   const [showFuture, setShowFuture] = useState(false);
 
   const pendingBookings = bookings.filter((b) => b.status === "pending" && ((b as any).na_count || 0) < 2);
@@ -500,6 +509,14 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
 
   const getNote = (id: string) => notes[id] || "";
   const setNote = (id: string, val: string) => setNotes((prev) => ({ ...prev, [id]: val }));
+  const getReasons = (id: string) => rejectionReasons[id] || [];
+  const toggleReason = (id: string, reason: string) => {
+    setRejectionReasons((prev) => {
+      const current = prev[id] || [];
+      const updated = current.includes(reason) ? current.filter((r) => r !== reason) : [...current, reason];
+      return { ...prev, [id]: updated };
+    });
+  };
 
   const handleValidate = async (booking: Booking) => {
     setProcessingId(booking.id);
@@ -545,11 +562,13 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
           status: "rejected",
           validation_date: today,
           validation_note: note,
+          rejection_reason: getReasons(booking.id).join(", "),
         }),
       });
       if (!res.ok) throw new Error("PATCH failed");
       setNotes((prev) => { const n = { ...prev }; delete n[booking.id]; return n; });
       setRejectMode((prev) => { const r = { ...prev }; delete r[booking.id]; return r; });
+      setRejectionReasons((prev) => { const r = { ...prev }; delete r[booking.id]; return r; });
       onUpdate();
     } catch (err) {
       console.error("Failed to reject:", err);
@@ -644,10 +663,34 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
         </div>
 
         <div className="mt-4">
+          {isRejecting && (
+            <div className="mb-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-[10px] font-bold text-red-600 uppercase mb-2">Rejection reason — select all that apply</p>
+              <div className="flex flex-wrap gap-2">
+                {REJECTION_REASONS.map((reason) => {
+                  const selected = getReasons(booking.id).includes(reason);
+                  return (
+                    <button
+                      key={reason}
+                      type="button"
+                      onClick={() => toggleReason(booking.id, reason)}
+                      className={`px-2.5 py-1 rounded-full text-xs font-semibold border-2 transition-all ${
+                        selected
+                          ? "bg-red-600 text-white border-red-600"
+                          : "bg-white text-red-500 border-red-200 hover:border-red-400"
+                      }`}
+                    >
+                      {selected ? "✓ " : ""}{reason}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
           <textarea
             value={note}
             onChange={(e) => setNote(booking.id, e.target.value)}
-            placeholder={isRejecting ? "Rejection reason (required)..." : isHotTryLater ? "Follow-up note (optional, e.g. call back in 3 months)..." : "Feedback note (optional)..."}
+            placeholder={isRejecting ? "Additional notes (optional)..." : isHotTryLater ? "Follow-up note (optional, e.g. call back in 3 months)..." : "Feedback note (optional)..."}
             className={`w-full border rounded-lg px-3 py-2 text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent ${isRejecting ? "border-red-300 bg-red-50/30" : "border-gray-200"}`}
           />
           <div className="flex gap-2 mt-2">
@@ -1160,6 +1203,20 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
     .filter((b) => b.status === "rejected" && b.validation_note)
     .map((b) => ({ note: b.validation_note!, staff: b.staff_member, date: b.booking_date, business: b.business_name }));
 
+  // Rejection reason breakdown — per staff × reason
+  const rejectedBookings = filtered.filter((b) => b.status === "rejected");
+  const staffList = Array.from(new Set(rejectedBookings.map((b) => b.staff_member))).sort();
+  const reasonCounts: Record<string, Record<string, number>> = {};
+  staffList.forEach((staff) => { reasonCounts[staff] = {}; REJECTION_REASONS.forEach((r) => { reasonCounts[staff][r] = 0; }); reasonCounts[staff]["Other / untagged"] = 0; });
+  rejectedBookings.forEach((b) => {
+    const staff = b.staff_member;
+    if (!reasonCounts[staff]) return;
+    const reasons = (b as any).rejection_reason ? String((b as any).rejection_reason).split(",").map((s: string) => s.trim()).filter(Boolean) : [];
+    if (reasons.length === 0) { reasonCounts[staff]["Other / untagged"] += 1; }
+    else { reasons.forEach((r: string) => { if (reasonCounts[staff][r] !== undefined) reasonCounts[staff][r] += 1; else reasonCounts[staff][r] = 1; }); }
+  });
+  const allReasonCols = [...REJECTION_REASONS, "Other / untagged"];
+
   const exportCSV = () => {
     const headers = ["Booking Date", "Business Name", "Contact Name", "Contact Phone", "Staff Member", "Buddy", "Status", "N/A Count", "Validation Date", "Note", "Observation Date"];
     const rows = filtered.map((b) => [
@@ -1353,6 +1410,72 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
           </tbody>
         </table>
       </div>
+
+      {/* Rejection Reason Breakdown */}
+      {rejectedBookings.length > 0 && (
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-6">
+          <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-bold text-slate-700">❌ Rejection Reason Breakdown</h3>
+              <p className="text-xs text-slate-400 mt-0.5">Why bookings were rejected — by staff member</p>
+            </div>
+            <span className="text-xs text-slate-400">{rejectedBookings.length} rejections total</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Staff</th>
+                  <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Total Rejected</th>
+                  {allReasonCols.map((r) => (
+                    <th key={r} className="px-4 py-2 text-center text-xs font-semibold text-gray-500 whitespace-nowrap">{r}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {staffList.map((staff) => {
+                  const total = rejectedBookings.filter((b) => b.staff_member === staff).length;
+                  return (
+                    <tr key={staff} className="hover:bg-gray-50">
+                      <td className="px-4 py-2.5 font-medium text-slate-800">{staff}</td>
+                      <td className="px-4 py-2.5 text-center font-bold text-red-600">{total}</td>
+                      {allReasonCols.map((r) => {
+                        const count = reasonCounts[staff]?.[r] || 0;
+                        const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+                        return (
+                          <td key={r} className="px-4 py-2.5 text-center">
+                            {count > 0 ? (
+                              <div className="flex flex-col items-center">
+                                <span className="font-bold text-slate-700">{count}</span>
+                                <span className="text-[10px] text-slate-400">{pct}%</span>
+                              </div>
+                            ) : (
+                              <span className="text-slate-200">—</span>
+                            )}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+                {/* Totals row */}
+                <tr className="bg-gray-50 border-t-2 border-gray-200">
+                  <td className="px-4 py-2.5 font-bold text-slate-600">Total</td>
+                  <td className="px-4 py-2.5 text-center font-bold text-red-600">{rejectedBookings.length}</td>
+                  {allReasonCols.map((r) => {
+                    const total = staffList.reduce((sum, s) => sum + (reasonCounts[s]?.[r] || 0), 0);
+                    return (
+                      <td key={r} className="px-4 py-2.5 text-center font-bold text-slate-600">
+                        {total > 0 ? total : <span className="text-slate-200">—</span>}
+                      </td>
+                    );
+                  })}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {/* Rejection Reasons */}
       {rejectionNotes.length > 0 && (

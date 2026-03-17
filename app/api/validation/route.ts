@@ -68,6 +68,7 @@ export async function GET(request: NextRequest) {
       observation_date: r.fields.observation_date || "",
       na_date: r.fields.na_date || "",
       na_count: r.fields.na_count || 0,
+      rejection_reason: r.fields.rejection_reason || "",
       created_at: r.fields.created_at || "",
     }));
 
