@@ -293,7 +293,7 @@ function SydneyWeek0Content() {
             {[
               { bold: "Booking targets apply", rest: " — 1 booking per hour is the expectation across C4C and Supervised Call blocks. Your buddy is there to pick up the slack if needed." },
               { bold: "Call for Call (C4C)", rest: " — you're calling alongside the senior team. Target 2 bookings in 2hr blocks, 3 bookings in 3.5hr blocks." },
-              { bold: "Supervised Calls", rest: " — target 1 booking per 1–1.5hr block, 3 bookings per 3.5hr block. Focus on pitch and objection handling." },
+              { bold: "Supervised Calls", rest: " — target 1 booking per 1–1.5hr block, 3 bookings per 3.5hr block. Focus on following the script naturally and getting a feel for when to lead with Quodo vs Marketing Sweet." },
               { bold: "Process & Technology (Monday PM)", rest: " — set up all your tools properly from day one so nothing slows you down later." },
               { bold: "Customer Service session (Tuesday PM)", rest: " — understand what happens after a deal is closed so you can sell with conviction." },
               { bold: "Find Your Harpoon (Friday AM)", rest: " — a dedicated session to identify your personal sales style and hook." },
