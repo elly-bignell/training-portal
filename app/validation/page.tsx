@@ -444,6 +444,7 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [rejectMode, setRejectMode] = useState<Record<string, boolean>>({});
+  const [hotTryLaterMode, setHotTryLaterMode] = useState<Record<string, boolean>>({});
   const [showFuture, setShowFuture] = useState(false);
 
   const pendingBookings = bookings.filter((b) => b.status === "pending" && ((b as any).na_count || 0) < 2);
@@ -571,9 +572,34 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
     }
   };
 
+  const handleHotTryLater = async (booking: Booking) => {
+    setProcessingId(booking.id);
+    try {
+      const res = await fetch(`/api/validation/${booking.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: "hot_try_later",
+          validation_date: today,
+          validation_note: getNote(booking.id),
+        }),
+      });
+      if (!res.ok) throw new Error("PATCH failed");
+      setNotes((prev) => { const n = { ...prev }; delete n[booking.id]; return n; });
+      setHotTryLaterMode((prev) => { const h = { ...prev }; delete h[booking.id]; return h; });
+      onUpdate();
+    } catch (err) {
+      console.error("Failed to mark Hot Try Later:", err);
+      alert("Failed to mark as Hot Try Later — check console for details.");
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
   // Shared booking card renderer
   const renderBookingCard = (booking: Booking) => {
     const isRejecting = !!rejectMode[booking.id];
+    const isHotTryLater = !!hotTryLaterMode[booking.id];
     const isProcessing = processingId === booking.id;
     const note = getNote(booking.id);
     const isNA = (booking as any).na_date === today;
@@ -612,7 +638,7 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
           <textarea
             value={note}
             onChange={(e) => setNote(booking.id, e.target.value)}
-            placeholder={isRejecting ? "Rejection reason (required)..." : "Feedback note (optional)..."}
+            placeholder={isRejecting ? "Rejection reason (required)..." : isHotTryLater ? "Follow-up note (optional, e.g. call back in 3 months)..." : "Feedback note (optional)..."}
             className={`w-full border rounded-lg px-3 py-2 text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent ${isRejecting ? "border-red-300 bg-red-50/30" : "border-gray-200"}`}
           />
           <div className="flex gap-2 mt-2">
@@ -623,6 +649,23 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
             >
               ✅ Validate
             </button>
+            {isHotTryLater ? (
+              <button
+                onClick={() => handleHotTryLater(booking)}
+                disabled={isProcessing}
+                className="flex-1 py-2.5 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors text-sm flex items-center justify-center gap-1.5"
+              >
+                🔥 Confirm HTL
+              </button>
+            ) : (
+              <button
+                onClick={() => { setHotTryLaterMode((prev) => ({ ...prev, [booking.id]: true })); setRejectMode((prev) => { const r = { ...prev }; delete r[booking.id]; return r; }); }}
+                disabled={isRejecting}
+                className="flex-1 py-2.5 bg-white text-purple-600 border-2 border-purple-200 font-semibold rounded-lg hover:bg-purple-50 transition-colors text-sm flex items-center justify-center gap-1.5 disabled:opacity-40"
+              >
+                🔥 Hot Try Later
+              </button>
+            )}
             {isRejecting ? (
               <button
                 onClick={() => handleReject(booking)}
@@ -633,13 +676,14 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
               </button>
             ) : (
               <button
-                onClick={() => setRejectMode((prev) => ({ ...prev, [booking.id]: true }))}
-                className="flex-1 py-2.5 bg-white text-red-600 border-2 border-red-200 font-semibold rounded-lg hover:bg-red-50 transition-colors text-sm flex items-center justify-center gap-1.5"
+                onClick={() => { setRejectMode((prev) => ({ ...prev, [booking.id]: true })); setHotTryLaterMode((prev) => { const h = { ...prev }; delete h[booking.id]; return h; }); }}
+                disabled={isHotTryLater}
+                className="flex-1 py-2.5 bg-white text-red-600 border-2 border-red-200 font-semibold rounded-lg hover:bg-red-50 transition-colors text-sm flex items-center justify-center gap-1.5 disabled:opacity-40"
               >
                 ❌ Reject
               </button>
             )}
-            {!isRejecting && !isNA && (
+            {!isRejecting && !isHotTryLater && !isNA && (
               <button
                 onClick={() => handleNA(booking)}
                 disabled={isProcessing}
@@ -768,6 +812,7 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
 
   const validated = filtered.filter((b) => b.status === "validated");
   const rejected = filtered.filter((b) => b.status === "rejected");
+  const hotTryLater = filtered.filter((b) => b.status === "hot_try_later");
 
   // NA × 2 bookings — removed from validation queue
   const na2All = bookings.filter((b) => b.status === "pending" && ((b as any).na_count || 0) >= 2);
@@ -783,13 +828,18 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
     return ((b as any).na_count || 0) > 0;
   });
 
-  function BookingCard({ booking, type }: { booking: Booking; type: "validated" | "rejected" }) {
+  function BookingCard({ booking, type }: { booking: Booking; type: "validated" | "rejected" | "hot_try_later" }) {
     const isGood = type === "validated";
+    const isHTL = type === "hot_try_later";
+    const borderClass = isGood ? "border-emerald-200 bg-emerald-50/50" : isHTL ? "border-purple-200 bg-purple-50/50" : "border-red-200 bg-red-50/50";
+    const badgeClass = isGood ? "bg-emerald-100 text-emerald-700" : isHTL ? "bg-purple-100 text-purple-700" : "bg-red-100 text-red-700";
+    const noteClass = isGood ? "bg-emerald-100 text-emerald-800" : isHTL ? "bg-purple-100 text-purple-800" : "bg-red-100 text-red-800";
+    const badgeLabel = isGood ? "✅ Validated" : isHTL ? "🔥 Hot Try Later" : "❌ Rejected";
     return (
-      <div className={`rounded-lg border-2 p-4 ${isGood ? "border-emerald-200 bg-emerald-50/50" : "border-red-200 bg-red-50/50"}`}>
+      <div className={`rounded-lg border-2 p-4 ${borderClass}`}>
         <div className="flex items-center justify-between mb-2">
-          <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full uppercase ${isGood ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}`}>
-            {isGood ? "✅ Validated" : "❌ Rejected"}
+          <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full uppercase ${badgeClass}`}>
+            {badgeLabel}
           </span>
           <span className="text-[10px] text-gray-400">{formatDate(booking.booking_date)}</span>
         </div>
@@ -797,12 +847,15 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
         <p className="text-xs text-slate-500 mt-1">👤 {booking.staff_member} · 🤝 {booking.buddy}</p>
         {booking.contact_name && <p className="text-xs text-slate-400 mt-0.5">📇 {booking.contact_name} {booking.contact_phone ? `· 📞 ${booking.contact_phone}` : ""}</p>}
         {booking.validation_note && (
-          <div className={`mt-2 p-2 rounded text-xs ${isGood ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"}`}>
+          <div className={`mt-2 p-2 rounded text-xs ${noteClass}`}>
             💬 {booking.validation_note}
           </div>
         )}
         {isGood && booking.observation_date && (
           <p className="text-xs text-emerald-600 font-medium mt-2">📅 Observation: {formatDate(booking.observation_date)}</p>
+        )}
+        {isHTL && (
+          <p className="text-xs text-purple-600 font-medium mt-2">🔥 Interested — follow up later</p>
         )}
       </div>
     );
@@ -836,7 +889,7 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
       </div>
 
       {/* Summary */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-5 gap-4 mb-6">
         <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
           <div className="text-2xl font-bold text-slate-800">{filtered.length}</div>
           <div className="text-xs text-slate-500">Total Processed</div>
@@ -852,6 +905,10 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
         <div className="bg-orange-50 rounded-xl border border-orange-200 p-4 text-center">
           <div className="text-2xl font-bold text-orange-600">{naCalls.length}</div>
           <div className="text-xs text-orange-600">Call N/A</div>
+        </div>
+        <div className="bg-purple-50 rounded-xl border border-purple-200 p-4 text-center">
+          <div className="text-2xl font-bold text-purple-600">{hotTryLater.length}</div>
+          <div className="text-xs text-purple-600">Hot Try Later</div>
         </div>
       </div>
 
@@ -884,6 +941,20 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
           </div>
         </div>
       </div>
+
+      {/* Hot Try Later section */}
+      {hotTryLater.length > 0 && (
+        <div className="mt-6">
+          <h3 className="text-sm font-bold text-purple-700 mb-3 flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-purple-500"></span>
+            🔥 Hot Try Later ({hotTryLater.length})
+          </h3>
+          <p className="text-xs text-gray-400 mb-3">Interested but not right now — good bookings to follow up on later.</p>
+          <div className="grid grid-cols-2 gap-3">
+            {hotTryLater.map((b) => <BookingCard key={b.id} booking={b} type="hot_try_later" />)}
+          </div>
+        </div>
+      )}
 
       {/* N/A Calls section */}
       {naCalls.length > 0 && (
@@ -1072,6 +1143,8 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
   const pending = filtered.filter((b) => b.status === "pending").length;
   const firstCallPending = filtered.filter((b) => b.status === "pending" && !((b as any).na_count > 0)).length;
   const naAwaitingRetry = filtered.filter((b) => b.status === "pending" && (b as any).na_count > 0).length;
+  const htl = filtered.filter((b) => b.status === "hot_try_later").length;
+  // Validation rate: validated ÷ (validated + rejected) — HTL excluded (it's a good outcome, not a failure)
   const validationRate = (validated + rejected) > 0 ? Math.round((validated / (validated + rejected)) * 100) : 0;
 
   const rejectionNotes = filtered
@@ -1120,7 +1193,7 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-6 gap-3 mb-6">
+      <div className="grid grid-cols-7 gap-3 mb-6">
         <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
           <div className="text-2xl font-bold text-slate-800">{total}</div>
           <div className="text-xs text-slate-500">Total Bookings</div>
@@ -1141,9 +1214,13 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
           <div className="text-2xl font-bold text-orange-600">{naAwaitingRetry}</div>
           <div className="text-xs text-orange-600">N/A, Retry Pending</div>
         </div>
+        <div className="bg-purple-50 rounded-xl border border-purple-200 p-4 text-center">
+          <div className="text-2xl font-bold text-purple-600">{htl}</div>
+          <div className="text-xs text-purple-600">Hot Try Later</div>
+        </div>
         <div className="bg-pink-50 rounded-xl border border-pink-200 p-4 text-center">
           <div className="text-2xl font-bold text-[#E6017D]">{validationRate}%</div>
-          <div className="text-xs text-[#E6017D]">Validation Rate</div>
+          <div className="text-xs text-[#E6017D]">Val. Rate</div>
         </div>
       </div>
 
@@ -1159,6 +1236,7 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Total</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Validated</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Rejected</th>
+              <th className="px-4 py-2 text-center text-xs font-semibold text-purple-500">🔥 HTL</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">1st Call Pending</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">NA × 1</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">NA × 2<br/><span className="font-normal normal-case text-gray-400">(conf. call day prior)</span></th>
@@ -1171,6 +1249,7 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
             {Object.entries(byStaff).map(([staff, bks]) => {
               const v = bks.filter((b) => b.status === "validated").length;
               const r = bks.filter((b) => b.status === "rejected").length;
+              const h = bks.filter((b) => b.status === "hot_try_later").length;
               const fcp = bks.filter((b) => b.status === "pending" && !((b as any).na_count > 0)).length;
               const na1 = bks.filter((b) => b.status === "pending" && (b as any).na_count === 1).length;
               const na2 = bks.filter((b) => b.status === "pending" && ((b as any).na_count || 0) >= 2).length;
@@ -1183,6 +1262,7 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
                   <td className="px-4 py-2.5 text-center">{bks.length}</td>
                   <td className="px-4 py-2.5 text-center text-emerald-600 font-semibold">{v}</td>
                   <td className="px-4 py-2.5 text-center text-red-600 font-semibold">{r}</td>
+                  <td className="px-4 py-2.5 text-center text-purple-600 font-semibold">{h}</td>
                   <td className="px-4 py-2.5 text-center text-amber-600">{fcp}</td>
                   <td className="px-4 py-2.5 text-center text-orange-500 font-semibold">{na1}</td>
                   <td className="px-4 py-2.5 text-center text-orange-700 font-bold">{na2}</td>
@@ -1216,6 +1296,7 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Total</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Validated</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Rejected</th>
+              <th className="px-4 py-2 text-center text-xs font-semibold text-purple-500">🔥 HTL</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">1st Call Pending</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">NA × 1</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">NA × 2 (Conf.)</th>
@@ -1229,6 +1310,7 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
               const dayBookings = byDate[date];
               const v = dayBookings.filter((b) => b.status === "validated").length;
               const r = dayBookings.filter((b) => b.status === "rejected").length;
+              const h = dayBookings.filter((b) => b.status === "hot_try_later").length;
               const fcp = dayBookings.filter((b) => b.status === "pending" && !((b as any).na_count > 0)).length;
               const na1 = dayBookings.filter((b) => b.status === "pending" && (b as any).na_count === 1).length;
               const na2 = dayBookings.filter((b) => b.status === "pending" && ((b as any).na_count || 0) >= 2).length;
@@ -1241,6 +1323,7 @@ function ReportsTab({ bookings }: { bookings: Booking[] }) {
                   <td className="px-4 py-2.5 text-center">{dayBookings.length}</td>
                   <td className="px-4 py-2.5 text-center text-emerald-600 font-semibold">{v}</td>
                   <td className="px-4 py-2.5 text-center text-red-600 font-semibold">{r}</td>
+                  <td className="px-4 py-2.5 text-center text-purple-600 font-semibold">{h}</td>
                   <td className="px-4 py-2.5 text-center text-amber-600">{fcp}</td>
                   <td className="px-4 py-2.5 text-center text-orange-500 font-semibold">{na1}</td>
                   <td className="px-4 py-2.5 text-center text-orange-700 font-bold">{na2}</td>

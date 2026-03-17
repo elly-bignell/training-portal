@@ -1,6 +1,6 @@
 // lib/validation.ts
 
-export type BookingStatus = "pending" | "validated" | "rejected";
+export type BookingStatus = "pending" | "validated" | "rejected" | "hot_try_later";
 
 export interface Booking {
   id: string;
