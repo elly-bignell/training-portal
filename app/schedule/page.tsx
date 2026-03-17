@@ -36,7 +36,7 @@ function SchedulePageContent() {
           {[
             { name: "Cindy", slug: "cindy", from: "Sydney" },
             { name: "Krishna", slug: "krishna", from: "Local" },
-            { name: "Connie", slug: "connie", from: "Local" },
+            { name: "Sydney", slug: "sydney", from: "Local" },
           ].map((t) => (
             <Link key={t.slug} href={`/schedule/${t.slug}`} className="bg-white rounded-lg border border-gray-200 p-3 hover:border-blue-300 hover:shadow-sm transition-all text-center group">
               <div className="text-sm font-semibold text-gray-800 group-hover:text-blue-700">{t.name}</div>
@@ -112,7 +112,7 @@ function SchedulePageContent() {
                   <td rowSpan={7} className="p-2 text-center border border-gray-200 align-middle bg-purple-50">
                     <div className="bg-purple-100 text-purple-700 rounded px-2 py-1.5 text-xs font-semibold">Welcome</div>
                     <div className="text-[10px] text-gray-500 mt-1">9:00am–12:30pm · 3.5hrs</div>
-                    <div className="text-[10px] text-gray-500 mt-1">Cindy, Krishna, Connie from 9:00am</div>
+                    <div className="text-[10px] text-gray-500 mt-1">Cindy, Krishna, Sydney from 9:00am</div>
                     <div className="text-[10px] text-gray-500">Becks joins from 10:00am</div>
                     <div className="text-[10px] text-gray-600 mt-2 text-left pl-3 space-y-1">
                       <div>• Tech Setup</div>

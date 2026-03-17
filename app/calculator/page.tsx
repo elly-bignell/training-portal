@@ -12,7 +12,7 @@ const STAFF = [
   { name: "Dylan Munro", slug: "dylan-munro", week: 1, buddy: true },
   { name: "Tom Rennie", slug: "tom-rennie", week: 1, buddy: true },
   { name: "Cindy Manrique", slug: "cindy-manrique", week: 1, buddy: true },
-  { name: "Connie Matthews", slug: "connie-matthews", week: 1, buddy: true },
+  { name: "Sydney Arnold", slug: "sydney-arnold", week: 1, buddy: true },
   { name: "Krishna Patel", slug: "krishna-patel", week: 1, buddy: true },
 ];
 

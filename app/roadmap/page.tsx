@@ -5,7 +5,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import PasswordGate from "@/components/PasswordGate";
-import { hasMasterAccess } from "@/data/passwords";
+
 
 interface WeekData {
   week: number;
@@ -521,12 +521,19 @@ function RoadmapContent() {
 
   useEffect(() => {
     setCurrentWeek(getCurrentWeek());
-    // Check if user logged in with master password
+    // Check if user logged in with admin password
     const stored = localStorage.getItem("training-portal-auth");
     if (stored) {
       try {
         const authData = JSON.parse(stored);
-        setIsAdmin(hasMasterAccess(authData.password));
+        fetch("/api/auth/validate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password: authData.password, requireMaster: true }),
+        })
+          .then((r) => r.json())
+          .then((data) => setIsAdmin(data.valid === true))
+          .catch(() => {});
       } catch (e) {}
     }
   }, []);

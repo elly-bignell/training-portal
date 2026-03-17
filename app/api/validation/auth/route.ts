@@ -1,36 +1,42 @@
 // app/api/validation/auth/route.ts
 //
 // Returns role based on password: "admin" | "senior" | "trainee" | null
-// Uses existing data/passwords.ts — no extra env vars needed
+// Validates against Airtable Portal Users table
 
 import { NextRequest, NextResponse } from "next/server";
-import { isValidPassword, hasMasterAccess } from "@/data/passwords";
-import { trainees } from "@/data/trainees";
 
-// Senior team members who get full validation access (all 6 tabs)
+const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY!;
+const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID!;
+const AIRTABLE_URL = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent("Portal Users")}`;
+
 const SENIOR_SLUGS = ["lucas-tirri", "felipe-garcia", "dylan-munro"];
 
 export async function POST(request: NextRequest) {
   try {
     const { password } = await request.json();
-    if (!password) {
-      return NextResponse.json({ role: null });
-    }
+    if (!password) return NextResponse.json({ role: null });
 
-    // Check master password first
-    if (hasMasterAccess(password)) {
-      return NextResponse.json({ role: "admin" });
-    }
-
-    // Check each trainee password
-    for (const trainee of trainees) {
-      if (isValidPassword(password, trainee.slug)) {
-        const isSenior = SENIOR_SLUGS.includes(trainee.slug);
-        return NextResponse.json({ role: isSenior ? "senior" : "trainee", slug: trainee.slug });
+    const response = await fetch(
+      `${AIRTABLE_URL}?filterByFormula=({Active}=TRUE())`,
+      {
+        headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` },
+        cache: "no-store",
       }
-    }
+    );
 
-    return NextResponse.json({ role: null });
+    if (!response.ok) return NextResponse.json({ role: null }, { status: 500 });
+
+    const data = await response.json();
+    const user = data.records
+      .map((r: any) => ({ slug: r.fields.Slug, password: r.fields.Password, role: r.fields.Role }))
+      .find((u: any) => u.password === password);
+
+    if (!user) return NextResponse.json({ role: null });
+
+    if (user.role === "Admin") return NextResponse.json({ role: "admin" });
+
+    const isSenior = SENIOR_SLUGS.includes(user.slug);
+    return NextResponse.json({ role: isSenior ? "senior" : "trainee", slug: user.slug });
   } catch {
     return NextResponse.json({ role: null }, { status: 400 });
   }

@@ -3,7 +3,7 @@
 // Senior (sales) → Junior (lead gen) buddy pairs
 export const buddyPairs: Record<string, string> = {
   "lucas-tirri": "cindy-rose-rondez-manrique",
-  "felipe-garcia": "connie-matthews",
+  "felipe-garcia": "sydney-arnold",
   "dylan-munro": "krishna-patel",
 };
 
@@ -18,7 +18,7 @@ export const buddyNames: Record<string, string> = {
   "felipe-garcia": "Felipe",
   "dylan-munro": "Dylan",
   "cindy-rose-rondez-manrique": "Cindy",
-  "connie-matthews": "Connie",
+  "sydney-arnold": "Sydney",
   "krishna-patel": "Krishna",
 };
 

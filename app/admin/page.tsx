@@ -293,7 +293,7 @@ function AdminDashboardContent() {
           </h3>
           <div className="space-y-4">
             {[
-              { name: "Connie Matthews", dir: "connie" },
+              { name: "Sydney Arnold", dir: "sydney" },
               { name: "Cindy Rose Rondez Manrique", dir: "cindy" },
               { name: "Krishna Patel", dir: "krishna" },
             ].map((t) => (

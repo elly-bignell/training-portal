@@ -31,8 +31,8 @@ interface RepSession {
 
 const INITIAL_REPS: RepSession[] = [
   {
-    name: "Connie Matthews",
-    slug: "connie-matthews",
+    name: "Sydney Arnold",
+    slug: "sydney-arnold",
     hoursWorked: 3.5,
     actuals: { calls: 58, connects: 31, bookings: 9, attendance: 4, sales: 2 },
   },

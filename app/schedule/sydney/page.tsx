@@ -9,56 +9,56 @@ function SydneyScheduleContent() {
   const weeks = [
     {
         "week": 1,
-        "dateRange": "Mon 16 Mar – Fri 20 Mar",
-        "label": "First Week Out",
+        "dateRange": "Mon 23 Mar – Fri 27 Mar",
+        "label": "Training Week (Observation)",
         "badge": "Calls Only",
         "badgeColor": "bg-sky-100 text-sky-700"
     },
     {
         "week": 2,
-        "dateRange": "Mon 23 Mar – Fri 27 Mar",
+        "dateRange": "Mon 30 Mar – Fri 3 Apr",
         "label": "Building Pipeline",
         "badge": "+ 1 Meeting",
         "badgeColor": "bg-emerald-100 text-emerald-700"
     },
     {
         "week": 3,
-        "dateRange": "Mon 30 Mar – Fri 3 Apr",
+        "dateRange": "Mon 7 Apr – Fri 11 Apr",
         "label": "Consistency",
         "badge": "+ 1 Meeting",
         "badgeColor": "bg-emerald-100 text-emerald-700"
     },
     {
         "week": 4,
-        "dateRange": "Mon 7 Apr – Fri 11 Apr",
+        "dateRange": "Mon 14 Apr – Fri 18 Apr",
         "label": "Wrapping Up Phase 1",
         "badge": "+ 1 Meeting",
         "badgeColor": "bg-emerald-100 text-emerald-700"
     },
     {
         "week": 5,
-        "dateRange": "Mon 14 Apr – Fri 18 Apr",
+        "dateRange": "Mon 22 Apr – Fri 25 Apr",
         "label": "Stepping Up",
         "badge": "2 Meetings",
         "badgeColor": "bg-amber-100 text-amber-700"
     },
     {
         "week": 6,
-        "dateRange": "Mon 22 Apr – Fri 25 Apr",
+        "dateRange": "Mon 28 Apr – Fri 2 May",
         "label": "Final Buddy Week",
         "badge": "2 Meetings",
         "badgeColor": "bg-amber-100 text-amber-700"
     },
     {
         "week": 7,
-        "dateRange": "Mon 28 Apr – Fri 2 May",
+        "dateRange": "Mon 5 May – Fri 9 May",
         "label": "✈️ Flying Solo",
         "badge": "Solo",
         "badgeColor": "bg-emerald-600 text-white"
     },
     {
         "week": 8,
-        "dateRange": "Mon 5 May – Fri 9 May",
+        "dateRange": "Mon 12 May – Fri 16 May",
         "label": "🎯 The Standard",
         "badge": "The Standard",
         "badgeColor": "bg-pink-600 text-white"

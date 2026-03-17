@@ -67,10 +67,10 @@ const buddyPairs = [
     closer: "lucas-tirri",
   },
   {
-    label: "Felipe & Connie",
+    label: "Felipe & Sydney",
     color: "pink",
-    members: ["felipe-garcia", "connie-matthews"],
-    leadGen: "connie-matthews",
+    members: ["felipe-garcia", "sydney-arnold"],
+    leadGen: "sydney-arnold",
     closer: "felipe-garcia",
   },
   {

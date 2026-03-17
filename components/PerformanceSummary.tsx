@@ -38,7 +38,7 @@ const teams = [
   },
   {
     name: "Team 2",
-    members: ["felipe-garcia", "connie-matthews"],
+    members: ["felipe-garcia", "sydney-arnold"],
   },
   {
     name: "Team 3",
@@ -54,7 +54,7 @@ const teams = [
 // Buddies (Lucas, Felipe, Dylan) have no individual target — they pick up the slack
 const TRAINEES_WITH_TARGET = new Set([
   "cindy-rose-rondez-manrique",
-  "connie-matthews",
+  "sydney-arnold",
   "krishna-patel",
   "thomas-rennie",
 ]);

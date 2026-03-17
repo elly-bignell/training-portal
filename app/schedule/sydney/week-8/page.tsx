@@ -7,7 +7,7 @@ import PasswordGate from "@/components/PasswordGate";
 import { usePersistedState } from "@/hooks/usePersistedState";
 
 function SydneyWeek8Content() {
-  const days = ["Mon 5 May", "Tue 6 May", "Wed 7 May", "Thu 8 May", "Fri 9 May"];
+  const days = ["Mon 19 May", "Tue 20 May", "Wed 21 May", "Thu 22 May", "Fri 23 May"];
 
   const WEEK_PHONE_HOURS = 6;
   const BLOCK1_HOURS = 3;
@@ -44,7 +44,7 @@ function SydneyWeek8Content() {
               </Link>
               <div>
                 <h1 className="text-xl font-bold">Sydney Arnold</h1>
-                <p className="text-sm text-slate-400">Week 8 — 🎯 The Standard · Mon 5 May – Fri 9 May 2026</p>
+                <p className="text-sm text-slate-400">Week 8 — 🎯 The Standard · Mon 19 May – Fri 23 May 2026</p>
               </div>
             </div>
             <span className="px-3 py-1 bg-pink-600 text-white text-xs font-semibold rounded-full">

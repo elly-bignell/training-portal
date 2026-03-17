@@ -8,7 +8,7 @@ const TOTAL_SPOTS = 10;
 
 const pairConfig = [
   { label: "Lucas & Cindy", color: "indigo", senior: "lucas-tirri", seniorName: "Lucas", junior: "cindy-rose-rondez-manrique", juniorName: "Cindy" },
-  { label: "Felipe & Connie", color: "pink", senior: "felipe-garcia", seniorName: "Felipe", junior: "connie-matthews", juniorName: "Connie" },
+  { label: "Felipe & Sydney", color: "pink", senior: "felipe-garcia", seniorName: "Felipe", junior: "sydney-arnold", juniorName: "Sydney" },
   { label: "Dylan & Krishna", color: "amber", senior: "dylan-munro", seniorName: "Dylan", junior: "krishna-patel", juniorName: "Krishna" },
 ];
 

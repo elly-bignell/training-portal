@@ -21,7 +21,7 @@ export interface Booking {
 }
 
 export const BUDDY_PAIRS: Record<string, string> = {
-  "Connie Matthews": "Felipe Garcia",
+  "Sydney Arnold": "Felipe Garcia",
   "Cindy Manrique": "Lucas Tirri",
   "Krishna Patel": "Dylan Munro",
   "Tom Rennie": "Lucas Tirri",
