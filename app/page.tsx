@@ -391,7 +391,7 @@ function HomeContent() {
           {/* Sales Training Dashboard Access */}
           <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3 mt-6">Sales Training — Dashboard Access</h3>
           <div className="space-y-4">
-            {["rachel-astachnowicz", "aston-marsh"].map(s => trainees.find(t => t.slug === s)!).filter(Boolean).map((trainee) => (
+            {["rachel-astachnowicz", "aston-marsh", "adam-conover"].map(s => trainees.find(t => t.slug === s)!).filter(Boolean).map((trainee) => (
               <div key={trainee.slug} className="border border-gray-200 rounded-lg p-4">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 rounded-full bg-[#E6017D] flex items-center justify-center text-white font-bold text-sm">
@@ -416,7 +416,7 @@ function HomeContent() {
             Select Your Dashboard
           </h2>
           {(() => {
-            const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold", "rachel-astachnowicz", "aston-marsh"];
+            const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold", "rachel-astachnowicz", "aston-marsh", "adam-conover"];
             const CS_SLUGS = ["jeremy-valiente", "dasha-axenova"];
             const ARCHIVED_SLUGS = ["connie-matthews"];
 

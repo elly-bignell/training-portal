@@ -76,6 +76,12 @@ export const trainees: Trainee[] = [
     startDate: "2026-03-18",
   },
   {
+    id: "adam-conover",
+    name: "Adam Conover",
+    slug: "adam-conover",
+    startDate: "2026-03-18",
+  },
+  {
     id: "sydney-arnold",
     name: "Sydney Arnold",
     slug: "sydney-arnold",
