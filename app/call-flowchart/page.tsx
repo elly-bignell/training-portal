@@ -479,7 +479,7 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
       {/* Intro — single merged card */}
       <div className="max-w-2xl mx-auto">
         <FlowCard
-          node={{ id: "fu-intro", type: "start", label: "Introduction", script: "Hi [Name], it's [Your Name] calling from Marketing Sweet — we spoke on [Day] in regards to your website and marketing. How are you? You asked me to send through some information via email and follow you up today. How did you go with that one — did you happen to see it?" }}
+          node={{ id: "fu-intro", type: "start", label: "Introduction", script: "Hi [Name], it's [Your Name] calling from Marketing Sweet — we spoke on [Day] in regards to your website and marketing. How are you? You asked me to send through some information via email and follow you up today. What did you think?" }}
           isActive={activeNode === "fu-intro"}
           onClick={() => toggle("fu-intro")}
         />
@@ -541,14 +541,38 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
         </div>
       </div>
 
-      {/* Shared script — both A and B converge here */}
-      <div className="max-w-2xl mx-auto mt-6">
-        <FlowCard
-          node={{ id: "fu-b-zoom-pitch", type: "script", label: "Pitch the Zoom", script: "From here, most of my clients choose to opt in to a quick 10–15 minute Zoom call where we walk you through a few websites we've built, show you how the process works, and send you a quote afterwards. From there, you can do with the information as you wish." }}
-          isActive={activeNode === "fu-b-zoom-pitch"}
-          onClick={() => toggle("fu-b-zoom-pitch")}
-        />
+      {/* Pitch the Zoom — brand split */}
+      <div className="grid grid-cols-2 gap-6 max-w-4xl mx-auto mt-6">
+
+        {/* Quodo */}
+        <div>
+          <div className="rounded-t-xl px-5 py-3" style={{ background: "linear-gradient(135deg, #F473B7, #e85da0)" }}>
+            <span className="text-sm font-bold text-white">🌐 Quodo — Replacing Websites</span>
+          </div>
+          <div className="border border-t-0 border-pink-200 rounded-b-xl p-4 bg-white">
+            <FlowCard
+              node={{ id: "fu-zoom-quodo", type: "script", label: "Pitch the Zoom", script: "From here, most of my clients choose to opt in to a quick 10–15 minute Zoom call where we walk you through a few websites we've built, show you how the process works, and send you a quote afterwards. From there, you can do with the information as you wish." }}
+              isActive={activeNode === "fu-zoom-quodo"}
+              onClick={() => toggle("fu-zoom-quodo")}
+            />
+          </div>
+        </div>
+
+        {/* Marketing Sweet */}
+        <div>
+          <div className="rounded-t-xl px-5 py-3" style={{ background: "linear-gradient(135deg, #96d16a, #7dba54)" }}>
+            <span className="text-sm font-bold text-white">📈 Marketing Sweet — Existing Websites</span>
+          </div>
+          <div className="border border-t-0 border-green-200 rounded-b-xl p-4 bg-white">
+            <FlowCard
+              node={{ id: "fu-zoom-ms", type: "script", label: "Pitch the Zoom", script: "From here, most of my clients choose to opt in to a quick 10–15 minute Zoom call where I can run you through the email in detail. In the meeting we'll look at how you're currently performing online, benchmark you against some of your local competitors, and from there we'll put together a tailored quotation for you. You can do with that information as you wish." }}
+              isActive={activeNode === "fu-zoom-ms"}
+              onClick={() => toggle("fu-zoom-ms")}
+            />
+          </div>
+        </div>
       </div>
+
       <Arrow />
       <div className="max-w-2xl mx-auto">
         <FlowCard
