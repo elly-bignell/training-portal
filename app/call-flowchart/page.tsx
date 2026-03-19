@@ -542,7 +542,7 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
       </div>
 
       {/* Shared script — both A and B converge here */}
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto mt-6">
         <FlowCard
           node={{ id: "fu-b-zoom-pitch", type: "script", label: "Pitch the Zoom", script: "From here, most of my clients choose to opt in to a quick 10–15 minute Zoom call where we walk you through a few websites we've built, show you how the process works, and send you a quote afterwards. From there, you can do with the information as you wish." }}
           isActive={activeNode === "fu-b-zoom-pitch"}
@@ -632,7 +632,7 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
             />
             <Arrow />
             <FlowCard
-              node={{ id: "fu-b2-reframe", type: "script", label: "Reframe", script: "Yeah completely fair — most people say that. The only thing is, the email is pretty general — it makes a lot more sense once I walk you through it. There's no obligation at all, it's just 10 minutes." }}
+              node={{ id: "fu-b2-reframe", type: "script", label: "Reframe", script: "Yeah completely fair — to be honest the email is pretty general. It will take me max 10 minutes to take you through it over Zoom. There's no obligation at all but I think you'll get massive value from a catch up." }}
               isActive={activeNode === "fu-b2-reframe"}
               onClick={() => toggle("fu-b2-reframe")}
             />
@@ -644,17 +644,26 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
             />
             <Arrow />
             <FlowCard
-              node={{ id: "fu-b2-pushback", type: "decision", label: "Still pushing back?" }}
-              isActive={activeNode === "fu-b2-pushback"}
-              onClick={() => toggle("fu-b2-pushback")}
+              node={{ id: "fu-b2-dec", type: "decision", label: "Do they take it?" }}
+              isActive={activeNode === "fu-b2-dec"}
+              onClick={() => toggle("fu-b2-dec")}
             />
-            <div className="mt-3">
-              <BranchLabel text="IF STILL PUSHING BACK" />
-              <FlowCard
-                node={{ id: "fu-b2-resend", type: "outcome-followup", label: "Resend & Follow Up", script: "No worries at all — I'll resend it now. I'll give you a call [Day] — are you generally better mornings or afternoons?" }}
-                isActive={activeNode === "fu-b2-resend"}
-                onClick={() => toggle("fu-b2-resend")}
-              />
+            <div className="mt-3 space-y-3">
+              <div>
+                <BranchLabel text="YES ↖" />
+                <div className="flex items-center gap-2 px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-xl">
+                  <span className="text-emerald-500 text-base">↖</span>
+                  <p className="text-xs font-bold text-emerald-700 tracking-wide uppercase">Go to B1 — Confirm Email</p>
+                </div>
+              </div>
+              <div>
+                <BranchLabel text="STILL PUSHING BACK" />
+                <FlowCard
+                  node={{ id: "fu-b2-resend", type: "outcome-followup", label: "Resend & Follow Up", script: "No worries at all — I'll resend it now. I'll give you a call [Day] — are you generally better mornings or afternoons?" }}
+                  isActive={activeNode === "fu-b2-resend"}
+                  onClick={() => toggle("fu-b2-resend")}
+                />
+              </div>
             </div>
           </div>
         </div>
