@@ -507,65 +507,10 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
               onClick={() => toggle("fu-a-thoughts")}
             />
 
-            <DecisionLabel text="Their initial reaction?" />
-
-            {/* A1: Positive */}
-            <div className="mb-3 p-4 rounded-lg border border-emerald-100 bg-emerald-50/40">
-              <BranchLabel text="A1 — POSITIVE / CURIOUS" />
-              <FlowCard
-                node={{ id: "fu-a1-resp", type: "response", label: "Sounds Interested", script: "Sounds good / interested" }}
-                isActive={activeNode === "fu-a1-resp"}
-                onClick={() => toggle("fu-a1-resp")}
-              />
-              <Arrow />
-              <FlowCard
-                node={{ id: "fu-a1-book", type: "outcome-book", label: "Book the Zoom", script: "Awesome — best next step is just a quick 10–15 minute Zoom. I'll walk you through a few examples and how it all works. Would Thursday or Friday suit you better?" }}
-                isActive={activeNode === "fu-a1-book"}
-                onClick={() => toggle("fu-a1-book")}
-              />
-            </div>
-
-            {/* A2: Unsure */}
-            <div className="mb-3 p-4 rounded-lg border border-amber-100 bg-amber-50/40">
-              <BranchLabel text="A2 — UNSURE / HESITANT" />
-              <FlowCard
-                node={{ id: "fu-a2-resp", type: "response", label: "Still Thinking", script: "Not sure / still thinking" }}
-                isActive={activeNode === "fu-a2-resp"}
-                onClick={() => toggle("fu-a2-resp")}
-              />
-              <Arrow />
-              <FlowCard
-                node={{ id: "fu-a2-reframe", type: "script", label: "Reframe & Reassure", script: "Yeah that's completely fair — it'll make a lot more sense when I walk you through it. Let's jump on a quick 10-minute call and you can make a proper decision from there." }}
-                isActive={activeNode === "fu-a2-reframe"}
-                onClick={() => toggle("fu-a2-reframe")}
-              />
-              <Arrow />
-              <FlowCard
-                node={{ id: "fu-a2-book", type: "outcome-book", label: "Book", script: "Are you better mornings or afternoons?" }}
-                isActive={activeNode === "fu-a2-book"}
-                onClick={() => toggle("fu-a2-book")}
-              />
-            </div>
-
-            {/* A3: Not Interested */}
-            <div className="p-4 rounded-lg border border-slate-200 bg-slate-50/40">
-              <BranchLabel text="A3 — NOT INTERESTED" />
-              <FlowCard
-                node={{ id: "fu-a3-resp", type: "response", label: "Not Interested", script: "Not interested" }}
-                isActive={activeNode === "fu-a3-resp"}
-                onClick={() => toggle("fu-a3-resp")}
-              />
-              <Arrow />
-              <FlowCard
-                node={{ id: "fu-a3-probe", type: "script", label: "Probe the Objection", script: "Yeah, totally fair — can I just ask, is that because you've already got something in place, or just not something you're looking at right now?" }}
-                isActive={activeNode === "fu-a3-probe"}
-                onClick={() => toggle("fu-a3-probe")}
-              />
-              <Arrow />
-              <div className="mt-2 flex items-center gap-2 px-4 py-3 bg-slate-100 rounded-lg">
-                <span className="text-slate-400 text-sm">↓</span>
-                <span className="text-xs font-bold text-slate-500 tracking-wide uppercase">See Not Interested Flow — Section 5</span>
-              </div>
+            <Arrow />
+            <div className="flex items-center gap-3 px-4 py-3 bg-indigo-50 border border-indigo-200 rounded-xl mt-1">
+              <span className="text-indigo-400 text-lg">→</span>
+              <p className="text-xs font-bold text-indigo-600 tracking-wide uppercase">Joins the shared script below ↓</p>
             </div>
           </div>
         </div>
@@ -583,7 +528,7 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
             />
             <Arrow />
             <FlowCard
-              node={{ id: "fu-b-noworries", type: "script", label: "No Stress — Pitch the Zoom", script: "No stress at all — most people don't to be honest. Most of my clients choose to opt in to a quick 10–15 minute Zoom call where we walk you through a few websites we've built, show you how the process works, and send you a quote afterwards. From there, you can do with the information as you wish." }}
+              node={{ id: "fu-b-noworries", type: "script", label: "Pitch the Zoom", script: "From here, most of my clients choose to opt in to a quick 10–15 minute Zoom call where we walk you through a few websites we've built, show you how the process works, and send you a quote afterwards. From there, you can do with the information as you wish." }}
               isActive={activeNode === "fu-b-noworries"}
               onClick={() => toggle("fu-b-noworries")}
             />
