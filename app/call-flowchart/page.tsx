@@ -566,7 +566,7 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
         {/* B1: Open — okay sure */}
         <div>
           <div className="bg-emerald-50 border border-emerald-200 rounded-t-xl px-4 py-3">
-            <span className="text-sm font-bold text-emerald-700">✅ B1 — OKAY, SURE</span>
+            <span className="text-sm font-bold text-emerald-700">✅ 1 — OKAY, SURE</span>
           </div>
           <div className="border border-t-0 border-emerald-100 rounded-b-xl p-4 bg-white">
             <FlowCard
@@ -622,7 +622,7 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
         {/* B2: Hesitant / want to think */}
         <div>
           <div className="bg-amber-50 border border-amber-200 rounded-t-xl px-4 py-3">
-            <span className="text-sm font-bold text-amber-700">🤔 B2 — HESITANT</span>
+            <span className="text-sm font-bold text-amber-700">🤔 2 — HESITANT</span>
           </div>
           <div className="border border-t-0 border-amber-100 rounded-b-xl p-4 bg-white">
             <FlowCard
@@ -671,7 +671,7 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
         {/* B3: Not interested */}
         <div>
           <div className="bg-slate-100 border border-slate-200 rounded-t-xl px-4 py-3">
-            <span className="text-sm font-bold text-slate-600">🚫 B3 — NOT INTERESTED</span>
+            <span className="text-sm font-bold text-slate-600">🚫 3 — NOT INTERESTED</span>
           </div>
           <div className="border border-t-0 border-slate-200 rounded-b-xl p-4 bg-white">
             <FlowCard
