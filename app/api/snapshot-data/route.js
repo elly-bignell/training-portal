@@ -11,7 +11,7 @@ const TRAINEES = {
     name: "Cindy",
     fullName: "Cindy Rose Rondez Manrique",
     staffMatchNames: ["Cindy Manrique", "cindy-rose-rondez-manrique"],
-    absences: { publicHolidays: 0, sickDays: 0 },
+    absences: { publicHolidays: 0, sickDays: 4 },
   },
   "connie-matthews": {
     name: "Connie",
