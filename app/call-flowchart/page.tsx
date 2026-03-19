@@ -507,11 +507,7 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
               isActive={activeNode === "fu-a-thoughts"}
               onClick={() => toggle("fu-a-thoughts")}
             />
-            <Arrow />
-            <div className="flex items-center justify-center gap-2 px-4 py-3 bg-indigo-50 border border-indigo-200 rounded-xl">
-              <span className="text-indigo-500 text-base">↘</span>
-              <p className="text-xs font-bold text-indigo-600 tracking-wide uppercase">Joins shared script below</p>
-            </div>
+
           </div>
         </div>
 
@@ -532,17 +528,20 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
               isActive={activeNode === "fu-b-noworries"}
               onClick={() => toggle("fu-b-noworries")}
             />
-            <Arrow />
-            <div className="flex items-center justify-center gap-2 px-4 py-3 bg-indigo-50 border border-indigo-200 rounded-xl">
-              <span className="text-indigo-500 text-base">↙</span>
-              <p className="text-xs font-bold text-indigo-600 tracking-wide uppercase">Joins shared script below</p>
-            </div>
+
           </div>
         </div>
       </div>
 
       {/* Pitch the Zoom — brand split */}
-      <div className="grid grid-cols-2 gap-6 max-w-4xl mx-auto mt-6">
+      <div className="flex justify-center mt-8 mb-4">
+        <div className="flex items-center gap-3">
+          <div className="h-px w-16 bg-slate-200"></div>
+          <span className="text-xs font-bold text-slate-400 tracking-widest uppercase">Quodo or MS?</span>
+          <div className="h-px w-16 bg-slate-200"></div>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-6 max-w-4xl mx-auto">
 
         {/* Quodo */}
         <div>
