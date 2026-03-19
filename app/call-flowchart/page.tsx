@@ -534,7 +534,7 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
       </div>
 
       {/* Pitch the Zoom — brand split */}
-      <div className="flex justify-center mt-8 mb-4">
+      <div className="flex justify-center mt-16 mb-8">
         <div className="flex items-center gap-3">
           <div className="h-px w-16 bg-slate-200"></div>
           <span className="text-xs font-bold text-slate-400 tracking-widest uppercase">Quodo or MS?</span>
