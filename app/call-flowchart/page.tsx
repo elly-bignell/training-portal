@@ -488,7 +488,7 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
       <DecisionLabel text="Did they read the email?" />
 
       {/* Top split: A vs B opener */}
-      <div className="grid grid-cols-2 gap-8 max-w-4xl mx-auto items-start mb-4">
+      <div className="grid grid-cols-2 gap-8 max-w-4xl mx-auto items-start mb-10">
 
         {/* ── A: HAS READ EMAIL ── */}
         <div>
@@ -541,7 +541,7 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
           <div className="h-px w-16 bg-slate-200"></div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-6 max-w-4xl mx-auto">
+      <div className="grid grid-cols-2 gap-6 max-w-4xl mx-auto mt-6">
 
         {/* Quodo */}
         <div>
@@ -682,7 +682,7 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
               <div>
                 <BranchLabel text="STILL PUSHING BACK" />
                 <FlowCard
-                  node={{ id: "fu-b2-resend", type: "outcome-followup", label: "Resend & Follow Up", script: "No worries at all — I'll resend it now. I'll give you a call [Day] — are you generally better mornings or afternoons?" }}
+                  node={{ id: "fu-b2-resend", type: "outcome-followup", label: "Resend & Follow Up", script: "No worries at all — I'll resend that email to you now so it's at the top of your inbox. If I give you a quick call on [Day], will that give you enough time to review it?" }}
                   isActive={activeNode === "fu-b2-resend"}
                   onClick={() => toggle("fu-b2-resend")}
                 />
