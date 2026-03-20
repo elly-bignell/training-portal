@@ -6,6 +6,7 @@ interface DailyActivity {
   calls_made: number;
   calls: number;
   bookings: number;
+  follow_up_call_scheduled: number;
   meetings: number;
   units: number;
   revenue: number;
@@ -21,15 +22,15 @@ interface WeeklyData {
 // Per hour: 18 calls → 10 connects (55.6%) → 1.5 bookings (15%) → 0.75 attended (50%) → 0.375 deals (50%)
 // Revenue: $350 per deal
 export const weeklyStandards: Record<number, DailyActivity> = {
-  0: { calls_made: 0, calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 }, // Training
-  1: { calls_made: 72, calls: 40, bookings: 6, meetings: 3, units: 1.5, revenue: 525 },
-  2: { calls_made: 72, calls: 40, bookings: 6, meetings: 3, units: 1.5, revenue: 525 },
-  3: { calls_made: 72, calls: 40, bookings: 6, meetings: 3, units: 1.5, revenue: 525 },
-  4: { calls_made: 72, calls: 40, bookings: 6, meetings: 3, units: 1.5, revenue: 525 },
-  5: { calls_made: 72, calls: 40, bookings: 6, meetings: 3, units: 1.5, revenue: 525 },
-  6: { calls_made: 72, calls: 40, bookings: 6, meetings: 3, units: 1.5, revenue: 525 }, // The Standard
-  7: { calls_made: 72, calls: 40, bookings: 6, meetings: 3, units: 1.5, revenue: 525 },
-  8: { calls_made: 72, calls: 40, bookings: 6, meetings: 3, units: 1.5, revenue: 525 },
+  0: { calls_made: 0, calls: 0, bookings: 0, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 }, // Training
+  1: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  2: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  3: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  4: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  5: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  6: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 }, // The Standard
+  7: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  8: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
 };
 
 // Week start dates (Sundays before each Monday)
@@ -92,6 +93,7 @@ export function useActivityTracking(traineeSlug: string, traineeName: string) {
     calls_made: 0,
     calls: 0,
     bookings: 0,
+    follow_up_call_scheduled: 0,
     meetings: 0,
     units: 0,
     revenue: 0,
@@ -112,6 +114,7 @@ export function useActivityTracking(traineeSlug: string, traineeName: string) {
           calls_made: data.calls_made || 0,
           calls: data.calls || 0,
           bookings: data.bookings || 0,
+          follow_up_call_scheduled: data.follow_up_call_scheduled || 0,
           meetings: data.meetings || 0,
           units: data.units || 0,
           revenue: data.revenue || 0,
@@ -184,7 +187,7 @@ export function useActivityTracking(traineeSlug: string, traineeName: string) {
       const now = getAdelaideDate();
       if (now !== lastFetchDateRef.current) {
         // Day changed! Reset to zeros, then re-fetch fresh data
-        const fresh: DailyActivity = { calls_made: 0, calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 };
+        const fresh: DailyActivity = { calls_made: 0, calls: 0, bookings: 0, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 };
         const newActivity = { ...fresh, [metric]: amount };
         setTodayActivity(newActivity);
         lastFetchDateRef.current = now;
@@ -210,7 +213,7 @@ export function useActivityTracking(traineeSlug: string, traineeName: string) {
     async (metric: keyof DailyActivity, value: number) => {
       const now = getAdelaideDate();
       if (now !== lastFetchDateRef.current) {
-        const fresh: DailyActivity = { calls_made: 0, calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 };
+        const fresh: DailyActivity = { calls_made: 0, calls: 0, bookings: 0, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 };
         const newActivity = { ...fresh, [metric]: value };
         setTodayActivity(newActivity);
         lastFetchDateRef.current = now;
@@ -239,6 +242,7 @@ export function useActivityTracking(traineeSlug: string, traineeName: string) {
       calls_made: daily.calls_made * 5,
       calls: daily.calls * 5,
       bookings: daily.bookings * 5,
+      follow_up_call_scheduled: 0,
       meetings: daily.meetings * 5,
       units: daily.units * 5,
       revenue: daily.revenue * 5,

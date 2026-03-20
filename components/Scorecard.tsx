@@ -219,7 +219,7 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
 
   const dailyStandard = getDailyStandard();
   const weeklyStandard = getWeeklyStandard();
-  const weeklyTotals = weeklyData?.weeklyTotals || { calls_made: 0, calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 };
+  const weeklyTotals = weeklyData?.weeklyTotals || { calls_made: 0, calls: 0, bookings: 0, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 };
 
   // Calculate overall % to standard for the day
   const metrics = ["calls_made", "calls", "bookings", "meetings", "units", "revenue"] as const;
@@ -326,8 +326,22 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
             />
           </div>
 
-          {/* Row 2: Meetings + Sales Units */}
-          <div className="grid grid-cols-2 gap-2 sm:gap-3">
+          {/* Row 2: Follow Up Call Scheduled + Meetings + Sales Units */}
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            {/* Follow Up Call Scheduled */}
+            <MetricCard
+              label="Follow Up Call"
+              value={todayActivity.follow_up_call_scheduled ?? 0}
+              target={dailyStandard.follow_up_call_scheduled ?? 0}
+              weeklyValue={weeklyTotals.follow_up_call_scheduled ?? 0}
+              weeklyTarget={weeklyStandard.follow_up_call_scheduled ?? 0}
+              color="bg-gradient-to-br from-cyan-500 to-cyan-600"
+              icon="📲"
+              onIncrement={() => incrementMetric("follow_up_call_scheduled", 1)}
+              onDecrement={() => incrementMetric("follow_up_call_scheduled", -1)}
+              isSaving={isSaving}
+            />
+
             {/* Attended Meetings */}
             <MetricCard
               label="Meetings"

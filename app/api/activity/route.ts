@@ -61,6 +61,7 @@ export async function GET(request: NextRequest) {
         calls_made: record.fields.calls_made || 0,
         calls: record.fields.calls || 0,
         bookings: record.fields.bookings || 0,
+        follow_up_call_scheduled: record.fields["follow up call scheduled"] || 0,
         meetings: record.fields.meetings || 0,
         units: record.fields.units || 0,
         revenue: record.fields.revenue || 0,
@@ -72,11 +73,12 @@ export async function GET(request: NextRequest) {
           calls_made: acc.calls_made + r.calls_made,
           calls: acc.calls + r.calls,
           bookings: acc.bookings + r.bookings,
+          follow_up_call_scheduled: acc.follow_up_call_scheduled + r.follow_up_call_scheduled,
           meetings: acc.meetings + r.meetings,
           units: acc.units + r.units,
           revenue: acc.revenue + r.revenue,
         }),
-        { calls_made: 0, calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 }
+        { calls_made: 0, calls: 0, bookings: 0, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 }
       );
 
       return NextResponse.json({ records, weeklyTotals });
@@ -92,6 +94,7 @@ export async function GET(request: NextRequest) {
         calls_made: record.fields.calls_made || 0,
         calls: record.fields.calls || 0,
         bookings: record.fields.bookings || 0,
+        follow_up_call_scheduled: record.fields["follow up call scheduled"] || 0,
         meetings: record.fields.meetings || 0,
         units: record.fields.units || 0,
         revenue: record.fields.revenue || 0,
@@ -105,6 +108,7 @@ export async function GET(request: NextRequest) {
       calls_made: 0,
       calls: 0,
       bookings: 0,
+      follow_up_call_scheduled: 0,
       meetings: 0,
       units: 0,
       revenue: 0,
@@ -119,7 +123,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { trainee_slug, trainee_name, calls_made, calls, bookings, meetings, units, revenue } = body;
+    const { trainee_slug, trainee_name, calls_made, calls, bookings, follow_up_call_scheduled, meetings, units, revenue } = body;
     const date = body.date || getAdelaideDate();
 
     if (!trainee_slug) {
@@ -149,6 +153,7 @@ export async function POST(request: NextRequest) {
       calls_made: calls_made || 0,
       calls: calls || 0,
       bookings: bookings || 0,
+      "follow up call scheduled": follow_up_call_scheduled || 0,
       meetings: meetings || 0,
       units: units || 0,
       revenue: revenue || 0,
