@@ -171,7 +171,7 @@ function QuodoFlow({ activeNode, toggle }: { activeNode: string | null; toggle: 
 
       <div className="max-w-2xl mx-auto">
         <FlowCard
-          node={{ id: "q-reason", type: "script", label: "Reason for Call", script: "The reason for my call is I was just having a look at your website and I noticed that you have been around for [X] years. I'm assuming that most of your work comes through word of mouth and referrals?" }}
+          node={{ id: "q-reason", type: "script", label: "Reason for Call", script: "Just for some context, we're Australia's largest privately owned web design company, based in South Australia but operational right across the country. The reason for my call is I was just having a look at your website and I noticed that you have been around for [X] years. I'm assuming that most of your work comes through word of mouth and referrals?" }}
           isActive={activeNode === "q-reason"}
           onClick={() => toggle("q-reason")}
         />
@@ -314,7 +314,7 @@ function MarketingSweetFlow({ activeNode, toggle }: { activeNode: string | null;
 
       <div className="max-w-3xl mx-auto">
         <FlowCard
-          node={{ id: "ms-reason", type: "script", label: "Reason for Call", script: "The reason for my call, I was doing some research in your area and you popped up. I already know you are successful with your WOM and Referrals, and we've helped 1000's of clients just like you get in front of people who need you but don't know who you are. I just wanted to ask if we could bring you more work, would you be able to take it on?" }}
+          node={{ id: "ms-reason", type: "script", label: "Reason for Call", script: "We're a digital marketing agency based in South Australia, but we're operational all over the country. The reason for my call, I was doing some research in your area and you popped up. I already know you are successful with your WOM and Referrals, and we've helped 1000's of clients just like you get in front of people who need you but don't know who you are. I just wanted to ask if we could bring you more work, would you be able to take it on?" }}
           isActive={activeNode === "ms-reason"}
           onClick={() => toggle("ms-reason")}
         />
