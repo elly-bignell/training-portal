@@ -18,6 +18,8 @@ const TRAINEES = {
     fullName: "Connie Matthews",
     staffMatchNames: ["Connie Matthews"],
     absences: { publicHolidays: 1, sickDays: 0 },
+    lastDay: "2026-03-12",
+    isArchived: true,
   },
   "krishna-patel": {
     name: "Krishna",
@@ -93,8 +95,8 @@ export async function GET() {
 
     const stats = {};
     for (const [slug, trainee] of Object.entries(TRAINEES)) {
-      const totalDays = countWorkingDays(PERIOD_START, today) - trainee.absences.publicHolidays - trainee.absences.sickDays;
-      const fieldDays = countWorkingDays(FIELD_WEEK_START, today) - trainee.absences.publicHolidays - trainee.absences.sickDays;
+      const totalDays = countWorkingDays(PERIOD_START, trainee.lastDay || today) - trainee.absences.publicHolidays - trainee.absences.sickDays;
+      const fieldDays = countWorkingDays(FIELD_WEEK_START, trainee.lastDay || today) - trainee.absences.publicHolidays - trainee.absences.sickDays;
       stats[slug] = { ...trainee, totalDays, fieldDays, callsMade: 0, connectedCalls: 0, bookings: 0, meetings: 0, unitsRaw: 0, revenueRaw: 0, valTotal: 0, valValidated: 0, valRejected: 0, valPending: 0 };
     }
 
@@ -134,7 +136,7 @@ export async function GET() {
       const revenue   = s.revenueRaw * 2;
       const contacted = s.valValidated + s.valRejected;
       return {
-        slug, name: s.name, fullName: s.fullName,
+        slug, name: s.name, fullName: s.fullName, isArchived: s.isArchived || false, lastDay: s.lastDay || null,
         totalDays: s.totalDays, fieldDays: s.fieldDays, absences: s.absences,
         revenue, units,
         meetings: s.meetings, bookings: s.bookings,

@@ -87,14 +87,20 @@ function ScorecardRow({ label, value, subLabel, highlight }) {
   );
 }
 
-function Scorecard({ t }) {
+function Scorecard({ t, archived }) {
   const d = t.totalDays;
   const fd = t.fieldDays;
   return (
     <div className="scorecard" style={{
-      background: C.cardBg, border: "1px solid " + C.border, borderRadius: 12,
+      background: C.cardBg, border: "1px solid " + (archived ? "#94a3b8" : C.border), borderRadius: 12,
       padding: "20px 22px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+      opacity: archived ? 0.6 : 1, filter: archived ? "grayscale(60%)" : "none", position: "relative",
     }}>
+      {archived && (
+        <div style={{ position: "absolute", top: 12, left: 20, fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#94a3b8", background: "#f1f5f9", border: "1px solid #cbd5e1", padding: "2px 8px", borderRadius: 4 }}>
+          Archived
+        </div>
+      )}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
         <div>
           <div style={{ fontSize: 17, fontWeight: 700, color: C.heading }}>{t.name}</div>
@@ -128,12 +134,17 @@ function Scorecard({ t }) {
   );
 }
 
-function TraineeCard({ t, all }) {
+function TraineeCard({ t, all, archived }) {
   const valRate = t.valRate;
   const valColor = valRate >= 60 ? C.green : valRate >= 40 ? C.amber : C.red;
   const valBg    = valRate >= 60 ? C.greenBg : valRate >= 40 ? C.amberBg : C.redBg;
   return (
-    <div className="card" style={{ background: C.cardBg, border: "1px solid " + C.border, borderRadius: 12, padding: "20px 22px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+    <div className="card" style={{ background: C.cardBg, border: "1px solid " + (archived ? "#94a3b8" : C.border), borderRadius: 12, padding: "20px 22px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)", opacity: archived ? 0.6 : 1, filter: archived ? "grayscale(60%)" : "none", position: "relative" }}>
+      {archived && (
+        <div style={{ position: "absolute", top: 12, left: 20, fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#94a3b8", background: "#f1f5f9", border: "1px solid #cbd5e1", padding: "2px 8px", borderRadius: 4 }}>
+          Archived · Last day 12 Mar
+        </div>
+      )}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
         <div>
           <div style={{ fontSize: 18, fontWeight: 700, color: C.heading }}>{t.name}</div>
@@ -476,7 +487,7 @@ export default function SnapshotPage() {
             <>
               <div style={{ fontSize: 11, fontWeight: 600, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>Overview</div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 28 }}>
-                {trainees.map((t) => <TraineeCard key={t.slug} t={t} all={trainees} />)}
+                {trainees.map((t) => <TraineeCard key={t.slug} t={t} all={trainees} archived={t.isArchived} />)}
               </div>
             </>
           )}
@@ -489,7 +500,7 @@ export default function SnapshotPage() {
                 <div style={{ fontSize: 11, color: "#94a3b8" }}>All metrics per active working day · Revenue &amp; units shown at 50% (trainee books, buddy closes)</div>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 28 }}>
-                {trainees.map((t) => <Scorecard key={t.slug} t={t} />)}
+                {trainees.map((t) => <Scorecard key={t.slug} t={t} archived={t.isArchived} />)}
               </div>
             </>
           )}
