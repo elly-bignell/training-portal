@@ -21,10 +21,10 @@ export async function GET(request: NextRequest) {
 
     // Paginate through all Airtable records
     let allRawRecords: any[] = [];
-    let offset: string | undefined = undefined;
+    let offset: string | undefined;
 
     do {
-      const offsetParam = offset ? `&offset=${offset}` : "";
+      const offsetParam: string = offset ? `&offset=${offset}` : "";
       const response = await fetch(
         `${AIRTABLE_URL}${filterFormula}&sort%5B0%5D%5Bfield%5D=date&sort%5B0%5D%5Bdirection%5D=desc&pageSize=100${offsetParam}`,
         {
