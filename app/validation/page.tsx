@@ -852,13 +852,15 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function LodgementTab({ bookings }: { bookings: Booking[] }) {
-  const [dateFilter, setDateFilter] = useState(toISODate(new Date()));
+  const [fromDate, setFromDate] = useState(toISODate(new Date()));
+  const [toDate, setToDate] = useState(toISODate(new Date()));
   const [staffFilter, setStaffFilter] = useState("all");
 
   const processed = bookings.filter((b) => b.status !== "pending");
   const filtered = processed.filter((b) => {
     if (staffFilter !== "all" && b.staff_member !== staffFilter) return false;
-    if (dateFilter && b.validation_date !== dateFilter) return false;
+    if (fromDate && b.validation_date && b.validation_date < fromDate) return false;
+    if (toDate && b.validation_date && b.validation_date > toDate) return false;
     return true;
   });
 
@@ -876,7 +878,9 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
   // N/A calls: pending bookings that were marked N/A on the selected date (or have any na_count if no date filter)
   const naCalls = bookings.filter((b) => {
     if (staffFilter !== "all" && b.staff_member !== staffFilter) return false;
-    if (dateFilter) return (b as any).na_date === dateFilter;
+    const naDate = (b as any).na_date;
+    if (fromDate && toDate) return naDate >= fromDate && naDate <= toDate;
+    if (fromDate) return naDate >= fromDate;
     return ((b as any).na_count || 0) > 0;
   });
 
@@ -928,40 +932,93 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
               <option key={s} value={s}>{s}</option>
             ))}
           </select>
-          <input
-            type="date"
-            value={dateFilter}
-            onChange={(e) => setDateFilter(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm"
-          />
-          <button onClick={() => setDateFilter("")} className="text-xs text-[#E6017D] hover:text-[#c9016c] font-medium">
+          <div className="flex items-center gap-2">
+            <input
+              type="date"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm"
+            />
+            <span className="text-gray-400 text-sm">→</span>
+            <input
+              type="date"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm"
+            />
+          </div>
+          <button
+            onClick={() => { setFromDate(""); setToDate(""); }}
+            className="text-xs text-[#E6017D] hover:text-[#c9016c] font-medium"
+          >
             Show All
+          </button>
+          <button
+            onClick={() => { setFromDate(toISODate(new Date())); setToDate(toISODate(new Date())); }}
+            className="text-xs text-slate-500 hover:text-slate-700 font-medium"
+          >
+            Today
           </button>
         </div>
       </div>
 
+      {/* Week quick-picks */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {[0, 1, 2, 3, 4].map((weeksAgo) => {
+          const mon = new Date();
+          const day = mon.getDay();
+          const diff = (day === 0 ? -6 : 1 - day) - weeksAgo * 7;
+          mon.setDate(mon.getDate() + diff);
+          const fri = new Date(mon); fri.setDate(fri.getDate() + 4);
+          const fmt = (d: Date) => d.toISOString().split("T")[0];
+          const label = weeksAgo === 0 ? "This Week" : weeksAgo === 1 ? "Last Week" : `${weeksAgo}w ago`;
+          const isActive = fromDate === fmt(mon) && toDate === fmt(fri);
+          return (
+            <button
+              key={weeksAgo}
+              onClick={() => { setFromDate(fmt(mon)); setToDate(fmt(fri)); }}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold border transition-colors ${isActive ? "bg-[#E6017D] text-white border-[#E6017D]" : "bg-white text-slate-600 border-gray-200 hover:border-[#E6017D] hover:text-[#E6017D]"}`}
+            >
+              {label}
+            </button>
+          );
+        })}
+      </div>
+
       {/* Summary */}
       <div className="grid grid-cols-5 gap-4 mb-6">
-        <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
-          <div className="text-2xl font-bold text-slate-800">{filtered.length}</div>
-          <div className="text-xs text-slate-500">Total Processed</div>
-        </div>
-        <div className="bg-emerald-50 rounded-xl border border-emerald-200 p-4 text-center">
-          <div className="text-2xl font-bold text-emerald-600">{validated.length}</div>
-          <div className="text-xs text-emerald-600">Validated</div>
-        </div>
-        <div className="bg-red-50 rounded-xl border border-red-200 p-4 text-center">
-          <div className="text-2xl font-bold text-red-600">{rejected.length}</div>
-          <div className="text-xs text-red-600">Rejected</div>
-        </div>
-        <div className="bg-orange-50 rounded-xl border border-orange-200 p-4 text-center">
-          <div className="text-2xl font-bold text-orange-600">{naCalls.length}</div>
-          <div className="text-xs text-orange-600">Call N/A</div>
-        </div>
-        <div className="bg-purple-50 rounded-xl border border-purple-200 p-4 text-center">
-          <div className="text-2xl font-bold text-purple-600">{hotTryLater.length}</div>
-          <div className="text-xs text-purple-600">Hot Try Later</div>
-        </div>
+        {(() => {
+          const total = filtered.length;
+          const pct = (n: number) => total > 0 ? Math.round((n / total) * 100) : 0;
+          return (
+            <>
+              <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
+                <div className="text-2xl font-bold text-slate-800">{total}</div>
+                <div className="text-xs text-slate-500">Total Processed</div>
+              </div>
+              <div className="bg-emerald-50 rounded-xl border border-emerald-200 p-4 text-center">
+                <div className="text-2xl font-bold text-emerald-600">{validated.length}</div>
+                <div className="text-xs text-emerald-500 font-semibold mt-0.5">{validated.length}/{total} · {pct(validated.length)}%</div>
+                <div className="text-xs text-emerald-600">Validated</div>
+              </div>
+              <div className="bg-red-50 rounded-xl border border-red-200 p-4 text-center">
+                <div className="text-2xl font-bold text-red-600">{rejected.length}</div>
+                <div className="text-xs text-red-500 font-semibold mt-0.5">{rejected.length}/{total} · {pct(rejected.length)}%</div>
+                <div className="text-xs text-red-600">Rejected</div>
+              </div>
+              <div className="bg-orange-50 rounded-xl border border-orange-200 p-4 text-center">
+                <div className="text-2xl font-bold text-orange-600">{naCalls.length}</div>
+                <div className="text-xs text-orange-500 font-semibold mt-0.5">{naCalls.length}/{total} · {pct(naCalls.length)}%</div>
+                <div className="text-xs text-orange-600">Call N/A</div>
+              </div>
+              <div className="bg-purple-50 rounded-xl border border-purple-200 p-4 text-center">
+                <div className="text-2xl font-bold text-purple-600">{hotTryLater.length}</div>
+                <div className="text-xs text-purple-500 font-semibold mt-0.5">{hotTryLater.length}/{total} · {pct(hotTryLater.length)}%</div>
+                <div className="text-xs text-purple-600">Hot Try Later</div>
+              </div>
+            </>
+          );
+        })()}
       </div>
 
       {/* Split columns */}
