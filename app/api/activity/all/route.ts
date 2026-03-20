@@ -19,24 +19,33 @@ export async function GET(request: NextRequest) {
       filterFormula = `?filterByFormula=${encodeURIComponent(`{trainee_slug} = "${traineeSlug}"`)}`;
     }
 
-    const response = await fetch(
-      `${AIRTABLE_URL}${filterFormula}&sort%5B0%5D%5Bfield%5D=date&sort%5B0%5D%5Bdirection%5D=desc`,
-      {
-        headers: {
-          Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        cache: "no-store",
+    // Paginate through all Airtable records
+    let allRawRecords: any[] = [];
+    let offset: string | undefined = undefined;
+
+    do {
+      const offsetParam = offset ? `&offset=${offset}` : "";
+      const response = await fetch(
+        `${AIRTABLE_URL}${filterFormula}&sort%5B0%5D%5Bfield%5D=date&sort%5B0%5D%5Bdirection%5D=desc&pageSize=100${offsetParam}`,
+        {
+          headers: {
+            Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          cache: "no-store",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Airtable error: ${response.status}`);
       }
-    );
 
-    if (!response.ok) {
-      throw new Error(`Airtable error: ${response.status}`);
-    }
+      const data = await response.json();
+      allRawRecords = allRawRecords.concat(data.records || []);
+      offset = data.offset;
+    } while (offset);
 
-    const data = await response.json();
-
-    const records = data.records.map((record: any) => ({
+    const records = allRawRecords.map((record: any) => ({
       id: record.id,
       trainee_slug: record.fields.trainee_slug,
       trainee_name: record.fields.trainee_name,
