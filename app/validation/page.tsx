@@ -998,22 +998,22 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
               </div>
               <div className="bg-emerald-50 rounded-xl border border-emerald-200 p-4 text-center">
                 <div className="text-2xl font-bold text-emerald-600">{validated.length}</div>
-                <div className="text-xs text-emerald-500 font-semibold mt-0.5">{validated.length}/{total} · {pct(validated.length)}%</div>
+                <div className="text-xs text-emerald-500 font-semibold mt-0.5">{pct(validated.length)}%</div>
                 <div className="text-xs text-emerald-600">Validated</div>
               </div>
               <div className="bg-red-50 rounded-xl border border-red-200 p-4 text-center">
                 <div className="text-2xl font-bold text-red-600">{rejected.length}</div>
-                <div className="text-xs text-red-500 font-semibold mt-0.5">{rejected.length}/{total} · {pct(rejected.length)}%</div>
+                <div className="text-xs text-red-500 font-semibold mt-0.5">{pct(rejected.length)}%</div>
                 <div className="text-xs text-red-600">Rejected</div>
               </div>
               <div className="bg-orange-50 rounded-xl border border-orange-200 p-4 text-center">
                 <div className="text-2xl font-bold text-orange-600">{naCalls.length}</div>
-                <div className="text-xs text-orange-500 font-semibold mt-0.5">{naCalls.length}/{total} · {pct(naCalls.length)}%</div>
+                <div className="text-xs text-orange-500 font-semibold mt-0.5">{pct(naCalls.length)}%</div>
                 <div className="text-xs text-orange-600">Call N/A</div>
               </div>
               <div className="bg-purple-50 rounded-xl border border-purple-200 p-4 text-center">
                 <div className="text-2xl font-bold text-purple-600">{hotTryLater.length}</div>
-                <div className="text-xs text-purple-500 font-semibold mt-0.5">{hotTryLater.length}/{total} · {pct(hotTryLater.length)}%</div>
+                <div className="text-xs text-purple-500 font-semibold mt-0.5">{pct(hotTryLater.length)}%</div>
                 <div className="text-xs text-purple-600">Hot Try Later</div>
               </div>
             </>
