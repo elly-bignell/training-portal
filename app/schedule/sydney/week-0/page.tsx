@@ -51,8 +51,11 @@ function SydneyWeek0Content() {
           <p className="text-sm text-amber-100">Orientation, system setup, and your first live calls. Booking targets apply during C4C and Supervised Call blocks — your buddy is there to support you every step of the way.</p>
         </div>
 
+        {/* Schedule + Competencies side-by-side */}
+        <div className="flex gap-4 items-start">
+
         {/* Schedule Table */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 overflow-x-auto">
+        <div className="flex-1 min-w-0 bg-white rounded-xl shadow-sm border border-gray-200 p-6 overflow-x-auto">
           <div className="min-w-[900px]">
             <table className="w-full text-sm border-collapse">
               <thead>
@@ -282,6 +285,48 @@ function SydneyWeek0Content() {
             <div className="flex items-center gap-1.5"><span className="w-4 h-4 rounded bg-blue-100 border border-blue-200"></span><span className="text-gray-600">Debrief</span></div>
           </div>
         </div>
+
+        {/* Competencies Sign-Off Panel */}
+        <div className="w-72 flex-shrink-0 bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h2 className="text-xs font-bold text-slate-800 mb-1 uppercase tracking-wide">Competencies</h2>
+          <p className="text-[10px] text-slate-400 mb-4 leading-relaxed">Sign off once the staff member has demonstrated competency in each area.</p>
+          <table className="w-full text-xs border-collapse">
+            <thead>
+              <tr className="bg-slate-100">
+                <th className="text-left py-1.5 px-2 text-[10px] font-semibold text-slate-600 border border-slate-200">Competency</th>
+                <th className="py-1.5 px-2 text-[10px] font-semibold text-slate-600 border border-slate-200 text-center w-12">Mgr</th>
+                <th className="py-1.5 px-2 text-[10px] font-semibold text-slate-600 border border-slate-200 text-center w-12">Staff</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                "Technology Set Up",
+                "How to Book a Lead",
+                "How to Close a Deal",
+                "5 Hours Call for Call",
+                "5 Hours Supervised Calls",
+                "Call Scripts",
+                "Understanding the Quodo Production Process",
+                "Understanding the strength of our Customer Service Team",
+                "Objection Handling",
+                "Email & Text Templates: Marketing Sweet",
+                "Email & Text Templates: Quodo",
+              ].map((item, i) => (
+                <tr key={i} className="border-b border-gray-100 hover:bg-slate-50/50">
+                  <td className="py-2 px-2 text-gray-700 leading-tight border border-gray-100">{item}</td>
+                  <td className="py-2 px-1 border border-gray-100">
+                    <div className="h-6 rounded border border-gray-300 bg-gray-50/50 w-full"></div>
+                  </td>
+                  <td className="py-2 px-1 border border-gray-100">
+                    <div className="h-6 rounded border border-gray-300 bg-gray-50/50 w-full"></div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        </div>{/* end schedule + competencies row */}
 
         {/* Key Focus */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
