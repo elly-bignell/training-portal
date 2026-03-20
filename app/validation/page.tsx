@@ -70,13 +70,21 @@ function ValidationContent({ role }: { role: UserRole }) {
               </svg>
               Admin
             </Link>
-            <button
-              onClick={fetchBookings}
-              disabled={loading}
-              className="px-3 py-1.5 bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg hover:bg-slate-600 disabled:opacity-50 transition-colors"
-            >
-              {loading ? "Loading..." : "↻ Refresh"}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => window.print()}
+                className="px-3 py-1.5 bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg hover:bg-slate-600 transition-colors flex items-center gap-1.5"
+              >
+                🖨️ Print
+              </button>
+              <button
+                onClick={fetchBookings}
+                disabled={loading}
+                className="px-3 py-1.5 bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg hover:bg-slate-600 disabled:opacity-50 transition-colors"
+              >
+                {loading ? "Loading..." : "↻ Refresh"}
+              </button>
+            </div>
           </div>
           <h1 className="text-2xl font-bold">Booking Validation</h1>
           <p className="text-slate-400 text-sm mt-1">Create, validate, schedule observations, and track performance</p>
