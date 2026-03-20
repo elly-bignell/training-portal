@@ -1030,7 +1030,7 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
           </h3>
           <div className="space-y-3">
             {validated.length === 0 ? (
-              <p className="text-sm text-gray-400 italic">No validated bookings{dateFilter ? " for this date" : ""}</p>
+              <p className="text-sm text-gray-400 italic">No validated bookings{fromDate ? " for this date range" : ""}</p>
             ) : (
               validated.map((b) => <BookingCard key={b.id} booking={b} type="validated" />)
             )}
@@ -1043,7 +1043,7 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
           </h3>
           <div className="space-y-3">
             {rejected.length === 0 ? (
-              <p className="text-sm text-gray-400 italic">No rejected bookings{dateFilter ? " for this date" : ""}</p>
+              <p className="text-sm text-gray-400 italic">No rejected bookings{fromDate ? " for this date range" : ""}</p>
             ) : (
               rejected.map((b) => <BookingCard key={b.id} booking={b} type="rejected" />)
             )}
