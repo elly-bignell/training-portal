@@ -301,8 +301,8 @@ function SydneyWeek0Content() {
             <tbody>
               {[
                 "Technology Set Up",
-                "How to Book a Lead",
-                "How to Close a Deal",
+                { label: "How to Book a Lead", sub: "Lead Admin" },
+                { label: "How to Close a Deal", sub: "Deal Admin" },
                 "5 Hours Call for Call",
                 "5 Hours Supervised Calls",
                 "Call Scripts",
@@ -313,7 +313,11 @@ function SydneyWeek0Content() {
                 "Email & Text Templates: Quodo",
               ].map((item, i) => (
                 <tr key={i} className="border-b border-gray-100 hover:bg-slate-50/50">
-                  <td className="py-2 px-2 text-gray-700 leading-tight border border-gray-100">{item}</td>
+                  <td className="py-2 px-2 text-gray-700 leading-tight border border-gray-100">
+                    {typeof item === "string" ? item : (
+                      <><span>{item.label}</span><br /><span className="text-[10px] italic text-gray-400">{item.sub}</span></>
+                    )}
+                  </td>
                   <td className="py-2 px-1 border border-gray-100">
                     <div className="h-6 rounded border border-gray-300 bg-gray-50/50 w-full"></div>
                   </td>
