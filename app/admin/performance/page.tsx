@@ -33,8 +33,8 @@ const DEFAULT_DEAL_VALUE = 400;
 // ─── Buddy pairs ───
 const buddyPairs = [
   { label: "Lucas & Cindy", members: ["lucas-tirri", "cindy-rose-rondez-manrique"] },
-  { label: "Felipe & Sydney", members: ["felipe-garcia", "sydney-arnold"] },
   { label: "Dylan & Krishna", members: ["dylan-munro", "krishna-patel"] },
+  { label: "Felipe & Sydney", sublabel: "Week 0 — Training Week", members: ["felipe-garcia", "sydney-arnold"] },
   { label: "Tom", members: ["thomas-rennie"] },
 ];
 
@@ -282,7 +282,8 @@ function PerformanceDashboardContent() {
                         pIdx < buddyPairs.length - 1 ? "border-r-2 border-slate-600" : ""
                       }`}
                     >
-                      {pair.label}
+                      <div>{pair.label}</div>
+                      {pair.sublabel && <div className="text-[9px] font-normal text-slate-300 mt-0.5">{pair.sublabel}</div>}
                     </th>
                   ))}
                 </tr>
