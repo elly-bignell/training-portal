@@ -110,6 +110,23 @@ function ProjectionsContent() {
   const [callsPerHour, setCallsPerHour] = usePersistedState("proj-callsPerHour", DEFAULT_CALLS_PER_HOUR);
   const [connectsPerHour, setConnectsPerHour] = usePersistedState("proj-connectsPerHour", DEFAULT_CONNECTS_PER_HOUR);
   const [bookingsPerHour, setBookingsPerHour] = usePersistedState("proj-bookingsPerHour", DEFAULT_BOOKINGS_PER_HOUR);
+  // ── Team Configuration State ──────────────────────────────────────────
+  const [totalHeadcount, setTotalHeadcount] = React.useState<number>(() => {
+    if (typeof window !== 'undefined') { const v = localStorage.getItem('proj_totalHeadcount'); return v ? Number(v) : 2; }
+    return 2;
+  });
+  const [bookersPerCloser, setBookersPerCloser] = React.useState<number>(() => {
+    if (typeof window !== 'undefined') { const v = localStorage.getItem('proj_bookersPerCloser'); return v ? Number(v) : 1; }
+    return 1;
+  });
+  const [eoyTarget, setEoyTarget] = React.useState<number>(() => {
+    if (typeof window !== 'undefined') { const v = localStorage.getItem('proj_eoyTarget'); return v ? Number(v) : 1000000; }
+    return 1000000;
+  });
+  React.useEffect(() => { localStorage.setItem('proj_totalHeadcount', String(totalHeadcount)); }, [totalHeadcount]);
+  React.useEffect(() => { localStorage.setItem('proj_bookersPerCloser', String(bookersPerCloser)); }, [bookersPerCloser]);
+  React.useEffect(() => { localStorage.setItem('proj_eoyTarget', String(eoyTarget)); }, [eoyTarget]);
+
   const [attendanceRate, setAttendanceRate] = usePersistedState("proj-attendanceRate", DEFAULT_ATTENDANCE_RATE);
   const [closeRate, setCloseRate] = usePersistedState("proj-closeRate", DEFAULT_CLOSE_RATE);
 
@@ -182,6 +199,21 @@ function ProjectionsContent() {
   const weeklyDeals = dailyDeals * 5;
   const weeklyRevenue = dailyRevenue * 5;
 
+  // ── Team Config Derived ────────────────────────────────────────────────
+  const teamClosers = bookersPerCloser > 0 ? Math.floor(totalHeadcount / (bookersPerCloser + 1)) : 0;
+  const teamBookers = totalHeadcount - teamClosers;
+  const teamUnits = teamClosers;
+  const weeklyTeamRevenue = teamUnits * weeklyRevenue;
+  const monthlyTeamRevenue = weeklyTeamRevenue * 4.33;
+  const annualTeamRevenue = weeklyTeamRevenue * 52;
+  const revenuePerCloserWeek = teamClosers > 0 ? weeklyTeamRevenue / teamClosers : 0;
+  const _now = new Date();
+  const _eoy = new Date(_now.getFullYear(), 11, 31);
+  const weeksLeft = Math.max(1, Math.ceil((_eoy.getTime() - _now.getTime()) / (7 * 24 * 60 * 60 * 1000)));
+  const _revPerUnit = weeklyRevenue * weeksLeft;
+  const unitsNeeded = _revPerUnit > 0 ? Math.ceil(eoyTarget / _revPerUnit) : 0;
+  const headcountNeeded = unitsNeeded * (bookersPerCloser + 1);
+
   const leadGenWeeks = buildWeeks(viewYear, viewMonth, leadGenData);
   const closingWeeks = buildWeeks(viewYear, viewMonth, closingData);
 
@@ -192,6 +224,90 @@ function ProjectionsContent() {
 
   return (
     <main className="min-h-screen bg-slate-100">
+      {/* ══ Team Configuration Card ══════════════════════════════════════ */}
+      <div className="bg-gray-800/60 rounded-2xl p-6 mb-6 border border-purple-500/30 shadow-xl mx-4 mt-6">
+        <div className="flex items-center gap-3 mb-1">
+          <span className="text-2xl">👥</span>
+          <h2 className="text-xl font-bold text-white">Team Configuration</h2>
+        </div>
+        <p className="text-gray-400 text-sm mb-5">
+          Adjust headcount &amp; ratio to project total team revenue and required bodies to hit your EOY target.
+          Per-unit outputs are driven by your calculator inputs below.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+          <div className="bg-gray-700/50 rounded-xl p-4 border border-gray-600/40">
+            <p className="text-gray-300 text-sm font-semibold mb-3">Total Headcount</p>
+            <div className="flex items-center gap-2 mb-1">
+              <button onClick={() => setTotalHeadcount(v => Math.max(1, v - 1))} className="w-8 h-8 rounded-full bg-gray-600 hover:bg-purple-600 text-white font-bold transition-colors flex items-center justify-center text-lg leading-none">−</button>
+              <input type="number" value={totalHeadcount} onChange={e => setTotalHeadcount(Math.max(1, parseInt(e.target.value) || 1))} className="w-16 text-center bg-gray-800 border border-gray-600 rounded-lg text-white font-bold text-xl py-1 focus:outline-none focus:border-purple-400" min={1} />
+              <button onClick={() => setTotalHeadcount(v => v + 1)} className="w-8 h-8 rounded-full bg-gray-600 hover:bg-purple-600 text-white font-bold transition-colors flex items-center justify-center text-lg leading-none">+</button>
+            </div>
+            <p className="text-gray-500 text-xs">total people (bookers + closers)</p>
+          </div>
+          <div className="bg-gray-700/50 rounded-xl p-4 border border-gray-600/40">
+            <p className="text-gray-300 text-sm font-semibold mb-3">Bookers per Closer</p>
+            <div className="flex items-center gap-2 mb-1">
+              <button onClick={() => setBookersPerCloser(v => Math.max(1, v - 1))} className="w-8 h-8 rounded-full bg-gray-600 hover:bg-purple-600 text-white font-bold transition-colors flex items-center justify-center text-lg leading-none">−</button>
+              <input type="number" value={bookersPerCloser} onChange={e => setBookersPerCloser(Math.max(1, parseInt(e.target.value) || 1))} className="w-16 text-center bg-gray-800 border border-gray-600 rounded-lg text-white font-bold text-xl py-1 focus:outline-none focus:border-purple-400" min={1} />
+              <button onClick={() => setBookersPerCloser(v => v + 1)} className="w-8 h-8 rounded-full bg-gray-600 hover:bg-purple-600 text-white font-bold transition-colors flex items-center justify-center text-lg leading-none">+</button>
+            </div>
+            <p className="text-gray-500 text-xs">lead gen staff per closing staff member</p>
+          </div>
+          <div className="bg-gray-700/50 rounded-xl p-4 border border-gray-600/40 flex flex-col justify-center">
+            <p className="text-gray-300 text-sm font-semibold mb-3">Team Breakdown</p>
+            <div className="flex flex-wrap gap-2">
+              <span className="bg-blue-500/20 border border-blue-500/40 text-blue-300 text-sm font-semibold px-3 py-1.5 rounded-full">📞 {teamBookers} booker{teamBookers !== 1 ? 's' : ''}</span>
+              <span className="bg-green-500/20 border border-green-500/40 text-green-300 text-sm font-semibold px-3 py-1.5 rounded-full">🏆 {teamClosers} closer{teamClosers !== 1 ? 's' : ''}</span>
+              <span className="bg-purple-500/20 border border-purple-500/40 text-purple-300 text-sm font-semibold px-3 py-1.5 rounded-full">👥 {teamUnits} team{teamUnits !== 1 ? 's' : ''}</span>
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <div className="bg-gray-700/50 rounded-xl p-3 text-center border border-gray-600/30">
+            <p className="text-gray-400 text-xs mb-1">Weekly (all teams)</p>
+            <p className="text-white font-bold text-xl">${weeklyTeamRevenue.toLocaleString('en-AU', {maximumFractionDigits: 0})}</p>
+          </div>
+          <div className="bg-gray-700/50 rounded-xl p-3 text-center border border-gray-600/30">
+            <p className="text-gray-400 text-xs mb-1">Monthly (all teams)</p>
+            <p className="text-white font-bold text-xl">${monthlyTeamRevenue.toLocaleString('en-AU', {maximumFractionDigits: 0})}</p>
+          </div>
+          <div className="bg-gray-700/50 rounded-xl p-3 text-center border border-gray-600/30">
+            <p className="text-gray-400 text-xs mb-1">Annual (all teams)</p>
+            <p className="text-green-400 font-bold text-xl">${annualTeamRevenue.toLocaleString('en-AU', {maximumFractionDigits: 0})}</p>
+          </div>
+          <div className="bg-gray-700/50 rounded-xl p-3 text-center border border-gray-600/30">
+            <p className="text-gray-400 text-xs mb-1">Per Closer / Week</p>
+            <p className="text-yellow-400 font-bold text-xl">${revenuePerCloserWeek.toLocaleString('en-AU', {maximumFractionDigits: 0})}</p>
+          </div>
+        </div>
+        <div className="border-t border-gray-600/60 pt-4">
+          <p className="text-gray-300 text-sm font-semibold mb-3">🎯 How many bodies to hit your EOY target?</p>
+          <div className="flex flex-wrap items-end gap-4">
+            <div>
+              <label className="block text-gray-400 text-xs mb-1">EOY Revenue Target ($)</label>
+              <input type="number" value={eoyTarget} onChange={e => setEoyTarget(Math.max(0, parseInt(e.target.value) || 0))} className="bg-gray-800 border border-gray-600 rounded-xl text-white font-bold px-3 py-2 w-44 focus:outline-none focus:border-purple-400" step={10000} />
+            </div>
+            <div className="bg-gray-700/50 rounded-xl px-4 py-2.5 text-center min-w-[110px] border border-gray-600/30">
+              <p className="text-gray-400 text-xs">Weeks Left</p>
+              <p className="text-white font-bold text-2xl">{weeksLeft}</p>
+            </div>
+            <div className="bg-gray-700/50 rounded-xl px-4 py-2.5 text-center min-w-[120px] border border-gray-600/30">
+              <p className="text-gray-400 text-xs">Units Needed</p>
+              <p className="text-white font-bold text-2xl">{unitsNeeded}</p>
+              <p className="text-gray-500 text-xs">booker+closer pairs</p>
+            </div>
+            <div className="bg-orange-500/10 border border-orange-500/40 rounded-xl px-5 py-2.5 text-center min-w-[150px]">
+              <p className="text-orange-300 text-xs font-semibold uppercase tracking-wide">Headcount Needed</p>
+              <p className="text-orange-400 font-bold text-3xl">{headcountNeeded}</p>
+              <p className="text-gray-500 text-xs">at {bookersPerCloser}:1 ratio</p>
+            </div>
+          </div>
+          <p className="text-gray-500 text-xs mt-3">
+            Based on {weeksLeft} weeks remaining in {_now.getFullYear()} &amp; ${weeklyRevenue.toLocaleString('en-AU', {maximumFractionDigits: 0})}/week per unit from your inputs below.
+          </p>
+        </div>
+      </div>
+
       <header className="bg-slate-900 text-white">
         <div className="max-w-[1200px] mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
