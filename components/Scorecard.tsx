@@ -221,13 +221,14 @@ export default function Scorecard({ traineeSlug, traineeName }: ScorecardProps) 
   const weeklyStandard = getWeeklyStandard();
   const weeklyTotals = weeklyData?.weeklyTotals || { calls_made: 0, calls: 0, bookings: 0, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 };
 
-  // Calculate overall % to standard for the day
+  // Calculate overall % to standard for the day — only include metrics that have a target
   const metrics = ["calls_made", "calls", "bookings", "meetings", "units", "revenue"] as const;
-  const dailyPcts = metrics.map((m) => {
-    const target = dailyStandard[m];
-    return target > 0 ? Math.min(100, (todayActivity[m] / target) * 100) : 100;
-  });
-  const overallDailyPct = Math.round(dailyPcts.reduce((a, b) => a + b, 0) / dailyPcts.length);
+  const dailyPctsWithTarget = metrics
+    .map((m) => ({ target: dailyStandard[m], pct: Math.min(100, (todayActivity[m] / dailyStandard[m]) * 100) }))
+    .filter(({ target }) => target > 0);
+  const overallDailyPct = dailyPctsWithTarget.length > 0
+    ? Math.round(dailyPctsWithTarget.reduce((a, b) => a + b.pct, 0) / dailyPctsWithTarget.length)
+    : 0;
 
   // Week phase label
   const getWeekLabel = () => {
