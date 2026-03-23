@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { trainees } from "@/data/trainees";
-import { weeklyStandards, getCurrentWeekNumber, getWeekBoundaries } from "@/hooks/useActivityTracking";
+import { weeklyStandards, getCurrentWeekNumber, getWeekBoundaries, getDayOfWeek, TRAINEE_WEEK_OVERRIDES } from "@/hooks/useActivityTracking";
 
 interface DailyData {
   date: string;
@@ -79,6 +79,29 @@ const weekDateRanges: Record<number, string> = {
   7: "Mon 6 Apr – Fri 10 Apr",
   8: "Mon 13 Apr – Fri 17 Apr",
 };
+
+// Sydney Week 0 per-day booking targets (Mon=0 ... Fri=4)
+const SYDNEY_WEEK0_BOOKING_TARGETS = [3, 4, 5, 6, 7];
+// Felipe picks up the slack to keep the team at 7/day
+const FELIPE_WEEK0_BOOKING_TARGETS = [4, 3, 2, 1, 0];
+const SYDNEY_WEEK0_EOW = 25; // 3+4+5+6+7
+const FELIPE_WEEK0_EOW = 10; // 4+3+2+1+0
+
+function getIndividualDayTarget(slug: string, dayIdx: number): number {
+  if (TRAINEE_WEEK_OVERRIDES["sydney-arnold"] === 0) {
+    if (slug === "sydney-arnold") return SYDNEY_WEEK0_BOOKING_TARGETS[dayIdx] ?? 7;
+    if (slug === "felipe-garcia") return FELIPE_WEEK0_BOOKING_TARGETS[dayIdx] ?? 0;
+  }
+  return TRAINEES_WITH_TARGET.has(slug) ? TRAINEE_BOOKINGS_TARGET_DAILY : 0;
+}
+
+function getIndividualEowTarget(slug: string): number {
+  if (TRAINEE_WEEK_OVERRIDES["sydney-arnold"] === 0) {
+    if (slug === "sydney-arnold") return SYDNEY_WEEK0_EOW;
+    if (slug === "felipe-garcia") return FELIPE_WEEK0_EOW;
+  }
+  return TRAINEES_WITH_TARGET.has(slug) ? TEAM_BOOKINGS_TARGET_EOW : 0;
+}
 
 // Get booking status colour for a person
 function getBookingStatusClass(actual: number, target: number): string {
@@ -341,8 +364,6 @@ export default function PerformanceSummary() {
                     const td = dataMap.get(slug);
                     if (!td) return null;
 
-                    const isTraineeWithTarget = TRAINEES_WITH_TARGET.has(slug);
-
                     return (
                       <React.Fragment key={td.slug}>
                         {/* Bookings row */}
@@ -358,8 +379,8 @@ export default function PerformanceSummary() {
                           <td className="px-1 py-1.5 text-center">
                             <span className="text-[10px] text-gray-400 uppercase font-semibold">Book</span>
                           </td>
-                          {td.days.map((day) => {
-                            const target = isTraineeWithTarget ? TRAINEE_BOOKINGS_TARGET_DAILY : 0;
+                          {td.days.map((day, dayIdx) => {
+                            const target = getIndividualDayTarget(td.slug, dayIdx);
                             const statusClass = target > 0
                               ? getBookingStatusClass(day.bookings, target)
                               : "text-gray-700";
@@ -372,7 +393,7 @@ export default function PerformanceSummary() {
                               </td>
                             );
                           })}
-                          <td className={`px-3 py-1.5 text-center font-semibold ${isTraineeWithTarget ? getBookingStatusClass(td.totals.bookings, TEAM_BOOKINGS_TARGET_EOW) : "text-gray-800"}`}>
+                          <td className={`px-3 py-1.5 text-center font-semibold ${getIndividualEowTarget(td.slug) > 0 ? getBookingStatusClass(td.totals.bookings, getIndividualEowTarget(td.slug)) : "text-gray-800"}`}>
                             {td.totals.bookings}
                           </td>
                           <td className="px-2 py-1.5 text-center text-xs font-semibold text-gray-600">

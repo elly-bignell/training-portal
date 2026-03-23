@@ -33,6 +33,20 @@ export const weeklyStandards: Record<number, DailyActivity> = {
   8: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
 };
 
+// Per-trainee week number overrides (slug → effective week for standards/display)
+export const TRAINEE_WEEK_OVERRIDES: Record<string, number> = {
+  "sydney-arnold": 0, // Sydney is in Week 0 (Training Week)
+};
+
+// Sydney Week 0 ramp-up targets by day (0 = Mon, 1 = Tue, 2 = Wed, 3 = Thu, 4 = Fri)
+export const SYDNEY_WEEK0_RAMP: Record<number, DailyActivity> = {
+  0: { calls_made: 0, calls: 30, bookings: 3, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 },
+  1: { calls_made: 0, calls: 40, bookings: 4, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 },
+  2: { calls_made: 0, calls: 50, bookings: 5, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 },
+  3: { calls_made: 0, calls: 60, bookings: 6, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 },
+  4: { calls_made: 0, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 },
+};
+
 // Week start dates (Sundays before each Monday)
 const weekStartDates: Record<number, string> = {
   0: "2026-02-15", // Training: Sun before Mon 16 Feb
@@ -230,13 +244,38 @@ export function useActivityTracking(traineeSlug: string, traineeName: string) {
     [todayActivity, saveActivity]
   );
 
-  // Get daily standard for current week
+  // Get daily standard for current week (respects per-trainee week overrides)
   const getDailyStandard = useCallback((): DailyActivity => {
-    return weeklyStandards[currentWeek] || weeklyStandards[6];
-  }, [currentWeek]);
+    const eff = TRAINEE_WEEK_OVERRIDES[traineeSlug] !== undefined
+      ? TRAINEE_WEEK_OVERRIDES[traineeSlug]
+      : currentWeek;
+    if (eff === 0 && traineeSlug in TRAINEE_WEEK_OVERRIDES) {
+      const dayIdx = getDayOfWeek();
+      const validDay = dayIdx >= 0 && dayIdx <= 4 ? dayIdx : 0;
+      return SYDNEY_WEEK0_RAMP[validDay];
+    }
+    return weeklyStandards[eff] || weeklyStandards[6];
+  }, [currentWeek, traineeSlug]);
 
-  // Get weekly standard (daily * 5)
+  // Get weekly standard (respects per-trainee week overrides)
   const getWeeklyStandard = useCallback((): DailyActivity => {
+    const eff = TRAINEE_WEEK_OVERRIDES[traineeSlug] !== undefined
+      ? TRAINEE_WEEK_OVERRIDES[traineeSlug]
+      : currentWeek;
+    if (eff === 0 && traineeSlug in TRAINEE_WEEK_OVERRIDES) {
+      return Object.values(SYDNEY_WEEK0_RAMP).reduce(
+        (acc, d) => ({
+          calls_made: acc.calls_made + d.calls_made,
+          calls: acc.calls + d.calls,
+          bookings: acc.bookings + d.bookings,
+          follow_up_call_scheduled: 0,
+          meetings: 0,
+          units: 0,
+          revenue: 0,
+        }),
+        { calls_made: 0, calls: 0, bookings: 0, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 }
+      );
+    }
     const daily = getDailyStandard();
     return {
       calls_made: daily.calls_made * 5,
@@ -247,14 +286,16 @@ export function useActivityTracking(traineeSlug: string, traineeName: string) {
       units: daily.units * 5,
       revenue: daily.revenue * 5,
     };
-  }, [getDailyStandard]);
+  }, [getDailyStandard, currentWeek, traineeSlug]);
 
   return {
     todayActivity,
     weeklyData,
     isLoading,
     isSaving,
-    currentWeek,
+    currentWeek: TRAINEE_WEEK_OVERRIDES[traineeSlug] !== undefined
+      ? TRAINEE_WEEK_OVERRIDES[traineeSlug]
+      : currentWeek,
     incrementMetric,
     setMetric,
     getDailyStandard,
