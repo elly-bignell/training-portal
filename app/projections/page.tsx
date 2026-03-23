@@ -111,21 +111,21 @@ function ProjectionsContent() {
   const [connectsPerHour, setConnectsPerHour] = usePersistedState("proj-connectsPerHour", DEFAULT_CONNECTS_PER_HOUR);
   const [bookingsPerHour, setBookingsPerHour] = usePersistedState("proj-bookingsPerHour", DEFAULT_BOOKINGS_PER_HOUR);
   // ── Team Configuration State ──────────────────────────────────────────
-  const [totalHeadcount, setTotalHeadcount] = React.useState<number>(() => {
+  const [totalHeadcount, setTotalHeadcount] = useState<number>(() => {
     if (typeof window !== 'undefined') { const v = localStorage.getItem('proj_totalHeadcount'); return v ? Number(v) : 2; }
     return 2;
   });
-  const [bookersPerCloser, setBookersPerCloser] = React.useState<number>(() => {
+  const [bookersPerCloser, setBookersPerCloser] = useState<number>(() => {
     if (typeof window !== 'undefined') { const v = localStorage.getItem('proj_bookersPerCloser'); return v ? Number(v) : 1; }
     return 1;
   });
-  const [eoyTarget, setEoyTarget] = React.useState<number>(() => {
+  const [eoyTarget, setEoyTarget] = useState<number>(() => {
     if (typeof window !== 'undefined') { const v = localStorage.getItem('proj_eoyTarget'); return v ? Number(v) : 1000000; }
     return 1000000;
   });
-  React.useEffect(() => { localStorage.setItem('proj_totalHeadcount', String(totalHeadcount)); }, [totalHeadcount]);
-  React.useEffect(() => { localStorage.setItem('proj_bookersPerCloser', String(bookersPerCloser)); }, [bookersPerCloser]);
-  React.useEffect(() => { localStorage.setItem('proj_eoyTarget', String(eoyTarget)); }, [eoyTarget]);
+  useEffect(() => { localStorage.setItem('proj_totalHeadcount', String(totalHeadcount)); }, [totalHeadcount]);
+  useEffect(() => { localStorage.setItem('proj_bookersPerCloser', String(bookersPerCloser)); }, [bookersPerCloser]);
+  useEffect(() => { localStorage.setItem('proj_eoyTarget', String(eoyTarget)); }, [eoyTarget]);
 
   const [attendanceRate, setAttendanceRate] = usePersistedState("proj-attendanceRate", DEFAULT_ATTENDANCE_RATE);
   const [closeRate, setCloseRate] = usePersistedState("proj-closeRate", DEFAULT_CLOSE_RATE);
