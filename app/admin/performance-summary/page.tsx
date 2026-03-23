@@ -65,13 +65,8 @@ const buddyPairs = [
     members: ["lucas-tirri", "cindy-rose-rondez-manrique"],
     leadGen: "cindy-rose-rondez-manrique",
     closer: "lucas-tirri",
-  },
-  {
-    label: "Felipe & Sydney",
-    color: "pink",
-    members: ["felipe-garcia", "sydney-arnold"],
-    leadGen: "sydney-arnold",
-    closer: "felipe-garcia",
+    startGlobalWeek: 0,
+    weekLabelOffset: 0,
   },
   {
     label: "Dylan & Krishna",
@@ -79,6 +74,17 @@ const buddyPairs = [
     members: ["dylan-munro", "krishna-patel"],
     leadGen: "krishna-patel",
     closer: "dylan-munro",
+    startGlobalWeek: 0,
+    weekLabelOffset: 0,
+  },
+  {
+    label: "Felipe & Sydney",
+    color: "pink",
+    members: ["felipe-garcia", "sydney-arnold"],
+    leadGen: "sydney-arnold",
+    closer: "felipe-garcia",
+    startGlobalWeek: 5,
+    weekLabelOffset: -5,
   },
 ];
 
@@ -362,8 +368,9 @@ function PerformanceSummaryContent() {
     return buddyPairs.map((pair) => {
       const closerName = getShortName(pair.closer);
       const lgName = getShortName(pair.leadGen);
+      const pairWeeksToShow = weeksToShow.filter((w) => w >= (pair.startGlobalWeek ?? 0));
 
-      const weekData: WeekData[] = weeksToShow.map((weekNum, idx) => {
+      const weekData: WeekData[] = pairWeeksToShow.map((weekNum, idx) => {
         const daysElapsed = weekNum < currentWeek ? 5 : getWorkingDaysElapsed(weekNum);
         const metricData: MetricResult[] = compMetrics.map((m) => {
           const closerVal = getPersonWeekTotal(pair.closer, weekNum, m.key);
@@ -555,7 +562,7 @@ function PerformanceSummaryContent() {
                     </thead>
                     <tbody>
                       {weekData.map((wd) => {
-                        const wc = weekConfig[wd.weekNum];
+                        const localWC = weekConfig[wd.weekNum + (pair.weekLabelOffset ?? 0)] ?? weekConfig[wd.weekNum];
                         const isNow = wd.weekNum === currentWeek;
                         const isSelected = wd.weekNum === activeTab;
                         const tl = trafficLight(wd.overallPct);
@@ -575,7 +582,7 @@ function PerformanceSummaryContent() {
                             <td className="px-3 py-3 font-semibold text-gray-700 whitespace-nowrap align-top">
                               <div className="flex items-center gap-1">
                                 {isSelected && <span className="text-[8px]">▶</span>}
-                                {wc.shortLabel}
+                                {localWC.shortLabel}
                               </div>
                               {isNow && <span className="text-[8px] bg-[#E6017D] text-white px-1 py-0.5 rounded font-bold">NOW</span>}
                               {isNow && wd.daysElapsed < 5 && <div className="text-gray-400 text-[9px]">{wd.daysElapsed}/5 days</div>}
@@ -652,7 +659,7 @@ function PerformanceSummaryContent() {
                   {/* Week tabs */}
                   <div className="flex items-center gap-1 px-5 pt-3 pb-0 overflow-x-auto">
                     {weekData.map((wd) => {
-                      const wc = weekConfig[wd.weekNum];
+                      const tabWC = weekConfig[wd.weekNum + (pair.weekLabelOffset ?? 0)] ?? weekConfig[wd.weekNum];
                       const isActive = wd.weekNum === activeTab;
                       const hasData = wd.metricData.some((md) => md.teamActual > 0);
                       const isLive = wd.weekNum === currentWeek;
@@ -668,7 +675,7 @@ function PerformanceSummaryContent() {
                             (!hasData ? "opacity-40 " : "")
                           }
                         >
-                          {wc.shortLabel}
+                          {tabWC.shortLabel}
                           {isLive && <span className="ml-1 text-[8px] opacity-70">●</span>}
                           {!isActive && hasData && (
                             <span className={"ml-1 inline-block w-1.5 h-1.5 rounded-full " + tl.dot}></span>
@@ -684,7 +691,7 @@ function PerformanceSummaryContent() {
                       <div className="bg-white rounded-xl border border-gray-200 p-4">
                         <div className="flex items-center justify-between mb-3">
                           <h3 className="text-sm font-bold text-gray-800">
-                            {activeTab === currentWeek ? "📋 Live Summary" : "📋 Week Summary"} — {weekConfig[activeTab]?.label}
+                            {activeTab === currentWeek ? "📋 Live Summary" : "📋 Week Summary"} — {(weekConfig[activeTab + (pair.weekLabelOffset ?? 0)] ?? weekConfig[activeTab])?.label}
                             {activeTab === currentWeek && <span className="ml-2 text-[10px] font-normal text-gray-400">(updates as data comes in)</span>}
                             {activeTab < currentWeek && <span className="ml-2 text-[10px] font-normal text-gray-400">(final)</span>}
                           </h3>
