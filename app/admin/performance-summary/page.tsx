@@ -195,6 +195,7 @@ function generateExecSummary(
   lgName: string,
   currentWeek: number,
   projTeamDaily: Record<string, number>,
+  lgMetricData?: { calls_made: number; calls: number; bookings: number; meetings: number; units: number; revenue: number },
 ): string[] {
   const lines: string[] = [];
   const hasData = wd.metricData.some((md) => md.teamActual > 0);
@@ -206,8 +207,10 @@ function generateExecSummary(
   const isLive = wd.weekNum === currentWeek;
   const dayLabel = isLive ? wd.daysElapsed + " of 5 days" : "5 of 5 days (complete)";
 
-  const overallWord = wd.overallPct >= 100 ? "on track" : wd.overallPct >= 75 ? "slightly behind" : "off track";
-  lines.push("📋 STATUS: Team is " + overallWord + " at " + Math.round(wd.overallPct) + "% of target (" + dayLabel + ")." + (isLive ? " Projections prorated to days elapsed." : ""));
+  const revMetric = wd.metricData.find((m) => m.key === "revenue");
+  const revPct = revMetric && revMetric.projected > 0 ? Math.round((revMetric.teamActual / revMetric.projected) * 100) : 0;
+  const overallWord = revPct >= 100 ? "on track" : revPct >= 75 ? "slightly behind" : "off track";
+  lines.push("📋 STATUS: Team is " + overallWord + " — 💰 Revenue at " + revPct + "% of target (" + dayLabel + ")." + (isLive ? " Projections prorated to days elapsed." : ""));
 
   const calls = wd.metricData.find((m) => m.key === "calls_made");
   const connects = wd.metricData.find((m) => m.key === "calls");
@@ -225,9 +228,6 @@ function generateExecSummary(
   const expAttRate = projTeamDaily.bookings > 0 ? projTeamDaily.attended / projTeamDaily.bookings : 0;
   const expCloseRate = projTeamDaily.attended > 0 ? projTeamDaily.deals / projTeamDaily.attended : 0;
 
-  lines.push("");
-  lines.push("📊 CUT-THROUGH RATES (actual vs expected):");
-
   const rateCheck = (label: string, actual: number, expected: number): string => {
     const aPct = Math.round(actual * 100);
     const ePct = Math.round(expected * 100);
@@ -237,10 +237,27 @@ function generateExecSummary(
     return status + " " + label + ": " + aPct + "% (expected " + ePct + "%) " + diffStr;
   };
 
-  if (calls && calls.teamActual > 0) lines.push(rateCheck("Calls → Connected", actualConnRate, expConnRate));
-  if (connects && connects.teamActual > 0) lines.push(rateCheck("Connected → Bookings", actualBkgRate, expBkgRate));
-  if (bookings && bookings.teamActual > 0) lines.push(rateCheck("Bookings → Attended", actualAttRate, expAttRate));
-  if (attended && attended.teamActual > 0) lines.push(rateCheck("Attended → Closed", actualCloseRate, expCloseRate));
+  lines.push("");
+  if (lgMetricData) {
+    const lgCalls = lgMetricData.calls_made;
+    const lgConnects = lgMetricData.calls;
+    const lgBookings = lgMetricData.bookings;
+    const lgAttended = lgMetricData.meetings;
+    const lgConnRate = lgCalls > 0 ? lgConnects / lgCalls : 0;
+    const lgBkgRate = lgConnects > 0 ? lgBookings / lgConnects : 0;
+    const lgAttRate = lgBookings > 0 ? lgAttended / lgBookings : 0;
+    lines.push("📊 " + lgName.toUpperCase() + "'S CUT-THROUGH RATES (vs expected):");
+    if (lgCalls > 0) lines.push(rateCheck("Calls → Connected", lgConnRate, expConnRate));
+    if (lgConnects > 0) lines.push(rateCheck("Connected → Bookings", lgBkgRate, expBkgRate));
+    if (lgBookings > 0) lines.push(rateCheck("Bookings → Attended", lgAttRate, expAttRate));
+    if (lgAttended > 0) lines.push(rateCheck("Attended → Closed", actualCloseRate, expCloseRate));
+  } else {
+    lines.push("📊 CUT-THROUGH RATES (actual vs expected):");
+    if (calls && calls.teamActual > 0) lines.push(rateCheck("Calls → Connected", actualConnRate, expConnRate));
+    if (connects && connects.teamActual > 0) lines.push(rateCheck("Connected → Bookings", actualBkgRate, expBkgRate));
+    if (bookings && bookings.teamActual > 0) lines.push(rateCheck("Bookings → Attended", actualAttRate, expAttRate));
+    if (attended && attended.teamActual > 0) lines.push(rateCheck("Attended → Closed", actualCloseRate, expCloseRate));
+  }
 
   const ahead = wd.metricData.filter((md) => md.pct >= 100 && md.teamActual > 0);
   const behind = wd.metricData.filter((md) => md.pct < 100 && md.teamActual > 0);
@@ -274,12 +291,12 @@ function generateExecSummary(
 
   if (!isLive && wd.weekNum < currentWeek) {
     lines.push("");
-    if (wd.overallPct >= 100) {
-      lines.push("🏁 WRAP-UP: Strong week. Team met or exceeded targets across " + ahead.length + " of " + (ahead.length + behind.length) + " metrics.");
-    } else if (wd.overallPct >= 75) {
-      lines.push("🏁 WRAP-UP: Reasonable week but gaps remain. Focus areas for next week: " + behind.map((m) => m.label.toLowerCase()).join(", ") + ".");
+    if (revPct >= 100) {
+      lines.push("🏁 WRAP-UP: Strong week. Revenue target hit at " + revPct + "% (" + (revMetric ? fmtVal(revMetric.teamActual, "revenue") : "") + ").");
+    } else if (revPct >= 75) {
+      lines.push("🏁 WRAP-UP: Reasonable week — revenue reached " + revPct + "% of target. Key gaps: " + behind.map((m) => m.label.toLowerCase()).join(", ") + ".");
     } else {
-      lines.push("🏁 WRAP-UP: Below expectations. " + behind.length + " of " + (ahead.length + behind.length) + " metrics missed. Key gaps: " + behind.slice(0, 3).map((m) => m.label.toLowerCase() + " (" + Math.round(m.pct) + "%)").join(", ") + ".");
+      lines.push("🏁 WRAP-UP: Below expectations — revenue at " + revPct + "% of target. Key gaps: " + behind.slice(0, 3).map((m) => m.label.toLowerCase() + " (" + Math.round(m.pct) + "%)").join(", ") + ".");
     }
   }
 
@@ -537,9 +554,16 @@ function PerformanceSummaryContent() {
                         <span className={latestWeek.trend.color + " text-xs font-bold bg-white/90 px-2 py-0.5 rounded-full"}>
                           {latestWeek.trend.icon} {latestWeek.trend.label}
                         </span>
-                        <span className={latestTL.text + " text-xs font-bold bg-white/90 px-2 py-0.5 rounded-full"}>
-                          {Math.round(latestWeek.overallPct)}% of target
-                        </span>
+                        {(() => {
+                          const hRevM = latestWeek.metricData.find((m) => m.key === "revenue");
+                          const hRevPct = hRevM && hRevM.projected > 0 ? Math.round((hRevM.teamActual / hRevM.projected) * 100) : 0;
+                          const htl = trafficLight(hRevPct);
+                          return (
+                            <span className={htl.text + " text-xs font-bold bg-white/90 px-2 py-0.5 rounded-full"}>
+                              💰 {hRevPct}% rev
+                            </span>
+                          );
+                        })()}
                       </div>
                     )}
                   </div>
@@ -695,17 +719,34 @@ function PerformanceSummaryContent() {
                             {activeTab === currentWeek && <span className="ml-2 text-[10px] font-normal text-gray-400">(updates as data comes in)</span>}
                             {activeTab < currentWeek && <span className="ml-2 text-[10px] font-normal text-gray-400">(final)</span>}
                           </h3>
-                          <span className={
-                            "text-xs font-bold px-2 py-0.5 rounded-full " +
-                            trafficLight(activeWeekData.overallPct).bg + " " +
-                            trafficLight(activeWeekData.overallPct).text
-                          }>
-                            {Math.round(activeWeekData.overallPct)}% of target
-                          </span>
+                          {(() => {
+                            const aRevM = activeWeekData.metricData.find((m) => m.key === "revenue");
+                            const aRevPct = aRevM && aRevM.projected > 0 ? Math.round((aRevM.teamActual / aRevM.projected) * 100) : 0;
+                            const tl = trafficLight(aRevPct);
+                            return (
+                              <span className={"text-xs font-bold px-2 py-0.5 rounded-full " + tl.bg + " " + tl.text}>
+                                💰 {aRevPct}% rev target
+                              </span>
+                            );
+                          })()}
                         </div>
 
                         <div className="font-mono text-[11px] leading-relaxed text-gray-700 whitespace-pre-wrap">
-                          {generateExecSummary(activeWeekData, closerName, lgName, currentWeek, projTeamDaily).map((line, i) => (
+                          {generateExecSummary(
+                            activeWeekData,
+                            closerName,
+                            lgName,
+                            currentWeek,
+                            projTeamDaily,
+                            {
+                              calls_made: getPersonWeekTotal(pair.leadGen, activeTab, "calls_made"),
+                              calls: getPersonWeekTotal(pair.leadGen, activeTab, "calls"),
+                              bookings: getPersonWeekTotal(pair.leadGen, activeTab, "bookings"),
+                              meetings: getPersonWeekTotal(pair.leadGen, activeTab, "meetings"),
+                              units: getPersonWeekTotal(pair.leadGen, activeTab, "units"),
+                              revenue: getPersonWeekTotal(pair.leadGen, activeTab, "revenue"),
+                            }
+                          ).map((line, i) => (
                             <div key={i} className={line === "" ? "h-2" : ""}>{line}</div>
                           ))}
                         </div>
