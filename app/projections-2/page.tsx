@@ -434,19 +434,19 @@ function Projections2Content() {
               <p className="text-slate-400 text-xs">/wk more recurring needed</p>
             </div>
             <div className="bg-orange-50 rounded-xl p-3 text-center border border-orange-200">
-              <p className="text-orange-500 text-xs mb-0.5">Adjusted Weekly Gap</p>
-              <p className="text-orange-700 font-bold text-xl tabular-nums">{fmtCurrency(dtgAdjusted)}</p>
-              <p className="text-slate-400 text-xs">incl. {fmtCurrency(retentionLossPerWeek)}/wk churn</p>
+              <p className="text-orange-500 text-xs mb-0.5">Total New Recurring Needed</p>
+              <p className="text-orange-700 font-bold text-xl tabular-nums">{fmtCurrency(Math.round(dtgAdjusted))}</p>
+              <p className="text-slate-400 text-xs">gap + churn over {weeksToTarget} wks</p>
             </div>
             <div className="bg-slate-50 rounded-xl p-3 text-center border border-slate-200">
               <p className="text-slate-500 text-xs mb-0.5">New Recurring / Day</p>
-              <p className="text-slate-900 font-bold text-xl tabular-nums">{fmtCurrency(dtgPerDay)}</p>
-              <p className="text-slate-400 text-xs">to close gap in 1 week</p>
+              <p className="text-slate-900 font-bold text-xl tabular-nums">{fmtCurrency(Math.round(totalChurnErosion))}</p>
+              <p className="text-slate-400 text-xs">{fmtCurrency(retentionLossPerWeek)}/wk × {weeksToTarget} wks</p>
             </div>
             <div className="bg-slate-50 rounded-xl p-3 text-center border border-slate-200">
               <p className="text-slate-500 text-xs mb-0.5">Deals / Week Needed</p>
-              <p className="text-slate-900 font-bold text-xl tabular-nums">{dealValue > 0 ? Math.ceil(dtgAdjusted / (dealValue / 4.33)) : '—'}</p>
-              <p className="text-slate-400 text-xs">at {fmtCurrency(dealValue)}/mo per deal</p>
+              <p className="text-slate-900 font-bold text-xl tabular-nums">{totalDealsNeeded}</p>
+              <p className="text-slate-400 text-xs">at {fmtCurrency(dealValue)}/mo · {weeksToTarget} wks</p>
             </div>
           </div>
 
