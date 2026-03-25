@@ -375,7 +375,23 @@ function Projections2Content() {
         <div className="border-t border-slate-200 pt-4 mb-5">
           <p className="text-slate-700 text-sm font-semibold mb-3">🎯 EOY Target &amp; Distance to Go</p>
 
-          {/* Input row */}
+          {/* Time context */}
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="bg-slate-50 rounded-xl p-3 text-center border border-slate-200">
+              <p className="text-slate-400 text-xs mb-0.5">Target Date</p>
+              <p className="text-slate-900 font-bold">17 Dec 2026</p>
+            </div>
+            <div className="bg-slate-50 rounded-xl p-3 text-center border border-slate-200">
+              <p className="text-slate-400 text-xs mb-0.5">Working Days Left</p>
+              <p className="text-slate-900 font-bold text-2xl tabular-nums">{workingDaysLeft}</p>
+            </div>
+            <div className="bg-slate-50 rounded-xl p-3 text-center border border-slate-200">
+              <p className="text-slate-400 text-xs mb-0.5">Weeks Left</p>
+              <p className="text-slate-900 font-bold text-2xl tabular-nums">{weeksToTarget}</p>
+            </div>
+          </div>
+
+          {/* Info banner */}
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-4">
             <p className="text-blue-700 text-xs font-semibold mb-1">ℹ️ All figures below are <strong>weekly recurring revenue ($)</strong> — not totals</p>
             <p className="text-blue-600 text-xs">e.g. target = $250k/wk recurring · current = $142k/wk recurring · loss = churn per working day</p>
