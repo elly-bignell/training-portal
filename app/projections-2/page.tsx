@@ -116,6 +116,7 @@ function Projections2Content() {
   const [bookersPerCloser, setBookersPerCloser] = usePersistedState("proj2-bookersPerCloser", 2);
   const [eoyTarget, setEoyTarget] = usePersistedState("proj2-eoyTarget", 250000);
   const [currentRevenue, setCurrentRevenue] = usePersistedState("proj2-currentRevenue", 0);
+  const [currentTeams, setCurrentTeams] = usePersistedState("proj2-currentTeams", 1);
   const [retentionLossPerDay, setRetentionLossPerDay] = usePersistedState("proj2-retentionLossPerDay", 200);
 
   const [attendanceRate, setAttendanceRate] = usePersistedState("proj2-attendanceRate", DEFAULT_ATTENDANCE_RATE);
@@ -197,6 +198,9 @@ function Projections2Content() {
     ? Math.ceil(dtgAdjusted / oneTeamRecurringByDeadline) : 0;
   const newHeadcountNeeded = teamsToHitDtg * (bookersPerCloser + 1);
   const totalDealsNeeded = dealValuePerWeek > 0 ? Math.ceil(dtgAdjusted / dealValuePerWeek) : 0;
+  const additionalTeamsNeeded = Math.max(0, teamsToHitDtg - currentTeams);
+  const additionalHeadcount = additionalTeamsNeeded * (bookersPerCloser + 1);
+  const totalHeadcount2 = teamsToHitDtg * (bookersPerCloser + 1);
 
   const leadGenData = useMemo(() => {
     const { daysInMonth } = getMonthData(viewYear, viewMonth);
@@ -414,7 +418,7 @@ function Projections2Content() {
             <p className="text-blue-700 text-xs font-semibold mb-1">ℹ️ All figures below are <strong>weekly recurring revenue ($)</strong> — not totals</p>
             <p className="text-blue-600 text-xs">e.g. target = $250k/wk recurring · current = $142k/wk recurring · loss = churn per working day</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
             <div>
               <label className="block text-slate-500 text-xs mb-1">Weekly Recurring Target ($/wk)</label>
               <input type="number" value={eoyTarget} onChange={e => setEoyTarget(Math.max(0, parseInt(e.target.value) || 0))} className="bg-white border border-slate-300 rounded-xl text-slate-900 font-bold px-3 py-2 w-full focus:outline-none focus:border-blue-400" step={1000} />
@@ -426,6 +430,10 @@ function Projections2Content() {
             <div>
               <label className="block text-slate-500 text-xs mb-1">Retention Churn / Working Day ($)</label>
               <input type="number" value={retentionLossPerDay} onChange={e => setRetentionLossPerDay(Math.max(0, parseInt(e.target.value) || 0))} className="bg-white border border-slate-300 rounded-xl text-slate-900 font-bold px-3 py-2 w-full focus:outline-none focus:border-red-400" step={50} />
+            </div>
+            <div>
+              <label className="block text-slate-500 text-xs mb-1">Current Teams Running</label>
+              <input type="number" value={currentTeams} onChange={e => setCurrentTeams(Math.max(0, parseInt(e.target.value) || 0))} className="bg-white border border-slate-300 rounded-xl text-slate-900 font-bold px-3 py-2 w-full focus:outline-none focus:border-purple-400" step={1} min={0} />
             </div>
           </div>
 
@@ -471,14 +479,19 @@ function Projections2Content() {
           {/* Teams needed */}
           <div className="flex flex-wrap items-end gap-3">
             <div className="bg-slate-50 rounded-xl px-4 py-2.5 text-center min-w-[130px] border border-slate-200">
-              <p className="text-slate-400 text-xs">Additional Teams Needed</p>
+              <p className="text-slate-400 text-xs">Total Teams Needed</p>
               <p className="text-slate-900 font-bold text-2xl">{teamsToHitDtg}</p>
-              <p className="text-slate-400 text-xs">on top of existing teams</p>
+              <p className="text-slate-400 text-xs">{additionalTeamsNeeded} additional to hire</p>
+            </div>
+            <div className="bg-slate-50 rounded-xl px-4 py-2.5 text-center min-w-[130px] border border-slate-200">
+              <p className="text-slate-400 text-xs">Total Team Members</p>
+              <p className="text-slate-900 font-bold text-2xl">{totalHeadcount2}</p>
+              <p className="text-slate-400 text-xs">{additionalHeadcount} new hires needed</p>
             </div>
             <div className="bg-orange-50 border border-orange-300 rounded-xl px-5 py-2.5 text-center min-w-[150px]">
-              <p className="text-orange-600 text-xs font-semibold uppercase tracking-wide">Additional Headcount Needed</p>
-              <p className="text-orange-500 font-bold text-3xl">{newHeadcountNeeded}</p>
-              <p className="text-slate-400 text-xs">new hires · {bookersPerCloser}:1 ratio</p>
+              <p className="text-orange-600 text-xs font-semibold uppercase tracking-wide">Additional Hires Needed</p>
+              <p className="text-orange-500 font-bold text-3xl">{additionalHeadcount}</p>
+              <p className="text-slate-400 text-xs">{additionalTeamsNeeded} teams · {bookersPerCloser}:1 ratio</p>
             </div>
             <div className="text-xs text-slate-500 flex-1 space-y-1">
               <p>📍 Gap: {fmtCurrency(currentRevenue)} → {fmtCurrency(eoyTarget)}/wk = <strong className="text-slate-800">{fmtCurrency(dtg)}/wk</strong> to add</p>
