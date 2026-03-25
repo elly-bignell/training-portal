@@ -116,7 +116,7 @@ function Projections2Content() {
   const [bookersPerCloser, setBookersPerCloser] = usePersistedState("proj2-bookersPerCloser", 2);
   const [eoyTarget, setEoyTarget] = usePersistedState("proj2-eoyTarget", 250000);
   const [currentRevenue, setCurrentRevenue] = usePersistedState("proj2-currentRevenue", 0);
-  const [currentTeams, setCurrentTeams] = usePersistedState("proj2-currentTeams", 1);
+  const [currentHeadcount, setCurrentHeadcount] = usePersistedState("proj2-currentHeadcount", 0);
   const [retentionLossPerDay, setRetentionLossPerDay] = usePersistedState("proj2-retentionLossPerDay", 200);
 
   const [attendanceRate, setAttendanceRate] = usePersistedState("proj2-attendanceRate", DEFAULT_ATTENDANCE_RATE);
@@ -198,6 +198,7 @@ function Projections2Content() {
     ? Math.ceil(dtgAdjusted / oneTeamRecurringByDeadline) : 0;
   const newHeadcountNeeded = teamsToHitDtg * (bookersPerCloser + 1);
   const totalDealsNeeded = dealValuePerWeek > 0 ? Math.ceil(dtgAdjusted / dealValuePerWeek) : 0;
+  const currentTeams = bookersPerCloser > 0 ? Math.floor(currentHeadcount / (bookersPerCloser + 1)) : 0;
   const additionalTeamsNeeded = Math.max(0, teamsToHitDtg - currentTeams);
   const additionalHeadcount = additionalTeamsNeeded * (bookersPerCloser + 1);
   const totalHeadcount2 = teamsToHitDtg * (bookersPerCloser + 1);
@@ -439,8 +440,9 @@ function Projections2Content() {
               <input type="number" value={retentionLossPerDay} onChange={e => setRetentionLossPerDay(Math.max(0, parseInt(e.target.value) || 0))} className="bg-white border border-slate-300 rounded-xl text-slate-900 font-bold px-3 py-2 w-full focus:outline-none focus:border-red-400" step={50} />
             </div>
             <div>
-              <label className="block text-slate-500 text-xs mb-1">Current Teams Running</label>
-              <input type="number" value={currentTeams} onChange={e => setCurrentTeams(Math.max(0, parseInt(e.target.value) || 0))} className="bg-white border border-slate-300 rounded-xl text-slate-900 font-bold px-3 py-2 w-full focus:outline-none focus:border-purple-400" step={1} min={0} />
+              <label className="block text-slate-500 text-xs mb-1">Current Team Members</label>
+              <input type="number" value={currentHeadcount} onChange={e => setCurrentHeadcount(Math.max(0, parseInt(e.target.value) || 0))} className="bg-white border border-slate-300 rounded-xl text-slate-900 font-bold px-3 py-2 w-full focus:outline-none focus:border-purple-400" step={1} min={0} />
+              <p className="text-slate-400 text-xs mt-1">= {currentTeams} team{currentTeams !== 1 ? 's' : ''} at {bookersPerCloser}:1 ratio</p>
             </div>
           </div>
 
@@ -498,7 +500,7 @@ function Projections2Content() {
             <div className="bg-orange-50 border border-orange-300 rounded-xl px-5 py-2.5 text-center min-w-[150px]">
               <p className="text-orange-600 text-xs font-semibold uppercase tracking-wide">Additional Hires Needed</p>
               <p className="text-orange-500 font-bold text-3xl">{additionalHeadcount}</p>
-              <p className="text-slate-400 text-xs">you have {currentTeams} team{currentTeams !== 1 ? 's' : ''} · need {teamsToHitDtg} total</p>
+              <p className="text-slate-400 text-xs">{currentHeadcount} now · need {totalHeadcount2} total</p>
             </div>
             <div className="text-xs text-slate-500 flex-1 space-y-1">
               <p>📍 Gap: {fmtCurrency(currentRevenue)} → {fmtCurrency(eoyTarget)}/wk = <strong className="text-slate-800">{fmtCurrency(dtg)}/wk</strong> to add</p>
