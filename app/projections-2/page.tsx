@@ -169,14 +169,16 @@ function Projections2Content() {
   const teamsNeeded = _revPerTeamYear > 0 ? Math.ceil(eoyTarget / _revPerTeamYear) : 0;
   const headcountNeeded = teamsNeeded * (bookersPerCloser + 1);
 
-  // ── DTG calculations ──
+  // ── DTG calculations (all figures are weekly recurring revenue) ──
+  // eoyTarget = weekly recurring revenue target
+  // currentRevenue = current weekly recurring revenue
+  // retentionLossPerDay = weekly recurring revenue lost per day to churn
   const remainingWorkingDays = weeksLeft * 5;
-  const totalRetentionLoss = retentionLossPerDay * remainingWorkingDays;
-  const dtg = Math.max(0, eoyTarget - currentRevenue);
-  const dtgAdjusted = dtg + totalRetentionLoss;   // must earn this PLUS cover daily churn
-  const dtgPerDay = remainingWorkingDays > 0 ? dtgAdjusted / remainingWorkingDays : 0;
-  const dtgPerWeek = dtgPerDay * 5;
-  const teamsToHitDtg = teamWeeklyRevenue > 0 ? Math.ceil(dtgPerWeek / teamWeeklyRevenue) : 0;
+  const retentionLossPerWeek = retentionLossPerDay * 5;
+  const dtg = Math.max(0, eoyTarget - currentRevenue);           // weekly recurring gap
+  const dtgAdjusted = dtg + retentionLossPerWeek;                // gap + weekly churn to offset
+  const dtgPerDay = dtgAdjusted / 5;                             // spread across working days
+  const teamsToHitDtg = teamWeeklyRevenue > 0 ? Math.ceil(dtgAdjusted / teamWeeklyRevenue) : 0;
 
   const leadGenData = useMemo(() => {
     const { daysInMonth } = getMonthData(viewYear, viewMonth);
@@ -374,17 +376,21 @@ function Projections2Content() {
           <p className="text-slate-700 text-sm font-semibold mb-3">🎯 EOY Target &amp; Distance to Go</p>
 
           {/* Input row */}
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-4">
+            <p className="text-blue-700 text-xs font-semibold mb-1">ℹ️ All figures below are <strong>weekly recurring revenue ($)</strong> — not totals</p>
+            <p className="text-blue-600 text-xs">e.g. target = $250k/wk recurring · current = $142k/wk recurring · loss = churn per working day</p>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
             <div>
-              <label className="block text-slate-500 text-xs mb-1">EOY Revenue Target ($)</label>
-              <input type="number" value={eoyTarget} onChange={e => setEoyTarget(Math.max(0, parseInt(e.target.value) || 0))} className="bg-white border border-slate-300 rounded-xl text-slate-900 font-bold px-3 py-2 w-full focus:outline-none focus:border-blue-400" step={10000} />
+              <label className="block text-slate-500 text-xs mb-1">Weekly Recurring Target ($/wk)</label>
+              <input type="number" value={eoyTarget} onChange={e => setEoyTarget(Math.max(0, parseInt(e.target.value) || 0))} className="bg-white border border-slate-300 rounded-xl text-slate-900 font-bold px-3 py-2 w-full focus:outline-none focus:border-blue-400" step={1000} />
             </div>
             <div>
-              <label className="block text-slate-500 text-xs mb-1">Revenue So Far ($)</label>
+              <label className="block text-slate-500 text-xs mb-1">Current Weekly Recurring ($/wk)</label>
               <input type="number" value={currentRevenue} onChange={e => setCurrentRevenue(Math.max(0, parseInt(e.target.value) || 0))} className="bg-white border border-slate-300 rounded-xl text-slate-900 font-bold px-3 py-2 w-full focus:outline-none focus:border-emerald-400" step={1000} placeholder="0" />
             </div>
             <div>
-              <label className="block text-slate-500 text-xs mb-1">Retention Loss / Day ($)</label>
+              <label className="block text-slate-500 text-xs mb-1">Retention Churn / Working Day ($)</label>
               <input type="number" value={retentionLossPerDay} onChange={e => setRetentionLossPerDay(Math.max(0, parseInt(e.target.value) || 0))} className="bg-white border border-slate-300 rounded-xl text-slate-900 font-bold px-3 py-2 w-full focus:outline-none focus:border-red-400" step={50} />
             </div>
           </div>
@@ -392,9 +398,9 @@ function Projections2Content() {
           {/* Progress bar */}
           <div className="mb-4">
             <div className="flex justify-between text-xs text-slate-500 mb-1">
-              <span>{fmtCurrency(currentRevenue)} earned</span>
-              <span>{eoyTarget > 0 ? Math.min(100, Math.round((currentRevenue / eoyTarget) * 100)) : 0}% of target</span>
-              <span>{fmtCurrency(eoyTarget)} target</span>
+              <span>{fmtCurrency(currentRevenue)}/wk now</span>
+              <span>{eoyTarget > 0 ? Math.min(100, Math.round((currentRevenue / eoyTarget) * 100)) : 0}% of weekly target</span>
+              <span>{fmtCurrency(eoyTarget)}/wk target</span>
             </div>
             <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
               <div
@@ -407,42 +413,43 @@ function Projections2Content() {
           {/* DTG stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
             <div className="bg-red-50 rounded-xl p-3 text-center border border-red-200">
-              <p className="text-red-500 text-xs mb-0.5">Distance to Go</p>
+              <p className="text-red-500 text-xs mb-0.5">Weekly Gap</p>
               <p className="text-red-700 font-bold text-xl tabular-nums">{fmtCurrency(dtg)}</p>
-              <p className="text-slate-400 text-xs">raw gap</p>
+              <p className="text-slate-400 text-xs">/wk more recurring needed</p>
             </div>
             <div className="bg-orange-50 rounded-xl p-3 text-center border border-orange-200">
-              <p className="text-orange-500 text-xs mb-0.5">Adjusted DTG</p>
+              <p className="text-orange-500 text-xs mb-0.5">Adjusted Weekly Gap</p>
               <p className="text-orange-700 font-bold text-xl tabular-nums">{fmtCurrency(dtgAdjusted)}</p>
-              <p className="text-slate-400 text-xs">incl. {fmtCurrency(totalRetentionLoss)} churn</p>
+              <p className="text-slate-400 text-xs">incl. {fmtCurrency(retentionLossPerWeek)}/wk churn</p>
             </div>
             <div className="bg-slate-50 rounded-xl p-3 text-center border border-slate-200">
-              <p className="text-slate-500 text-xs mb-0.5">Need Per Day</p>
+              <p className="text-slate-500 text-xs mb-0.5">New Recurring / Day</p>
               <p className="text-slate-900 font-bold text-xl tabular-nums">{fmtCurrency(dtgPerDay)}</p>
-              <p className="text-slate-400 text-xs">{remainingWorkingDays} working days left</p>
+              <p className="text-slate-400 text-xs">to close gap in 1 week</p>
             </div>
             <div className="bg-slate-50 rounded-xl p-3 text-center border border-slate-200">
-              <p className="text-slate-500 text-xs mb-0.5">Need Per Week</p>
-              <p className="text-slate-900 font-bold text-xl tabular-nums">{fmtCurrency(dtgPerWeek)}</p>
-              <p className="text-slate-400 text-xs">{weeksLeft} weeks left</p>
+              <p className="text-slate-500 text-xs mb-0.5">Deals / Week Needed</p>
+              <p className="text-slate-900 font-bold text-xl tabular-nums">{dealValue > 0 ? Math.ceil(dtgAdjusted / (dealValue / 4.33)) : '—'}</p>
+              <p className="text-slate-400 text-xs">at {fmtCurrency(dealValue)}/mo per deal</p>
             </div>
           </div>
 
           {/* Teams needed */}
           <div className="flex flex-wrap items-end gap-3">
-            <div className="bg-slate-50 rounded-xl px-4 py-2.5 text-center min-w-[120px] border border-slate-200">
-              <p className="text-slate-400 text-xs">Teams to Hit DTG</p>
+            <div className="bg-slate-50 rounded-xl px-4 py-2.5 text-center min-w-[130px] border border-slate-200">
+              <p className="text-slate-400 text-xs">New Teams Needed</p>
               <p className="text-slate-900 font-bold text-2xl">{teamsToHitDtg}</p>
               <p className="text-slate-400 text-xs">at {fmtCurrency(teamWeeklyRevenue)}/wk each</p>
             </div>
             <div className="bg-orange-50 border border-orange-300 rounded-xl px-5 py-2.5 text-center min-w-[150px]">
-              <p className="text-orange-600 text-xs font-semibold uppercase tracking-wide">Headcount Needed</p>
+              <p className="text-orange-600 text-xs font-semibold uppercase tracking-wide">New Headcount Needed</p>
               <p className="text-orange-500 font-bold text-3xl">{teamsToHitDtg * (bookersPerCloser + 1)}</p>
               <p className="text-slate-400 text-xs">at {bookersPerCloser}:1 ratio</p>
             </div>
-            <div className="text-xs text-slate-400 flex-1">
-              <p>Retention loss: {fmtCurrency(retentionLossPerDay)}/day × {remainingWorkingDays} days = <strong className="text-slate-600">{fmtCurrency(totalRetentionLoss)}</strong> total churn to offset</p>
-              <p className="mt-0.5">Each team generating {fmtCurrency(teamWeeklyRevenue)}/wk net of churn</p>
+            <div className="text-xs text-slate-400 flex-1 space-y-0.5">
+              <p>Weekly gap: {fmtCurrency(dtg)}/wk + churn {fmtCurrency(retentionLossPerWeek)}/wk = <strong className="text-slate-600">{fmtCurrency(dtgAdjusted)}/wk</strong> to add</p>
+              <p>Each new team adds ~{fmtCurrency(teamWeeklyRevenue)}/wk recurring</p>
+              <p>Churn: {fmtCurrency(retentionLossPerDay)}/day × 5 = {fmtCurrency(retentionLossPerWeek)}/wk erosion</p>
             </div>
           </div>
         </div>
