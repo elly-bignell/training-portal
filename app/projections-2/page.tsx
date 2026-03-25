@@ -173,12 +173,30 @@ function Projections2Content() {
   // eoyTarget = weekly recurring revenue target
   // currentRevenue = current weekly recurring revenue
   // retentionLossPerDay = weekly recurring revenue lost per day to churn
-  const remainingWorkingDays = weeksLeft * 5;
   const retentionLossPerWeek = retentionLossPerDay * 5;
-  const dtg = Math.max(0, eoyTarget - currentRevenue);           // weekly recurring gap
-  const dtgAdjusted = dtg + retentionLossPerWeek;                // gap + weekly churn to offset
-  const dtgPerDay = dtgAdjusted / 5;                             // spread across working days
-  const teamsToHitDtg = teamWeeklyRevenue > 0 ? Math.ceil(dtgAdjusted / teamWeeklyRevenue) : 0;
+
+  // Target: 17 December 2026
+  const _targetDate = new Date(2026, 11, 17);
+  const _msPerDay = 24 * 60 * 60 * 1000;
+  const _totalCalDays = Math.ceil((_targetDate.getTime() - _now.getTime()) / _msPerDay);
+  const _totalWeeks = _totalCalDays / 7;
+  const workingDaysLeft = Math.round(_totalWeeks * 5);
+  const weeksToTarget = Math.round(_totalWeeks * 10) / 10;
+
+  // Weekly recurring gap (all in $/wk)
+  const dtg = Math.max(0, eoyTarget - currentRevenue);
+  const totalChurnErosion = retentionLossPerWeek * weeksToTarget;
+  const dtgAdjusted = dtg + totalChurnErosion;
+
+  // 1 team stacks new recurring each week until Dec 17
+  const dealValuePerWeek = dealValue / 4.33;
+  const weeklyDealsPerTeam = teamDailyDeals * 5;
+  const oneTeamRecurringByDeadline = weeklyDealsPerTeam * weeksToTarget * dealValuePerWeek;
+
+  const teamsToHitDtg = oneTeamRecurringByDeadline > 0
+    ? Math.ceil(dtgAdjusted / oneTeamRecurringByDeadline) : 0;
+  const newHeadcountNeeded = teamsToHitDtg * (bookersPerCloser + 1);
+  const totalDealsNeeded = dealValuePerWeek > 0 ? Math.ceil(dtgAdjusted / dealValuePerWeek) : 0;
 
   const leadGenData = useMemo(() => {
     const { daysInMonth } = getMonthData(viewYear, viewMonth);
