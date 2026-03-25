@@ -236,7 +236,7 @@ function Projections2Content() {
           <h2 className="text-xl font-bold text-slate-900">Team Calculator</h2>
         </div>
         <p className="text-slate-500 text-sm mb-5">
-          Set how many teams you're running and your booker-to-closer ratio. Revenue flows from the funnel cut-throughs below.
+          Set how many teams you&apos;re running and your booker-to-closer ratio. Revenue flows from the funnel cut-throughs below.
         </p>
 
         {/* Team inputs */}
