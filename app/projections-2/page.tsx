@@ -115,6 +115,8 @@ function Projections2Content() {
   const [numTeams, setNumTeams] = usePersistedState("proj2-numTeams", 1);
   const [bookersPerCloser, setBookersPerCloser] = usePersistedState("proj2-bookersPerCloser", 2);
   const [eoyTarget, setEoyTarget] = usePersistedState("proj2-eoyTarget", 250000);
+  const [currentRevenue, setCurrentRevenue] = usePersistedState("proj2-currentRevenue", 0);
+  const [retentionLossPerDay, setRetentionLossPerDay] = usePersistedState("proj2-retentionLossPerDay", 200);
 
   const [attendanceRate, setAttendanceRate] = usePersistedState("proj2-attendanceRate", DEFAULT_ATTENDANCE_RATE);
   const [closeRate, setCloseRate] = usePersistedState("proj2-closeRate", DEFAULT_CLOSE_RATE);
@@ -166,6 +168,15 @@ function Projections2Content() {
   const _revPerTeamYear = weeklyRevenue * weeksLeft;
   const teamsNeeded = _revPerTeamYear > 0 ? Math.ceil(eoyTarget / _revPerTeamYear) : 0;
   const headcountNeeded = teamsNeeded * (bookersPerCloser + 1);
+
+  // ── DTG calculations ──
+  const remainingWorkingDays = weeksLeft * 5;
+  const totalRetentionLoss = retentionLossPerDay * remainingWorkingDays;
+  const dtg = Math.max(0, eoyTarget - currentRevenue);
+  const dtgAdjusted = dtg + totalRetentionLoss;   // must earn this PLUS cover daily churn
+  const dtgPerDay = remainingWorkingDays > 0 ? dtgAdjusted / remainingWorkingDays : 0;
+  const dtgPerWeek = dtgPerDay * 5;
+  const teamsToHitDtg = teamWeeklyRevenue > 0 ? Math.ceil(dtgPerWeek / teamWeeklyRevenue) : 0;
 
   const leadGenData = useMemo(() => {
     const { daysInMonth } = getMonthData(viewYear, viewMonth);
@@ -358,32 +369,82 @@ function Projections2Content() {
           </div>
         </div>
 
-        {/* EOY target */}
+        {/* EOY target + DTG */}
         <div className="border-t border-slate-200 pt-4 mb-5">
-          <p className="text-slate-700 text-sm font-semibold mb-3">🎯 How many teams to hit your EOY target?</p>
-          <div className="flex flex-wrap items-end gap-4">
+          <p className="text-slate-700 text-sm font-semibold mb-3">🎯 EOY Target &amp; Distance to Go</p>
+
+          {/* Input row */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
             <div>
               <label className="block text-slate-500 text-xs mb-1">EOY Revenue Target ($)</label>
-              <input type="number" value={eoyTarget} onChange={e => setEoyTarget(Math.max(0, parseInt(e.target.value) || 0))} className="bg-white border border-slate-300 rounded-xl text-slate-900 font-bold px-3 py-2 w-44 focus:outline-none focus:border-blue-400" step={10000} />
+              <input type="number" value={eoyTarget} onChange={e => setEoyTarget(Math.max(0, parseInt(e.target.value) || 0))} className="bg-white border border-slate-300 rounded-xl text-slate-900 font-bold px-3 py-2 w-full focus:outline-none focus:border-blue-400" step={10000} />
             </div>
-            <div className="bg-slate-50 rounded-xl px-4 py-2.5 text-center min-w-[100px] border border-slate-200">
-              <p className="text-slate-400 text-xs">Weeks Left</p>
-              <p className="text-slate-900 font-bold text-2xl">{weeksLeft}</p>
+            <div>
+              <label className="block text-slate-500 text-xs mb-1">Revenue So Far ($)</label>
+              <input type="number" value={currentRevenue} onChange={e => setCurrentRevenue(Math.max(0, parseInt(e.target.value) || 0))} className="bg-white border border-slate-300 rounded-xl text-slate-900 font-bold px-3 py-2 w-full focus:outline-none focus:border-emerald-400" step={1000} placeholder="0" />
             </div>
+            <div>
+              <label className="block text-slate-500 text-xs mb-1">Retention Loss / Day ($)</label>
+              <input type="number" value={retentionLossPerDay} onChange={e => setRetentionLossPerDay(Math.max(0, parseInt(e.target.value) || 0))} className="bg-white border border-slate-300 rounded-xl text-slate-900 font-bold px-3 py-2 w-full focus:outline-none focus:border-red-400" step={50} />
+            </div>
+          </div>
+
+          {/* Progress bar */}
+          <div className="mb-4">
+            <div className="flex justify-between text-xs text-slate-500 mb-1">
+              <span>{fmtCurrency(currentRevenue)} earned</span>
+              <span>{eoyTarget > 0 ? Math.min(100, Math.round((currentRevenue / eoyTarget) * 100)) : 0}% of target</span>
+              <span>{fmtCurrency(eoyTarget)} target</span>
+            </div>
+            <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+              <div
+                className="h-3 rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600 transition-all duration-500"
+                style={{ width: `${eoyTarget > 0 ? Math.min(100, (currentRevenue / eoyTarget) * 100) : 0}%` }}
+              />
+            </div>
+          </div>
+
+          {/* DTG stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+            <div className="bg-red-50 rounded-xl p-3 text-center border border-red-200">
+              <p className="text-red-500 text-xs mb-0.5">Distance to Go</p>
+              <p className="text-red-700 font-bold text-xl tabular-nums">{fmtCurrency(dtg)}</p>
+              <p className="text-slate-400 text-xs">raw gap</p>
+            </div>
+            <div className="bg-orange-50 rounded-xl p-3 text-center border border-orange-200">
+              <p className="text-orange-500 text-xs mb-0.5">Adjusted DTG</p>
+              <p className="text-orange-700 font-bold text-xl tabular-nums">{fmtCurrency(dtgAdjusted)}</p>
+              <p className="text-slate-400 text-xs">incl. {fmtCurrency(totalRetentionLoss)} churn</p>
+            </div>
+            <div className="bg-slate-50 rounded-xl p-3 text-center border border-slate-200">
+              <p className="text-slate-500 text-xs mb-0.5">Need Per Day</p>
+              <p className="text-slate-900 font-bold text-xl tabular-nums">{fmtCurrency(dtgPerDay)}</p>
+              <p className="text-slate-400 text-xs">{remainingWorkingDays} working days left</p>
+            </div>
+            <div className="bg-slate-50 rounded-xl p-3 text-center border border-slate-200">
+              <p className="text-slate-500 text-xs mb-0.5">Need Per Week</p>
+              <p className="text-slate-900 font-bold text-xl tabular-nums">{fmtCurrency(dtgPerWeek)}</p>
+              <p className="text-slate-400 text-xs">{weeksLeft} weeks left</p>
+            </div>
+          </div>
+
+          {/* Teams needed */}
+          <div className="flex flex-wrap items-end gap-3">
             <div className="bg-slate-50 rounded-xl px-4 py-2.5 text-center min-w-[120px] border border-slate-200">
-              <p className="text-slate-400 text-xs">Teams Needed</p>
-              <p className="text-slate-900 font-bold text-2xl">{teamsNeeded}</p>
-              <p className="text-slate-400 text-xs">closer units</p>
+              <p className="text-slate-400 text-xs">Teams to Hit DTG</p>
+              <p className="text-slate-900 font-bold text-2xl">{teamsToHitDtg}</p>
+              <p className="text-slate-400 text-xs">at {fmtCurrency(teamWeeklyRevenue)}/wk each</p>
             </div>
             <div className="bg-orange-50 border border-orange-300 rounded-xl px-5 py-2.5 text-center min-w-[150px]">
               <p className="text-orange-600 text-xs font-semibold uppercase tracking-wide">Headcount Needed</p>
-              <p className="text-orange-500 font-bold text-3xl">{headcountNeeded}</p>
+              <p className="text-orange-500 font-bold text-3xl">{teamsToHitDtg * (bookersPerCloser + 1)}</p>
               <p className="text-slate-400 text-xs">at {bookersPerCloser}:1 ratio</p>
             </div>
+            <div className="text-xs text-slate-400 flex-1">
+              <p>Retention loss: {fmtCurrency(retentionLossPerDay)}/day × {remainingWorkingDays} days = <strong className="text-slate-600">{fmtCurrency(totalRetentionLoss)}</strong> total churn to offset</p>
+              <p className="mt-0.5">Each team generating {fmtCurrency(teamWeeklyRevenue)}/wk net of churn</p>
+            </div>
           </div>
-          <p className="text-slate-400 text-xs mt-3">
-            Based on {weeksLeft} weeks remaining in {_now.getFullYear()} &amp; {fmtCurrency(teamWeeklyRevenue)}/week per team from your inputs below.
-          </p>
         </div>
 
         {/* Benchmark data */}
