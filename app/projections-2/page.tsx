@@ -471,19 +471,20 @@ function Projections2Content() {
           {/* Teams needed */}
           <div className="flex flex-wrap items-end gap-3">
             <div className="bg-slate-50 rounded-xl px-4 py-2.5 text-center min-w-[130px] border border-slate-200">
-              <p className="text-slate-400 text-xs">New Teams Needed</p>
+              <p className="text-slate-400 text-xs">Additional Teams Needed</p>
               <p className="text-slate-900 font-bold text-2xl">{teamsToHitDtg}</p>
-              <p className="text-slate-400 text-xs">at {fmtCurrency(teamWeeklyRevenue)}/wk each</p>
+              <p className="text-slate-400 text-xs">on top of existing teams</p>
             </div>
             <div className="bg-orange-50 border border-orange-300 rounded-xl px-5 py-2.5 text-center min-w-[150px]">
-              <p className="text-orange-600 text-xs font-semibold uppercase tracking-wide">New Headcount Needed</p>
-              <p className="text-orange-500 font-bold text-3xl">{teamsToHitDtg * (bookersPerCloser + 1)}</p>
-              <p className="text-slate-400 text-xs">at {bookersPerCloser}:1 ratio</p>
+              <p className="text-orange-600 text-xs font-semibold uppercase tracking-wide">Additional Headcount Needed</p>
+              <p className="text-orange-500 font-bold text-3xl">{newHeadcountNeeded}</p>
+              <p className="text-slate-400 text-xs">new hires · {bookersPerCloser}:1 ratio</p>
             </div>
-            <div className="text-xs text-slate-400 flex-1 space-y-0.5">
-              <p>Weekly gap: {fmtCurrency(dtg)}/wk + churn {fmtCurrency(retentionLossPerWeek)}/wk = <strong className="text-slate-600">{fmtCurrency(dtgAdjusted)}/wk</strong> to add</p>
-              <p>Each new team adds ~{fmtCurrency(teamWeeklyRevenue)}/wk recurring</p>
-              <p>Churn: {fmtCurrency(retentionLossPerDay)}/day × 5 = {fmtCurrency(retentionLossPerWeek)}/wk erosion</p>
+            <div className="text-xs text-slate-500 flex-1 space-y-1">
+              <p>📍 Gap: {fmtCurrency(currentRevenue)} → {fmtCurrency(eoyTarget)}/wk = <strong className="text-slate-800">{fmtCurrency(dtg)}/wk</strong> to add</p>
+              <p>🔁 Churn: {fmtCurrency(retentionLossPerWeek)}/wk × {weeksToTarget} wks = <strong className="text-slate-800">{fmtCurrency(Math.round(totalChurnErosion))}</strong> to replace</p>
+              <p>🎯 Total new recurring to build: <strong className="text-slate-800">{fmtCurrency(Math.round(dtgAdjusted))}</strong></p>
+              <p>📈 1 team closes {fmt(weeklyDealsPerTeam)} deals/wk × {weeksToTarget} wks × {fmtCurrency(Math.round(dealValuePerWeek))}/wk = <strong className="text-slate-800">{fmtCurrency(Math.round(oneTeamRecurringByDeadline))}</strong> recurring by Dec 17</p>
             </div>
           </div>
         </div>
