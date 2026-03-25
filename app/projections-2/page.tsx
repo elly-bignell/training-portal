@@ -381,19 +381,19 @@ function Projections2Content() {
                   <td className="py-2 text-center font-semibold text-emerald-600 tabular-nums">{fmt(teamDailyDeals * 5)}</td>
                   <td className="py-2 text-center font-semibold text-emerald-600 tabular-nums">{fmt(teamDailyDeals * 21)}</td>
                 </tr>
-                <tr className="bg-amber-50/40">
-                  <td className="py-2 text-slate-700 font-bold">💰 Revenue (Weekly)</td>
-                  <td className="py-2 text-center text-xs text-slate-400">{fmtCurrency(Math.round(dealValuePerWeek))}/wk</td>
-                  <td className="py-2 text-center font-bold text-slate-900 tabular-nums">{fmtCurrency(teamDailyRevenue)}/day</td>
-                  <td className="py-2 text-center font-bold text-slate-900 tabular-nums">{fmtCurrency(teamWeeklyRevenue)}/wk</td>
-                  <td className="py-2 text-center font-bold text-slate-900 tabular-nums">{fmtCurrency(teamWeeklyRevenue * 4.33)}/mo</td>
-                </tr>
                 <tr className="bg-amber-50/60">
                   <td className="py-2 text-slate-700 font-bold">💰 Revenue (Monthly)</td>
                   <td className="py-2 text-center text-xs text-slate-400">{fmtCurrency(dealValue)}/mo/deal</td>
-                  <td className="py-2 text-center font-bold text-amber-700 tabular-nums">{fmtCurrency(teamDailyRevenue * 4.33)}</td>
-                  <td className="py-2 text-center font-bold text-amber-700 tabular-nums">{fmtCurrency(teamWeeklyRevenue * 4.33)}</td>
-                  <td className="py-2 text-center font-bold text-amber-700 tabular-nums">{fmtCurrency(teamMonthlyRevenue)}</td>
+                  <td className="py-2 text-center font-bold text-amber-700 tabular-nums">{fmtCurrency(Math.round(teamDailyDeals * dealValue))}</td>
+                  <td className="py-2 text-center font-bold text-amber-700 tabular-nums">{fmtCurrency(Math.round(teamDailyDeals * 5 * dealValue))}</td>
+                  <td className="py-2 text-center font-bold text-amber-700 tabular-nums">{fmtCurrency(Math.round(teamDailyDeals * 21 * dealValue))}</td>
+                </tr>
+                <tr className="bg-amber-50/30">
+                  <td className="py-2 text-slate-700 font-bold">💰 Revenue (Weekly)</td>
+                  <td className="py-2 text-center text-xs text-slate-400">{fmtCurrency(Math.round(dealValuePerWeek))}/wk/deal</td>
+                  <td className="py-2 text-center font-bold text-slate-700 tabular-nums">{fmtCurrency(Math.round(teamDailyDeals * dealValuePerWeek))}</td>
+                  <td className="py-2 text-center font-bold text-slate-700 tabular-nums">{fmtCurrency(Math.round(teamDailyDeals * 5 * dealValuePerWeek))}</td>
+                  <td className="py-2 text-center font-bold text-slate-700 tabular-nums">{fmtCurrency(Math.round(teamDailyDeals * 21 * dealValuePerWeek))}</td>
                 </tr>
               </tbody>
             </table>
@@ -488,17 +488,17 @@ function Projections2Content() {
             <div className="bg-slate-50 rounded-xl px-4 py-2.5 text-center min-w-[130px] border border-slate-200">
               <p className="text-slate-400 text-xs">Total Teams Needed</p>
               <p className="text-slate-900 font-bold text-2xl">{teamsToHitDtg}</p>
-              <p className="text-slate-400 text-xs">{additionalTeamsNeeded} additional to hire</p>
+              <p className="text-slate-400 text-xs">{fmtCurrency(Math.round(oneTeamRecurringByDeadline))} each by Dec 17</p>
             </div>
             <div className="bg-slate-50 rounded-xl px-4 py-2.5 text-center min-w-[130px] border border-slate-200">
               <p className="text-slate-400 text-xs">Total Team Members</p>
               <p className="text-slate-900 font-bold text-2xl">{totalHeadcount2}</p>
-              <p className="text-slate-400 text-xs">{additionalHeadcount} new hires needed</p>
+              <p className="text-slate-400 text-xs">across {teamsToHitDtg} teams</p>
             </div>
             <div className="bg-orange-50 border border-orange-300 rounded-xl px-5 py-2.5 text-center min-w-[150px]">
               <p className="text-orange-600 text-xs font-semibold uppercase tracking-wide">Additional Hires Needed</p>
               <p className="text-orange-500 font-bold text-3xl">{additionalHeadcount}</p>
-              <p className="text-slate-400 text-xs">{additionalTeamsNeeded} teams · {bookersPerCloser}:1 ratio</p>
+              <p className="text-slate-400 text-xs">you have {currentTeams} team{currentTeams !== 1 ? 's' : ''} · need {teamsToHitDtg} total</p>
             </div>
             <div className="text-xs text-slate-500 flex-1 space-y-1">
               <p>📍 Gap: {fmtCurrency(currentRevenue)} → {fmtCurrency(eoyTarget)}/wk = <strong className="text-slate-800">{fmtCurrency(dtg)}/wk</strong> to add</p>
