@@ -117,6 +117,7 @@ function ProjectionsContent() {
 
   const [attendanceRate, setAttendanceRate] = usePersistedState("proj-attendanceRate", DEFAULT_ATTENDANCE_RATE);
   const [closeRate, setCloseRate] = usePersistedState("proj-closeRate", DEFAULT_CLOSE_RATE);
+  const [pipeRate, setPipeRate] = usePersistedState("proj-pipeRate", 0.75);
 
   const today = new Date();
   const [viewMonth, setViewMonth] = useState(today.getMonth());
@@ -126,14 +127,16 @@ function ProjectionsContent() {
   const nextMonth = () => { if (viewMonth === 11) { setViewMonth(0); setViewYear(viewYear + 1); } else setViewMonth(viewMonth + 1); };
 
   const attendedPerHour = bookingsPerHour * attendanceRate;
-  const dealsPerHour = attendedPerHour * closeRate;
+  const pipePerHour = attendedPerHour * pipeRate;
+  const dealsPerHour = pipePerHour * closeRate;
   const revenuePerHour = dealsPerHour * dealValue;
 
   const dailyCalls = phoneHours * callsPerHour;
   const dailyConnects = phoneHours * connectsPerHour;
   const dailyBookings = phoneHours * bookingsPerHour;
   const dailyAttended = dailyBookings * attendanceRate;
-  const dailyDeals = dailyAttended * closeRate;
+  const dailyPipe = dailyAttended * pipeRate;
+  const dailyDeals = dailyPipe * closeRate;
   const dailyRevenue = dailyDeals * dealValue;
 
   const leadGenData = useMemo(() => {
@@ -170,7 +173,7 @@ function ProjectionsContent() {
       if (isWeekday(viewYear, viewMonth, d)) {
         const attended = meetingMap[d] || 0;
         const scheduled = attended > 0 ? attended / attendanceRate : 0;
-        const deals = attended * closeRate;
+        const deals = attended * pipeRate * closeRate;
         const revenue = deals * dealValue;
         data.push({ day: d, meetingsScheduled: Number(scheduled.toFixed(2)), meetingsAttended: Number(attended.toFixed(2)), deals: Number(deals.toFixed(2)), revenue: Math.round(revenue), weekNumber: getWeekNumber(viewYear, viewMonth, d) });
       }
@@ -590,11 +593,18 @@ function ProjectionsContent() {
                   <td className="py-2.5 text-center text-gray-400">of Bookings</td>
                 </tr>
                 <tr className="border-b border-gray-100">
+                  <td className="py-2.5 font-medium text-gray-700">📋 Added to Pipe</td>
+                  <td className="py-2.5 text-center text-slate-900 font-bold tabular-nums">{fmt(pipePerHour)}</td>
+                  <td className="py-2.5 text-center text-gray-600 font-semibold tabular-nums">{fmt(dailyPipe)}</td>
+                  <td className="py-2.5 text-center"><FunnelInput value={Math.round(pipeRate * 100)} onChange={(v) => setPipeRate(Math.min(1, v / 100))} step={5} min={1} width="w-12" suffix="%" /></td>
+                  <td className="py-2.5 text-center text-gray-400">of Attended</td>
+                </tr>
+                <tr className="border-t border-gray-100">
                   <td className="py-2.5 font-medium text-gray-700">🏆 Deals</td>
                   <td className="py-2.5 text-center text-slate-900 font-bold tabular-nums">{fmt(dealsPerHour)}</td>
                   <td className="py-2.5 text-center text-gray-600 font-semibold tabular-nums">{fmt(dailyDeals)}</td>
                   <td className="py-2.5 text-center"><FunnelInput value={Math.round(closeRate * 100)} onChange={(v) => setCloseRate(Math.min(1, v / 100))} step={5} min={1} width="w-12" suffix="%" /></td>
-                  <td className="py-2.5 text-center text-gray-400">of Attended</td>
+                  <td className="py-2.5 text-center text-gray-400">of Pipe</td>
                 </tr>
                 <tr className="border-b border-gray-100">
                   <td className="py-2.5 font-medium text-gray-700">💰 Revenue</td>
@@ -607,7 +617,7 @@ function ProjectionsContent() {
             </table>
           </div>
           <div className="mt-3 text-[10px] text-gray-400">
-            Revenue calculated at {fmtCurrency(dealValue)} per deal (monthly value). Bookings → Attended: {pct(attendanceRate)}. Attended → Deals: {pct(closeRate)}. Meetings occur 3–5 business days after booking.
+            Revenue calculated at {fmtCurrency(dealValue)} per deal (monthly value). Bookings → Attended: {pct(attendanceRate)}. Attended → Pipe: {pct(pipeRate)}. Pipe → Deals: {pct(closeRate)}. Meetings occur 3–5 business days after booking.
           </div>
         </div>
 
