@@ -1136,7 +1136,7 @@ export default function PipelineManagement() {
                     <span className="font-black" style={{ color: weekColors[r.bucket] }}>{r.bucket}</span>
                     {' '}— we should be at{' '}
                     <span className="font-semibold text-gray-900">{fmt$(r.todayTarget)}</span>
-                    {' '}today (full week: {fmt$(r.fullWeekTarget)} · {fmt$(Math.round(r.fullWeekTarget / 4.33))}/wk).{' '}
+                    {' '}today ({fmt$(Math.round(r.todayTarget / 4.33))}/wk · full week: {fmt$(r.fullWeekTarget)} · {fmt$(Math.round(r.fullWeekTarget / 4.33))}/wk).{' '}
                     We are at{' '}
                     <span className={`font-black ${r.current >= r.todayTarget ? 'text-emerald-600' : r.current > 0 ? 'text-amber-600' : 'text-red-500'}`}>
                       {r.current > 0 ? `${fmt$(r.current)} (${fmt$(Math.round(r.current / 4.33))}/wk · ${r.currentUnits} units)` : 'nothing logged'}
