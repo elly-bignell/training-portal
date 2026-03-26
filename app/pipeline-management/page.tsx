@@ -847,14 +847,14 @@ export default function PipelineManagement() {
                     <div className="h-full rounded-full transition-all" style={{ width: `${barPct}%`, background: color }} />
                   </div>
 
-                  {/* Three rows: Target / Actual / Variance */}
+                  {/* Three rows: Target (prorated) / Actual / Variance */}
                   <div className="flex flex-col gap-1.5">
 
-                    {/* Target */}
+                    {/* Target = prorated WTD */}
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider w-16">Target</span>
-                      <span className="text-sm font-black text-gray-700">{fmt$(fullTgt)}</span>
-                      <span className="text-[10px] text-gray-400">{targetUnits} units</span>
+                      <span className="text-sm font-black text-gray-700">{fmt$(tgt)}</span>
+                      <span className="text-[10px] text-gray-400">{Math.round(targetUnits * dayOfWeek / 5)} units</span>
                     </div>
 
                     {/* Actual */}
@@ -864,21 +864,23 @@ export default function PipelineManagement() {
                       <span className="text-[10px] text-gray-400">{cur.units} units</span>
                     </div>
 
-                    {/* Variance */}
+                    {/* Variance vs prorated target */}
                     <div className="flex items-center justify-between border-t border-gray-100 pt-1.5">
                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider w-16">Variance</span>
-                      <span className={`text-sm font-black ${varValue >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
-                        {varValue >= 0 ? '+' : ''}{fmt$(varValue)}
+                      <span className={`text-sm font-black ${cur.value - tgt >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                        {cur.value - tgt >= 0 ? '+' : ''}{fmt$(cur.value - tgt)}
                       </span>
-                      <span className={`text-[10px] font-bold ${varValue >= 0 ? 'text-emerald-500' : 'text-red-400'}`}>
-                        {varValue >= 0 ? '+' : ''}{varPct.toFixed(0)}%
+                      <span className={`text-[10px] font-bold ${cur.value - tgt >= 0 ? 'text-emerald-500' : 'text-red-400'}`}>
+                        {tgt > 0 ? `${cur.value - tgt >= 0 ? '+' : ''}${(((cur.value - tgt) / tgt) * 100).toFixed(0)}%` : '—'}
                       </span>
                     </div>
                   </div>
 
-                  {/* Today prorated note */}
-                  <div className="text-[10px] text-gray-400 border-t border-gray-100 pt-1">
-                    Today&apos;s prorated target: {fmt$(tgt)}
+                  {/* Full week target at bottom */}
+                  <div className="flex items-center justify-between border-t border-gray-100 pt-2">
+                    <span className="text-[10px] text-gray-400">Full week target</span>
+                    <span className="text-[10px] font-black text-gray-500">{fmt$(fullTgt)}</span>
+                    <span className="text-[10px] text-gray-400">{targetUnits} units</span>
                   </div>
                 </div>
               );
