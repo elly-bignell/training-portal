@@ -869,55 +869,6 @@ export default function PipelineManagement() {
               );
             })()}
 
-            {/* ── Total summary row ── */}
-            {(() => {
-              const totalTarget = fullWeekTargets.total;
-              const totalTargetWTD = totalTarget * (dayOfWeek / 5);
-              const totalTargetUnits = Math.round(fullWeekTargets.dealsInPipe);
-              const totalTargetUnitsWTD = Math.round(totalTargetUnits * dayOfWeek / 5);
-              const totalActual = execSummary.totalCurrentPipe;
-              const totalActualUnits = execSummary.totalCurrentUnits;
-              const varWTD = totalActual - totalTargetWTD;
-              const varWTDPct = totalTargetWTD > 0 ? (varWTD / totalTargetWTD) * 100 : 0;
-              const varFull = totalActual - totalTarget;
-              return (
-                <div className="rounded-2xl border-2 border-gray-300 bg-gray-50 p-5">
-                  <div className="text-xs font-black uppercase tracking-widest text-gray-500 mb-4">Combined Pipeline — All Weeks</div>
-                  <div className="grid grid-cols-3 gap-6">
-                    <div className="flex flex-col gap-1">
-                      <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Target (WTD)</div>
-                      <div className="text-xl font-black text-gray-800">{fmt$(totalTargetWTD)}</div>
-                      <div className="text-xs text-gray-500">{fmt$(totalTargetWTD / 4.33)} weekly equiv</div>
-                      <div className="text-xs text-gray-400 mt-0.5">{totalTargetUnitsWTD} units</div>
-                      <div className="text-[10px] text-gray-400 mt-1 pt-1 border-t border-gray-200">Full wk: {fmt$(totalTarget)} · {totalTargetUnits} units</div>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Actual</div>
-                      <div className="text-xl font-black text-gray-800">{fmt$(totalActual)}</div>
-                      <div className="text-xs text-gray-500">{fmt$(totalActual / 4.33)} weekly equiv</div>
-                      <div className="text-xs text-gray-400 mt-0.5">{totalActualUnits} units</div>
-                      <div className="text-[10px] text-gray-400 mt-1 pt-1 border-t border-gray-200">{fmt$(totalActualUnits * dealMonthly)} total MRR</div>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Variance (vs WTD)</div>
-                      <div className={`text-xl font-black ${varWTD >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
-                        {varWTD >= 0 ? '+' : ''}{fmt$(varWTD)}
-                      </div>
-                      <div className={`text-xs font-semibold ${varWTD >= 0 ? 'text-emerald-500' : 'text-red-400'}`}>
-                        {varWTD >= 0 ? '+' : ''}{varWTDPct.toFixed(0)}%
-                      </div>
-                      <div className={`text-xs mt-0.5 ${varWTD >= 0 ? 'text-emerald-500' : 'text-red-400'}`}>
-                        {totalActualUnits - totalTargetUnitsWTD >= 0 ? '+' : ''}{totalActualUnits - totalTargetUnitsWTD} units
-                      </div>
-                      <div className={`text-[10px] mt-1 pt-1 border-t border-gray-200 ${varFull >= 0 ? 'text-emerald-500' : 'text-red-400'}`}>
-                        vs full wk: {varFull >= 0 ? '+' : ''}{fmt$(varFull)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })()}
-
             {/* ── Individual week tiles ── */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {(['Week 1', 'Week 2', 'Week 3', 'Week 4+'] as WeekBucket[]).map(bucket => {
