@@ -38,6 +38,12 @@ function todayStr() {
   return new Date().toISOString().split('T')[0];
 }
 
+function yesterdayStr() {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return d.toISOString().split('T')[0];
+}
+
 function Slider({ label, value, min, max, step, onChange, format, accent = '#f97316' }: {
   label: string; value: number; min: number; max: number; step: number;
   onChange: (v: number) => void; format: (v: number) => string; accent?: string;
@@ -340,6 +346,83 @@ export default function PipelineManagement() {
       dailyLostDeals: closesNeeded / 5,
     };
   }, [weeklyTarget, pipeClose, dealMonthly, tw1, tw2, tw3, tw4]);
+
+  // ── Executive summary data ───────────────────────────────────────────
+  const execSummary = useMemo(() => {
+    const yesterday = yesterdayStr();
+    const yesterdayEntries = entries.filter(e => e.Date === yesterday && e.Type === 'Added');
+    const yesterdayAdded = yesterdayEntries.reduce((a, e) => a + (e.Value || 0), 0);
+    const yesterdayUnits = yesterdayEntries.reduce((a, e) => a + (e.Units || 0), 0);
+    const dailyTarget = fullWeekTargets.dailyAddValue;
+    const yesterdayDiff = yesterdayAdded - dailyTarget;
+
+    // Total current pipe across all buckets
+    const totalCurrentPipe = Object.values(trackerStats.buckets).reduce((a, b) => a + b.value, 0);
+    const totalCurrentUnits = Object.values(trackerStats.buckets).reduce((a, b) => a + b.units, 0);
+
+    // Bucket summaries
+    const bucketRows = (['Week 1', 'Week 2', 'Week 3', 'Week 4+'] as WeekBucket[]).map(b => ({
+      bucket: b,
+      current: trackerStats.buckets[b].value,
+      currentUnits: trackerStats.buckets[b].units,
+      todayTarget: targetPipePerBucket[b],
+      fullWeekTarget: fullWeekTargets[b],
+      diff: trackerStats.buckets[b].value - targetPipePerBucket[b],
+    }));
+
+    // Key takeaways
+    const takeaways: string[] = [];
+
+    // Total pipe vs target
+    const totalPipeTarget = fullWeekTargets.total;
+    const totalPipeDiff = totalCurrentPipe - totalPipeTarget;
+    if (Math.abs(totalPipeDiff) > 200) {
+      takeaways.push(
+        totalPipeDiff >= 0
+          ? `Total pipeline is ${fmt$(totalPipeDiff)} ahead of the full-week target`
+          : `Total pipeline is ${fmt$(Math.abs(totalPipeDiff))} short of the full-week target of ${fmt$(totalPipeTarget)}`
+      );
+    }
+
+    // Yesterday performance
+    if (yesterdayAdded > 0) {
+      takeaways.push(
+        yesterdayDiff >= 0
+          ? `Yesterday exceeded the daily add target by ${fmt$(yesterdayDiff)} (${yesterdayUnits} units added)`
+          : `Yesterday was ${fmt$(Math.abs(yesterdayDiff))} short of the daily add target — only ${fmt$(yesterdayAdded)} added`
+      );
+    } else {
+      takeaways.push(`No pipeline entries logged for yesterday — daily target was ${fmt$(dailyTarget)}`);
+    }
+
+    // Capacity check
+    if (!capacityCalc.onTrack) {
+      takeaways.push(
+        `At current call volume, the team can only generate ${fmt$(capacityCalc.canRevenuePerWeek)}/wk — ${fmt$(Math.abs(capacityCalc.gapWeeklyRevenue))} short of the ${fmt$(weeklyTarget)} target`
+      );
+    } else {
+      takeaways.push(
+        `Team capacity can generate ${fmt$(capacityCalc.canRevenuePerWeek)}/wk — a ${fmt$(capacityCalc.gapWeeklyRevenue)} surplus above target`
+      );
+    }
+
+    // Week-specific flags
+    bucketRows.forEach(r => {
+      if (r.current > 0 && r.diff < -500) {
+        takeaways.push(`${r.bucket} pipeline is ${fmt$(Math.abs(r.diff))} below today's prorated target`);
+      }
+      if (r.current === 0 && r.fullWeekTarget > 0) {
+        takeaways.push(`${r.bucket} has no pipeline logged — target is ${fmt$(r.fullWeekTarget)}`);
+      }
+    });
+
+    // Timing check
+    if (Math.abs(timingSum - 100) > 2) {
+      takeaways.push(`Close timing percentages sum to ${timingSum}% — adjust to reach 100% for accurate projections`);
+    }
+
+    return { yesterdayAdded, yesterdayUnits, yesterdayDiff, dailyTarget, totalCurrentPipe, totalCurrentUnits, bucketRows, takeaways };
+  }, [entries, trackerStats, targetPipePerBucket, fullWeekTargets, capacityCalc, weeklyTarget, timingSum]);
 
   const weekColors: Record<WeekBucket, string> = {
     'Week 1': '#f97316', 'Week 2': '#a78bfa', 'Week 3': '#34d399', 'Week 4+': '#60a5fa',
@@ -861,6 +944,125 @@ export default function PipelineManagement() {
               ))}
             </div>
           )}
+        </div>
+
+        {/* ══ EXECUTIVE SUMMARY ══════════════════════════════════════════════ */}
+        <div className="flex items-center gap-4 pt-2">
+          <div className="h-px flex-1 bg-gray-300" />
+          <div className="text-xs font-black uppercase tracking-widest text-gray-400 whitespace-nowrap">Executive Summary</div>
+          <div className="h-px flex-1 bg-gray-300" />
+        </div>
+
+        <div className="bg-white rounded-2xl border-2 border-gray-200 overflow-hidden">
+          {/* Header */}
+          <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+            <span className="text-base">📋</span>
+            <div>
+              <div className="text-sm font-black text-gray-800">Pipeline Status Report</div>
+              <div className="text-xs text-gray-400">
+                {new Date().toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                {' · '}Day {dayOfWeek} of 5
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6 flex flex-col gap-5">
+
+            {/* Narrative sentences */}
+            <div className="flex flex-col gap-3 text-sm text-gray-700 leading-relaxed">
+
+              {/* Total pipeline */}
+              <div className="flex items-start gap-2">
+                <span className="text-base mt-0.5">🔥</span>
+                <span>
+                  Our total pipeline should be at{' '}
+                  <span className="font-black text-gray-900">{fmt$(fullWeekTargets.total)}</span>
+                  {' '}({Math.round(fullWeekTargets.dealsInPipe)} units).{' '}
+                  We currently have{' '}
+                  <span className={`font-black ${execSummary.totalCurrentPipe >= fullWeekTargets.total ? 'text-emerald-600' : 'text-red-500'}`}>
+                    {fmt$(execSummary.totalCurrentPipe)}
+                  </span>
+                  {' '}({execSummary.totalCurrentUnits} units) —{' '}
+                  <span className={`font-semibold ${execSummary.totalCurrentPipe >= fullWeekTargets.total ? 'text-emerald-600' : 'text-red-500'}`}>
+                    {execSummary.totalCurrentPipe >= fullWeekTargets.total
+                      ? `${fmt$(execSummary.totalCurrentPipe - fullWeekTargets.total)} ahead`
+                      : `${fmt$(fullWeekTargets.total - execSummary.totalCurrentPipe)} short`}
+                  </span>.
+                </span>
+              </div>
+
+              {/* Daily add target */}
+              <div className="flex items-start gap-2">
+                <span className="text-base mt-0.5">➕</span>
+                <span>
+                  We should be adding{' '}
+                  <span className="font-black text-gray-900">{fmt$(execSummary.dailyTarget)}</span>
+                  {' '}({fullWeekTargets.dailyAddDeals.toFixed(1)} units) into the pipe each day.
+                </span>
+              </div>
+
+              {/* Yesterday */}
+              <div className="flex items-start gap-2">
+                <span className="text-base mt-0.5">📅</span>
+                <span>
+                  Yesterday we added{' '}
+                  <span className={`font-black ${execSummary.yesterdayAdded > 0 ? 'text-gray-900' : 'text-gray-400'}`}>
+                    {execSummary.yesterdayAdded > 0 ? `${fmt$(execSummary.yesterdayAdded)} (${execSummary.yesterdayUnits} units)` : 'nothing logged'}
+                  </span>
+                  {execSummary.yesterdayAdded > 0 && (
+                    <span className={`font-semibold ${execSummary.yesterdayDiff >= 0 ? ' text-emerald-600' : ' text-red-500'}`}>
+                      {execSummary.yesterdayDiff >= 0
+                        ? ` — ${fmt$(execSummary.yesterdayDiff)} ahead of daily target`
+                        : ` — ${fmt$(Math.abs(execSummary.yesterdayDiff))} behind daily target`}
+                    </span>
+                  )}.
+                </span>
+              </div>
+
+              {/* Divider */}
+              <div className="border-t border-gray-100 pt-1" />
+
+              {/* Per-bucket rows */}
+              {execSummary.bucketRows.map(r => (
+                <div key={r.bucket} className="flex items-start gap-2">
+                  <span className="text-base mt-0.5"
+                    style={{ color: weekColors[r.bucket] }}>●</span>
+                  <span>
+                    <span className="font-black" style={{ color: weekColors[r.bucket] }}>{r.bucket}</span>
+                    {' '}— we should be at{' '}
+                    <span className="font-semibold text-gray-900">{fmt$(r.todayTarget)}</span>
+                    {' '}today (full week: {fmt$(r.fullWeekTarget)}).{' '}
+                    We are at{' '}
+                    <span className={`font-black ${r.current >= r.todayTarget ? 'text-emerald-600' : r.current > 0 ? 'text-amber-600' : 'text-red-500'}`}>
+                      {r.current > 0 ? `${fmt$(r.current)} (${r.currentUnits} units)` : 'nothing logged'}
+                    </span>
+                    {r.current > 0 && (
+                      <span className={`font-semibold ${r.diff >= 0 ? ' text-emerald-600' : ' text-amber-600'}`}>
+                        {r.diff >= 0 ? ` — ${fmt$(r.diff)} ahead` : ` — ${fmt$(Math.abs(r.diff))} short`}
+                      </span>
+                    )}.
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Key takeaways */}
+            {execSummary.takeaways.length > 0 && (
+              <div className="border-t border-gray-100 pt-4">
+                <div className="text-xs font-black uppercase tracking-widest text-gray-500 mb-3">
+                  Key Takeaways
+                </div>
+                <ul className="flex flex-col gap-2">
+                  {execSummary.takeaways.map((t, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                      <span className="text-orange-400 font-black mt-0.5 flex-shrink-0">·</span>
+                      <span>{t}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="text-center text-xs text-gray-400 pb-4">
