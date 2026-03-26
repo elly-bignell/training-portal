@@ -812,7 +812,65 @@ export default function PipelineManagement() {
               </div>
             </div>
           </div>
-          <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="p-5 flex flex-col gap-4">
+
+            {/* ── Total pipeline summary row ── */}
+            {(() => {
+              const totalTarget = fullWeekTargets.total;
+              const totalTargetWTD = totalTarget * (dayOfWeek / 5);
+              const totalTargetUnits = Math.round(fullWeekTargets.dealsInPipe);
+              const totalTargetUnitsWTD = Math.round(totalTargetUnits * dayOfWeek / 5);
+              const totalActual = execSummary.totalCurrentPipe;
+              const totalActualUnits = execSummary.totalCurrentUnits;
+              const totalVar = totalActual - totalTargetWTD;
+              const totalVarPct = totalTargetWTD > 0 ? (totalVar / totalTargetWTD) * 100 : 0;
+              const wdv = dealMonthly / 4.33;
+              return (
+                <div className="rounded-2xl border-2 border-gray-300 bg-gray-50 p-4">
+                  <div className="text-xs font-black uppercase tracking-widest text-gray-500 mb-3">
+                    Combined Pipeline — All Weeks
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+
+                    {/* Target WTD */}
+                    <div className="flex flex-col gap-0.5">
+                      <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Target (WTD)</div>
+                      <div className="text-xl font-black text-gray-800">{fmt$(totalTargetWTD)}</div>
+                      <div className="text-[10px] text-gray-500">{fmt$(totalTargetWTD / (dealMonthly / 4.33) * dealMonthly / 4.33)}</div>
+                      <div className="text-xs text-gray-400 mt-0.5">{totalTargetUnitsWTD} units</div>
+                      <div className="text-[10px] text-gray-400">Full wk: {fmt$(totalTarget)} · {totalTargetUnits} units</div>
+                    </div>
+
+                    {/* Actual */}
+                    <div className="flex flex-col gap-0.5">
+                      <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Actual</div>
+                      <div className="text-xl font-black text-gray-800">{fmt$(totalActual)}</div>
+                      <div className="text-[10px] text-gray-500">{fmt$(totalActual / 4.33)} wkly equiv</div>
+                      <div className="text-xs text-gray-400 mt-0.5">{totalActualUnits} units</div>
+                      <div className="text-[10px] text-gray-400">{fmt$(totalActualUnits * dealMonthly)} total MRR</div>
+                    </div>
+
+                    {/* Variance */}
+                    <div className="flex flex-col gap-0.5">
+                      <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Variance</div>
+                      <div className={`text-xl font-black ${totalVar >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                        {totalVar >= 0 ? '+' : ''}{fmt$(totalVar)}
+                      </div>
+                      <div className={`text-[10px] font-semibold ${totalVar >= 0 ? 'text-emerald-500' : 'text-red-400'}`}>
+                        {totalVar >= 0 ? '+' : ''}{totalVarPct.toFixed(0)}% vs WTD target
+                      </div>
+                      <div className={`text-xs mt-0.5 font-bold ${totalVar >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                        {totalActualUnits - totalTargetUnitsWTD >= 0 ? '+' : ''}{totalActualUnits - totalTargetUnitsWTD} units
+                      </div>
+                      <div className="text-[10px] text-gray-400">vs full wk: {fmt$(totalActual - totalTarget)}</div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* ── Individual week tiles ── */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {(['Week 1', 'Week 2', 'Week 3', 'Week 4+'] as WeekBucket[]).map(bucket => {
               const cur = trackerStats.buckets[bucket];
               const tgt = targetPipePerBucket[bucket];
