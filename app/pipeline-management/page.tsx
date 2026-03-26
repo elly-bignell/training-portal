@@ -245,17 +245,50 @@ export default function PipelineManagement() {
     };
   }, [entries, trackerDate]);
 
+  // Day-of-week proration: Mon=1 … Fri=5, clamp to 1–5
+  const dayOfWeek = useMemo(() => {
+    const d = new Date().getDay(); // 0=Sun,1=Mon…6=Sat
+    return Math.min(Math.max(d === 0 ? 5 : d === 6 ? 5 : d, 1), 5);
+  }, []);
+
   const targetPipePerBucket = useMemo(() => {
     const cr = pipeClose / 100;
     const wdv = dealMonthly / 4.33;
-    const pipeNeeded = (weeklyTarget / wdv) / cr;
-    const pipeValue = pipeNeeded * wdv / cr;
+    // Correct: pipeline value uses monthly deal value, not weekly
+    const closesNeeded = weeklyTarget / wdv;
+    const dealsInPipe = closesNeeded / cr;          // e.g. 60.4 deals
+    const totalPipeValue = dealsInPipe * dealMonthly; // e.g. 60.4 × $430
+    // Prorate by day: show what SHOULD be filled by end of today
+    const prorate = dayOfWeek / 5;
     return {
-      'Week 1': pipeValue * (tw1 / 100),
-      'Week 2': pipeValue * (tw2 / 100),
-      'Week 3': pipeValue * (tw3 / 100),
-      'Week 4+': pipeValue * (tw4 / 100),
+      'Week 1': totalPipeValue * (tw1 / 100) * prorate,
+      'Week 2': totalPipeValue * (tw2 / 100) * prorate,
+      'Week 3': totalPipeValue * (tw3 / 100) * prorate,
+      'Week 4+': totalPipeValue * (tw4 / 100) * prorate,
     } as Record<WeekBucket, number>;
+  }, [weeklyTarget, pipeClose, dealMonthly, tw1, tw2, tw3, tw4, dayOfWeek]);
+
+  // Full-week targets (no proration) for display
+  const fullWeekTargets = useMemo(() => {
+    const cr = pipeClose / 100;
+    const wdv = dealMonthly / 4.33;
+    const closesNeeded = weeklyTarget / wdv;
+    const dealsInPipe = closesNeeded / cr;
+    const totalPipeValue = dealsInPipe * dealMonthly;
+    return {
+      'Week 1': totalPipeValue * (tw1 / 100),
+      'Week 2': totalPipeValue * (tw2 / 100),
+      'Week 3': totalPipeValue * (tw3 / 100),
+      'Week 4+': totalPipeValue * (tw4 / 100),
+      total: totalPipeValue,
+      dealsInPipe,
+      closesNeeded,
+      dailyAddValue: (totalPipeValue / 5),
+      dailyAddDeals: (dealsInPipe / 5),
+      dailyWonValue: (closesNeeded / 5) * dealMonthly,
+      dailyWonDeals: closesNeeded / 5,
+      dailyLostDeals: closesNeeded / 5,
+    };
   }, [weeklyTarget, pipeClose, dealMonthly, tw1, tw2, tw3, tw4]);
 
   const weekColors: Record<WeekBucket, string> = {
@@ -479,8 +512,30 @@ export default function PipelineManagement() {
         {/* Bucket health */}
         <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-100">
-            <div className="text-xs font-black uppercase tracking-widest text-gray-500">📦 Pipeline Health by Week Bucket</div>
-            <p className="text-xs text-gray-400 mt-0.5">Current logged pipeline vs what you need in each bucket to hit target</p>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <div className="text-xs font-black uppercase tracking-widest text-gray-500">📦 Pipeline Health by Week Bucket</div>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Current logged pipeline vs today&apos;s prorated target (day {dayOfWeek} of 5).
+                  Full week target = ${Math.round(fullWeekTargets.total).toLocaleString()} across all buckets.
+                </p>
+              </div>
+              <div className="flex-shrink-0 text-right">
+                <div className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">Daily targets</div>
+                <div className="text-xs text-gray-600 mt-0.5">
+                  Add: <span className="font-black text-purple-600">${Math.round(fullWeekTargets.dailyAddValue).toLocaleString()}</span>
+                  <span className="text-gray-400"> ({fullWeekTargets.dailyAddDeals.toFixed(1)} deals)</span>
+                </div>
+                <div className="text-xs text-gray-600">
+                  Won: <span className="font-black text-emerald-600">${Math.round(fullWeekTargets.dailyWonValue).toLocaleString()}</span>
+                  <span className="text-gray-400"> ({fullWeekTargets.dailyWonDeals.toFixed(1)} closes)</span>
+                </div>
+                <div className="text-xs text-gray-600">
+                  Lost: <span className="font-black text-red-500">{fullWeekTargets.dailyLostDeals.toFixed(1)} deals</span>
+                  <span className="text-gray-400"> (50% of pipe)</span>
+                </div>
+              </div>
+            </div>
           </div>
           <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4">
             {(['Week 1', 'Week 2', 'Week 3', 'Week 4+'] as WeekBucket[]).map(bucket => {
@@ -489,20 +544,24 @@ export default function PipelineManagement() {
               const pct = tgt > 0 ? Math.min((cur.value / tgt) * 100, 100) : 0;
               const color = weekColors[bucket];
               const diff = cur.value - tgt;
+              const fullTgt = fullWeekTargets[bucket];
               return (
                 <div key={bucket} className="flex flex-col gap-2 rounded-2xl border-2 p-4"
                   style={{ borderColor: color + '40', background: color + '08' }}>
                   <div className="text-xs font-black uppercase tracking-wider" style={{ color }}>{bucket}</div>
                   <div className="text-2xl font-black text-gray-800">{fmt$(cur.value)}</div>
-                  <div className="text-[10px] text-gray-400">{cur.units} units</div>
+                  <div className="text-[10px] text-gray-400">{cur.units} units in pipe</div>
                   <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
                     <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: color }} />
                   </div>
                   <div className="flex justify-between text-[10px]">
-                    <span className="text-gray-400">Target: {fmt$(tgt)}</span>
+                    <span className="text-gray-400">Today: {fmt$(tgt)}</span>
                     <span className={`font-bold ${diff >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                       {diff >= 0 ? '+' : ''}{fmt$(diff)}
                     </span>
+                  </div>
+                  <div className="text-[10px] text-gray-400 text-right">
+                    Full wk: {fmt$(fullTgt)}
                   </div>
                 </div>
               );
