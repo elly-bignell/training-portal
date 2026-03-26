@@ -80,7 +80,7 @@ function FunnelStep({ icon, label, value, sub, color, highlight = false }: {
 function WeekColumn({
   week, closePct, closes, revenue, dealOnDay, isWeek1, color, timingPct,
 }: {
-  week: string; closePct: number; closes: number; revenue: number;
+  week: string; closes: number; revenue: number;
   dealOnDay?: number; isWeek1?: boolean; color: string; timingPct: number;
 }) {
   return (
