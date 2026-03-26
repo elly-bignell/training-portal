@@ -1143,7 +1143,7 @@ export default function PipelineManagement() {
                     </span>
                     {r.current > 0 && (
                       <span className={`font-semibold ${r.diff >= 0 ? ' text-emerald-600' : ' text-amber-600'}`}>
-                        {r.diff >= 0 ? ` — ${fmt$(r.diff)} ahead` : ` — ${fmt$(Math.abs(r.diff))} short`}
+                        {r.diff >= 0 ? ` — ${fmt$(r.diff)} (${fmt$(Math.round(r.diff / 4.33))}/wk) ahead` : ` — ${fmt$(Math.abs(r.diff))} (${fmt$(Math.round(Math.abs(r.diff) / 4.33))}/wk) short`}
                       </span>
                     )}.
                   </span>
