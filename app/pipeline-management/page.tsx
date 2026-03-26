@@ -439,7 +439,7 @@ export default function PipelineManagement() {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {calc.weekData.map((w, i) => (
-              <WeekCard key={w.week} week={w.week} pipeline={w.pipeline} closes={w.closes} revenue={w.revenue} target={weeklyTarget} isActive={i === 0} breakdown={w.breakdown} cumRevenue={w.revenue} />
+              <WeekCard key={w.week} week={w.week} pipeline={w.pipeline} closes={w.closes} revenue={w.revenue} target={weeklyTarget} isActive={i === 0} breakdown={w.breakdown} />
             ))}
           </div>
 
