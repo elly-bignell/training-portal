@@ -78,7 +78,7 @@ function FunnelStep({ icon, label, value, sub, color, highlight = false }: {
 
 // ── Week Column (flowchart) ────────────────────────────────────────────────
 function WeekColumn({
-  week, closePct, closes, revenue, dealOnDay, isWeek1, color, timingPct,
+  week, closes, revenue, dealOnDay, isWeek1, color, timingPct,
 }: {
   week: string; closes: number; revenue: number;
   dealOnDay?: number; isWeek1?: boolean; color: string; timingPct: number;
