@@ -836,7 +836,7 @@ export default function PipelineManagement() {
                     <div className="flex flex-col gap-0.5">
                       <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Target (WTD)</div>
                       <div className="text-xl font-black text-gray-800">{fmt$(totalTargetWTD)}</div>
-                      <div className="text-[10px] text-gray-500">{fmt$(totalTargetWTD / (dealMonthly / 4.33) * dealMonthly / 4.33)}</div>
+                      <div className="text-[10px] text-gray-500">{fmt$(totalTargetWTD / 4.33)}/wk</div>
                       <div className="text-xs text-gray-400 mt-0.5">{totalTargetUnitsWTD} units</div>
                       <div className="text-[10px] text-gray-400">Full wk: {fmt$(totalTarget)} · {totalTargetUnits} units</div>
                     </div>
@@ -1080,12 +1080,12 @@ export default function PipelineManagement() {
                 <span>
                   Our total pipeline should be at{' '}
                   <span className="font-black text-gray-900">{fmt$(fullWeekTargets.total)}</span>
-                  {' '}({Math.round(fullWeekTargets.dealsInPipe)} units).{' '}
+                  {' '}({fmt$(Math.round(fullWeekTargets.total / 4.33))}/wk · {Math.round(fullWeekTargets.dealsInPipe)} units).{' '}
                   We currently have{' '}
                   <span className={`font-black ${execSummary.totalCurrentPipe >= fullWeekTargets.total ? 'text-emerald-600' : 'text-red-500'}`}>
                     {fmt$(execSummary.totalCurrentPipe)}
                   </span>
-                  {' '}({execSummary.totalCurrentUnits} units) —{' '}
+                  {' '}({fmt$(Math.round(execSummary.totalCurrentPipe / 4.33))}/wk · {execSummary.totalCurrentUnits} units) —{' '}
                   <span className={`font-semibold ${execSummary.totalCurrentPipe >= fullWeekTargets.total ? 'text-emerald-600' : 'text-red-500'}`}>
                     {execSummary.totalCurrentPipe >= fullWeekTargets.total
                       ? `${fmt$(execSummary.totalCurrentPipe - fullWeekTargets.total)} ahead`
@@ -1100,7 +1100,7 @@ export default function PipelineManagement() {
                 <span>
                   We should be adding{' '}
                   <span className="font-black text-gray-900">{fmt$(execSummary.dailyTarget)}</span>
-                  {' '}({fullWeekTargets.dailyAddDeals.toFixed(1)} units) into the pipe each day.
+                  {' '}({fmt$(Math.round(execSummary.dailyTarget / 4.33))}/wk equiv · {fullWeekTargets.dailyAddDeals.toFixed(1)} units) into the pipe each day.
                 </span>
               </div>
 
@@ -1110,7 +1110,9 @@ export default function PipelineManagement() {
                 <span>
                   Yesterday we added{' '}
                   <span className={`font-black ${execSummary.yesterdayAdded > 0 ? 'text-gray-900' : 'text-gray-400'}`}>
-                    {execSummary.yesterdayAdded > 0 ? `${fmt$(execSummary.yesterdayAdded)} (${execSummary.yesterdayUnits} units)` : 'nothing logged'}
+                    {execSummary.yesterdayAdded > 0
+                      ? `${fmt$(execSummary.yesterdayAdded)} (${fmt$(Math.round(execSummary.yesterdayAdded / 4.33))}/wk · ${execSummary.yesterdayUnits} units)`
+                      : 'nothing logged'}
                   </span>
                   {execSummary.yesterdayAdded > 0 && (
                     <span className={`font-semibold ${execSummary.yesterdayDiff >= 0 ? ' text-emerald-600' : ' text-red-500'}`}>
@@ -1134,10 +1136,10 @@ export default function PipelineManagement() {
                     <span className="font-black" style={{ color: weekColors[r.bucket] }}>{r.bucket}</span>
                     {' '}— we should be at{' '}
                     <span className="font-semibold text-gray-900">{fmt$(r.todayTarget)}</span>
-                    {' '}today (full week: {fmt$(r.fullWeekTarget)}).{' '}
+                    {' '}today (full week: {fmt$(r.fullWeekTarget)} · {fmt$(Math.round(r.fullWeekTarget / 4.33))}/wk).{' '}
                     We are at{' '}
                     <span className={`font-black ${r.current >= r.todayTarget ? 'text-emerald-600' : r.current > 0 ? 'text-amber-600' : 'text-red-500'}`}>
-                      {r.current > 0 ? `${fmt$(r.current)} (${r.currentUnits} units)` : 'nothing logged'}
+                      {r.current > 0 ? `${fmt$(r.current)} (${fmt$(Math.round(r.current / 4.33))}/wk · ${r.currentUnits} units)` : 'nothing logged'}
                     </span>
                     {r.current > 0 && (
                       <span className={`font-semibold ${r.diff >= 0 ? ' text-emerald-600' : ' text-amber-600'}`}>
