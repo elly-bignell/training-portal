@@ -129,6 +129,8 @@ export default function PipelineManagement() {
   const [dealMonthly, setDealMonthly] = useState(430);
   const [weeklyTarget, setWeeklyTarget] = useState(3000);
   const [inputCalls, setInputCalls] = useState(200);
+  const [teamSize, setTeamSize] = useState(4);
+  const [callsPerPersonPerDay, setCallsPerPersonPerDay] = useState(50);
 
   const [entries, setEntries] = useState<PipeEntry[]>([]);
   const [loadingEntries, setLoadingEntries] = useState(true);
@@ -213,6 +215,54 @@ export default function PipelineManagement() {
       closesForTarget: callsForTarget * (callBook / 100) * (bookAttend / 100) * (attendPipe / 100) * cr,
     };
   }, [inputCalls, callBook, bookAttend, attendPipe, pipeClose, tw1, tw2, tw3, tw4, dod, dealMonthly, weeklyTarget]);
+
+  // ── Capacity vs Target comparison ────────────────────────────────────
+  const capacityCalc = useMemo(() => {
+    const wdv = dealMonthly / 4.33;
+    const cr = pipeClose / 100;
+
+    // What the target NEEDS per day
+    const closesNeededPerWeek = weeklyTarget / wdv;
+    const dealsNeededInPipe = closesNeededPerWeek / cr;
+    const needDailyAddDeals = dealsNeededInPipe / 5;
+    const needDailyAddValue = needDailyAddDeals * dealMonthly;
+    const needDailyWonDeals = closesNeededPerWeek / 5;
+    const needDailyWonValue = needDailyWonDeals * dealMonthly;
+    const needDailyLostDeals = needDailyWonDeals; // 50% of pipe lost = same as won
+    const needWeeklyPipeValue = dealsNeededInPipe * dealMonthly;
+
+    // What the team CAN generate per day
+    const totalCallsPerDay = teamSize * callsPerPersonPerDay;
+    const totalCallsPerWeek = totalCallsPerDay * 5;
+    const canBookingsPerWeek = totalCallsPerWeek * (callBook / 100);
+    const canAttendedPerWeek = canBookingsPerWeek * (bookAttend / 100);
+    const canPipelinePerWeek = canAttendedPerWeek * (attendPipe / 100);
+    const canClosesPerWeek = canPipelinePerWeek * cr;
+    const canRevenuePerWeek = canClosesPerWeek * wdv;
+    const canDailyAddDeals = canPipelinePerWeek / 5;
+    const canDailyAddValue = canDailyAddDeals * dealMonthly;
+
+    // Gap (can minus need — positive = surplus, negative = shortfall)
+    const gapDailyDeals = canDailyAddDeals - needDailyAddDeals;
+    const gapDailyValue = canDailyAddValue - needDailyAddValue;
+    const gapWeeklyRevenue = canRevenuePerWeek - weeklyTarget;
+    const gapWeeklyCloses = canClosesPerWeek - closesNeededPerWeek;
+
+    return {
+      // needs
+      needDailyAddDeals, needDailyAddValue,
+      needDailyWonDeals, needDailyWonValue,
+      needDailyLostDeals, needWeeklyPipeValue,
+      closesNeededPerWeek, dealsNeededInPipe,
+      // can
+      totalCallsPerDay, totalCallsPerWeek,
+      canPipelinePerWeek, canClosesPerWeek,
+      canRevenuePerWeek, canDailyAddDeals, canDailyAddValue,
+      // gap
+      gapDailyDeals, gapDailyValue, gapWeeklyRevenue, gapWeeklyCloses,
+      onTrack: canRevenuePerWeek >= weeklyTarget,
+    };
+  }, [teamSize, callsPerPersonPerDay, callBook, bookAttend, attendPipe, pipeClose, dealMonthly, weeklyTarget]);
 
   const trackerStats = useMemo(() => {
     const todayEntries = entries.filter(e => e.Date === trackerDate);
@@ -471,6 +521,148 @@ export default function PipelineManagement() {
                 <div className="text-[10px] text-gray-500 font-semibold text-center">{s.label}</div>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* ══ CAPACITY VS TARGET ═════════════════════════════════════════════ */}
+        <div className="flex items-center gap-4 pt-2">
+          <div className="h-px flex-1 bg-gray-300" />
+          <div className="text-xs font-black uppercase tracking-widest text-gray-400 whitespace-nowrap">Capacity vs Target</div>
+          <div className="h-px flex-1 bg-gray-300" />
+        </div>
+
+        {/* Team inputs */}
+        <div className="bg-white rounded-2xl border border-gray-200 p-5 flex flex-col gap-4">
+          <div className="text-xs font-black uppercase tracking-widest text-gray-500">👥 Your Team</div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Number of callers</label>
+              <input type="number" min={1} value={teamSize}
+                onChange={e => setTeamSize(Math.max(1, Number(e.target.value)))}
+                className="border-2 border-gray-200 rounded-xl px-3 py-2.5 text-2xl font-black text-gray-800 outline-none focus:border-orange-400 w-full" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Calls per person per day</label>
+              <input type="number" min={1} value={callsPerPersonPerDay}
+                onChange={e => setCallsPerPersonPerDay(Math.max(1, Number(e.target.value)))}
+                className="border-2 border-gray-200 rounded-xl px-3 py-2.5 text-2xl font-black text-gray-800 outline-none focus:border-orange-400 w-full" />
+            </div>
+          </div>
+          <div className="text-xs text-gray-400">
+            Total: <span className="font-black text-gray-600">{capacityCalc.totalCallsPerDay} calls/day</span>
+            <span className="mx-2">·</span>
+            <span className="font-black text-gray-600">{capacityCalc.totalCallsPerWeek.toLocaleString()} calls/week</span>
+          </div>
+        </div>
+
+        {/* Needs vs Can comparison */}
+        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100">
+            <div className="text-xs font-black uppercase tracking-widest text-gray-500">📊 Target Needs vs Team Capacity — Daily</div>
+            <p className="text-xs text-gray-400 mt-0.5">
+              What the pipeline requires vs what your team can actually generate
+            </p>
+          </div>
+          <div className="p-5 flex flex-col gap-4">
+
+            {/* Column headers */}
+            <div className="grid grid-cols-4 gap-3">
+              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider"></div>
+              <div className="text-xs font-bold text-center uppercase tracking-wider text-purple-500">Needs</div>
+              <div className="text-xs font-bold text-center uppercase tracking-wider text-blue-500">Can</div>
+              <div className="text-xs font-bold text-center uppercase tracking-wider text-gray-500">Gap</div>
+            </div>
+
+            {/* Add to pipe row */}
+            <div className="grid grid-cols-4 gap-3 items-center rounded-xl bg-gray-50 p-3">
+              <div>
+                <div className="text-xs font-bold text-gray-600">Add to pipe</div>
+                <div className="text-[10px] text-gray-400">deals/day</div>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-black text-purple-600">{capacityCalc.needDailyAddDeals.toFixed(1)}</div>
+                <div className="text-[10px] text-gray-400">{fmt$(capacityCalc.needDailyAddValue)}</div>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-black text-blue-600">{capacityCalc.canDailyAddDeals.toFixed(1)}</div>
+                <div className="text-[10px] text-gray-400">{fmt$(capacityCalc.canDailyAddValue)}</div>
+              </div>
+              <div className="text-center">
+                <div className={`text-lg font-black ${capacityCalc.gapDailyDeals >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                  {capacityCalc.gapDailyDeals >= 0 ? '+' : ''}{capacityCalc.gapDailyDeals.toFixed(1)}
+                </div>
+                <div className={`text-[10px] font-semibold ${capacityCalc.gapDailyDeals >= 0 ? 'text-emerald-500' : 'text-red-400'}`}>
+                  {fmt$(capacityCalc.gapDailyValue)}
+                </div>
+              </div>
+            </div>
+
+            {/* Closes per week row */}
+            <div className="grid grid-cols-4 gap-3 items-center rounded-xl bg-gray-50 p-3">
+              <div>
+                <div className="text-xs font-bold text-gray-600">Closes</div>
+                <div className="text-[10px] text-gray-400">per week</div>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-black text-purple-600">{capacityCalc.closesNeededPerWeek.toFixed(1)}</div>
+                <div className="text-[10px] text-gray-400">{fmt$(weeklyTarget)}/wk</div>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-black text-blue-600">{capacityCalc.canClosesPerWeek.toFixed(1)}</div>
+                <div className="text-[10px] text-gray-400">{fmt$(capacityCalc.canRevenuePerWeek)}/wk</div>
+              </div>
+              <div className="text-center">
+                <div className={`text-lg font-black ${capacityCalc.gapWeeklyCloses >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                  {capacityCalc.gapWeeklyCloses >= 0 ? '+' : ''}{capacityCalc.gapWeeklyCloses.toFixed(1)}
+                </div>
+                <div className={`text-[10px] font-semibold ${capacityCalc.gapWeeklyRevenue >= 0 ? 'text-emerald-500' : 'text-red-400'}`}>
+                  {capacityCalc.gapWeeklyRevenue >= 0 ? '+' : ''}{fmt$(capacityCalc.gapWeeklyRevenue)}/wk
+                </div>
+              </div>
+            </div>
+
+            {/* Won/Lost targets (needs only — informational) */}
+            <div className="grid grid-cols-2 gap-3 pt-1">
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3">
+                <div className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">🏆 Won target/day</div>
+                <div className="text-xl font-black text-emerald-700">{capacityCalc.needDailyWonDeals.toFixed(1)} closes</div>
+                <div className="text-xs text-emerald-600">{fmt$(capacityCalc.needDailyWonValue)} revenue</div>
+              </div>
+              <div className="rounded-xl border border-red-200 bg-red-50 p-3">
+                <div className="text-[10px] font-bold text-red-500 uppercase tracking-wider mb-1">❌ Expected lost/day</div>
+                <div className="text-xl font-black text-red-600">{capacityCalc.needDailyLostDeals.toFixed(1)} deals</div>
+                <div className="text-xs text-red-500">50% of pipe that won&apos;t close</div>
+              </div>
+            </div>
+
+            {/* Verdict */}
+            <div className={`rounded-xl border-2 p-4 text-center ${capacityCalc.onTrack ? 'border-emerald-300 bg-emerald-50' : 'border-red-200 bg-red-50'}`}>
+              {capacityCalc.onTrack ? (
+                <div>
+                  <div className="text-sm font-black text-emerald-700">
+                    ✅ Your team can hit the target
+                  </div>
+                  <div className="text-xs text-emerald-600 mt-1">
+                    {teamSize} callers × {callsPerPersonPerDay} calls/day generates {fmt$(capacityCalc.canRevenuePerWeek)}/wk
+                    — a <span className="font-black">{fmt$(capacityCalc.gapWeeklyRevenue)} surplus</span> above the {fmt$(weeklyTarget)} target
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div className="text-sm font-black text-red-600">
+                    ⚠️ Your team cannot hit the target at current call volume
+                  </div>
+                  <div className="text-xs text-red-500 mt-1">
+                    {teamSize} callers × {callsPerPersonPerDay} calls/day only generates {fmt$(capacityCalc.canRevenuePerWeek)}/wk
+                    — a <span className="font-black">{fmt$(Math.abs(capacityCalc.gapWeeklyRevenue))} shortfall</span> vs the {fmt$(weeklyTarget)} target
+                  </div>
+                  <div className="text-xs text-red-400 mt-1">
+                    You need {Math.ceil(weeklyTarget / (capacityCalc.canRevenuePerWeek / teamSize))} callers at {callsPerPersonPerDay} calls/day,
+                    or {Math.ceil(capacityCalc.needDailyAddDeals * 5 / teamSize / (callBook / 100) / (bookAttend / 100) / (attendPipe / 100))} calls/person/day with {teamSize} callers
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
