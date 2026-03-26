@@ -646,7 +646,7 @@ export default function PipelineManagement() {
               What the pipeline requires vs what your team can actually generate
             </p>
           </div>
-          <div className="p-5 flex flex-col gap-4">
+          <div className="p-5 flex flex-col gap-5">
 
             {/* Column headers */}
             <div className="grid grid-cols-4 gap-3">
@@ -812,7 +812,7 @@ export default function PipelineManagement() {
               </div>
             </div>
           </div>
-          <div className="p-5 flex flex-col gap-4">
+          <div className="p-5 flex flex-col gap-5">
 
             {/* ── Total pipeline summary row ── */}
             {(() => {
@@ -943,6 +943,7 @@ export default function PipelineManagement() {
                 </div>
               );
             })}
+            </div>
           </div>
         </div>
 
@@ -951,7 +952,7 @@ export default function PipelineManagement() {
           <div className="px-6 py-4 border-b border-gray-100">
             <div className="text-xs font-black uppercase tracking-widest text-gray-500">✏️ Log an Entry</div>
           </div>
-          <div className="p-5 flex flex-col gap-4">
+          <div className="p-5 flex flex-col gap-5">
             <div className="flex gap-2">
               {(['Added', 'Won', 'Lost'] as EntryType[]).map(t => {
                 const tc = t === 'Added' ? '#a78bfa' : t === 'Won' ? '#22c55e' : '#ef4444';
