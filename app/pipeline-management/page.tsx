@@ -816,27 +816,69 @@ export default function PipelineManagement() {
             {(['Week 1', 'Week 2', 'Week 3', 'Week 4+'] as WeekBucket[]).map(bucket => {
               const cur = trackerStats.buckets[bucket];
               const tgt = targetPipePerBucket[bucket];
-              const pct = tgt > 0 ? Math.min((cur.value / tgt) * 100, 100) : 0;
               const color = weekColors[bucket];
-              const diff = cur.value - tgt;
               const fullTgt = fullWeekTargets[bucket];
+              const timingPctMap: Record<WeekBucket, number> = {
+                'Week 1': tw1, 'Week 2': tw2, 'Week 3': tw3, 'Week 4+': tw4,
+              };
+              const timingPct = timingPctMap[bucket];
+              // Target units = deals needed in pipe × timing %
+              const cr = pipeClose / 100;
+              const wdv = dealMonthly / 4.33;
+              const targetUnits = Math.round((weeklyTarget / wdv / cr) * (timingPct / 100));
+              const varValue = cur.value - fullTgt;
+              const varPct = fullTgt > 0 ? (varValue / fullTgt) * 100 : 0;
+              const barPct = fullTgt > 0 ? Math.min((cur.value / fullTgt) * 100, 100) : 0;
               return (
-                <div key={bucket} className="flex flex-col gap-2 rounded-2xl border-2 p-4"
-                  style={{ borderColor: color + '40', background: color + '08' }}>
-                  <div className="text-xs font-black uppercase tracking-wider" style={{ color }}>{bucket}</div>
-                  <div className="text-2xl font-black text-gray-800">{fmt$(cur.value)}</div>
-                  <div className="text-[10px] text-gray-400">{cur.units} units in pipe</div>
+                <div key={bucket} className="flex flex-col gap-3 rounded-2xl border-2 p-4"
+                  style={{ borderColor: color + '50', background: color + '08' }}>
+
+                  {/* Header: week label + timing % badge */}
+                  <div className="flex items-center justify-between">
+                    <div className="text-xs font-black uppercase tracking-wider" style={{ color }}>{bucket}</div>
+                    <div className="text-[10px] font-black px-2 py-0.5 rounded-full"
+                      style={{ background: color + '20', color }}>
+                      {timingPct}% of closes
+                    </div>
+                  </div>
+
+                  {/* Progress bar */}
                   <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                    <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: color }} />
+                    <div className="h-full rounded-full transition-all" style={{ width: `${barPct}%`, background: color }} />
                   </div>
-                  <div className="flex justify-between text-[10px]">
-                    <span className="text-gray-400">Today: {fmt$(tgt)}</span>
-                    <span className={`font-bold ${diff >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
-                      {diff >= 0 ? '+' : ''}{fmt$(diff)}
-                    </span>
+
+                  {/* Three rows: Target / Actual / Variance */}
+                  <div className="flex flex-col gap-1.5">
+
+                    {/* Target */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider w-16">Target</span>
+                      <span className="text-sm font-black text-gray-700">{fmt$(fullTgt)}</span>
+                      <span className="text-[10px] text-gray-400">{targetUnits} units</span>
+                    </div>
+
+                    {/* Actual */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider w-16">Actual</span>
+                      <span className="text-sm font-black text-gray-700">{fmt$(cur.value)}</span>
+                      <span className="text-[10px] text-gray-400">{cur.units} units</span>
+                    </div>
+
+                    {/* Variance */}
+                    <div className="flex items-center justify-between border-t border-gray-100 pt-1.5">
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider w-16">Variance</span>
+                      <span className={`text-sm font-black ${varValue >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                        {varValue >= 0 ? '+' : ''}{fmt$(varValue)}
+                      </span>
+                      <span className={`text-[10px] font-bold ${varValue >= 0 ? 'text-emerald-500' : 'text-red-400'}`}>
+                        {varValue >= 0 ? '+' : ''}{varPct.toFixed(0)}%
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-[10px] text-gray-400 text-right">
-                    Full wk: {fmt$(fullTgt)}
+
+                  {/* Today prorated note */}
+                  <div className="text-[10px] text-gray-400 border-t border-gray-100 pt-1">
+                    Today&apos;s prorated target: {fmt$(tgt)}
                   </div>
                 </div>
               );
