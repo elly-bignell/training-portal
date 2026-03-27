@@ -225,7 +225,7 @@ function HomeContent() {
           {/* Trainees */}
           <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">Trainees</h3>
           <div className="space-y-4 mb-6">
-            {trainees.filter((t) => ["sydney-arnold", "krishna-patel", "cindy-rose-rondez-manrique"].includes(t.slug)).map((trainee) => {
+            {trainees.filter((t) => ["riley-kerrison", "sydney-arnold", "krishna-patel", "cindy-rose-rondez-manrique"].includes(t.slug)).map((trainee) => {
               const module1Attempts = getTraineeExamAttempts(trainee.slug, "exam-module-1");
               const module1Passed = module1Attempts.some((a) => a.passed);
               const module1BestScore = module1Attempts.length > 0
@@ -416,7 +416,7 @@ function HomeContent() {
             Select Your Dashboard
           </h2>
           {(() => {
-            const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold"];
+            const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold", "riley-kerrison"];
             const CS_SLUGS = ["jeremy-valiente", "dasha-axenova", "shani-thomas"];
             const ARCHIVED_SLUGS = ["connie-matthews", "reegan-james", "rachel-astachnowicz", "aston-marsh"];
 
