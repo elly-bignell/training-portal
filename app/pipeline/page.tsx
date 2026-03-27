@@ -258,7 +258,7 @@ export default function PipelinePage(){
             <p className="text-sm text-gray-500 mt-1">Select your name to continue</p>
           </div>
           <div className="flex flex-col gap-2">
-            {[...new Set([...CLOSERS,'Admin'])].map(name=>(
+            {['Lucas','Dylan','Felipe','Thomas','Admin'].map(name=>(
               <button key={name} onClick={()=>setUser(name)}
                 className="w-full rounded-xl border-2 border-gray-200 py-3 text-sm font-black text-gray-700 hover:border-orange-400 hover:text-orange-500 transition-all">
                 {name}
