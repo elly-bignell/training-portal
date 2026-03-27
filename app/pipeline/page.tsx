@@ -34,7 +34,7 @@ interface Deal {
   CloseTime?:string; Closer:string; Booker:string; MonthlyValue:number;
   WeeklyValue:number; UpfrontValue?:number; GTH:string; NextContactDate?:string;
   Brand:Brand; Plan?:string; Extras?:string; WeekBucket:Bucket;
-  Status:Status; LoggedBy:string; Notes?:string;
+  Status:Status; LoggedBy:string; Notes?:string; CloseDateHistory?:string;
 }
 
 function getWeekBucket(closeDate:string):Bucket {
@@ -63,14 +63,39 @@ function Field({label,children,required}:{label:string;children:React.ReactNode;
 const inputCls="border-2 border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 font-semibold outline-none focus:border-orange-400 bg-white w-full";
 const selectCls="border-2 border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 font-semibold outline-none focus:border-orange-400 bg-white w-full";
 
-function DealCard({deal,onStatusChange,canEdit}:{deal:Deal;onStatusChange:(id:string,s:Status)=>void;canEdit:boolean}){
+function DealCard({deal,onStatusChange,onReschedule,canEdit}:{
+  deal:Deal;
+  onStatusChange:(id:string,s:Status)=>void;
+  onReschedule:(id:string,newDate:string,history:string)=>void;
+  canEdit:boolean;
+}){
   const sc=STATUS_COLORS[deal.Status]||STATUS_COLORS.Active;
   const [changing,setChanging]=useState(false);
+  const [showReschedule,setShowReschedule]=useState(false);
+  const [newCloseDate,setNewCloseDate]=useState('');
+  const [rescheduling,setRescheduling]=useState(false);
+
   async function handleStatus(s:Status){
     setChanging(true); await onStatusChange(deal.id,s); setChanging(false);
   }
+
+  async function handleReschedule(){
+    if(!newCloseDate) return;
+    setRescheduling(true);
+    const prevHistory = deal.CloseDateHistory || '';
+    const historyEntry = `${deal.CloseDate} → ${newCloseDate}`;
+    const newHistory = prevHistory ? `${prevHistory} | ${historyEntry}` : historyEntry;
+    await onReschedule(deal.id, newCloseDate, newHistory);
+    setNewCloseDate('');
+    setShowReschedule(false);
+    setRescheduling(false);
+  }
+
+  const historyDates = deal.CloseDateHistory ? deal.CloseDateHistory.split(' | ') : [];
+
   return(
     <div className="bg-white rounded-2xl border-2 p-4 flex flex-col gap-3 shadow-sm" style={{borderColor:sc.border}}>
+      {/* Header */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="font-black text-gray-900 text-sm leading-tight truncate">{deal.BusinessName}</div>
@@ -79,6 +104,8 @@ function DealCard({deal,onStatusChange,canEdit}:{deal:Deal;onStatusChange:(id:st
         <div className="flex-shrink-0 px-2 py-0.5 rounded-full text-[10px] font-black border"
           style={{background:sc.bg,color:sc.text,borderColor:sc.border}}>{deal.Status}</div>
       </div>
+
+      {/* Values */}
       <div className="grid grid-cols-3 gap-2">
         {[{label:'Monthly',val:fmt$(deal.MonthlyValue)},{label:'Weekly',val:fmt$(deal.WeeklyValue)},{label:'Upfront',val:deal.UpfrontValue?fmt$(deal.UpfrontValue):'—'}].map(s=>(
           <div key={s.label} className="bg-gray-50 rounded-xl p-2 text-center">
@@ -87,17 +114,64 @@ function DealCard({deal,onStatusChange,canEdit}:{deal:Deal;onStatusChange:(id:st
           </div>
         ))}
       </div>
+
+      {/* Meta */}
       <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-gray-500">
         <span>📅 Close: <strong>{deal.CloseDate}</strong>{deal.CloseTime?` @ ${deal.CloseTime}`:''}</span>
         <span>🎯 {deal.GTH}</span>
         <span>👤 {deal.Closer}</span>
         <span>📞 {deal.Booker}</span>
       </div>
+
+      {/* Close date history */}
+      {historyDates.length > 0 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1.5">
+          <div className="text-[9px] font-bold text-amber-600 uppercase tracking-wider mb-1">
+            📆 Moved {historyDates.length}x
+          </div>
+          {historyDates.map((h,i) => (
+            <div key={i} className="text-[10px] text-amber-700">{h}</div>
+          ))}
+        </div>
+      )}
+
       {deal.Extras&&<div className="text-[10px] text-gray-400"><strong className="text-gray-500">Extras:</strong> {deal.Extras}</div>}
       {deal.NextContactDate&&<div className="text-[10px] text-gray-400"><strong className="text-gray-500">Next contact:</strong> {deal.NextContactDate}</div>}
       {deal.Notes&&<div className="text-[10px] text-gray-400 italic">{deal.Notes}</div>}
+
+      {/* Reschedule */}
+      {canEdit && (
+        <div className="border-t border-gray-100 pt-2">
+          {!showReschedule ? (
+            <button onClick={()=>setShowReschedule(true)}
+              className="w-full text-[10px] font-bold text-gray-400 hover:text-orange-500 transition-colors py-1">
+              📅 Move close date
+            </button>
+          ) : (
+            <div className="flex gap-2 items-center">
+              <input type="date" value={newCloseDate} onChange={e=>setNewCloseDate(e.target.value)}
+                className="flex-1 border-2 border-orange-300 rounded-lg px-2 py-1.5 text-xs font-semibold text-gray-700 outline-none"/>
+              {newCloseDate && (
+                <span className="text-[9px] font-black px-1.5 py-0.5 rounded"
+                  style={{color:WEEK_COLORS[getWeekBucket(newCloseDate)],background:WEEK_COLORS[getWeekBucket(newCloseDate)]+'20'}}>
+                  {getWeekBucket(newCloseDate)}
+                </span>
+              )}
+              <button onClick={handleReschedule} disabled={rescheduling||!newCloseDate}
+                className="text-[10px] font-black text-white px-2.5 py-1.5 rounded-lg transition-all"
+                style={{background:rescheduling||!newCloseDate?'#d1d5db':'#f97316'}}>
+                {rescheduling?'…':'Save'}
+              </button>
+              <button onClick={()=>{setShowReschedule(false);setNewCloseDate('');}}
+                className="text-[10px] text-gray-400 hover:text-gray-600 px-1">✕</button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Status buttons */}
       {canEdit&&(
-        <div className="flex gap-1.5 pt-1 border-t border-gray-100">
+        <div className="flex gap-1.5 border-t border-gray-100 pt-2">
           {(['Active','Won','Lost'] as Status[]).map(s=>(
             <button key={s} onClick={()=>handleStatus(s)} disabled={changing||deal.Status===s}
               className="flex-1 rounded-lg py-1.5 text-[10px] font-black border transition-all"
@@ -141,7 +215,7 @@ function BucketVisual({bucket,deals,targetValue}:{bucket:Bucket;deals:Deal[];tar
       </div>
       <div className="text-center">
         <div className="text-xs font-black text-gray-700">{fmt$(totalM)}</div>
-        <div className="text-[10px] text-gray-400">of {fmt$(targetValue)}</div>
+        <div className="text-[10px] text-gray-400">of {fmt$(targetValue)} <span className="text-gray-300">·</span> {fmt$(Math.round(targetValue/4.33/100)*100)}/wk</div>
         {wonM>0&&<div className="text-[10px] text-emerald-600 font-semibold">🏆 {fmt$(wonM)} won</div>}
       </div>
     </div>
@@ -201,6 +275,15 @@ export default function PipelinePage(){
 
   async function handleStatusChange(id:string,status:Status){
     const res=await fetch(`/api/pipeline/deals/${id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({Status:status})});
+    if(res.ok){const u=await res.json();setDeals(prev=>prev.map(d=>d.id===id?{...d,...u}:d));}
+  }
+
+  async function handleReschedule(id:string,newDate:string,history:string){
+    const newBucket=getWeekBucket(newDate);
+    const res=await fetch(`/api/pipeline/deals/${id}`,{
+      method:'PATCH',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({CloseDate:newDate,WeekBucket:newBucket,CloseDateHistory:history}),
+    });
     if(res.ok){const u=await res.json();setDeals(prev=>prev.map(d=>d.id===id?{...d,...u}:d));}
   }
 
@@ -340,7 +423,7 @@ export default function PipelinePage(){
                   <span className="text-xs text-gray-400">— {dealsByBucket[weekTab].length} deals · {fmt$(totalByBucket[weekTab])} active</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500">Target: {fmt$(BUCKET_TARGETS[weekTab])}</span>
+                  <span className="text-xs text-gray-500">Target: {fmt$(BUCKET_TARGETS[weekTab])} <span className="text-gray-400">({fmt$(Math.round(BUCKET_TARGETS[weekTab]/4.33/100)*100)}/wk)</span></span>
                   <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
                     <div className="h-full rounded-full transition-all"
                       style={{width:`${Math.min((totalByBucket[weekTab]/BUCKET_TARGETS[weekTab])*100,100)}%`,background:WEEK_COLORS[weekTab]}}/>
@@ -358,7 +441,7 @@ export default function PipelinePage(){
               ):(
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {dealsByBucket[weekTab].map(deal=>(
-                    <DealCard key={deal.id} deal={deal} onStatusChange={handleStatusChange} canEdit={canLog||user==='Admin'}/>
+                    <DealCard key={deal.id} deal={deal} onStatusChange={handleStatusChange} onReschedule={handleReschedule} canEdit={canLog||user==='Admin'}/>
                   ))}
                 </div>
               )}
