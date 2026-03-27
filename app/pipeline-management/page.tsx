@@ -1088,8 +1088,8 @@ export default function PipelineManagement() {
                   {' '}({fmt$(Math.round(execSummary.totalCurrentPipe / 4.33))}/wk · {execSummary.totalCurrentUnits} units) —{' '}
                   <span className={`font-semibold ${execSummary.totalCurrentPipe >= fullWeekTargets.total ? 'text-emerald-600' : 'text-red-500'}`}>
                     {execSummary.totalCurrentPipe >= fullWeekTargets.total
-                      ? `${fmt$(execSummary.totalCurrentPipe - fullWeekTargets.total)} ahead`
-                      : `${fmt$(fullWeekTargets.total - execSummary.totalCurrentPipe)} short`}
+                      ? `${fmt$(execSummary.totalCurrentPipe - fullWeekTargets.total)} (${ fmt$(Math.round((execSummary.totalCurrentPipe - fullWeekTargets.total) / 4.33))}/wk) ahead`
+                      : `${fmt$(fullWeekTargets.total - execSummary.totalCurrentPipe)} (${ fmt$(Math.round((fullWeekTargets.total - execSummary.totalCurrentPipe) / 4.33))}/wk) short`}
                   </span>.
                 </span>
               </div>
