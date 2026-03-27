@@ -1,4 +1,4 @@
-'use client';
+'use client'; // build fix
 
 import { useState, useMemo } from 'react';
 
