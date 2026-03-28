@@ -36,10 +36,11 @@ export const weeklyStandards: Record<number, DailyActivity> = {
 // Per-trainee week number overrides (slug → effective week for standards/display)
 export const TRAINEE_WEEK_OVERRIDES: Record<string, number> = {
   "sydney-arnold": 0, // Sydney is in Week 0 (Training Week)
+  "riley-kerrison": 0,  // Riley is in Week 0 (Training Week)
 };
 
 // Sydney Week 0 ramp-up targets by day (0 = Mon, 1 = Tue, 2 = Wed, 3 = Thu, 4 = Fri)
-export const SYDNEY_WEEK0_RAMP: Record<number, DailyActivity> = {
+export const WEEK0_RAMP: Record<number, DailyActivity> = {
   0: { calls_made: 0, calls: 30, bookings: 3, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 },
   1: { calls_made: 0, calls: 40, bookings: 4, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 },
   2: { calls_made: 0, calls: 50, bookings: 5, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 },
@@ -252,7 +253,7 @@ export function useActivityTracking(traineeSlug: string, traineeName: string) {
     if (eff === 0 && traineeSlug in TRAINEE_WEEK_OVERRIDES) {
       const dayIdx = getDayOfWeek();
       const validDay = dayIdx >= 0 && dayIdx <= 4 ? dayIdx : 0;
-      return SYDNEY_WEEK0_RAMP[validDay];
+      return WEEK0_RAMP[validDay];
     }
     return weeklyStandards[eff] || weeklyStandards[6];
   }, [currentWeek, traineeSlug]);
@@ -263,7 +264,7 @@ export function useActivityTracking(traineeSlug: string, traineeName: string) {
       ? TRAINEE_WEEK_OVERRIDES[traineeSlug]
       : currentWeek;
     if (eff === 0 && traineeSlug in TRAINEE_WEEK_OVERRIDES) {
-      return Object.values(SYDNEY_WEEK0_RAMP).reduce(
+      return Object.values(WEEK0_RAMP).reduce(
         (acc, d) => ({
           calls_made: acc.calls_made + d.calls_made,
           calls: acc.calls + d.calls,

@@ -34,7 +34,7 @@ interface TraineeWeekData {
 const teams = [
   {
     name: "Team 1",
-    members: ["lucas-tirri", "cindy-rose-rondez-manrique"],
+    members: ["lucas-tirri", "cindy-rose-rondez-manrique", "riley-kerrison"],
   },
   {
     name: "Team 2",
@@ -80,26 +80,37 @@ const weekDateRanges: Record<number, string> = {
   8: "Mon 13 Apr – Fri 17 Apr",
 };
 
-// Sydney Week 0 per-day booking targets (Mon=0 ... Fri=4)
-const SYDNEY_WEEK0_BOOKING_TARGETS = [3, 4, 5, 6, 7];
-// Felipe picks up the slack to keep the team at 7/day
-const FELIPE_WEEK0_BOOKING_TARGETS = [4, 3, 2, 1, 0];
-const SYDNEY_WEEK0_EOW = 25; // 3+4+5+6+7
-const FELIPE_WEEK0_EOW = 10; // 4+3+2+1+0
+// Week 0 ramp booking targets (Mon=0 … Fri=4) — applies to any Week 0 trainee
+const WEEK0_TRAINEE_BOOKING_TARGETS = [3, 4, 5, 6, 7];
+const WEEK0_BUDDY_BOOKING_TARGETS   = [4, 3, 2, 1, 0];
+const WEEK0_TRAINEE_EOW = 25; // 3+4+5+6+7
+const WEEK0_BUDDY_EOW   = 10; // 4+3+2+1+0
+
+// Map each Week 0 trainee → the buddy who picks up the slack
+const WEEK0_BUDDIES: Record<string, string> = {
+  "sydney-arnold":  "felipe-garcia",
+  "riley-kerrison": "lucas-tirri",
+};
 
 function getIndividualDayTarget(slug: string, dayIdx: number): number {
-  if (TRAINEE_WEEK_OVERRIDES["sydney-arnold"] === 0) {
-    if (slug === "sydney-arnold") return SYDNEY_WEEK0_BOOKING_TARGETS[dayIdx] ?? 7;
-    if (slug === "felipe-garcia") return FELIPE_WEEK0_BOOKING_TARGETS[dayIdx] ?? 0;
+  // Is this slug a Week 0 trainee?
+  if (TRAINEE_WEEK_OVERRIDES[slug] === 0) {
+    return WEEK0_TRAINEE_BOOKING_TARGETS[dayIdx] ?? 7;
   }
+  // Is this slug the buddy of an active Week 0 trainee?
+  const week0Trainee = Object.keys(WEEK0_BUDDIES).find(
+    (t) => WEEK0_BUDDIES[t] === slug && TRAINEE_WEEK_OVERRIDES[t] === 0
+  );
+  if (week0Trainee) return WEEK0_BUDDY_BOOKING_TARGETS[dayIdx] ?? 0;
   return TRAINEES_WITH_TARGET.has(slug) ? TRAINEE_BOOKINGS_TARGET_DAILY : 0;
 }
 
 function getIndividualEowTarget(slug: string): number {
-  if (TRAINEE_WEEK_OVERRIDES["sydney-arnold"] === 0) {
-    if (slug === "sydney-arnold") return SYDNEY_WEEK0_EOW;
-    if (slug === "felipe-garcia") return FELIPE_WEEK0_EOW;
-  }
+  if (TRAINEE_WEEK_OVERRIDES[slug] === 0) return WEEK0_TRAINEE_EOW;
+  const week0Trainee = Object.keys(WEEK0_BUDDIES).find(
+    (t) => WEEK0_BUDDIES[t] === slug && TRAINEE_WEEK_OVERRIDES[t] === 0
+  );
+  if (week0Trainee) return WEEK0_BUDDY_EOW;
   return TRAINEES_WITH_TARGET.has(slug) ? TEAM_BOOKINGS_TARGET_EOW : 0;
 }
 
