@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 
 const CLOSERS = ['Lucas', 'Dylan', 'Felipe', 'Thomas'];
-const BOOKERS = ['Lucas', 'Dylan', 'Felipe', 'Thomas'];
+const BOOKERS = ['Cindy', 'Krishna', 'Thomas', 'Riley', 'Sydney', 'Felipe', 'Dylan', 'Lucas'];
 const VIEWERS = ['Lucas', 'Dylan', 'Felipe', 'Admin'];
 
 const MS_PLANS  = ['Web Support','SEO Support','Digital Support','Diamond','Platinum','Gold','Silver','Bronze'];
@@ -19,6 +19,7 @@ const STATUS_COLORS: Record<string,{bg:string;text:string;border:string}> = {
 
 const WEEK_COLORS: Record<string,string> = {
   'Week 1':'#f97316','Week 2':'#a78bfa','Week 3':'#34d399','Week 4+':'#60a5fa',
+  'Won':'#16a34a','Lost':'#dc2626',
 };
 
 const BUCKET_TARGETS: Record<string,number> = {
@@ -28,6 +29,7 @@ const BUCKET_TARGETS: Record<string,number> = {
 type Status = 'Active'|'Won'|'Lost';
 type Brand  = 'MS'|'Quodo'|'Both';
 type Bucket = 'Week 1'|'Week 2'|'Week 3'|'Week 4+';
+type ViewMode = Bucket | 'Won' | 'Lost';
 
 interface Deal {
   id:string; BusinessName:string; DateOfMeeting:string; CloseDate:string;
@@ -44,6 +46,36 @@ function getWeekBucket(closeDate:string):Bucket {
   const diff=Math.floor((close.getTime()-mon.getTime())/86400000);
   if(diff<7)return 'Week 1'; if(diff<14)return 'Week 2';
   if(diff<21)return 'Week 3'; return 'Week 4+';
+}
+
+function getWeekDateRange(bucket: Bucket): string {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const mon = new Date(today);
+  mon.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+  const offsets: Record<Bucket, number> = { 'Week 1': 0, 'Week 2': 7, 'Week 3': 14, 'Week 4+': 21 };
+  const start = new Date(mon); start.setDate(mon.getDate() + offsets[bucket]);
+  const end = new Date(start); end.setDate(start.getDate() + 4);
+  const fmt = (d: Date) => d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+  if (bucket === 'Week 4+') return `From ${fmt(start)}`;
+  return `${fmt(start)} – ${fmt(end)}`;
+}
+
+function groupDealsByDay(deals: Deal[]): Array<{ dateStr: string; label: string; deals: Deal[] }> {
+  const map = new Map<string, Deal[]>();
+  deals.forEach(d => {
+    const key = d.CloseDate || 'tbc';
+    if (!map.has(key)) map.set(key, []);
+    map.get(key)!.push(d);
+  });
+  return Array.from(map.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([dateStr, dayDeals]) => ({
+      dateStr,
+      label: dateStr === 'tbc'
+        ? 'No close date set'
+        : new Date(dateStr + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' }),
+      deals: [...dayDeals].sort((a, b) => (a.CloseTime || '99:99').localeCompare(b.CloseTime || '99:99')),
+    }));
 }
 
 function fmt$(n:number){return '$'+n.toLocaleString(undefined,{maximumFractionDigits:0});}
@@ -101,8 +133,13 @@ function DealCard({deal,onStatusChange,onReschedule,canEdit}:{
           <div className="font-black text-gray-900 text-sm leading-tight truncate">{deal.BusinessName}</div>
           <div className="text-xs text-gray-400 mt-0.5">{deal.Brand} · {deal.Plan||'—'}</div>
         </div>
-        <div className="flex-shrink-0 px-2 py-0.5 rounded-full text-[10px] font-black border"
-          style={{background:sc.bg,color:sc.text,borderColor:sc.border}}>{deal.Status}</div>
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          <div className="px-2 py-0.5 rounded-full text-[10px] font-black border"
+            style={{background:sc.bg,color:sc.text,borderColor:sc.border}}>{deal.Status}</div>
+          <div className={`px-2 py-0.5 rounded-full text-[10px] font-black border ${deal.GTH==='GTH'?'bg-orange-50 text-orange-600 border-orange-200':'bg-gray-50 text-gray-500 border-gray-200'}`}>
+            {deal.GTH}
+          </div>
+        </div>
       </div>
 
       {/* Values */}
@@ -118,7 +155,6 @@ function DealCard({deal,onStatusChange,onReschedule,canEdit}:{
       {/* Meta */}
       <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-gray-500">
         <span>📅 Close: <strong>{deal.CloseDate}</strong>{deal.CloseTime?` @ ${deal.CloseTime}`:''}</span>
-        <span>🎯 {deal.GTH}</span>
         <span>👤 {deal.Closer}</span>
         <span>📞 {deal.Booker}</span>
       </div>
@@ -224,7 +260,7 @@ function BucketVisual({bucket,deals,targetValue}:{bucket:Bucket;deals:Deal[];tar
 
 export default function PipelinePage(){
   const [tab,setTab]=useState<'pipeline'|'log'>('pipeline');
-  const [weekTab,setWeekTab]=useState<Bucket>('Week 1');
+  const [viewMode,setViewMode]=useState<ViewMode>('Week 1');
   const [user,setUser]=useState('');
   const [deals,setDeals]=useState<Deal[]>([]);
   const [loading,setLoading]=useState(true);
@@ -314,7 +350,7 @@ export default function PipelinePage(){
         setFBooker('');setFMonthly('');setFWeekly('');setFUpfront('');
         setFGTH('');setFNextContact('');setFBrand('');setFPlan('');
         setFExtras([]);setFNotes('');setFDate(todayStr());
-        setTab('pipeline');setWeekTab(closedBucket);
+        setTab('pipeline');setViewMode(closedBucket);
       }
     }finally{setSaving(false);}
   }
@@ -330,6 +366,18 @@ export default function PipelinePage(){
     deals.filter(d=>d.Status==='Active').forEach(d=>{map[d.WeekBucket]+=d.MonthlyValue;});
     return map;
   },[deals]);
+
+  const dealsForView=useMemo(()=>{
+    if(viewMode==='Won')return deals.filter(d=>d.Status==='Won');
+    if(viewMode==='Lost')return deals.filter(d=>d.Status==='Lost');
+    return dealsByBucket[viewMode]||[];
+  },[viewMode,deals,dealsByBucket]);
+
+  const wonDeals=useMemo(()=>deals.filter(d=>d.Status==='Won'),[deals]);
+  const lostDeals=useMemo(()=>deals.filter(d=>d.Status==='Lost'),[deals]);
+
+  const isBucket=(vm:ViewMode):vm is Bucket=>['Week 1','Week 2','Week 3','Week 4+'].includes(vm);
+  const viewColor=WEEK_COLORS[viewMode]||'#f97316';
 
   if(!user){
     return(
@@ -367,6 +415,7 @@ export default function PipelinePage(){
 
   return(
     <div className="min-h-screen" style={{background:'#f4f6f9'}}>
+      {/* Top nav */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
@@ -380,7 +429,7 @@ export default function PipelinePage(){
         </div>
         <div className="max-w-6xl mx-auto px-6 flex gap-1">
           {[{key:'pipeline',label:'📊 Pipeline View'},...(canLog?[{key:'log',label:'✏️ Log a Deal'}]:[])].map(t=>(
-            <button key={t.key} onClick={()=>setTab(t.key as any)}
+            <button key={t.key} onClick={()=>setTab(t.key as 'pipeline'|'log')}
               className="px-4 py-2.5 text-sm font-bold border-b-2 transition-all"
               style={{borderColor:tab===t.key?'#f97316':'transparent',color:tab===t.key?'#f97316':'#6b7280'}}>
               {t.label}
@@ -391,64 +440,159 @@ export default function PipelinePage(){
 
       <div className="max-w-6xl mx-auto px-6 py-6">
 
+        {/* ── PIPELINE VIEW ── */}
         {tab==='pipeline'&&(
           <div className="flex flex-col gap-6">
+
             {/* Bucket overview */}
             <div className="bg-white rounded-2xl border border-gray-200 p-5">
               <div className="flex items-center justify-between mb-5">
                 <div className="text-xs font-black uppercase tracking-widest text-gray-500">Pipeline Overview</div>
                 <button onClick={fetchDeals} className="text-xs text-orange-500 font-bold hover:text-orange-600">↻ Refresh</button>
               </div>
+              {/* Week buckets */}
               <div className="grid grid-cols-4 gap-6">
                 {(['Week 1','Week 2','Week 3','Week 4+'] as Bucket[]).map(b=>(
-                  <button key={b} onClick={()=>setWeekTab(b)} className="flex flex-col gap-2 transition-all"
-                    style={{opacity:weekTab===b?1:0.6}}>
+                  <button key={b} onClick={()=>setViewMode(b)} className="flex flex-col gap-2 transition-all"
+                    style={{opacity:viewMode===b?1:0.6}}>
                     <BucketVisual bucket={b} deals={dealsByBucket[b]} targetValue={BUCKET_TARGETS[b]}/>
                     <div className="text-center">
                       <div className="text-xs font-black" style={{color:WEEK_COLORS[b]}}>{b}</div>
+                      <div className="text-[10px] font-semibold text-gray-500">{getWeekDateRange(b)}</div>
                       <div className="text-[10px] text-gray-400">{dealsByBucket[b].length} deals</div>
                     </div>
-                    {weekTab===b&&<div className="w-full h-1 rounded-full" style={{background:WEEK_COLORS[b]}}/>}
+                    {viewMode===b&&<div className="w-full h-1 rounded-full" style={{background:WEEK_COLORS[b]}}/>}
                   </button>
                 ))}
               </div>
+              {/* Won / Lost pills */}
+              <div className="flex gap-3 mt-5 pt-4 border-t border-gray-100">
+                <button onClick={()=>setViewMode('Won')}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 transition-all flex-1 justify-center"
+                  style={{borderColor:viewMode==='Won'?'#16a34a':'#e5e7eb',background:viewMode==='Won'?'#f0fdf4':'#f9fafb'}}>
+                  <span>🏆</span>
+                  <span className="text-sm font-black" style={{color:viewMode==='Won'?'#16a34a':'#6b7280'}}>Won</span>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full"
+                    style={{background:viewMode==='Won'?'#dcfce7':'#f3f4f6',color:viewMode==='Won'?'#16a34a':'#9ca3af'}}>
+                    {wonDeals.length}
+                  </span>
+                </button>
+                <button onClick={()=>setViewMode('Lost')}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 transition-all flex-1 justify-center"
+                  style={{borderColor:viewMode==='Lost'?'#dc2626':'#e5e7eb',background:viewMode==='Lost'?'#fef2f2':'#f9fafb'}}>
+                  <span>✕</span>
+                  <span className="text-sm font-black" style={{color:viewMode==='Lost'?'#dc2626':'#6b7280'}}>Lost</span>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full"
+                    style={{background:viewMode==='Lost'?'#fee2e2':'#f3f4f6',color:viewMode==='Lost'?'#dc2626':'#9ca3af'}}>
+                    {lostDeals.length}
+                  </span>
+                </button>
+              </div>
             </div>
 
-            {/* Active week deals */}
+            {/* Deal list — chronological by day */}
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{background:WEEK_COLORS[weekTab]}}/>
-                  <span className="text-sm font-black text-gray-800">{weekTab}</span>
-                  <span className="text-xs text-gray-400">— {dealsByBucket[weekTab].length} deals · {fmt$(totalByBucket[weekTab])} active</span>
+              {/* Section header */}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <div className="w-3 h-3 rounded-full flex-shrink-0" style={{background:viewColor}}/>
+                  <span className="text-sm font-black text-gray-800">{viewMode}</span>
+                  {isBucket(viewMode)&&(
+                    <span className="text-xs font-semibold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
+                      {getWeekDateRange(viewMode)}
+                    </span>
+                  )}
+                  <span className="text-xs text-gray-400">
+                    — {dealsForView.length} deal{dealsForView.length!==1?'s':''}
+                  </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500">Target: {fmt$(BUCKET_TARGETS[weekTab])} <span className="text-gray-400">({fmt$(Math.round(BUCKET_TARGETS[weekTab]/4.33/100)*100)}/wk)</span></span>
-                  <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div className="h-full rounded-full transition-all"
-                      style={{width:`${Math.min((totalByBucket[weekTab]/BUCKET_TARGETS[weekTab])*100,100)}%`,background:WEEK_COLORS[weekTab]}}/>
+                {isBucket(viewMode)&&(
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-500">
+                      Target: {fmt$(BUCKET_TARGETS[viewMode])}
+                      <span className="text-gray-400"> ({fmt$(Math.round(BUCKET_TARGETS[viewMode]/4.33/100)*100)}/wk)</span>
+                    </span>
+                    <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full transition-all"
+                        style={{width:`${Math.min((totalByBucket[viewMode]/BUCKET_TARGETS[viewMode])*100,100)}%`,background:viewColor}}/>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
+
+              {/* Deals */}
               {loading?(
                 <div className="text-center py-12 text-gray-400 text-sm">Loading deals...</div>
-              ):dealsByBucket[weekTab].length===0?(
+              ):dealsForView.length===0?(
                 <div className="bg-white rounded-2xl border border-gray-200 py-12 text-center">
-                  <div className="text-3xl mb-2">📭</div>
-                  <div className="text-sm text-gray-500 font-semibold">No deals in {weekTab} yet</div>
-                  {canLog&&<button onClick={()=>setTab('log')} className="mt-3 text-sm text-orange-500 font-bold underline">Log a deal →</button>}
+                  <div className="text-3xl mb-2">{viewMode==='Won'?'🏆':viewMode==='Lost'?'❌':'📭'}</div>
+                  <div className="text-sm text-gray-500 font-semibold">No {viewMode} deals yet</div>
+                  {canLog&&isBucket(viewMode)&&(
+                    <button onClick={()=>setTab('log')} className="mt-3 text-sm text-orange-500 font-bold underline">Log a deal →</button>
+                  )}
                 </div>
               ):(
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {dealsByBucket[weekTab].map(deal=>(
-                    <DealCard key={deal.id} deal={deal} onStatusChange={handleStatusChange} onReschedule={handleReschedule} canEdit={canLog||user==='Admin'}/>
-                  ))}
+                <div className="flex flex-col gap-8">
+                  {groupDealsByDay(dealsForView).map(({dateStr,label,deals:dayDeals})=>{
+                    const gthWeekly=dayDeals.reduce((a,d)=>d.GTH==='GTH'?a+d.WeeklyValue:a,0);
+                    const nonGthWeekly=dayDeals.reduce((a,d)=>d.GTH!=='GTH'?a+d.WeeklyValue:a,0);
+                    const totalWeekly=gthWeekly+nonGthWeekly;
+                    return(
+                      <div key={dateStr}>
+                        {/* Day heading */}
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="h-px flex-1 bg-gray-200"/>
+                          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-200 bg-white shadow-sm flex-shrink-0">
+                            <div className="w-2 h-2 rounded-full" style={{background:viewColor}}/>
+                            <span className="text-xs font-black text-gray-700">{label}</span>
+                            <span className="text-[10px] text-gray-400">· {dayDeals.length} deal{dayDeals.length!==1?'s':''}</span>
+                          </div>
+                          <div className="h-px flex-1 bg-gray-200"/>
+                        </div>
+
+                        {/* Deal cards — stacked */}
+                        <div className="flex flex-col gap-3 mb-4">
+                          {dayDeals.map(deal=>(
+                            <DealCard key={deal.id} deal={deal}
+                              onStatusChange={handleStatusChange}
+                              onReschedule={handleReschedule}
+                              canEdit={canLog||user==='Admin'}/>
+                          ))}
+                        </div>
+
+                        {/* Day summary bar */}
+                        <div className="rounded-xl border border-gray-200 bg-white px-5 py-3 flex flex-wrap gap-x-6 gap-y-2 items-center">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 mr-2">Day Total</span>
+                          <div className="flex items-center gap-1.5">
+                            <span className="inline-block w-2 h-2 rounded-full bg-orange-400"/>
+                            <span className="text-[10px] font-bold text-orange-500 uppercase tracking-wider">GTH</span>
+                            <span className="text-sm font-black text-gray-800">{fmt$(gthWeekly)}</span>
+                            <span className="text-[10px] text-gray-400">/wk</span>
+                          </div>
+                          <div className="text-gray-200">|</div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="inline-block w-2 h-2 rounded-full bg-purple-400"/>
+                            <span className="text-[10px] font-bold text-purple-500 uppercase tracking-wider">Non-GTH</span>
+                            <span className="text-sm font-black text-gray-800">{fmt$(nonGthWeekly)}</span>
+                            <span className="text-[10px] text-gray-400">/wk</span>
+                          </div>
+                          <div className="text-gray-200">|</div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Total</span>
+                            <span className="text-sm font-black text-gray-700">{fmt$(totalWeekly)}</span>
+                            <span className="text-[10px] text-gray-400">/wk</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
           </div>
         )}
 
+        {/* ── LOG A DEAL ── */}
         {tab==='log'&&canLog&&(
           <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
