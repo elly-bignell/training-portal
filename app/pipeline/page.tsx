@@ -126,67 +126,80 @@ function DealCard({deal,onStatusChange,onReschedule,canEdit}:{
   const historyDates = deal.CloseDateHistory ? deal.CloseDateHistory.split(' | ') : [];
 
   return(
-    <div className="bg-white rounded-2xl border-2 p-4 flex flex-col gap-3 shadow-sm" style={{borderColor:sc.border}}>
-      {/* Header */}
-      <div className="flex items-start justify-between gap-2">
+    <div className="bg-white rounded-xl border-2 px-4 py-2.5 flex flex-col gap-1.5 shadow-sm" style={{borderColor:sc.border}}>
+      {/* Header row — name + badges + values all inline */}
+      <div className="flex items-center gap-3 min-w-0">
         <div className="flex-1 min-w-0">
           <div className="font-black text-gray-900 text-sm leading-tight truncate">{deal.BusinessName}</div>
-          <div className="text-xs text-gray-400 mt-0.5">{deal.Brand} · {deal.Plan||'—'}</div>
+          <div className="text-[10px] text-gray-400">{deal.Brand}{deal.Plan?` · ${deal.Plan}`:''}</div>
         </div>
+        {/* Value pills */}
         <div className="flex items-center gap-1.5 flex-shrink-0">
-          <div className="px-2 py-0.5 rounded-full text-[10px] font-black border"
+          <div className="flex flex-col items-center bg-gray-50 rounded-lg px-2 py-1 min-w-[56px]">
+            <span className="text-[8px] text-gray-400 font-semibold uppercase leading-none">Monthly</span>
+            <span className="text-xs font-black text-gray-800 leading-snug">{fmt$(deal.MonthlyValue)}</span>
+          </div>
+          <div className="flex flex-col items-center bg-gray-50 rounded-lg px-2 py-1 min-w-[48px]">
+            <span className="text-[8px] text-gray-400 font-semibold uppercase leading-none">Weekly</span>
+            <span className="text-xs font-black text-gray-800 leading-snug">{fmt$(deal.WeeklyValue)}</span>
+          </div>
+          {deal.UpfrontValue&&(
+            <div className="flex flex-col items-center bg-gray-50 rounded-lg px-2 py-1 min-w-[48px]">
+              <span className="text-[8px] text-gray-400 font-semibold uppercase leading-none">Upfront</span>
+              <span className="text-xs font-black text-gray-800 leading-snug">{fmt$(deal.UpfrontValue)}</span>
+            </div>
+          )}
+        </div>
+        {/* Status + GTH badges */}
+        <div className="flex items-center gap-1 flex-shrink-0">
+          <div className="px-1.5 py-0.5 rounded-full text-[9px] font-black border"
             style={{background:sc.bg,color:sc.text,borderColor:sc.border}}>{deal.Status}</div>
-          <div className={`px-2 py-0.5 rounded-full text-[10px] font-black border ${deal.GTH==='GTH'?'bg-orange-50 text-orange-600 border-orange-200':'bg-gray-50 text-gray-500 border-gray-200'}`}>
+          <div className={`px-1.5 py-0.5 rounded-full text-[9px] font-black border ${deal.GTH==='GTH'?'bg-orange-50 text-orange-600 border-orange-200':'bg-gray-50 text-gray-400 border-gray-200'}`}>
             {deal.GTH}
           </div>
         </div>
       </div>
 
-      {/* Values */}
-      <div className="grid grid-cols-3 gap-2">
-        {[{label:'Monthly',val:fmt$(deal.MonthlyValue)},{label:'Weekly',val:fmt$(deal.WeeklyValue)},{label:'Upfront',val:deal.UpfrontValue?fmt$(deal.UpfrontValue):'—'}].map(s=>(
-          <div key={s.label} className="bg-gray-50 rounded-xl p-2 text-center">
-            <div className="text-[9px] text-gray-400 font-semibold uppercase">{s.label}</div>
-            <div className="text-sm font-black text-gray-800">{s.val}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* Meta */}
-      <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-gray-500">
-        <span>📅 Close: <strong>{deal.CloseDate}</strong>{deal.CloseTime?` @ ${deal.CloseTime}`:''}</span>
+      {/* Meta row */}
+      <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-gray-400">
+        {deal.CloseTime&&<span>🕐 {deal.CloseTime}</span>}
         <span>👤 {deal.Closer}</span>
         <span>📞 {deal.Booker}</span>
+        {deal.Extras&&<span><strong className="text-gray-500">+</strong> {deal.Extras}</span>}
+        {deal.NextContactDate&&<span>📆 {deal.NextContactDate}</span>}
+        {deal.Notes&&<span className="italic">{deal.Notes}</span>}
       </div>
 
-      {/* Close date history */}
+      {/* Close date history — collapsed */}
       {historyDates.length > 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1.5">
-          <div className="text-[9px] font-bold text-amber-600 uppercase tracking-wider mb-1">
-            📆 Moved {historyDates.length}x
-          </div>
-          {historyDates.map((h,i) => (
-            <div key={i} className="text-[10px] text-amber-700">{h}</div>
-          ))}
+        <div className="text-[9px] text-amber-600 font-semibold">
+          📆 Moved {historyDates.length}x: {historyDates[historyDates.length-1]}
         </div>
       )}
-
-      {deal.Extras&&<div className="text-[10px] text-gray-400"><strong className="text-gray-500">Extras:</strong> {deal.Extras}</div>}
-      {deal.NextContactDate&&<div className="text-[10px] text-gray-400"><strong className="text-gray-500">Next contact:</strong> {deal.NextContactDate}</div>}
       {deal.Notes&&<div className="text-[10px] text-gray-400 italic">{deal.Notes}</div>}
 
-      {/* Reschedule */}
+      {/* Reschedule + Status — inline */}
       {canEdit && (
-        <div className="border-t border-gray-100 pt-2">
+        <div className="flex items-center gap-2 border-t border-gray-100 pt-1.5">
           {!showReschedule ? (
-            <button onClick={()=>setShowReschedule(true)}
-              className="w-full text-[10px] font-bold text-gray-400 hover:text-orange-500 transition-colors py-1">
-              📅 Move close date
-            </button>
+            <>
+              <button onClick={()=>setShowReschedule(true)}
+                className="text-[9px] font-bold text-gray-400 hover:text-orange-500 transition-colors whitespace-nowrap">
+                📅 Move date
+              </button>
+              <div className="flex-1"/>
+              {(['Active','Won','Lost'] as Status[]).map(s=>(
+                <button key={s} onClick={()=>handleStatus(s)} disabled={changing||deal.Status===s}
+                  className="rounded-lg px-2.5 py-1 text-[9px] font-black border transition-all"
+                  style={{background:deal.Status===s?STATUS_COLORS[s].bg:'#f9fafb',color:deal.Status===s?STATUS_COLORS[s].text:'#9ca3af',borderColor:deal.Status===s?STATUS_COLORS[s].border:'#e5e7eb'}}>
+                  {s==='Active'?'Active':s==='Won'?'🏆 Won':'✕ Lost'}
+                </button>
+              ))}
+            </>
           ) : (
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center w-full">
               <input type="date" value={newCloseDate} onChange={e=>setNewCloseDate(e.target.value)}
-                className="flex-1 border-2 border-orange-300 rounded-lg px-2 py-1.5 text-xs font-semibold text-gray-700 outline-none"/>
+                className="flex-1 border-2 border-orange-300 rounded-lg px-2 py-1 text-xs font-semibold text-gray-700 outline-none"/>
               {newCloseDate && (
                 <span className="text-[9px] font-black px-1.5 py-0.5 rounded"
                   style={{color:WEEK_COLORS[getWeekBucket(newCloseDate)],background:WEEK_COLORS[getWeekBucket(newCloseDate)]+'20'}}>
@@ -194,27 +207,14 @@ function DealCard({deal,onStatusChange,onReschedule,canEdit}:{
                 </span>
               )}
               <button onClick={handleReschedule} disabled={rescheduling||!newCloseDate}
-                className="text-[10px] font-black text-white px-2.5 py-1.5 rounded-lg transition-all"
+                className="text-[9px] font-black text-white px-2 py-1 rounded-lg transition-all"
                 style={{background:rescheduling||!newCloseDate?'#d1d5db':'#f97316'}}>
                 {rescheduling?'…':'Save'}
               </button>
               <button onClick={()=>{setShowReschedule(false);setNewCloseDate('');}}
-                className="text-[10px] text-gray-400 hover:text-gray-600 px-1">✕</button>
+                className="text-[10px] text-gray-400 hover:text-gray-600">✕</button>
             </div>
           )}
-        </div>
-      )}
-
-      {/* Status buttons */}
-      {canEdit&&(
-        <div className="flex gap-1.5 border-t border-gray-100 pt-2">
-          {(['Active','Won','Lost'] as Status[]).map(s=>(
-            <button key={s} onClick={()=>handleStatus(s)} disabled={changing||deal.Status===s}
-              className="flex-1 rounded-lg py-1.5 text-[10px] font-black border transition-all"
-              style={{background:deal.Status===s?STATUS_COLORS[s].bg:'#f9fafb',color:deal.Status===s?STATUS_COLORS[s].text:'#9ca3af',borderColor:deal.Status===s?STATUS_COLORS[s].border:'#e5e7eb'}}>
-              {s==='Active'?'● Active':s==='Won'?'🏆 Won':'✕ Lost'}
-            </button>
-          ))}
         </div>
       )}
     </div>
