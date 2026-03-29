@@ -658,7 +658,7 @@ export default function PipelinePage(){
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-sm font-black text-gray-800">Previous Week Buckets</h2>
-                <p className="text-xs text-gray-400 mt-0.5">Deals grouped by their close date — shows what each week's pipeline turned into</p>
+                <p className="text-xs text-gray-400 mt-0.5">Deals grouped by their close date — shows what each week&apos;s pipeline turned into</p>
               </div>
               <button onClick={fetchDeals} className="text-xs text-orange-500 font-bold hover:text-orange-600">↻ Refresh</button>
             </div>
