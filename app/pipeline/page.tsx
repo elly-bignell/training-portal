@@ -60,6 +60,38 @@ function getWeekDateRange(bucket: Bucket): string {
   return `${fmt(start)} – ${fmt(end)}`;
 }
 
+// Returns the Monday of the current week
+function currentMonday(): Date {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const mon = new Date(today);
+  mon.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+  return mon;
+}
+
+// Returns array of historical week ranges (most recent first, up to 8 weeks back)
+function getHistoricalWeeks(): Array<{label:string; start:Date; end:Date; weekOffset:number}> {
+  const mon = currentMonday();
+  const weeks = [];
+  for (let i = 1; i <= 8; i++) {
+    const start = new Date(mon); start.setDate(mon.getDate() - i * 7);
+    const end = new Date(start); end.setDate(start.getDate() + 6);
+    const fmtShort = (d:Date) => d.toLocaleDateString('en-AU', { day:'numeric', month:'short' });
+    weeks.push({ label: `${fmtShort(start)} – ${fmtShort(end)}`, start, end, weekOffset: i });
+  }
+  return weeks;
+}
+
+// Given a deal's CloseDate, find which historical week it belongs to (returns weekOffset or null)
+function getHistoricalWeekOffset(closeDate:string): number|null {
+  const close = new Date(closeDate + 'T00:00:00');
+  const mon = currentMonday();
+  const diffDays = Math.floor((mon.getTime() - close.getTime()) / 86400000);
+  if (diffDays <= 0) return null; // current week or future
+  const weekOffset = Math.ceil(diffDays / 7);
+  if (weekOffset > 8) return null;
+  return weekOffset;
+}
+
 function groupDealsByDay(deals: Deal[]): Array<{ dateStr: string; label: string; deals: Deal[] }> {
   const map = new Map<string, Deal[]>();
   deals.forEach(d => {
@@ -259,9 +291,8 @@ function BucketVisual({bucket,deals,targetValue}:{bucket:Bucket;deals:Deal[];tar
 }
 
 export default function PipelinePage(){
-  const [tab,setTab]=useState<'pipeline'|'log'>('pipeline');
+  const [tab,setTab]=useState<'pipeline'|'log'|'history'>('pipeline');
   const [viewMode,setViewMode]=useState<ViewMode>('Week 1');
-  const [user,setUser]=useState('');
   const [deals,setDeals]=useState<Deal[]>([]);
   const [loading,setLoading]=useState(true);
   const [saving,setSaving]=useState(false);
@@ -283,8 +314,8 @@ export default function PipelinePage(){
   const [fExtras,setFExtras]=useState<string[]>([]);
   const [fNotes,setFNotes]=useState('');
 
-  const canLog=CLOSERS.includes(user);
-  const canView=VIEWERS.includes(user);
+  const canLog=true;
+  const canView=true;
 
   const planOptions=useMemo(()=>{
     if(fBrand==='MS')return MS_PLANS;
@@ -306,7 +337,7 @@ export default function PipelinePage(){
     finally{setLoading(false);}
   },[]);
 
-  useEffect(()=>{if(canView)fetchDeals();},[canView,fetchDeals]);
+  useEffect(()=>{fetchDeals();},[fetchDeals]);
   useEffect(()=>{setFPlan('');setFExtras([]);},[fBrand]);
 
   async function handleStatusChange(id:string,status:Status){
@@ -338,7 +369,7 @@ export default function PipelinePage(){
         Brand:fBrand,...(fPlan?{Plan:fPlan}:{}),
         ...(fExtras.length?{Extras:fExtras.join(', ')}:{}),
         ...(fNotes?{Notes:fNotes}:{}),
-        WeekBucket:bucket,Status:'Active',LoggedBy:user,
+        WeekBucket:bucket,Status:'Active',LoggedBy:'Admin',
       };
       const res=await fetch('/api/pipeline/deals',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
       if(res.ok){
@@ -379,39 +410,7 @@ export default function PipelinePage(){
   const isBucket=(vm:ViewMode):vm is Bucket=>['Week 1','Week 2','Week 3','Week 4+'].includes(vm);
   const viewColor=WEEK_COLORS[viewMode]||'#f97316';
 
-  if(!user){
-    return(
-      <div className="min-h-screen flex items-center justify-center" style={{background:'#f4f6f9'}}>
-        <div className="bg-white rounded-2xl border-2 border-gray-200 p-8 w-full max-w-sm flex flex-col gap-5 shadow-sm">
-          <div>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Marketing Sweet</div>
-            <h1 className="text-2xl font-black text-gray-900 mt-1">Pipeline</h1>
-            <p className="text-sm text-gray-500 mt-1">Select your name to continue</p>
-          </div>
-          <div className="flex flex-col gap-2">
-            {['Lucas','Dylan','Felipe','Thomas','Admin'].map(name=>(
-              <button key={name} onClick={()=>setUser(name)}
-                className="w-full rounded-xl border-2 border-gray-200 py-3 text-sm font-black text-gray-700 hover:border-orange-400 hover:text-orange-500 transition-all">
-                {name}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
 
-  if(!canView){
-    return(
-      <div className="min-h-screen flex items-center justify-center" style={{background:'#f4f6f9'}}>
-        <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center">
-          <div className="text-2xl mb-2">🔒</div>
-          <div className="font-black text-gray-800">Access restricted</div>
-          <button onClick={()=>setUser('')} className="mt-4 text-sm text-orange-500 underline">Switch user</button>
-        </div>
-      </div>
-    );
-  }
 
   return(
     <div className="min-h-screen" style={{background:'#f4f6f9'}}>
@@ -422,10 +421,7 @@ export default function PipelinePage(){
             <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Marketing Sweet</div>
             <h1 className="text-xl font-black text-gray-900">Pipeline</h1>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-500 font-semibold">{user}</span>
-            <button onClick={()=>setUser('')} className="text-xs text-gray-400 hover:text-orange-500 transition-colors">Switch</button>
-          </div>
+          <button onClick={fetchDeals} className="text-xs text-gray-400 hover:text-orange-500 transition-colors font-bold">↻ Refresh</button>
         </div>
         <div className="max-w-6xl mx-auto px-6 flex gap-1">
           {[{key:'pipeline',label:'📊 Pipeline View'},...(canLog?[{key:'log',label:'✏️ Log a Deal'}]:[])].map(t=>(
@@ -556,7 +552,7 @@ export default function PipelinePage(){
                             <DealCard key={deal.id} deal={deal}
                               onStatusChange={handleStatusChange}
                               onReschedule={handleReschedule}
-                              canEdit={canLog||user==='Admin'}/>
+                              canEdit={canLog}/>
                           ))}
                         </div>
 
