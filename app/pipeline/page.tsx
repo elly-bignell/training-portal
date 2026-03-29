@@ -68,6 +68,13 @@ function currentMonday(): Date {
   return mon;
 }
 
+// True if closeDate falls before the current Monday (i.e. a previous week)
+function isPastWeek(closeDate: string): boolean {
+  if (!closeDate) return false;
+  const close = new Date(closeDate + 'T00:00:00');
+  return close < currentMonday();
+}
+
 // Returns array of historical week ranges (most recent first, up to 8 weeks back)
 function getHistoricalWeeks(): Array<{label:string; start:Date; end:Date; weekOffset:number}> {
   const mon = currentMonday();
@@ -92,22 +99,33 @@ function getHistoricalWeekOffset(closeDate:string): number|null {
   return weekOffset;
 }
 
-function groupDealsByDay(deals: Deal[]): Array<{ dateStr: string; label: string; deals: Deal[] }> {
+function groupDealsByDay(deals: Deal[]): Array<{ dateStr: string; label: string; deals: Deal[]; overdue: boolean }> {
   const map = new Map<string, Deal[]>();
   deals.forEach(d => {
     const key = d.CloseDate || 'tbc';
     if (!map.has(key)) map.set(key, []);
     map.get(key)!.push(d);
   });
+  const mon = currentMonday();
   return Array.from(map.entries())
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([dateStr, dayDeals]) => ({
-      dateStr,
-      label: dateStr === 'tbc'
-        ? 'No close date set'
-        : new Date(dateStr + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' }),
-      deals: [...dayDeals].sort((a, b) => (a.CloseTime || '99:99').localeCompare(b.CloseTime || '99:99')),
-    }));
+    .map(([dateStr, dayDeals]) => {
+      const isOverdue = dateStr !== 'tbc' && new Date(dateStr + 'T00:00:00') < mon;
+      return {
+        dateStr,
+        overdue: isOverdue,
+        label: dateStr === 'tbc'
+          ? 'No close date set'
+          : new Date(dateStr + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' }),
+        deals: [...dayDeals].sort((a, b) => (a.CloseTime || '99:99').localeCompare(b.CloseTime || '99:99')),
+      };
+    })
+    .sort((a, b) => {
+      // Overdue days always first
+      if (a.overdue && !b.overdue) return -1;
+      if (!a.overdue && b.overdue) return 1;
+      return a.dateStr.localeCompare(b.dateStr);
+    });
 }
 
 function fmt$(n:number){return '$'+n.toLocaleString(undefined,{maximumFractionDigits:0});}
@@ -127,13 +145,15 @@ function Field({label,children,required}:{label:string;children:React.ReactNode;
 const inputCls="border-2 border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 font-semibold outline-none focus:border-orange-400 bg-white w-full";
 const selectCls="border-2 border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 font-semibold outline-none focus:border-orange-400 bg-white w-full";
 
-function DealCard({deal,onStatusChange,onReschedule,canEdit}:{
+function DealCard({deal,onStatusChange,onReschedule,canEdit,overdue}:{
   deal:Deal;
   onStatusChange:(id:string,s:Status)=>void;
   onReschedule:(id:string,newDate:string,history:string)=>void;
   canEdit:boolean;
+  overdue?:boolean;
 }){
   const sc=STATUS_COLORS[deal.Status]||STATUS_COLORS.Active;
+  const borderColor = overdue ? '#fca5a5' : sc.border;
   const [changing,setChanging]=useState(false);
   const [showReschedule,setShowReschedule]=useState(false);
   const [newCloseDate,setNewCloseDate]=useState('');
@@ -158,7 +178,13 @@ function DealCard({deal,onStatusChange,onReschedule,canEdit}:{
   const historyDates = deal.CloseDateHistory ? deal.CloseDateHistory.split(' | ') : [];
 
   return(
-    <div className="bg-white rounded-xl border-2 px-4 py-2.5 flex flex-col gap-1.5 shadow-sm" style={{borderColor:sc.border}}>
+    <div className="bg-white rounded-xl border-2 px-4 py-2.5 flex flex-col gap-1.5 shadow-sm" style={{borderColor}}>
+      {/* Overdue banner */}
+      {overdue && (
+        <div className="flex items-center gap-1.5 bg-red-50 rounded-lg px-2 py-1 -mx-1">
+          <span className="text-[9px] font-black text-red-600 uppercase tracking-widest">⚠ OVERDUE — Mark Won, Lost, or move date</span>
+        </div>
+      )}
       {/* Header row — name + badges + values all inline */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="flex-1 min-w-0">
@@ -399,13 +425,26 @@ export default function PipelinePage(){
   },[deals]);
 
   const dealsForView=useMemo(()=>{
-    if(viewMode==='Won')return deals.filter(d=>d.Status==='Won');
-    if(viewMode==='Lost')return deals.filter(d=>d.Status==='Lost');
-    return dealsByBucket[viewMode]||[];
+    if(viewMode==='Won') return deals.filter(d=>d.Status==='Won' && !isPastWeek(d.CloseDate));
+    if(viewMode==='Lost') return deals.filter(d=>d.Status==='Lost' && !isPastWeek(d.CloseDate));
+    // For week buckets: exclude Won/Lost from previous weeks (they live in history tab)
+    // Active overdue deals stay — sorted to top of Week 1
+    const bucketDeals = (dealsByBucket[viewMode]||[]).filter(d => {
+      if(d.Status !== 'Active' && isPastWeek(d.CloseDate)) return false;
+      return true;
+    });
+    if(viewMode === 'Week 1') {
+      const overdue = bucketDeals.filter(d => d.Status === 'Active' && isPastWeek(d.CloseDate));
+      const current = bucketDeals.filter(d => !isPastWeek(d.CloseDate) || d.Status !== 'Active');
+      // Sort overdue by closeDate ascending, current by closeDate ascending
+      overdue.sort((a,b) => a.CloseDate.localeCompare(b.CloseDate));
+      return [...overdue, ...current];
+    }
+    return bucketDeals;
   },[viewMode,deals,dealsByBucket]);
 
-  const wonDeals=useMemo(()=>deals.filter(d=>d.Status==='Won'),[deals]);
-  const lostDeals=useMemo(()=>deals.filter(d=>d.Status==='Lost'),[deals]);
+  const wonDeals=useMemo(()=>deals.filter(d=>d.Status==='Won' && !isPastWeek(d.CloseDate)),[deals]);
+  const lostDeals=useMemo(()=>deals.filter(d=>d.Status==='Lost' && !isPastWeek(d.CloseDate)),[deals]);
 
   // Per-bucket won/lost stats for current week overview
   const bucketStats=useMemo(()=>{
@@ -593,7 +632,7 @@ export default function PipelinePage(){
                 </div>
               ):(
                 <div className="flex flex-col gap-8">
-                  {groupDealsByDay(dealsForView).map(({dateStr,label,deals:dayDeals})=>{
+                  {groupDealsByDay(dealsForView).map(({dateStr,label,deals:dayDeals,overdue})=>{
                     const gthWeekly=dayDeals.reduce((a,d)=>d.GTH==='GTH'?a+d.WeeklyValue:a,0);
                     const nonGthWeekly=dayDeals.reduce((a,d)=>d.GTH!=='GTH'?a+d.WeeklyValue:a,0);
                     const totalWeekly=gthWeekly+nonGthWeekly;
@@ -602,9 +641,15 @@ export default function PipelinePage(){
                         {/* Day heading */}
                         <div className="flex items-center gap-3 mb-4">
                           <div className="h-px flex-1 bg-gray-200"/>
-                          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-200 bg-white shadow-sm flex-shrink-0">
-                            <div className="w-2 h-2 rounded-full" style={{background:viewColor}}/>
-                            <span className="text-xs font-black text-gray-700">{label}</span>
+                          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border flex-shrink-0 shadow-sm"
+                            style={{
+                              background: overdue ? '#fef2f2' : 'white',
+                              borderColor: overdue ? '#fecaca' : '#e5e7eb',
+                            }}>
+                            {overdue && <span className="text-[9px] font-black text-red-600 uppercase tracking-widest">⚠ OVERDUE</span>}
+                            {overdue && <span className="text-gray-300">·</span>}
+                            <div className="w-2 h-2 rounded-full" style={{background: overdue ? '#ef4444' : viewColor}}/>
+                            <span className="text-xs font-black" style={{color: overdue ? '#dc2626' : 'text-gray-700'}}>{label}</span>
                             <span className="text-[10px] text-gray-400">· {dayDeals.length} deal{dayDeals.length!==1?'s':''}</span>
                           </div>
                           <div className="h-px flex-1 bg-gray-200"/>
@@ -616,7 +661,9 @@ export default function PipelinePage(){
                             <DealCard key={deal.id} deal={deal}
                               onStatusChange={handleStatusChange}
                               onReschedule={handleReschedule}
-                              canEdit={canLog}/>
+                              canEdit={canLog}
+                              overdue={overdue && deal.Status==='Active'}/>
+                          ))}
                           ))}
                         </div>
 
