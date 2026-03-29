@@ -407,6 +407,44 @@ export default function PipelinePage(){
   const wonDeals=useMemo(()=>deals.filter(d=>d.Status==='Won'),[deals]);
   const lostDeals=useMemo(()=>deals.filter(d=>d.Status==='Lost'),[deals]);
 
+  // Per-bucket won/lost stats for current week overview
+  const bucketStats=useMemo(()=>{
+    const s:Record<Bucket,{wonVal:number;wonCount:number;lostVal:number;lostCount:number;activeVal:number;activeCount:number}> = {
+      'Week 1':{wonVal:0,wonCount:0,lostVal:0,lostCount:0,activeVal:0,activeCount:0},
+      'Week 2':{wonVal:0,wonCount:0,lostVal:0,lostCount:0,activeVal:0,activeCount:0},
+      'Week 3':{wonVal:0,wonCount:0,lostVal:0,lostCount:0,activeVal:0,activeCount:0},
+      'Week 4+':{wonVal:0,wonCount:0,lostVal:0,lostCount:0,activeVal:0,activeCount:0},
+    };
+    deals.forEach(d=>{
+      if(!s[d.WeekBucket])return;
+      if(d.Status==='Won'){s[d.WeekBucket].wonVal+=d.MonthlyValue;s[d.WeekBucket].wonCount++;}
+      else if(d.Status==='Lost'){s[d.WeekBucket].lostVal+=d.MonthlyValue;s[d.WeekBucket].lostCount++;}
+      else{s[d.WeekBucket].activeVal+=d.MonthlyValue;s[d.WeekBucket].activeCount++;}
+    });
+    return s;
+  },[deals]);
+
+  // Historical weeks data
+  const historicalWeeks=useMemo(()=>getHistoricalWeeks(),[]);
+  const historicalData=useMemo(()=>{
+    return historicalWeeks.map(wk=>{
+      const wkDeals=deals.filter(d=>{
+        const offset=getHistoricalWeekOffset(d.CloseDate);
+        return offset===wk.weekOffset;
+      });
+      const totalVal=wkDeals.reduce((a,d)=>a+d.MonthlyValue,0);
+      const wonVal=wkDeals.filter(d=>d.Status==='Won').reduce((a,d)=>a+d.MonthlyValue,0);
+      const wonCount=wkDeals.filter(d=>d.Status==='Won').length;
+      const lostVal=wkDeals.filter(d=>d.Status==='Lost').reduce((a,d)=>a+d.MonthlyValue,0);
+      const lostCount=wkDeals.filter(d=>d.Status==='Lost').length;
+      const activeVal=wkDeals.filter(d=>d.Status==='Active').reduce((a,d)=>a+d.MonthlyValue,0);
+      const activeCount=wkDeals.filter(d=>d.Status==='Active').length;
+      const closedVal=wonVal+lostVal;
+      const winRate=closedVal>0?Math.round((wonVal/closedVal)*100):null;
+      return {...wk,wkDeals,totalVal,wonVal,wonCount,lostVal,lostCount,activeVal,activeCount,winRate};
+    }).filter(wk=>wk.wkDeals.length>0);
+  },[deals,historicalWeeks]);
+
   const isBucket=(vm:ViewMode):vm is Bucket=>['Week 1','Week 2','Week 3','Week 4+'].includes(vm);
   const viewColor=WEEK_COLORS[viewMode]||'#f97316';
 
@@ -424,8 +462,8 @@ export default function PipelinePage(){
           <button onClick={fetchDeals} className="text-xs text-gray-400 hover:text-orange-500 transition-colors font-bold">↻ Refresh</button>
         </div>
         <div className="max-w-6xl mx-auto px-6 flex gap-1">
-          {[{key:'pipeline',label:'📊 Pipeline View'},...(canLog?[{key:'log',label:'✏️ Log a Deal'}]:[])].map(t=>(
-            <button key={t.key} onClick={()=>setTab(t.key as 'pipeline'|'log')}
+          {([{key:'pipeline',label:'📊 Pipeline View'},{key:'log',label:'✏️ Log a Deal'},{key:'history',label:'📅 Previous Weeks'}]).map(t=>(
+            <button key={t.key} onClick={()=>setTab(t.key as 'pipeline'|'log'|'history')}
               className="px-4 py-2.5 text-sm font-bold border-b-2 transition-all"
               style={{borderColor:tab===t.key?'#f97316':'transparent',color:tab===t.key?'#f97316':'#6b7280'}}>
               {t.label}
@@ -448,7 +486,11 @@ export default function PipelinePage(){
               </div>
               {/* Week buckets */}
               <div className="grid grid-cols-4 gap-6">
-                {(['Week 1','Week 2','Week 3','Week 4+'] as Bucket[]).map(b=>(
+                {(['Week 1','Week 2','Week 3','Week 4+'] as Bucket[]).map(b=>{
+                  const bs=bucketStats[b];
+                  const closedVal=bs.wonVal+bs.lostVal;
+                  const winRate=closedVal>0?Math.round((bs.wonVal/closedVal)*100):null;
+                  return(
                   <button key={b} onClick={()=>setViewMode(b)} className="flex flex-col gap-2 transition-all"
                     style={{opacity:viewMode===b?1:0.6}}>
                     <BucketVisual bucket={b} deals={dealsByBucket[b]} targetValue={BUCKET_TARGETS[b]}/>
@@ -457,9 +499,31 @@ export default function PipelinePage(){
                       <div className="text-[10px] font-semibold text-gray-500">{getWeekDateRange(b)}</div>
                       <div className="text-[10px] text-gray-400">{dealsByBucket[b].length} deals</div>
                     </div>
+                    {/* Won / Lost mini stats */}
+                    <div className="w-full flex flex-col gap-1 px-1">
+                      {bs.wonCount>0&&(
+                        <div className="flex items-center justify-between text-[9px]">
+                          <span className="text-emerald-600 font-bold">🏆 {bs.wonCount} won</span>
+                          <span className="font-black text-emerald-700">{fmt$(bs.wonVal)}</span>
+                        </div>
+                      )}
+                      {bs.lostCount>0&&(
+                        <div className="flex items-center justify-between text-[9px]">
+                          <span className="text-red-500 font-bold">✕ {bs.lostCount} lost</span>
+                          <span className="font-black text-red-600">{fmt$(bs.lostVal)}</span>
+                        </div>
+                      )}
+                      {winRate!==null&&(
+                        <div className="flex items-center justify-between text-[9px] border-t border-gray-100 pt-1 mt-0.5">
+                          <span className="text-gray-400 font-semibold">Win rate</span>
+                          <span className={`font-black ${winRate>=50?'text-emerald-600':'text-red-500'}`}>{winRate}%</span>
+                        </div>
+                      )}
+                    </div>
                     {viewMode===b&&<div className="w-full h-1 rounded-full" style={{background:WEEK_COLORS[b]}}/>}
                   </button>
-                ))}
+                  );
+                })}
               </div>
               {/* Won / Lost pills */}
               <div className="flex gap-3 mt-5 pt-4 border-t border-gray-100">
@@ -588,7 +652,147 @@ export default function PipelinePage(){
           </div>
         )}
 
-        {/* ── LOG A DEAL ── */}
+        {/* ── HISTORY VIEW ── */}
+        {tab==='history'&&(
+          <div className="flex flex-col gap-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-sm font-black text-gray-800">Previous Week Buckets</h2>
+                <p className="text-xs text-gray-400 mt-0.5">Deals grouped by their close date — shows what each week's pipeline turned into</p>
+              </div>
+              <button onClick={fetchDeals} className="text-xs text-orange-500 font-bold hover:text-orange-600">↻ Refresh</button>
+            </div>
+
+            {loading?(
+              <div className="text-center py-12 text-gray-400 text-sm">Loading...</div>
+            ):historicalData.length===0?(
+              <div className="bg-white rounded-2xl border border-gray-200 py-12 text-center">
+                <div className="text-3xl mb-2">📭</div>
+                <div className="text-sm text-gray-500 font-semibold">No historical deals found</div>
+                <div className="text-xs text-gray-400 mt-1">Deals from previous weeks will appear here once logged</div>
+              </div>
+            ):(
+              <div className="flex flex-col gap-4">
+                {historicalData.map(wk=>{
+                  const closedVal=wk.wonVal+wk.lostVal;
+                  const winRate=closedVal>0?Math.round((wk.wonVal/closedVal)*100):null;
+                  const totalTracked=wk.wonVal+wk.lostVal+wk.activeVal;
+                  return(
+                    <div key={wk.weekOffset} className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                      {/* Week header */}
+                      <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+                        <div>
+                          <div className="text-xs font-black uppercase tracking-widest text-gray-500">
+                            {wk.weekOffset===1?'Last Week':wk.weekOffset===2?'2 Weeks Ago':`${wk.weekOffset} Weeks Ago`}
+                          </div>
+                          <div className="text-sm font-black text-gray-800 mt-0.5">{wk.label}</div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          {winRate!==null&&(
+                            <div className={`px-3 py-1.5 rounded-xl border-2 text-center ${winRate>=50?'border-emerald-200 bg-emerald-50':'border-red-200 bg-red-50'}`}>
+                              <div className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Win Rate</div>
+                              <div className={`text-lg font-black ${winRate>=50?'text-emerald-600':'text-red-500'}`}>{winRate}%</div>
+                            </div>
+                          )}
+                          <div className="text-right">
+                            <div className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Total in bucket</div>
+                            <div className="text-lg font-black text-gray-800">{fmt$(totalTracked)}</div>
+                            <div className="text-[10px] text-gray-400">{wk.wkDeals.length} deals</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Won / Lost / Active breakdown */}
+                      <div className="grid grid-cols-3 divide-x divide-gray-100">
+                        {/* Won */}
+                        <div className="px-5 py-4">
+                          <div className="flex items-center gap-1.5 mb-2">
+                            <span className="text-base">🏆</span>
+                            <span className="text-xs font-black text-emerald-600">Won</span>
+                          </div>
+                          <div className="text-2xl font-black text-emerald-700">{fmt$(wk.wonVal)}</div>
+                          <div className="text-[10px] text-gray-400 mt-0.5">{fmt$(Math.round(wk.wonVal/4.33))}/wk equiv</div>
+                          <div className="text-xs text-gray-500 mt-1 font-semibold">{wk.wonCount} deal{wk.wonCount!==1?'s':''}</div>
+                          {wk.wonCount>0&&(
+                            <div className="mt-2 flex flex-col gap-1">
+                              {wk.wkDeals.filter(d=>d.Status==='Won').map(d=>(
+                                <div key={d.id} className="text-[9px] text-gray-500 truncate">
+                                  {d.BusinessName} — {fmt$(d.MonthlyValue)}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Lost */}
+                        <div className="px-5 py-4">
+                          <div className="flex items-center gap-1.5 mb-2">
+                            <span className="text-base">✕</span>
+                            <span className="text-xs font-black text-red-500">Lost</span>
+                          </div>
+                          <div className="text-2xl font-black text-red-600">{fmt$(wk.lostVal)}</div>
+                          <div className="text-[10px] text-gray-400 mt-0.5">{fmt$(Math.round(wk.lostVal/4.33))}/wk equiv</div>
+                          <div className="text-xs text-gray-500 mt-1 font-semibold">{wk.lostCount} deal{wk.lostCount!==1?'s':''}</div>
+                          {wk.lostCount>0&&(
+                            <div className="mt-2 flex flex-col gap-1">
+                              {wk.wkDeals.filter(d=>d.Status==='Lost').map(d=>(
+                                <div key={d.id} className="text-[9px] text-gray-500 truncate">
+                                  {d.BusinessName} — {fmt$(d.MonthlyValue)}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Still active / moved */}
+                        <div className="px-5 py-4">
+                          <div className="flex items-center gap-1.5 mb-2">
+                            <span className="text-base">⏳</span>
+                            <span className="text-xs font-black text-orange-500">Still Active</span>
+                          </div>
+                          <div className="text-2xl font-black text-orange-600">{fmt$(wk.activeVal)}</div>
+                          <div className="text-[10px] text-gray-400 mt-0.5">{fmt$(Math.round(wk.activeVal/4.33))}/wk equiv</div>
+                          <div className="text-xs text-gray-500 mt-1 font-semibold">{wk.activeCount} deal{wk.activeCount!==1?'s':''}</div>
+                          {wk.activeCount>0&&(
+                            <div className="mt-2 flex flex-col gap-1">
+                              {wk.wkDeals.filter(d=>d.Status==='Active').map(d=>(
+                                <div key={d.id} className="text-[9px] text-gray-500 truncate">
+                                  {d.BusinessName} — {fmt$(d.MonthlyValue)}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Win rate bar */}
+                      {closedVal>0&&(
+                        <div className="px-5 py-3 border-t border-gray-100 bg-gray-50">
+                          <div className="flex items-center gap-3">
+                            <span className="text-[10px] font-bold text-gray-400 w-16">Won</span>
+                            <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden flex">
+                              <div className="h-full bg-emerald-400 rounded-l-full transition-all"
+                                style={{width:`${(wk.wonVal/totalTracked)*100}%`}}/>
+                              <div className="h-full bg-red-400 transition-all"
+                                style={{width:`${(wk.lostVal/totalTracked)*100}%`}}/>
+                              <div className="h-full bg-orange-300 rounded-r-full transition-all"
+                                style={{width:`${(wk.activeVal/totalTracked)*100}%`}}/>
+                            </div>
+                            <div className="flex gap-2 text-[9px] font-semibold flex-shrink-0">
+                              <span className="text-emerald-600">{Math.round((wk.wonVal/totalTracked)*100)}% won</span>
+                              <span className="text-red-500">{Math.round((wk.lostVal/totalTracked)*100)}% lost</span>
+                              {wk.activeCount>0&&<span className="text-orange-500">{Math.round((wk.activeVal/totalTracked)*100)}% active</span>}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
         {tab==='log'&&canLog&&(
           <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
