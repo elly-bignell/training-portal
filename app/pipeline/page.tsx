@@ -383,9 +383,9 @@ export default function PipelinePage(){
 
   async function handleReschedule(id:string,newDate:string,history:string){
     const newBucket=getWeekBucket(newDate);
+    const movesCount=history.split(' | ').length;
     const res=await fetch(`/api/pipeline/deals/${id}`,{
       method:'PATCH',headers:{'Content-Type':'application/json'},
-      const movesCount=history.split(' | ').length;
       body:JSON.stringify({CloseDate:newDate,WeekBucket:newBucket,CloseDateHistory:history,MovesInPipe:movesCount}),
     });
     if(res.ok){const u=await res.json();setDeals(prev=>prev.map(d=>d.id===id?{...d,...u}:d));}
