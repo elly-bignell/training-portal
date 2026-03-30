@@ -29,6 +29,12 @@ const BUCKET_TARGETS: Record<string,number> = {
 const BUCKET_PCT: Record<string,number> = {
   'Week 1':42,'Week 2':32,'Week 3':10,'Week 4+':16,
 };
+const BUCKET_WK_TARGETS: Record<string,number> = {
+  'Week 1':2520,'Week 2':1920,'Week 3':600,'Week 4+':960,
+};
+const PIPE_MIN_WK = 6000;
+const PIPE_MIN_MO = 26000;
+const DAILY_ADD_TARGET = 1200;
 
 type Status = 'Active'|'Won'|'Lost';
 type Brand  = 'MS'|'Quodo'|'Both';
@@ -467,6 +473,19 @@ export default function PipelinePage(){
     return map;
   },[deals]);
 
+  const yesterdayStats=useMemo(()=>{
+    const today=new Date();
+    const dow=today.getDay(); // 0=Sun,1=Mon,...,6=Sat
+    const daysBack=dow===1?3:dow===0?2:1; // Mon→Fri(3), Sun→Fri(2), else→1
+    const yd=new Date(); yd.setDate(yd.getDate()-daysBack);
+    const ydStr=yd.toISOString().slice(0,10);
+    const dayLabel=daysBack===3?'Friday':daysBack===2?'Friday':'Yesterday';
+    const ydDeals=deals.filter(d=>d.Date===ydStr);
+    const ydMo=ydDeals.reduce((s,d)=>s+d.MonthlyValue,0);
+    const ydWk=Math.round(ydMo/4.33);
+    return {ydWk,count:ydDeals.length,dayLabel};
+  },[deals]);
+
   const dealsForView=useMemo(()=>{
     if(viewMode==='Won') return deals.filter(d=>d.Status==='Won' && !isPastWeek(d.CloseDate));
     if(viewMode==='Lost') return deals.filter(d=>d.Status==='Lost' && !isPastWeek(d.CloseDate));
@@ -568,7 +587,7 @@ export default function PipelinePage(){
     <PipelineAuth>
     <div className="min-h-screen" style={{background:'#f4f6f9'}}>
       {/* Top nav */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
             <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Marketing Sweet</div>
@@ -596,6 +615,54 @@ export default function PipelinePage(){
         {/* ── PIPELINE VIEW ── */}
         {tab==='pipeline'&&(
           <div className="flex flex-col gap-6">
+
+            {/* Exec Summary */}
+            {(()=>{
+              const totalMo=Object.values(totalByBucket).reduce((s,v)=>s+v,0);
+              const totalWk=Math.round(totalMo/4.33);
+              const totalMoRounded=Math.round(totalMo/100)*100;
+              const diffWk=totalWk-PIPE_MIN_WK;
+              const diffMo=Math.round(totalMo-PIPE_MIN_MO);
+              const ydDiff=yesterdayStats.ydWk-DAILY_ADD_TARGET;
+              const aheadTotal=diffWk>=0;
+              const aheadYd=ydDiff>=0;
+              return(
+              <div className="bg-white rounded-2xl border border-gray-200 p-5">
+                <div className="text-xs font-black uppercase tracking-widest text-gray-500 mb-4">Pipeline Health</div>
+                <div className="flex flex-col gap-2.5 text-sm text-gray-700 mb-5">
+                  <div>🔥 Our pipeline should sit at minimum <span className="font-black text-gray-900">$6,000/wk ($26,000/mo)</span> at all times.</div>
+                  <div>🔥 We currently have <span className="font-black text-gray-900">${totalWk.toLocaleString()}/wk (${totalMoRounded.toLocaleString()}/mo)</span> — we are <span className={`font-black ${aheadTotal?'text-emerald-600':'text-red-600'}`}>${Math.abs(diffWk).toLocaleString()}/wk {aheadTotal?'ahead 🟢':'behind 🔴'} (${Math.abs(diffMo).toLocaleString()}/mo)</span></div>
+                  <div>➕ We need to be adding <span className="font-black text-gray-900">$1,200/day</span> to the pipe every day to maintain $6K</div>
+                  <div>📅 {yesterdayStats.dayLabel} we added <span className="font-black text-gray-900">${yesterdayStats.ydWk.toLocaleString()}</span>{yesterdayStats.ydWk===0?' (no deals logged)':' — '}{yesterdayStats.ydWk>0&&<span className={`font-black ${aheadYd?'text-emerald-600':'text-red-600'}`}>{aheadYd?'ahead':'behind'} by ${Math.abs(ydDiff).toLocaleString()} {aheadYd?'🟢':'🔴'}</span>}</div>
+                </div>
+                <div className="border-t border-gray-100 pt-4">
+                  <div className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Bucket Breakdown</div>
+                  <div className="grid grid-cols-4 gap-3">
+                    {(['Week 1','Week 2','Week 3','Week 4+'] as Bucket[]).map(b=>{
+                      const wkVal=Math.round(totalByBucket[b]/4.33);
+                      const wkTarget=BUCKET_WK_TARGETS[b];
+                      const diff=wkVal-wkTarget;
+                      const ahead=diff>=0;
+                      const pct=wkTarget>0?Math.round((wkVal/wkTarget)*100):0;
+                      return(
+                      <div key={b} className="rounded-xl p-3 border" style={{borderColor:WEEK_COLORS[b]+'50',background:WEEK_COLORS[b]+'08'}}>
+                        <div className="text-[10px] font-black uppercase tracking-wider mb-2" style={{color:WEEK_COLORS[b]}}>{b}</div>
+                        <div className="text-base font-black text-gray-900">${wkVal.toLocaleString()}<span className="text-xs text-gray-400 font-normal">/wk</span></div>
+                        <div className="text-[10px] text-gray-400 mb-1.5">Target: ${wkTarget.toLocaleString()}/wk ({BUCKET_PCT[b]}%)</div>
+                        <div className="w-full h-1 rounded-full bg-gray-100 mb-1.5">
+                          <div className="h-1 rounded-full transition-all" style={{width:`${Math.min(pct,100)}%`,background:WEEK_COLORS[b]}}/>
+                        </div>
+                        <div className={`text-[10px] font-bold ${ahead?'text-emerald-600':'text-red-600'}`}>
+                          {ahead?'▲':'▼'} ${Math.abs(diff).toLocaleString()} {ahead?'ahead':'behind'}
+                        </div>
+                      </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+              );
+            })()}
 
             {/* Bucket overview */}
             <div className="bg-white rounded-2xl border border-gray-200 p-5">
