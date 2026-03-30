@@ -671,7 +671,6 @@ export default function PipelinePage(){
                               canEdit={canLog}
                               overdue={overdue && deal.Status==='Active'}/>
                           ))}
-                          ))}
                         </div>
 
                         {/* Day summary bar */}
