@@ -332,6 +332,7 @@ export default function PipelinePage(){
   const [saving,setSaving]=useState(false);
   const [success,setSuccess]=useState(false);
   const [formErrors,setFormErrors]=useState<string[]>([]);
+  const err=(f:string)=>formErrors.includes(f);
 
   const [fDate,setFDate]=useState(todayStr());
   const [fCloseDate,setFCloseDate]=useState('');
@@ -982,7 +983,7 @@ export default function PipelinePage(){
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Field label="Date of Meeting" required><input type="date" value={fDate} onChange={e=>setFDate(e.target.value)} className={inputCls}/></Field>
-                <Field label="Close Date" required><input type="date" value={fCloseDate} onChange={e=>setFCloseDate(e.target.value)} className={inputCls}/></Field>
+                <Field label="Close Date" required><input type="date" value={fCloseDate} onChange={e=>setFCloseDate(e.target.value)} className={inputCls} style={{borderColor:err('Close Date')?'#ef4444':undefined}}/></Field>
                 <Field label="Close Time">
                   <select value={fCloseTime} onChange={e=>setFCloseTime(e.target.value)} className={selectCls}>
                     <option value="">Select time...</option>
@@ -1020,16 +1021,16 @@ export default function PipelinePage(){
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Field label="Business Name" required>
-                  <input type="text" value={fBusiness} onChange={e=>setFBusiness(e.target.value)} placeholder="Client business name" className={inputCls}/>
+                  <input type="text" value={fBusiness} onChange={e=>setFBusiness(e.target.value)} placeholder="Client business name" className={inputCls} style={{borderColor:err('Business Name')?'#ef4444':undefined}}/>
                 </Field>
                 <Field label="Closer" required>
-                  <select value={fCloser} onChange={e=>setFCloser(e.target.value)} className={selectCls}>
+                  <select value={fCloser} onChange={e=>setFCloser(e.target.value)} className={selectCls} style={{borderColor:err('Closer')?'#ef4444':undefined}}>
                     <option value="">Select closer...</option>
                     {CLOSERS.map(c=><option key={c} value={c}>{c}</option>)}
                   </select>
                 </Field>
                 <Field label="Booker" required>
-                  <select value={fBooker} onChange={e=>setFBooker(e.target.value)} className={selectCls}>
+                  <select value={fBooker} onChange={e=>setFBooker(e.target.value)} className={selectCls} style={{borderColor:err('Booker')?'#ef4444':undefined}}>
                     <option value="">Select booker...</option>
                     {BOOKERS.map(b=><option key={b} value={b}>{b}</option>)}
                   </select>
@@ -1038,7 +1039,7 @@ export default function PipelinePage(){
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Field label="Monthly $ ex GST" required>
-                  <div className="flex items-center border-2 border-gray-200 rounded-xl overflow-hidden focus-within:border-orange-400">
+                  <div className="flex items-center border-2 rounded-xl overflow-hidden focus-within:border-orange-400" style={{borderColor:err('Monthly $')?'#ef4444':'#e5e7eb'}}>
                     <span className="pl-3 text-gray-400 font-bold text-sm">$</span>
                     <input type="number" value={fMonthly} onChange={e=>setFMonthly(e.target.value)} placeholder="0" className="flex-1 px-2 py-2.5 text-sm font-semibold text-gray-800 outline-none bg-white"/>
                   </div>
@@ -1060,7 +1061,7 @@ export default function PipelinePage(){
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Field label="GTH Status" required>
-                  <select value={fGTH} onChange={e=>setFGTH(e.target.value)} className={selectCls}>
+                  <select value={fGTH} onChange={e=>setFGTH(e.target.value)} className={selectCls} style={{borderColor:err('GTH Status')?'#ef4444':undefined}}>
                     <option value="">Select...</option>
                     <option value="GTH">GTH — Gun to Head</option>
                     <option value="Non GTH">Non GTH</option>
@@ -1071,7 +1072,7 @@ export default function PipelinePage(){
                   <input type="date" value={fNextContact} onChange={e=>setFNextContact(e.target.value)} className={inputCls}/>
                 </div>
                 <Field label="Brand" required>
-                  <select value={fBrand} onChange={e=>setFBrand(e.target.value as Brand)} className={selectCls}>
+                  <select value={fBrand} onChange={e=>setFBrand(e.target.value as Brand)} className={selectCls} style={{borderColor:err('Brand')?'#ef4444':undefined}}>
                     <option value="">Select brand...</option>
                     <option value="MS">Marketing Sweet</option>
                     <option value="Quodo">Quodo</option>
@@ -1084,19 +1085,19 @@ export default function PipelinePage(){
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {fBrand==='Both'?(
                     <div className="flex flex-col gap-2">
-                      <label className="text-xs font-bold uppercase tracking-wider text-gray-500">Membership / Plan</label>
-                      <select value={fPlan} onChange={e=>setFPlan(e.target.value)} className={selectCls}>
+                      <label className="text-xs font-bold uppercase tracking-wider" style={{color:err('Membership / Plan (at least one)')?'#ef4444':'#6b7280'}}>Membership / Plan</label>
+                      <select value={fPlan} onChange={e=>setFPlan(e.target.value)} className={selectCls} style={{borderColor:err('Membership / Plan (at least one)')?'#ef4444':undefined}}>
                         <option value="">MS plan...</option>
                         {MS_PLANS.map(p=><option key={p} value={p}>{p}</option>)}
                       </select>
-                      <select value={fPlanQuodo} onChange={e=>setFPlanQuodo(e.target.value)} className={selectCls}>
+                      <select value={fPlanQuodo} onChange={e=>setFPlanQuodo(e.target.value)} className={selectCls} style={{borderColor:err('Membership / Plan (at least one)')?'#ef4444':undefined}}>
                         <option value="">Quodo plan...</option>
                         {Q_PLANS.map(p=><option key={p} value={p}>{p}</option>)}
                       </select>
                     </div>
                   ):(
                     <Field label="Membership / Plan">
-                      <select value={fPlan} onChange={e=>setFPlan(e.target.value)} className={selectCls}>
+                      <select value={fPlan} onChange={e=>setFPlan(e.target.value)} className={selectCls} style={{borderColor:err('Membership / Plan')?'#ef4444':undefined}}>
                         <option value="">Select plan...</option>
                         {planOptions.map(p=><option key={p} value={p}>{p}</option>)}
                       </select>
