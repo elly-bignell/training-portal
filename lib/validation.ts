@@ -22,10 +22,11 @@ export interface Booking {
 }
 
 export const BUDDY_PAIRS: Record<string, string> = {
-  "Sydney Arnold": "Felipe Garcia",
   "Cindy Manrique": "Lucas Tirri",
+  "Riley Kerrison": "Lucas Tirri",
   "Krishna Patel": "Dylan Munro",
   "Tom Rennie": "Felipe Garcia",
+  "Sydney Arnold": "Felipe Garcia",
 };
 
 export const STAFF_MEMBERS = Object.keys(BUDDY_PAIRS);
