@@ -13,7 +13,7 @@ const MS_EXTRAS = ['Web Changes','SEO Backlinking','SEO Page Building','Google A
 const Q_EXTRAS  = ['LiteHost','Plus36 Hosting','Plus24 Hosting','FlexiHost'];
 
 const STATUS_COLORS: Record<string,{bg:string;text:string;border:string}> = {
-  Active: { bg:'#fff7ed', text:'#ea580c', border:'#fed7aa' },
+  Active: { bg:'#eff6ff', text:'#2563eb', border:'#bfdbfe' },
   Won:    { bg:'#f0fdf4', text:'#16a34a', border:'#bbf7d0' },
   Lost:   { bg:'#fef2f2', text:'#dc2626', border:'#fecaca' },
 };
@@ -426,6 +426,8 @@ export default function PipelinePage(){
   const dealsByBucket=useMemo(()=>{
     const map:Record<Bucket,Deal[]>={'Week 1':[],'Week 2':[],'Week 3':[],'Week 4+':[]};
     deals.forEach(d=>{
+      // Exclude Won/Lost from previous weeks — they belong in history tab only
+      if(d.Status !== 'Active' && isPastWeek(d.CloseDate)) return;
       const bucket = d.CloseDate ? getWeekBucket(d.CloseDate) : d.WeekBucket;
       if(map[bucket]) map[bucket].push(d);
     });
