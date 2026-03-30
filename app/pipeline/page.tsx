@@ -146,10 +146,11 @@ function Field({label,children,required}:{label:string;children:React.ReactNode;
 const inputCls="border-2 border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 font-semibold outline-none focus:border-orange-400 bg-white w-full";
 const selectCls="border-2 border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 font-semibold outline-none focus:border-orange-400 bg-white w-full";
 
-function DealCard({deal,onStatusChange,onReschedule,canEdit,overdue}:{
+function DealCard({deal,onStatusChange,onReschedule,onGTHToggle,canEdit,overdue}:{
   deal:Deal;
   onStatusChange:(id:string,s:Status)=>void;
   onReschedule:(id:string,newDate:string,history:string)=>void;
+  onGTHToggle:(id:string,newGTH:string)=>void;
   canEdit:boolean;
   overdue?:boolean;
 }){
@@ -213,9 +214,12 @@ function DealCard({deal,onStatusChange,onReschedule,canEdit,overdue}:{
         <div className="flex items-center gap-1 flex-shrink-0">
           <div className="px-1.5 py-0.5 rounded-full text-[9px] font-black border"
             style={{background:sc.bg,color:sc.text,borderColor:sc.border}}>{deal.Status}</div>
-          <div className={`px-1.5 py-0.5 rounded-full text-[9px] font-black border ${deal.GTH==='GTH'?'bg-orange-50 text-orange-600 border-orange-200':'bg-gray-50 text-gray-400 border-gray-200'}`}>
-            {deal.GTH}
-          </div>
+          <button
+            onClick={()=>onGTHToggle(deal.id, deal.GTH==='GTH'?'Non GTH':'GTH')}
+            title="Click to toggle GTH status"
+            className={`px-1.5 py-0.5 rounded-full text-[9px] font-black border transition-all hover:opacity-80 ${deal.GTH==='GTH'?'bg-orange-50 text-orange-600 border-orange-200':'bg-gray-50 text-gray-400 border-gray-200'}`}>
+            {deal.GTH==='GTH'?'GTH':'Non GTH'}
+          </button>
         </div>
       </div>
 
@@ -379,6 +383,11 @@ export default function PipelinePage(){
       method:'PATCH',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({CloseDate:newDate,WeekBucket:newBucket,CloseDateHistory:history}),
     });
+    if(res.ok){const u=await res.json();setDeals(prev=>prev.map(d=>d.id===id?{...d,...u}:d));}
+  }
+
+  async function handleGTHToggle(id:string,newGTH:string){
+    const res=await fetch(`/api/pipeline/deals/${id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({GTH:newGTH})});
     if(res.ok){const u=await res.json();setDeals(prev=>prev.map(d=>d.id===id?{...d,...u}:d));}
   }
 
@@ -706,6 +715,7 @@ export default function PipelinePage(){
                             <DealCard key={deal.id} deal={deal}
                               onStatusChange={handleStatusChange}
                               onReschedule={handleReschedule}
+                              onGTHToggle={handleGTHToggle}
                               canEdit={canLog}
                               overdue={overdue && deal.Status==='Active'}/>
                           ))}
