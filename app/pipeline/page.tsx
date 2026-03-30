@@ -454,7 +454,7 @@ export default function PipelinePage(){
   const wonDeals=useMemo(()=>deals.filter(d=>d.Status==='Won' && !isPastWeek(d.CloseDate)),[deals]);
   const lostDeals=useMemo(()=>deals.filter(d=>d.Status==='Lost' && !isPastWeek(d.CloseDate)),[deals]);
 
-  // Per-bucket won/lost stats for current week overview
+  // Per-bucket won/lost stats — current week only, using live CloseDate
   const bucketStats=useMemo(()=>{
     const s:Record<Bucket,{wonVal:number;wonCount:number;lostVal:number;lostCount:number;activeVal:number;activeCount:number}> = {
       'Week 1':{wonVal:0,wonCount:0,lostVal:0,lostCount:0,activeVal:0,activeCount:0},
@@ -463,10 +463,13 @@ export default function PipelinePage(){
       'Week 4+':{wonVal:0,wonCount:0,lostVal:0,lostCount:0,activeVal:0,activeCount:0},
     };
     deals.forEach(d=>{
-      if(!s[d.WeekBucket])return;
-      if(d.Status==='Won'){s[d.WeekBucket].wonVal+=d.MonthlyValue;s[d.WeekBucket].wonCount++;}
-      else if(d.Status==='Lost'){s[d.WeekBucket].lostVal+=d.MonthlyValue;s[d.WeekBucket].lostCount++;}
-      else{s[d.WeekBucket].activeVal+=d.MonthlyValue;s[d.WeekBucket].activeCount++;}
+      // Only count deals whose close date is in the current or future week
+      if(isPastWeek(d.CloseDate)) return;
+      const bucket = d.CloseDate ? getWeekBucket(d.CloseDate) : d.WeekBucket;
+      if(!s[bucket]) return;
+      if(d.Status==='Won'){s[bucket].wonVal+=d.MonthlyValue;s[bucket].wonCount++;}
+      else if(d.Status==='Lost'){s[bucket].lostVal+=d.MonthlyValue;s[bucket].lostCount++;}
+      else{s[bucket].activeVal+=d.MonthlyValue;s[bucket].activeCount++;}
     });
     return s;
   },[deals]);
@@ -475,21 +478,50 @@ export default function PipelinePage(){
   const historicalWeeks=useMemo(()=>getHistoricalWeeks(),[]);
   const historicalData=useMemo(()=>{
     return historicalWeeks.map(wk=>{
+      // Deals whose CURRENT close date falls in this historical week
       const wkDeals=deals.filter(d=>{
         const offset=getHistoricalWeekOffset(d.CloseDate);
         return offset===wk.weekOffset;
       });
-      const totalVal=wkDeals.reduce((a,d)=>a+d.MonthlyValue,0);
       const wonVal=wkDeals.filter(d=>d.Status==='Won').reduce((a,d)=>a+d.MonthlyValue,0);
       const wonCount=wkDeals.filter(d=>d.Status==='Won').length;
       const lostVal=wkDeals.filter(d=>d.Status==='Lost').reduce((a,d)=>a+d.MonthlyValue,0);
       const lostCount=wkDeals.filter(d=>d.Status==='Lost').length;
       const activeVal=wkDeals.filter(d=>d.Status==='Active').reduce((a,d)=>a+d.MonthlyValue,0);
       const activeCount=wkDeals.filter(d=>d.Status==='Active').length;
+
+      // Deals MOVED FROM this week — find via CloseDateHistory
+      // A deal was "moved from" this week if any history entry's FROM date falls in this week's range
+      const movedDeals=deals.filter(d=>{
+        if(!d.CloseDateHistory) return false;
+        return d.CloseDateHistory.split(' | ').some(entry=>{
+          const fromDate=entry.split(' → ')[0]?.trim();
+          if(!fromDate) return false;
+          const from=new Date(fromDate+'T00:00:00');
+          return from>=wk.start && from<=wk.end;
+        });
+      });
+
+      // Group moved deals by which future bucket they landed in
+      const movedToBuckets:Record<string,{count:number;val:number}> = {
+        'Week 1':{count:0,val:0},'Week 2':{count:0,val:0},
+        'Week 3':{count:0,val:0},'Week 4+':{count:0,val:0},
+      };
+      movedDeals.forEach(d=>{
+        const dest=d.CloseDate?getWeekBucket(d.CloseDate):d.WeekBucket;
+        if(movedToBuckets[dest]){
+          movedToBuckets[dest].count++;
+          movedToBuckets[dest].val+=d.MonthlyValue;
+        }
+      });
+      const movedVal=movedDeals.reduce((a,d)=>a+d.MonthlyValue,0);
+      const movedCount=movedDeals.length;
+
+      const totalVal=wonVal+lostVal+activeVal+movedVal;
       const closedVal=wonVal+lostVal;
       const winRate=closedVal>0?Math.round((wonVal/closedVal)*100):null;
-      return {...wk,wkDeals,totalVal,wonVal,wonCount,lostVal,lostCount,activeVal,activeCount,winRate};
-    }).filter(wk=>wk.wkDeals.length>0);
+      return {...wk,wkDeals,totalVal,wonVal,wonCount,lostVal,lostCount,activeVal,activeCount,winRate,movedDeals,movedVal,movedCount,movedToBuckets};
+    }).filter(wk=>wk.wkDeals.length>0||wk.movedCount>0);
   },[deals,historicalWeeks]);
 
   const isBucket=(vm:ViewMode):vm is Bucket=>['Week 1','Week 2','Week 3','Week 4+'].includes(vm);
@@ -735,7 +767,6 @@ export default function PipelinePage(){
                 {historicalData.map(wk=>{
                   const closedVal=wk.wonVal+wk.lostVal;
                   const winRate=closedVal>0?Math.round((wk.wonVal/closedVal)*100):null;
-                  const totalTracked=wk.wonVal+wk.lostVal+wk.activeVal;
                   return(
                     <div key={wk.weekOffset} className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
                       {/* Week header */}
@@ -755,16 +786,16 @@ export default function PipelinePage(){
                           )}
                           <div className="text-right">
                             <div className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Total in bucket</div>
-                            <div className="text-lg font-black text-gray-800">{fmt$(totalTracked)}</div>
-                            <div className="text-[10px] text-gray-400">{wk.wkDeals.length} deals</div>
+                            <div className="text-lg font-black text-gray-800">{fmt$(wk.totalVal)}</div>
+                            <div className="text-[10px] text-gray-400">{wk.wkDeals.length + wk.movedCount} deals</div>
                           </div>
                         </div>
                       </div>
 
-                      {/* Won / Lost / Active breakdown */}
-                      <div className="grid grid-cols-3 divide-x divide-gray-100">
+                      {/* Won / Lost / Moved / Active breakdown */}
+                      <div className="grid grid-cols-4 divide-x divide-gray-100">
                         {/* Won */}
-                        <div className="px-5 py-4">
+                        <div className="px-4 py-4">
                           <div className="flex items-center gap-1.5 mb-2">
                             <span className="text-base">🏆</span>
                             <span className="text-xs font-black text-emerald-600">Won</span>
@@ -784,7 +815,7 @@ export default function PipelinePage(){
                         </div>
 
                         {/* Lost */}
-                        <div className="px-5 py-4">
+                        <div className="px-4 py-4">
                           <div className="flex items-center gap-1.5 mb-2">
                             <span className="text-base">✕</span>
                             <span className="text-xs font-black text-red-500">Lost</span>
@@ -803,8 +834,39 @@ export default function PipelinePage(){
                           )}
                         </div>
 
-                        {/* Still active / moved */}
-                        <div className="px-5 py-4">
+                        {/* Moved */}
+                        <div className="px-4 py-4">
+                          <div className="flex items-center gap-1.5 mb-2">
+                            <span className="text-base">📅</span>
+                            <span className="text-xs font-black text-purple-500">Moved</span>
+                          </div>
+                          <div className="text-2xl font-black text-purple-600">{fmt$(wk.movedVal)}</div>
+                          <div className="text-[10px] text-gray-400 mt-0.5">{fmt$(Math.round(wk.movedVal/4.33))}/wk equiv</div>
+                          <div className="text-xs text-gray-500 mt-1 font-semibold">{wk.movedCount} deal{wk.movedCount!==1?'s':''}</div>
+                          {wk.movedCount>0&&(
+                            <div className="mt-2 flex flex-col gap-1.5">
+                              {(['Week 1','Week 2','Week 3','Week 4+'] as const).filter(b=>wk.movedToBuckets[b]?.count>0).map(b=>(
+                                <div key={b} className="text-[9px] flex items-center justify-between gap-2">
+                                  <span className="font-bold px-1.5 py-0.5 rounded-full"
+                                    style={{background:WEEK_COLORS[b]+'20',color:WEEK_COLORS[b]}}>
+                                    → {b}
+                                  </span>
+                                  <span className="text-gray-500">{wk.movedToBuckets[b].count} deal{wk.movedToBuckets[b].count!==1?'s':''} · {fmt$(wk.movedToBuckets[b].val)}</span>
+                                </div>
+                              ))}
+                              <div className="mt-1 flex flex-col gap-0.5">
+                                {wk.movedDeals.map(d=>(
+                                  <div key={d.id} className="text-[9px] text-gray-500 truncate">
+                                    {d.BusinessName} — {fmt$(d.MonthlyValue)}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Still active / overdue */}
+                        <div className="px-4 py-4">
                           <div className="flex items-center gap-1.5 mb-2">
                             <span className="text-base">⏳</span>
                             <span className="text-xs font-black text-orange-500">Still Active</span>
@@ -824,23 +886,26 @@ export default function PipelinePage(){
                         </div>
                       </div>
 
-                      {/* Win rate bar */}
-                      {closedVal>0&&(
+                      {/* Breakdown bar */}
+                      {wk.totalVal>0&&(
                         <div className="px-5 py-3 border-t border-gray-100 bg-gray-50">
                           <div className="flex items-center gap-3">
-                            <span className="text-[10px] font-bold text-gray-400 w-16">Won</span>
+                            <span className="text-[10px] font-bold text-gray-400 w-16">Breakdown</span>
                             <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden flex">
                               <div className="h-full bg-emerald-400 rounded-l-full transition-all"
-                                style={{width:`${(wk.wonVal/totalTracked)*100}%`}}/>
+                                style={{width:`${(wk.wonVal/wk.totalVal)*100}%`}}/>
                               <div className="h-full bg-red-400 transition-all"
-                                style={{width:`${(wk.lostVal/totalTracked)*100}%`}}/>
+                                style={{width:`${(wk.lostVal/wk.totalVal)*100}%`}}/>
+                              <div className="h-full bg-purple-400 transition-all"
+                                style={{width:`${(wk.movedVal/wk.totalVal)*100}%`}}/>
                               <div className="h-full bg-orange-300 rounded-r-full transition-all"
-                                style={{width:`${(wk.activeVal/totalTracked)*100}%`}}/>
+                                style={{width:`${(wk.activeVal/wk.totalVal)*100}%`}}/>
                             </div>
-                            <div className="flex gap-2 text-[9px] font-semibold flex-shrink-0">
-                              <span className="text-emerald-600">{Math.round((wk.wonVal/totalTracked)*100)}% won</span>
-                              <span className="text-red-500">{Math.round((wk.lostVal/totalTracked)*100)}% lost</span>
-                              {wk.activeCount>0&&<span className="text-orange-500">{Math.round((wk.activeVal/totalTracked)*100)}% active</span>}
+                            <div className="flex gap-2 text-[9px] font-semibold flex-shrink-0 flex-wrap">
+                              {wk.wonVal>0&&<span className="text-emerald-600">{Math.round((wk.wonVal/wk.totalVal)*100)}% won</span>}
+                              {wk.lostVal>0&&<span className="text-red-500">{Math.round((wk.lostVal/wk.totalVal)*100)}% lost</span>}
+                              {wk.movedVal>0&&<span className="text-purple-500">{Math.round((wk.movedVal/wk.totalVal)*100)}% moved</span>}
+                              {wk.activeVal>0&&<span className="text-orange-500">{Math.round((wk.activeVal/wk.totalVal)*100)}% active</span>}
                             </div>
                           </div>
                         </div>
