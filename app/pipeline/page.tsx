@@ -38,6 +38,7 @@ interface Deal {
   WeeklyValue:number; UpfrontValue?:number; GTH:string; NextContactDate?:string;
   Brand:Brand; Plan?:string; Extras?:string; WeekBucket:Bucket;
   Status:Status; LoggedBy:string; Notes?:string; CloseDateHistory?:string;
+  DateAddedToPipe?:string; FirstCloseDate?:string; WonLostDate?:string; MovesInPipe?:number;
 }
 
 function getWeekBucket(closeDate:string):Bucket {
@@ -290,6 +291,7 @@ function BucketVisual({bucket,deals,targetValue}:{bucket:Bucket;deals:Deal[];tar
   const totalM=active.reduce((a,d)=>a+d.MonthlyValue,0);
   const wonM=won.reduce((a,d)=>a+d.MonthlyValue,0);
   const fillPct=targetValue>0?Math.min((totalM/targetValue)*100,100):0;
+  const displayPct=targetValue>0?Math.round((totalM/targetValue)*100):0;
   const color=WEEK_COLORS[bucket];
   const clipId=`clip-${bucket.replace(/\s+/g,'-').replace('+','plus')}`;
   return(
@@ -309,7 +311,7 @@ function BucketVisual({bucket,deals,targetValue}:{bucket:Bucket;deals:Deal[];tar
           <rect x="10" y="25" width="100" height="10" rx="5" fill="#d1d5db"/>
           <path d="M 35 25 Q 60 5 85 25" fill="none" stroke="#d1d5db" strokeWidth="4" strokeLinecap="round"/>
           <text x="60" y="95" textAnchor="middle" fontSize="20" fontWeight="900"
-            fill={fillPct>45?'#fff':color}>{fillPct.toFixed(0)}%</text>
+            fill={fillPct>45?'#fff':color}>{displayPct}%</text>
         </svg>
       </div>
       <div className="text-center">
@@ -373,7 +375,9 @@ export default function PipelinePage(){
   useEffect(()=>{setFPlan('');setFExtras([]);},[fBrand]);
 
   async function handleStatusChange(id:string,status:Status){
-    const res=await fetch(`/api/pipeline/deals/${id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({Status:status})});
+    const fields:Record<string,unknown>={Status:status};
+    if(status==='Won'||status==='Lost') fields.WonLostDate=todayStr();
+    const res=await fetch(`/api/pipeline/deals/${id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(fields)});
     if(res.ok){const u=await res.json();setDeals(prev=>prev.map(d=>d.id===id?{...d,...u}:d));}
   }
 
@@ -381,7 +385,8 @@ export default function PipelinePage(){
     const newBucket=getWeekBucket(newDate);
     const res=await fetch(`/api/pipeline/deals/${id}`,{
       method:'PATCH',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({CloseDate:newDate,WeekBucket:newBucket,CloseDateHistory:history}),
+      const movesCount=history.split(' | ').length;
+      body:JSON.stringify({CloseDate:newDate,WeekBucket:newBucket,CloseDateHistory:history,MovesInPipe:movesCount}),
     });
     if(res.ok){const u=await res.json();setDeals(prev=>prev.map(d=>d.id===id?{...d,...u}:d));}
   }
@@ -407,6 +412,7 @@ export default function PipelinePage(){
         ...(fExtras.length?{Extras:fExtras.join(', ')}:{}),
         ...(fNotes?{Notes:fNotes}:{}),
         WeekBucket:bucket,Status:'Active',LoggedBy:'Admin',
+        DateAddedToPipe:todayStr(),FirstCloseDate:fCloseDate,
       };
       const res=await fetch('/api/pipeline/deals',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
       if(res.ok){
