@@ -30,7 +30,7 @@ const BUCKET_PCT: Record<string,number> = {
   'Week 1':42,'Week 2':32,'Week 3':10,'Week 4+':16,
 };
 const BUCKET_WK_TARGETS: Record<string,number> = {
-  'Week 1':2520,'Week 2':1920,'Week 3':500,'Week 4+':960,
+  'Week 1':2520,'Week 2':1920,'Week 3':600,'Week 4+':960,
 };
 const PIPE_MIN_WK = 6000;
 const PIPE_MIN_MO = 26000;
@@ -645,16 +645,16 @@ export default function PipelinePage(){
                       const dayIdx=dow===0?4:dow===6?4:Math.min(dow-1,4);
                       const DAY_NAMES=['Monday','Tuesday','Wednesday','Thursday','Friday'];
                       const dayName=DAY_NAMES[dayIdx];
-                      // Expected value at START of today for each bucket
-                      // W1: depletes $504/day from $2520 — Mon=$2520, Tue=$2016, etc.
-                      // W2: grows $264/day from $600 base — Mon=$600, Tue=$864, etc.
-                      // W3: depletes $72/day from $960 — Mon=$960, Tue=$888, etc.
-                      // W4+: grows $192/day from $0 — Mon=$0, Tue=$192, etc.
+                      // Daily flow model — net movement between buckets each day:
+                      // W1: -$504/day (deals resolve)
+                      // W2: +$504 in from W1, -$380 out to W3 = net +$124/day
+                      // W3: +$380 in from W2, -$120 out to W4 = net +$260/day
+                      // W4+: +$120 in from W3, -$200 out to future = net -$80/day
                       const todayExpected:Record<string,number>={
                         'Week 1':Math.max(0,2520-dayIdx*504),
-                        'Week 2':600+dayIdx*264,
-                        'Week 3':Math.max(0,960-dayIdx*72),
-                        'Week 4+':dayIdx*192,
+                        'Week 2':Math.max(0,1920+dayIdx*124),
+                        'Week 3':Math.max(0,600+dayIdx*260),
+                        'Week 4+':Math.max(0,960-dayIdx*80),
                       };
                       return(['Week 1','Week 2','Week 3','Week 4+'] as Bucket[]).map(b=>{
                       const wkVal=Math.round(totalByBucket[b]/4.33);
