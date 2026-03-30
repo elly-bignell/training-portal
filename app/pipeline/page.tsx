@@ -26,6 +26,9 @@ const WEEK_COLORS: Record<string,string> = {
 const BUCKET_TARGETS: Record<string,number> = {
   'Week 1':10912,'Week 2':8314,'Week 3':2338,'Week 4+':4157,
 };
+const BUCKET_PCT: Record<string,number> = {
+  'Week 1':42,'Week 2':32,'Week 3':10,'Week 4+':16,
+};
 
 type Status = 'Active'|'Won'|'Lost';
 type Brand  = 'MS'|'Quodo'|'Both';
@@ -609,7 +612,8 @@ export default function PipelinePage(){
                   return(
                   <button key={b} onClick={()=>setViewMode(b)} className="flex flex-col gap-2 transition-all"
                     style={{opacity:viewMode===b?1:0.6}}>
-                    <BucketVisual bucket={b} deals={dealsByBucket[b]} targetValue={BUCKET_TARGETS[b]}/>
+                    <div className="text-center text-[10px] font-bold text-gray-400 tracking-wider mb-0.5">Target: {BUCKET_PCT[b]}%</div>
+    <BucketVisual bucket={b} deals={dealsByBucket[b]} targetValue={BUCKET_TARGETS[b]}/>
                     <div className="text-center">
                       <div className="text-xs font-black" style={{color:WEEK_COLORS[b]}}>{b}</div>
                       <div className="text-[10px] font-semibold text-gray-500">{getWeekDateRange(b)}</div>
