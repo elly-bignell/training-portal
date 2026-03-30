@@ -960,7 +960,39 @@ export default function PipelinePage(){
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Field label="Date of Meeting" required><input type="date" value={fDate} onChange={e=>setFDate(e.target.value)} className={inputCls}/></Field>
                 <Field label="Close Date" required><input type="date" value={fCloseDate} onChange={e=>setFCloseDate(e.target.value)} className={inputCls}/></Field>
-                <Field label="Close Time"><input type="time" value={fCloseTime} onChange={e=>setFCloseTime(e.target.value)} className={inputCls}/></Field>
+                <Field label="Close Time">
+                  <select value={fCloseTime} onChange={e=>setFCloseTime(e.target.value)} className={selectCls}>
+                    <option value="">Select time...</option>
+                    <option key="07:00" value="07:00">7:00 AM</option>
+                      <option key="07:30" value="07:30">7:30 AM</option>
+                      <option key="08:00" value="08:00">8:00 AM</option>
+                      <option key="08:30" value="08:30">8:30 AM</option>
+                      <option key="09:00" value="09:00">9:00 AM</option>
+                      <option key="09:30" value="09:30">9:30 AM</option>
+                      <option key="10:00" value="10:00">10:00 AM</option>
+                      <option key="10:30" value="10:30">10:30 AM</option>
+                      <option key="11:00" value="11:00">11:00 AM</option>
+                      <option key="11:30" value="11:30">11:30 AM</option>
+                      <option key="12:00" value="12:00">12:00 PM</option>
+                      <option key="12:30" value="12:30">12:30 PM</option>
+                      <option key="13:00" value="13:00">1:00 PM</option>
+                      <option key="13:30" value="13:30">1:30 PM</option>
+                      <option key="14:00" value="14:00">2:00 PM</option>
+                      <option key="14:30" value="14:30">2:30 PM</option>
+                      <option key="15:00" value="15:00">3:00 PM</option>
+                      <option key="15:30" value="15:30">3:30 PM</option>
+                      <option key="16:00" value="16:00">4:00 PM</option>
+                      <option key="16:30" value="16:30">4:30 PM</option>
+                      <option key="17:00" value="17:00">5:00 PM</option>
+                      <option key="17:30" value="17:30">5:30 PM</option>
+                      <option key="18:00" value="18:00">6:00 PM</option>
+                      <option key="18:30" value="18:30">6:30 PM</option>
+                      <option key="19:00" value="19:00">7:00 PM</option>
+                      <option key="19:30" value="19:30">7:30 PM</option>
+                      <option key="20:00" value="20:00">8:00 PM</option>
+                      <option key="20:30" value="20:30">8:30 PM</option>
+                  </select>
+                </Field>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
