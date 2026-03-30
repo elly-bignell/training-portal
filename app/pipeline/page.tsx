@@ -346,6 +346,7 @@ export default function PipelinePage(){
   const [fNextContact,setFNextContact]=useState('');
   const [fBrand,setFBrand]=useState<Brand|''>('');
   const [fPlan,setFPlan]=useState('');
+  const [fPlanQuodo,setFPlanQuodo]=useState('');
   const [fExtras,setFExtras]=useState<string[]>([]);
   const [fNotes,setFNotes]=useState('');
 
@@ -373,7 +374,7 @@ export default function PipelinePage(){
   },[]);
 
   useEffect(()=>{fetchDeals();},[fetchDeals]);
-  useEffect(()=>{setFPlan('');setFExtras([]);},[fBrand]);
+  useEffect(()=>{setFPlan('');setFPlanQuodo('');setFExtras([]);},[fBrand]);
 
   async function handleStatusChange(id:string,status:Status){
     const fields:Record<string,unknown>={Status:status};
@@ -409,7 +410,7 @@ export default function PipelinePage(){
         MonthlyValue:Number(fMonthly),WeeklyValue:Number(calcWeekly(fMonthly)),
         ...(fUpfront?{UpfrontValue:Number(fUpfront)}:{}),
         GTH:fGTH,...(fNextContact?{NextContactDate:fNextContact}:{}),
-        Brand:fBrand,...(fPlan?{Plan:fPlan}:{}),
+        Brand:fBrand,...(fBrand==='Both'?(fPlan||fPlanQuodo?{Plan:[fPlan,fPlanQuodo].filter(Boolean).join(' / ')}:{}):(fPlan?{Plan:fPlan}:{})),
         ...(fExtras.length?{Extras:fExtras.join(', ')}:{}),
         ...(fNotes?{Notes:fNotes}:{}),
         WeekBucket:bucket,Status:'Active',LoggedBy:'Admin',
@@ -423,7 +424,7 @@ export default function PipelinePage(){
         const closedBucket=getWeekBucket(fCloseDate);
         setFBusiness('');setFCloseDate('');setFCloseTime('');setFCloser('');
         setFBooker('');setFMonthly('');setFWeekly('');setFUpfront('');
-        setFGTH('');setFNextContact('');setFBrand('');setFPlan('');
+        setFGTH('');setFNextContact('');setFBrand('');setFPlan('');setFPlanQuodo('');
         setFExtras([]);setFNotes('');setFDate(todayStr());
         setTab('pipeline');setViewMode(closedBucket);
       }
@@ -1059,12 +1060,26 @@ export default function PipelinePage(){
 
               {fBrand&&(
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Field label="Membership / Plan">
-                    <select value={fPlan} onChange={e=>setFPlan(e.target.value)} className={selectCls}>
-                      <option value="">Select plan...</option>
-                      {planOptions.map(p=><option key={p} value={p}>{p}</option>)}
-                    </select>
-                  </Field>
+                  {fBrand==='Both'?(
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-gray-500">Membership / Plan</label>
+                      <select value={fPlan} onChange={e=>setFPlan(e.target.value)} className={selectCls}>
+                        <option value="">MS plan...</option>
+                        {MS_PLANS.map(p=><option key={p} value={p}>{p}</option>)}
+                      </select>
+                      <select value={fPlanQuodo} onChange={e=>setFPlanQuodo(e.target.value)} className={selectCls}>
+                        <option value="">Quodo plan...</option>
+                        {Q_PLANS.map(p=><option key={p} value={p}>{p}</option>)}
+                      </select>
+                    </div>
+                  ):(
+                    <Field label="Membership / Plan">
+                      <select value={fPlan} onChange={e=>setFPlan(e.target.value)} className={selectCls}>
+                        <option value="">Select plan...</option>
+                        {planOptions.map(p=><option key={p} value={p}>{p}</option>)}
+                      </select>
+                    </Field>
+                  )}
                   <Field label="Extras / Hosting">
                     <div className="border-2 border-gray-200 rounded-xl p-3 flex flex-wrap gap-2 min-h-[48px]">
                       {extraOptions.length===0&&<span className="text-xs text-gray-400">Select a brand first</span>}
