@@ -4,23 +4,33 @@ const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY!;
 const BASE_ID = process.env.AIRTABLE_BASE_ID!;
 const TABLE = 'DailyActivity';
 
-// Lead gen slugs only
 const LEAD_GEN_STAFF = [
-  { slug: 'cindy-rose-rondez-manfre', name: 'Cindy',  avatar: 'C', color: '#7c3aed' },
-  { slug: 'krishna-patel',            name: 'Krishna', avatar: 'K', color: '#0891b2' },
-  { slug: 'sydney-arnold',            name: 'Sydney',  avatar: 'S', color: '#059669' },
-  { slug: 'riley-kerrison',           name: 'Riley',   avatar: 'R', color: '#d97706' },
+  { slug: 'cindy-rose-rondez-manfre', name: 'Cindy',  avatar: 'C', color: '#7c3aed', startDate: '2026-02-23' },
+  { slug: 'krishna-patel',            name: 'Krishna', avatar: 'K', color: '#0891b2', startDate: '2026-02-23' },
+  { slug: 'sydney-arnold',            name: 'Sydney',  avatar: 'S', color: '#059669', startDate: '2026-03-23' },
+  { slug: 'riley-kerrison',           name: 'Riley',   avatar: 'R', color: '#d97706', startDate: '2026-03-30' },
 ];
+
+function weeksOnBoard(startDate: string): number {
+  const start = new Date(startDate);
+  const today = new Date();
+  // Zero out time so we measure full days only
+  start.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+  const days = Math.floor((today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+  return Math.floor(days / 7);
+}
 
 async function fetchAllRecords() {
   let records: any[] = [];
   let offset: string | undefined;
 
   do {
-    const params = new URLSearchParams({
-      'fields[]': ['trainee_slug', 'trainee_name', 'date', 'calls', 'bookings', 'meetings'],
-      pageSize: '100',
-    } as any);
+    const params = new URLSearchParams();
+    ['trainee_slug', 'date', 'calls', 'bookings', 'meetings'].forEach(f =>
+      params.append('fields[]', f)
+    );
+    params.set('pageSize', '100');
     if (offset) params.set('offset', offset);
 
     const res = await fetch(
@@ -35,10 +45,9 @@ async function fetchAllRecords() {
   return records;
 }
 
-// Get ISO week string e.g. "2026-W13"
 function getWeekKey(dateStr: string): string {
   const d = new Date(dateStr);
-  const day = d.getDay() || 7; // Mon=1 Sun=7
+  const day = d.getDay() || 7;
   d.setDate(d.getDate() + 4 - day);
   const yearStart = new Date(d.getFullYear(), 0, 1);
   const week = Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
@@ -49,14 +58,15 @@ function getCurrentWeekKey(): string {
   return getWeekKey(new Date().toISOString().slice(0, 10));
 }
 
+const round1 = (n: number | null) => n !== null ? Math.round(n * 10) / 10 : null;
+
 export async function GET() {
   try {
     const records = await fetchAllRecords();
-
-    // Get slugs we care about
     const slugSet = new Set(LEAD_GEN_STAFF.map(s => s.slug));
+    const currentWeek = getCurrentWeekKey();
 
-    // Group records by slug
+    // Group by slug
     const bySlug: Record<string, any[]> = {};
     for (const rec of records) {
       const slug = rec.fields.trainee_slug;
@@ -65,103 +75,73 @@ export async function GET() {
       bySlug[slug].push(rec.fields);
     }
 
-    const currentWeek = getCurrentWeekKey();
-
     const result = LEAD_GEN_STAFF.map(staff => {
       const rows = bySlug[staff.slug] || [];
+      const weeks = weeksOnBoard(staff.startDate);
 
-      // Sort by date ascending
-      rows.sort((a, b) => a.date.localeCompare(b.date));
-
-      const firstDate = rows.length > 0 ? new Date(rows[0].date) : new Date();
-      const today = new Date();
-      const msPerWeek = 7 * 24 * 60 * 60 * 1000;
-      const weeksOnBoard = Math.floor((today.getTime() - firstDate.getTime()) / msPerWeek);
-
-      // ── Channel 1: Call → Booking (bookings / calls) ─────────────────
-      const ch1Days = rows.filter(r => (r.calls || 0) > 0).map(r => ({
-        date: r.date,
-        week: getWeekKey(r.date),
-        calls: r.calls || 0,
-        bookings: r.bookings || 0,
-        rate: (r.bookings || 0) / (r.calls || 0),
+      // ── Channel 1: calls → bookings ──────────────────────────────────
+      const c1 = rows.filter(r => (r.calls ?? 0) > 0).map(r => ({
+        week:     getWeekKey(r.date),
+        calls:    r.calls    as number,
+        bookings: r.bookings as number ?? 0,
+        rate:     (r.bookings ?? 0) / r.calls,
       }));
 
-      // Overall avg
-      const ch1TotalCalls = ch1Days.reduce((s, d) => s + d.calls, 0);
-      const ch1TotalBooks = ch1Days.reduce((s, d) => s + d.bookings, 0);
-      const ch1Avg = ch1TotalCalls > 0 ? (ch1TotalBooks / ch1TotalCalls) * 100 : null;
+      const c1Calls = c1.reduce((s, d) => s + d.calls,    0);
+      const c1Books = c1.reduce((s, d) => s + d.bookings, 0);
 
-      // Best day
-      const ch1BestDay = ch1Days.length > 0
-        ? Math.max(...ch1Days.map(d => d.rate)) * 100
-        : null;
-
-      // Per-week aggregates
-      const ch1ByWeek: Record<string, { calls: number; bookings: number }> = {};
-      for (const d of ch1Days) {
-        if (!ch1ByWeek[d.week]) ch1ByWeek[d.week] = { calls: 0, bookings: 0 };
-        ch1ByWeek[d.week].calls += d.calls;
-        ch1ByWeek[d.week].bookings += d.bookings;
+      const c1ByWeek: Record<string, { calls: number; bookings: number }> = {};
+      for (const d of c1) {
+        if (!c1ByWeek[d.week]) c1ByWeek[d.week] = { calls: 0, bookings: 0 };
+        c1ByWeek[d.week].calls    += d.calls;
+        c1ByWeek[d.week].bookings += d.bookings;
       }
-      const ch1WeekRates = Object.values(ch1ByWeek)
-        .filter(w => w.calls > 0)
-        .map(w => w.bookings / w.calls);
-      const ch1BestWeek = ch1WeekRates.length > 0 ? Math.max(...ch1WeekRates) * 100 : null;
-      const ch1CurrentWeek = ch1ByWeek[currentWeek]
-        ? (ch1ByWeek[currentWeek].bookings / ch1ByWeek[currentWeek].calls) * 100
-        : null;
+      const c1WeekRates = Object.values(c1ByWeek).filter(w => w.calls > 0).map(w => w.bookings / w.calls);
 
-      // ── Channel 2: Booked → Attended (meetings / bookings) ───────────
-      const ch2Days = rows.filter(r => (r.bookings || 0) > 0).map(r => ({
-        date: r.date,
-        week: getWeekKey(r.date),
-        bookings: r.bookings || 0,
-        meetings: r.meetings || 0,
-        rate: (r.meetings || 0) / (r.bookings || 0),
+      const ch1 = {
+        avg:         c1Calls > 0 ? round1((c1Books / c1Calls) * 100) : null,
+        bestDay:     c1.length > 0 ? round1(Math.max(...c1.map(d => d.rate)) * 100) : null,
+        bestWeek:    c1WeekRates.length > 0 ? round1(Math.max(...c1WeekRates) * 100) : null,
+        currentWeek: c1ByWeek[currentWeek]?.calls > 0
+          ? round1((c1ByWeek[currentWeek].bookings / c1ByWeek[currentWeek].calls) * 100)
+          : null,
+      };
+
+      // ── Channel 2: bookings → meetings ───────────────────────────────
+      const c2 = rows.filter(r => (r.bookings ?? 0) > 0).map(r => ({
+        week:     getWeekKey(r.date),
+        bookings: r.bookings as number,
+        meetings: r.meetings as number ?? 0,
+        rate:     (r.meetings ?? 0) / r.bookings,
       }));
 
-      const ch2TotalBooks = ch2Days.reduce((s, d) => s + d.bookings, 0);
-      const ch2TotalMeets = ch2Days.reduce((s, d) => s + d.meetings, 0);
-      const ch2Avg = ch2TotalBooks > 0 ? (ch2TotalMeets / ch2TotalBooks) * 100 : null;
+      const c2Books = c2.reduce((s, d) => s + d.bookings, 0);
+      const c2Meets = c2.reduce((s, d) => s + d.meetings, 0);
 
-      const ch2BestDay = ch2Days.length > 0
-        ? Math.max(...ch2Days.map(d => d.rate)) * 100
-        : null;
-
-      const ch2ByWeek: Record<string, { bookings: number; meetings: number }> = {};
-      for (const d of ch2Days) {
-        if (!ch2ByWeek[d.week]) ch2ByWeek[d.week] = { bookings: 0, meetings: 0 };
-        ch2ByWeek[d.week].bookings += d.bookings;
-        ch2ByWeek[d.week].meetings += d.meetings;
+      const c2ByWeek: Record<string, { bookings: number; meetings: number }> = {};
+      for (const d of c2) {
+        if (!c2ByWeek[d.week]) c2ByWeek[d.week] = { bookings: 0, meetings: 0 };
+        c2ByWeek[d.week].bookings += d.bookings;
+        c2ByWeek[d.week].meetings += d.meetings;
       }
-      const ch2WeekRates = Object.values(ch2ByWeek)
-        .filter(w => w.bookings > 0)
-        .map(w => w.meetings / w.bookings);
-      const ch2BestWeek = ch2WeekRates.length > 0 ? Math.max(...ch2WeekRates) * 100 : null;
-      const ch2CurrentWeek = ch2ByWeek[currentWeek]
-        ? (ch2ByWeek[currentWeek].meetings / ch2ByWeek[currentWeek].bookings) * 100
-        : null;
+      const c2WeekRates = Object.values(c2ByWeek).filter(w => w.bookings > 0).map(w => w.meetings / w.bookings);
 
-      const round1 = (n: number | null) => n !== null ? Math.round(n * 10) / 10 : null;
+      const ch2 = {
+        avg:         c2Books > 0 ? round1((c2Meets / c2Books) * 100) : null,
+        bestDay:     c2.length > 0 ? round1(Math.max(...c2.map(d => d.rate)) * 100) : null,
+        bestWeek:    c2WeekRates.length > 0 ? round1(Math.max(...c2WeekRates) * 100) : null,
+        currentWeek: c2ByWeek[currentWeek]?.bookings > 0
+          ? round1((c2ByWeek[currentWeek].meetings / c2ByWeek[currentWeek].bookings) * 100)
+          : null,
+      };
 
       return {
-        ...staff,
-        weeksOnBoard,
-        channels: [
-          {
-            avg:         round1(ch1Avg),
-            bestDay:     round1(ch1BestDay),
-            bestWeek:    round1(ch1BestWeek),
-            currentWeek: round1(ch1CurrentWeek),
-          },
-          {
-            avg:         round1(ch2Avg),
-            bestDay:     round1(ch2BestDay),
-            bestWeek:    round1(ch2BestWeek),
-            currentWeek: round1(ch2CurrentWeek),
-          },
-        ],
+        name:         staff.name,
+        avatar:       staff.avatar,
+        color:        staff.color,
+        startDate:    staff.startDate,
+        weeksOnBoard: weeks,
+        channels:     [ch1, ch2],
       };
     });
 
