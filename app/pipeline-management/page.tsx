@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
+import PipelineAuth, { usePipelineAuth } from '../components/PipelineAuth';
 
 type EntryType = 'Added' | 'Won' | 'Lost';
 type WeekBucket = 'Week 1' | 'Week 2' | 'Week 3' | 'Week 4+';
@@ -123,6 +124,7 @@ function WeekColumn({ week, timingPct, closes, revenue, pipeValue, dealOnDay, is
 }
 
 export default function PipelineManagement() {
+  const { authedUser, logout } = usePipelineAuth();
   const [callBook, setCallBook] = useState(10);
   const [bookAttend, setBookAttend] = useState(33);
   const [attendPipe, setAttendPipe] = useState(75);
@@ -361,6 +363,7 @@ export default function PipelineManagement() {
   ];
 
   return (
+    <PipelineAuth>
     <div className="min-h-screen" style={{ background: '#f4f6f9' }}>
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
@@ -368,9 +371,13 @@ export default function PipelineManagement() {
             <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Marketing Sweet · Sales Operations</div>
             <h1 className="text-xl font-black text-gray-900 mt-0.5">Pipeline Management</h1>
           </div>
-          <div className="text-right">
-            <div className="text-[10px] text-gray-400 uppercase tracking-wider">Weekly Target</div>
-            <div className="text-2xl font-black text-orange-500">{fmt$(weeklyTarget)}</div>
+          <div className="flex items-center gap-4">
+            {authedUser && <span className="text-xs text-gray-500 font-semibold">{authedUser}</span>}
+            <button onClick={logout} className="text-xs text-gray-400 hover:text-red-500 transition-colors font-semibold">Sign out</button>
+            <div className="text-right">
+              <div className="text-[10px] text-gray-400 uppercase tracking-wider">Weekly Target</div>
+              <div className="text-2xl font-black text-orange-500">{fmt$(weeklyTarget)}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -934,5 +941,6 @@ export default function PipelineManagement() {
         </div>
       </div>
     </div>
+    </PipelineAuth>
   );
 }

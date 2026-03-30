@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
+import PipelineAuth, { usePipelineAuth } from '../components/PipelineAuth';
 
 const CLOSERS = ['Lucas', 'Dylan', 'Felipe', 'Thomas'];
 const BOOKERS = ['Cindy', 'Krishna', 'Thomas', 'Riley', 'Sydney', 'Felipe', 'Dylan', 'Lucas'];
@@ -317,6 +318,7 @@ function BucketVisual({bucket,deals,targetValue}:{bucket:Bucket;deals:Deal[];tar
 }
 
 export default function PipelinePage(){
+  const { authedUser, logout } = usePipelineAuth();
   const [tab,setTab]=useState<'pipeline'|'log'|'history'>('pipeline');
   const [viewMode,setViewMode]=useState<ViewMode>('Week 1');
   const [deals,setDeals]=useState<Deal[]>([]);
@@ -490,6 +492,7 @@ export default function PipelinePage(){
 
 
   return(
+    <PipelineAuth>
     <div className="min-h-screen" style={{background:'#f4f6f9'}}>
       {/* Top nav */}
       <div className="bg-white border-b border-gray-200">
@@ -498,7 +501,11 @@ export default function PipelinePage(){
             <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Marketing Sweet</div>
             <h1 className="text-xl font-black text-gray-900">Pipeline</h1>
           </div>
-          <button onClick={fetchDeals} className="text-xs text-gray-400 hover:text-orange-500 transition-colors font-bold">↻ Refresh</button>
+          <div className="flex items-center gap-3">
+            {authedUser && <span className="text-xs text-gray-500 font-semibold">{authedUser}</span>}
+            <button onClick={fetchDeals} className="text-xs text-gray-400 hover:text-orange-500 transition-colors font-bold">↻ Refresh</button>
+            <button onClick={logout} className="text-xs text-gray-400 hover:text-red-500 transition-colors font-semibold">Sign out</button>
+          </div>
         </div>
         <div className="max-w-6xl mx-auto px-6 flex gap-1">
           {([{key:'pipeline',label:'📊 Pipeline View'},{key:'log',label:'✏️ Log a Deal'},{key:'history',label:'📅 Previous Weeks'}]).map(t=>(
@@ -971,5 +978,6 @@ export default function PipelinePage(){
         )}
       </div>
     </div>
+    </PipelineAuth>
   );
 }
