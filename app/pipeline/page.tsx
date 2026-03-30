@@ -480,7 +480,7 @@ export default function PipelinePage(){
     const yd=new Date(); yd.setDate(yd.getDate()-daysBack);
     const ydStr=yd.toISOString().slice(0,10);
     const dayLabel=daysBack===3?'Friday':daysBack===2?'Friday':'Yesterday';
-    const ydDeals=deals.filter(d=>d.Date===ydStr);
+    const ydDeals=deals.filter(d=>d.DateAddedToPipe===ydStr);
     const ydMo=ydDeals.reduce((s,d)=>s+d.MonthlyValue,0);
     const ydWk=Math.round(ydMo/4.33);
     return {ydWk,count:ydDeals.length,dayLabel};
