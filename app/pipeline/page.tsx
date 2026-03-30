@@ -897,7 +897,8 @@ export default function PipelinePage(){
               <div className="flex flex-col gap-4">
                 {historicalData.map(wk=>{
                   const closedVal=wk.wonVal+wk.lostVal;
-                  const winRate=closedVal>0?Math.round((wk.wonVal/closedVal)*100):null;
+                  const resolvedVal=wk.wonVal+wk.lostVal+wk.movedVal;
+                  const winRate=resolvedVal>0?Math.round((wk.wonVal/resolvedVal)*100):null;
                   return(
                     <div key={wk.weekOffset} className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
                       {/* Week header */}
