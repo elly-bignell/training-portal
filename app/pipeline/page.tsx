@@ -638,12 +638,32 @@ export default function PipelinePage(){
                 <div className="border-t border-gray-100 pt-4">
                   <div className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Bucket Breakdown</div>
                   <div className="grid grid-cols-4 gap-3">
-                    {(['Week 1','Week 2','Week 3','Week 4+'] as Bucket[]).map(b=>{
+                    {(()=>{
+                      // Day index: Mon=0 Tue=1 Wed=2 Thu=3 Fri=4 (cap at 4)
+                      const dow=new Date().getDay();
+                      const dayIdx=dow===0?4:dow===6?4:Math.min(dow-1,4);
+                      const DAY_NAMES=['Monday','Tuesday','Wednesday','Thursday','Friday'];
+                      const dayName=DAY_NAMES[dayIdx];
+                      // Expected value at START of today for each bucket
+                      // W1: depletes $504/day from $2520 — Mon=$2520, Tue=$2016, etc.
+                      // W2: grows $264/day from $600 base — Mon=$600, Tue=$864, etc.
+                      // W3: depletes $72/day from $960 — Mon=$960, Tue=$888, etc.
+                      // W4+: grows $192/day from $0 — Mon=$0, Tue=$192, etc.
+                      const todayExpected:Record<string,number>={
+                        'Week 1':Math.max(0,2520-dayIdx*504),
+                        'Week 2':600+dayIdx*264,
+                        'Week 3':Math.max(0,960-dayIdx*72),
+                        'Week 4+':dayIdx*192,
+                      };
+                      return(['Week 1','Week 2','Week 3','Week 4+'] as Bucket[]).map(b=>{
                       const wkVal=Math.round(totalByBucket[b]/4.33);
                       const wkTarget=BUCKET_WK_TARGETS[b];
                       const diff=wkVal-wkTarget;
                       const ahead=diff>=0;
                       const pct=wkTarget>0?Math.round((wkVal/wkTarget)*100):0;
+                      const todayExp=todayExpected[b];
+                      const todayDiff=wkVal-todayExp;
+                      const todayAhead=todayDiff>=0;
                       return(
                       <div key={b} className="rounded-xl p-3 border" style={{borderColor:WEEK_COLORS[b]+'50',background:WEEK_COLORS[b]+'08'}}>
                         <div className="text-[10px] font-black uppercase tracking-wider mb-2" style={{color:WEEK_COLORS[b]}}>{b}</div>
@@ -653,11 +673,17 @@ export default function PipelinePage(){
                           <div className="h-1 rounded-full transition-all" style={{width:`${Math.min(pct,100)}%`,background:WEEK_COLORS[b]}}/>
                         </div>
                         <div className={`text-[10px] font-bold ${ahead?'text-emerald-600':'text-red-600'}`}>
-                          {ahead?'▲':'▼'} ${Math.abs(diff).toLocaleString()} {ahead?'ahead':'behind'}
+                          {ahead?'▲':'▼'} ${Math.abs(diff).toLocaleString()} vs week target
+                        </div>
+                        <div className="mt-1 pt-1 border-t border-gray-100">
+                          <div className="text-[9px] text-gray-400 mb-0.5">{dayName} expected: ${todayExp.toLocaleString()}</div>
+                          <div className={`text-[10px] font-bold ${todayAhead?'text-emerald-600':'text-red-600'}`}>
+                            {todayAhead?'▲':'▼'} ${Math.abs(todayDiff).toLocaleString()} vs today
+                          </div>
                         </div>
                       </div>
                       );
-                    })}
+                    });})()}
                   </div>
                 </div>
               </div>
