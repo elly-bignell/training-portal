@@ -7,8 +7,8 @@ const CLOSERS = ['Lucas', 'Dylan', 'Felipe', 'Thomas'];
 const BOOKERS = ['Cindy', 'Krishna', 'Thomas', 'Riley', 'Sydney', 'Felipe', 'Dylan', 'Lucas'];
 const VIEWERS = ['Lucas', 'Dylan', 'Felipe', 'Admin'];
 
-const MS_PLANS  = ['Web Support','SEO Support','Digital Support','Diamond','Platinum','Gold','Silver','Bronze'];
-const Q_PLANS   = ['Web Changes','SEO Backlinking','SEO Page Building','Google Ads','O/O Web Changes','O/O Page Building','O/O SEO Overhaul'];
+const MS_PLANS  = ['Web Support','SEO Support','Digital Support'];
+const Q_PLANS   = ['Bronze','Silver','Gold','Platinum','Diamond'];
 const MS_EXTRAS = ['Web Changes','SEO Backlinking','SEO Page Building','Google Ads','O/O Web Changes','O/O Page Building','O/O SEO Overhaul'];
 const Q_EXTRAS  = ['LiteHost','Plus36 Hosting','Plus24 Hosting','FlexiHost'];
 
@@ -340,6 +340,7 @@ export default function PipelinePage(){
   const [fBooker,setFBooker]=useState('');
   const [fMonthly,setFMonthly]=useState('');
   const [fWeekly,setFWeekly]=useState('');
+  const calcWeekly=(m:string)=>m?String(Math.round((Number(m)*12)/52*1.1*100)/100):'';
   const [fUpfront,setFUpfront]=useState('');
   const [fGTH,setFGTH]=useState('');
   const [fNextContact,setFNextContact]=useState('');
@@ -397,7 +398,7 @@ export default function PipelinePage(){
   }
 
   async function submitDeal(){
-    if(!fBusiness||!fCloseDate||!fCloser||!fBooker||!fMonthly||!fWeekly||!fGTH||!fBrand)return;
+    if(!fBusiness||!fCloseDate||!fCloser||!fBooker||!fMonthly||!fGTH||!fBrand)return;
     setSaving(true);
     try{
       const bucket=getWeekBucket(fCloseDate);
@@ -405,7 +406,7 @@ export default function PipelinePage(){
         BusinessName:fBusiness,DateOfMeeting:fDate,CloseDate:fCloseDate,
         ...(fCloseTime?{CloseTime:fCloseTime}:{}),
         Closer:fCloser,Booker:fBooker,
-        MonthlyValue:Number(fMonthly),WeeklyValue:Number(fWeekly),
+        MonthlyValue:Number(fMonthly),WeeklyValue:Number(calcWeekly(fMonthly)),
         ...(fUpfront?{UpfrontValue:Number(fUpfront)}:{}),
         GTH:fGTH,...(fNextContact?{NextContactDate:fNextContact}:{}),
         Brand:fBrand,...(fPlan?{Plan:fPlan}:{}),
@@ -981,16 +982,17 @@ export default function PipelinePage(){
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Field label="Monthly $ inc GST" required>
+                <Field label="Monthly $ ex GST" required>
                   <div className="flex items-center border-2 border-gray-200 rounded-xl overflow-hidden focus-within:border-orange-400">
                     <span className="pl-3 text-gray-400 font-bold text-sm">$</span>
                     <input type="number" value={fMonthly} onChange={e=>setFMonthly(e.target.value)} placeholder="0" className="flex-1 px-2 py-2.5 text-sm font-semibold text-gray-800 outline-none bg-white"/>
                   </div>
                 </Field>
-                <Field label="Weekly $ inc GST" required>
-                  <div className="flex items-center border-2 border-gray-200 rounded-xl overflow-hidden focus-within:border-orange-400">
+                <Field label="Weekly $ inc GST (auto)">
+                  <div className="flex items-center border-2 border-gray-100 rounded-xl overflow-hidden bg-gray-50">
                     <span className="pl-3 text-gray-400 font-bold text-sm">$</span>
-                    <input type="number" value={fWeekly} onChange={e=>setFWeekly(e.target.value)} placeholder="0" className="flex-1 px-2 py-2.5 text-sm font-semibold text-gray-800 outline-none bg-white"/>
+                    <input type="number" value={calcWeekly(fMonthly)} readOnly placeholder="Auto-calculated" className="flex-1 px-2 py-2.5 text-sm font-semibold text-gray-500 outline-none bg-transparent cursor-default"/>
+                    <span className="pr-3 text-[10px] text-gray-400 font-semibold italic">ex×÷12÷52×1.1</span>
                   </div>
                 </Field>
                 <Field label="Upfront $ inc GST">
@@ -1009,9 +1011,10 @@ export default function PipelinePage(){
                     <option value="Non GTH">Non GTH</option>
                   </select>
                 </Field>
-                <Field label="Next Contact Date">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-bold uppercase tracking-wider text-gray-500">Next Contact Date <span className="text-[10px] font-normal normal-case italic text-gray-400">(Load, Send Review etc. or same as Close Date)</span></label>
                   <input type="date" value={fNextContact} onChange={e=>setFNextContact(e.target.value)} className={inputCls}/>
-                </Field>
+                </div>
                 <Field label="Brand" required>
                   <select value={fBrand} onChange={e=>setFBrand(e.target.value as Brand)} className={selectCls}>
                     <option value="">Select brand...</option>
