@@ -96,7 +96,6 @@ const WEEK0_BUDDY_EOW   = 10; // 4+3+2+1+0
 
 // Map each Week 0 trainee → the buddy who picks up the slack
 const WEEK0_BUDDIES: Record<string, string> = {
-  "sydney-arnold":  "felipe-garcia",
   "riley-kerrison": "lucas-tirri",
 };
 

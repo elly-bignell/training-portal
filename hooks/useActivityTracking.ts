@@ -23,7 +23,7 @@ interface WeeklyData {
 // Revenue: $350 per deal
 export const weeklyStandards: Record<number, DailyActivity> = {
   0: { calls_made: 0, calls: 0, bookings: 0, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 }, // Training
-  1: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  1: { calls_made: 125, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
   2: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
   3: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
   4: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
@@ -35,7 +35,7 @@ export const weeklyStandards: Record<number, DailyActivity> = {
 
 // Per-trainee week number overrides (slug → effective week for standards/display)
 export const TRAINEE_WEEK_OVERRIDES: Record<string, number> = {
-  "sydney-arnold": 0, // Sydney is in Week 0 (Training Week)
+  "sydney-arnold": 1, // Sydney is in Week 1
   "riley-kerrison": 0,  // Riley is in Week 0 (Training Week)
 };
 
