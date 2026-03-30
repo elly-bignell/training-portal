@@ -24,13 +24,13 @@ const WEEK_COLORS: Record<string,string> = {
 };
 
 const BUCKET_TARGETS: Record<string,number> = {
-  'Week 1':10912,'Week 2':8314,'Week 3':2338,'Week 4+':4157,
+  'Week 1':10912,'Week 2':8314,'Week 3':3000,'Week 4+':4157,
 };
 const BUCKET_PCT: Record<string,number> = {
   'Week 1':42,'Week 2':32,'Week 3':10,'Week 4+':16,
 };
 const BUCKET_WK_TARGETS: Record<string,number> = {
-  'Week 1':2520,'Week 2':1920,'Week 3':600,'Week 4+':960,
+  'Week 1':2520,'Week 2':1920,'Week 3':500,'Week 4+':960,
 };
 const PIPE_MIN_WK = 6000;
 const PIPE_MIN_MO = 26000;
