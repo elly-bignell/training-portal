@@ -331,6 +331,7 @@ export default function PipelinePage(){
   const [loading,setLoading]=useState(true);
   const [saving,setSaving]=useState(false);
   const [success,setSuccess]=useState(false);
+  const [formErrors,setFormErrors]=useState<string[]>([]);
 
   const [fDate,setFDate]=useState(todayStr());
   const [fCloseDate,setFCloseDate]=useState('');
@@ -399,7 +400,18 @@ export default function PipelinePage(){
   }
 
   async function submitDeal(){
-    if(!fBusiness||!fCloseDate||!fCloser||!fBooker||!fMonthly||!fGTH||!fBrand)return;
+    const errors:string[]=[];
+    if(!fBusiness) errors.push('Business Name');
+    if(!fCloseDate) errors.push('Close Date');
+    if(!fCloser) errors.push('Closer');
+    if(!fBooker) errors.push('Booker');
+    if(!fMonthly) errors.push('Monthly $');
+    if(!fGTH) errors.push('GTH Status');
+    if(!fBrand) errors.push('Brand');
+    if(fBrand&&fBrand!=='Both'&&!fPlan) errors.push('Membership / Plan');
+    if(fBrand==='Both'&&!fPlan&&!fPlanQuodo) errors.push('Membership / Plan (at least one)');
+    if(errors.length>0){setFormErrors(errors);return;}
+    setFormErrors([]);
     setSaving(true);
     try{
       const bucket=getWeekBucket(fCloseDate);
@@ -424,7 +436,7 @@ export default function PipelinePage(){
         const closedBucket=getWeekBucket(fCloseDate);
         setFBusiness('');setFCloseDate('');setFCloseTime('');setFCloser('');
         setFBooker('');setFMonthly('');setFWeekly('');setFUpfront('');
-        setFGTH('');setFNextContact('');setFBrand('');setFPlan('');setFPlanQuodo('');
+        setFGTH('');setFNextContact('');setFBrand('');setFPlan('');setFPlanQuodo('');setFormErrors([]);
         setFExtras([]);setFNotes('');setFDate(todayStr());
         setTab('pipeline');setViewMode(closedBucket);
       }
@@ -955,6 +967,16 @@ export default function PipelinePage(){
               {success&&(
                 <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-sm text-emerald-700 font-semibold text-center">
                   ✅ Deal logged and added to pipeline!
+                </div>
+              )}
+              {formErrors.length>0&&(
+                <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
+                  <div className="text-sm font-black text-red-600 mb-1">⚠ Please fill in the required fields:</div>
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {formErrors.map(e=>(
+                      <span key={e} className="text-xs font-bold bg-red-100 text-red-700 px-2.5 py-1 rounded-full">{e}</span>
+                    ))}
+                  </div>
                 </div>
               )}
 
