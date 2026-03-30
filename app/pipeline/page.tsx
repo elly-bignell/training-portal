@@ -416,13 +416,19 @@ export default function PipelinePage(){
 
   const dealsByBucket=useMemo(()=>{
     const map:Record<Bucket,Deal[]>={'Week 1':[],'Week 2':[],'Week 3':[],'Week 4+':[]};
-    deals.forEach(d=>{if(map[d.WeekBucket])map[d.WeekBucket].push(d);});
+    deals.forEach(d=>{
+      const bucket = d.CloseDate ? getWeekBucket(d.CloseDate) : d.WeekBucket;
+      if(map[bucket]) map[bucket].push(d);
+    });
     return map;
   },[deals]);
 
   const totalByBucket=useMemo(()=>{
     const map:Record<Bucket,number>={'Week 1':0,'Week 2':0,'Week 3':0,'Week 4+':0};
-    deals.filter(d=>d.Status==='Active').forEach(d=>{map[d.WeekBucket]+=d.MonthlyValue;});
+    deals.filter(d=>d.Status==='Active').forEach(d=>{
+      const bucket = d.CloseDate ? getWeekBucket(d.CloseDate) : d.WeekBucket;
+      map[bucket]+=d.MonthlyValue;
+    });
     return map;
   },[deals]);
 
