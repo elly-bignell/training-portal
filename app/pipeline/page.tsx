@@ -573,7 +573,8 @@ export default function PipelinePage(){
 
       const totalVal=wonVal+lostVal+activeVal+movedVal;
       const closedVal=wonVal+lostVal;
-      const winRate=closedVal>0?Math.round((wonVal/closedVal)*100):null;
+      const resolvedVal=wonVal+lostVal+movedVal;
+      const winRate=resolvedVal>0?Math.round((wonVal/resolvedVal)*100):null;
       return {...wk,wkDeals,totalVal,wonVal,wonCount,lostVal,lostCount,activeVal,activeCount,winRate,movedDeals,movedVal,movedCount,movedToBuckets};
     }).filter(wk=>wk.wkDeals.length>0||wk.movedCount>0);
   },[deals,historicalWeeks]);
