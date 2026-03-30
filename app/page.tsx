@@ -72,6 +72,13 @@ function HomeContent() {
   const totalItems = getTotalChecklistItems();
   const totalModules = trainingProgram.length;
 
+  const weekLabels: Record<string, { label: string; color: string; bg: string }> = {
+    "krishna-patel":              { label: "Week 6",            color: "#16a34a", bg: "#dcfce7" },
+    "cindy-rose-rondez-manrique": { label: "Week 6",            color: "#16a34a", bg: "#dcfce7" },
+    "riley-kerrison":             { label: "Week 0 · Training", color: "#7c3aed", bg: "#ede9fe" },
+    "sydney-arnold":              { label: "Week 1",            color: "#2563eb", bg: "#dbeafe" },
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -246,7 +253,15 @@ function HomeContent() {
                   <div className="w-10 h-10 rounded-full bg-[#E6017D] flex items-center justify-center text-white font-bold text-sm">
                     {trainee.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
                   </div>
-                  <h3 className="font-semibold text-gray-800">{trainee.name}</h3>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-semibold text-gray-800">{trainee.name}</h3>
+                    {weekLabels[trainee.slug] && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold"
+                        style={{ color: weekLabels[trainee.slug].color, background: weekLabels[trainee.slug].bg }}>
+                        {weekLabels[trainee.slug].label}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
@@ -448,6 +463,12 @@ function HomeContent() {
                           {isCSTag && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-200">
                               🎧 Customer Service
+                            </span>
+                          )}
+                          {weekLabels[trainee.slug] && (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold"
+                              style={{ color: weekLabels[trainee.slug].color, background: weekLabels[trainee.slug].bg }}>
+                              {weekLabels[trainee.slug].label}
                             </span>
                           )}
                         </div>

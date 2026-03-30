@@ -27,6 +27,22 @@ const TRAINEES = {
     staffMatchNames: ["Krishna Patel"],
     absences: { publicHolidays: 1, sickDays: 2 },
   },
+  "riley-kerrison": {
+    name: "Riley",
+    fullName: "Riley Kerrison",
+    staffMatchNames: ["Riley Kerrison"],
+    absences: { publicHolidays: 0, sickDays: 0 },
+    startDay: "2026-03-30",
+    fieldStartDay: "2026-04-06",
+  },
+  "sydney-arnold": {
+    name: "Sydney",
+    fullName: "Sydney Arnold",
+    staffMatchNames: ["Sydney Arnold"],
+    absences: { publicHolidays: 0, sickDays: 0 },
+    startDay: "2026-03-23",
+    fieldStartDay: "2026-03-23",
+  },
 };
 
 const PERIOD_START     = "2026-02-16";
@@ -95,8 +111,8 @@ export async function GET() {
 
     const stats = {};
     for (const [slug, trainee] of Object.entries(TRAINEES)) {
-      const totalDays = countWorkingDays(PERIOD_START, trainee.lastDay || today) - trainee.absences.publicHolidays - trainee.absences.sickDays;
-      const fieldDays = countWorkingDays(FIELD_WEEK_START, trainee.lastDay || today) - trainee.absences.publicHolidays - trainee.absences.sickDays;
+      const totalDays = countWorkingDays(trainee.startDay || PERIOD_START, trainee.lastDay || today) - trainee.absences.publicHolidays - trainee.absences.sickDays;
+      const fieldDays = countWorkingDays(trainee.fieldStartDay || FIELD_WEEK_START, trainee.lastDay || today) - trainee.absences.publicHolidays - trainee.absences.sickDays;
       stats[slug] = { ...trainee, totalDays, fieldDays, callsMade: 0, connectedCalls: 0, bookings: 0, meetings: 0, unitsRaw: 0, revenueRaw: 0, valTotal: 0, valValidated: 0, valRejected: 0, valPending: 0 };
     }
 

@@ -216,7 +216,7 @@ const ROADMAP_WEEKS = [
   { week: 8, label: "Week 8+", start: "2026-04-13", daily: { bookings: 4, meetings: 2,   calls: 30, units: 1,   revenue: 500 } },
 ];
 
-const TRAINEE_SLUGS = ["cindy-rose-rondez-manrique", "connie-matthews", "krishna-patel"];
+const TRAINEE_SLUGS = ["cindy-rose-rondez-manrique", "krishna-patel", "riley-kerrison", "sydney-arnold", "connie-matthews"];
 
 function getWkDates(startStr) {
   const [y, m, d] = startStr.split("-").map(Number);
@@ -431,7 +431,7 @@ export default function SnapshotPage() {
     fetchActivity();
   }, []);
 
-  const TRAINEE_ORDER = ["cindy-rose-rondez-manrique", "krishna-patel", "connie-matthews"];
+  const TRAINEE_ORDER = ["cindy-rose-rondez-manrique", "krishna-patel", "riley-kerrison", "sydney-arnold", "connie-matthews"];
   const trainees = (data?.trainees ?? []).slice().sort((a, b) => {
     const ai = TRAINEE_ORDER.indexOf(a.slug);
     const bi = TRAINEE_ORDER.indexOf(b.slug);
