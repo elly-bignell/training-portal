@@ -67,6 +67,14 @@ const TEAM_BOOKINGS_TARGET_EOW = 35; // 7/day × 5 days
 // Days of the week
 const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
+// Week-on-board badges per lead gen trainee
+const WEEK_BADGES: Record<string, { label: string; color: string; bg: string }> = {
+  "cindy-rose-rondez-manrique": { label: "Wk 6", color: "#16a34a", bg: "#dcfce7" },
+  "krishna-patel":              { label: "Wk 6", color: "#16a34a", bg: "#dcfce7" },
+  "riley-kerrison":             { label: "Wk 0", color: "#7c3aed", bg: "#ede9fe" },
+  "sydney-arnold":              { label: "Wk 1", color: "#2563eb", bg: "#dbeafe" },
+};
+
 // Week date ranges for display
 const weekDateRanges: Record<number, string> = {
   0: "Mon 16 Feb – Fri 20 Feb",
@@ -386,6 +394,14 @@ export default function PerformanceSummary() {
                             >
                               {td.name}
                             </Link>
+                            {WEEK_BADGES[td.slug] && (
+                              <span
+                                className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold"
+                                style={{ color: WEEK_BADGES[td.slug].color, background: WEEK_BADGES[td.slug].bg }}
+                              >
+                                {WEEK_BADGES[td.slug].label}
+                              </span>
+                            )}
                           </td>
                           <td className="px-1 py-1.5 text-center">
                             <span className="text-[10px] text-gray-400 uppercase font-semibold">Book</span>
