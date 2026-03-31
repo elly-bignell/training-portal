@@ -918,6 +918,18 @@ export default function PipelinePage(){
                               overdue={overdue && deal.Status==='Active'}/>
                           ))}
                         </div>
+
+                        {/* Deal cards — stacked */}
+                        <div className="flex flex-col gap-3 mt-4">
+                          {dayDeals.map(deal=>(
+                            <DealCard key={deal.id} deal={deal}
+                              onStatusChange={handleStatusChange}
+                              onReschedule={handleReschedule}
+                              onGTHToggle={handleGTHToggle}
+                              canEdit={canLog}
+                              overdue={overdue && deal.Status==='Active'}/>
+                          ))}
+                        </div>
                       </div>
                     );
                   })}
