@@ -24,13 +24,13 @@ const WEEK_COLORS: Record<string,string> = {
 };
 
 const BUCKET_TARGETS: Record<string,number> = {
-  'Week 1':10912,'Week 2':8314,'Week 3':3000,'Week 4+':4157,
+  'Week 1':10912,'Week 2':8314,'Week 3':3000,'Week 4':4157,'Week 5+':0,
 };
 const BUCKET_PCT: Record<string,number> = {
-  'Week 1':42,'Week 2':32,'Week 3':10,'Week 4+':16,
+  'Week 1':42,'Week 2':32,'Week 3':10,'Week 4':16,'Week 5+':0,
 };
 const BUCKET_WK_TARGETS: Record<string,number> = {
-  'Week 1':2520,'Week 2':1920,'Week 3':600,'Week 4+':960,
+  'Week 1':2520,'Week 2':1920,'Week 3':600,'Week 4':960,'Week 5+':0,
 };
 const PIPE_MIN_WK = 6000;
 const PIPE_MIN_MO = 26000;
@@ -38,7 +38,7 @@ const DAILY_ADD_TARGET = 1200;
 
 type Status = 'Active'|'Won'|'Lost';
 type Brand  = 'MS'|'Quodo'|'Both';
-type Bucket = 'Week 1'|'Week 2'|'Week 3'|'Week 4+';
+type Bucket = 'Week 1'|'Week 2'|'Week 3'|'Week 4'|'Week 5+';
 type ViewMode = Bucket | 'Won' | 'Lost';
 
 interface Deal {
@@ -56,18 +56,18 @@ function getWeekBucket(closeDate:string):Bucket {
   const close=new Date(closeDate); close.setHours(0,0,0,0);
   const diff=Math.floor((close.getTime()-mon.getTime())/86400000);
   if(diff<7)return 'Week 1'; if(diff<14)return 'Week 2';
-  if(diff<21)return 'Week 3'; return 'Week 4+';
+  if(diff<21)return 'Week 3'; if(diff<28)return 'Week 4'; return 'Week 5+';
 }
 
 function getWeekDateRange(bucket: Bucket): string {
   const today = new Date(); today.setHours(0,0,0,0);
   const mon = new Date(today);
   mon.setDate(today.getDate() - ((today.getDay() + 6) % 7));
-  const offsets: Record<Bucket, number> = { 'Week 1': 0, 'Week 2': 7, 'Week 3': 14, 'Week 4+': 21 };
+  const offsets: Record<Bucket, number> = { 'Week 1': 0, 'Week 2': 7, 'Week 3': 14, 'Week 4': 21, 'Week 5+': 28 };
   const start = new Date(mon); start.setDate(mon.getDate() + offsets[bucket]);
   const end = new Date(start); end.setDate(start.getDate() + 4);
   const fmt = (d: Date) => d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
-  if (bucket === 'Week 4+') return `From ${fmt(start)}`;
+  if (bucket === 'Week 5+') return `From ${fmt(start)}`;
   return `${fmt(start)} – ${fmt(end)}`;
 }
 
@@ -454,7 +454,7 @@ export default function PipelinePage(){
   }
 
   const dealsByBucket=useMemo(()=>{
-    const map:Record<Bucket,Deal[]>={'Week 1':[],'Week 2':[],'Week 3':[],'Week 4+':[]};
+    const map:Record<Bucket,Deal[]>={'Week 1':[],'Week 2':[],'Week 3':[],'Week 4':[],'Week 5+':[]};
     deals.forEach(d=>{
       // Exclude Won/Lost from previous weeks — they belong in history tab only
       if(d.Status !== 'Active' && isPastWeek(d.CloseDate)) return;
@@ -465,7 +465,7 @@ export default function PipelinePage(){
   },[deals]);
 
   const totalByBucket=useMemo(()=>{
-    const map:Record<Bucket,number>={'Week 1':0,'Week 2':0,'Week 3':0,'Week 4+':0};
+    const map:Record<Bucket,number>={'Week 1':0,'Week 2':0,'Week 3':0,'Week 4':0,'Week 5+':0};
     deals.filter(d=>d.Status==='Active').forEach(d=>{
       const bucket = d.CloseDate ? getWeekBucket(d.CloseDate) : d.WeekBucket;
       map[bucket]+=d.MonthlyValue;
@@ -514,7 +514,8 @@ export default function PipelinePage(){
       'Week 1':{wonVal:0,wonCount:0,lostVal:0,lostCount:0,activeVal:0,activeCount:0},
       'Week 2':{wonVal:0,wonCount:0,lostVal:0,lostCount:0,activeVal:0,activeCount:0},
       'Week 3':{wonVal:0,wonCount:0,lostVal:0,lostCount:0,activeVal:0,activeCount:0},
-      'Week 4+':{wonVal:0,wonCount:0,lostVal:0,lostCount:0,activeVal:0,activeCount:0},
+      'Week 4':{wonVal:0,wonCount:0,lostVal:0,lostCount:0,activeVal:0,activeCount:0},
+      'Week 5+':{wonVal:0,wonCount:0,lostVal:0,lostCount:0,activeVal:0,activeCount:0},
     };
     deals.forEach(d=>{
       // Only count deals whose close date is in the current or future week
@@ -559,7 +560,7 @@ export default function PipelinePage(){
       // Group moved deals by which future bucket they landed in
       const movedToBuckets:Record<string,{count:number;val:number}> = {
         'Week 1':{count:0,val:0},'Week 2':{count:0,val:0},
-        'Week 3':{count:0,val:0},'Week 4+':{count:0,val:0},
+        'Week 3':{count:0,val:0},'Week 4':{count:0,val:0},'Week 5+':{count:0,val:0},
       };
       movedDeals.forEach(d=>{
         const dest=d.CloseDate?getWeekBucket(d.CloseDate):d.WeekBucket;
@@ -579,7 +580,7 @@ export default function PipelinePage(){
     }).filter(wk=>wk.wkDeals.length>0||wk.movedCount>0);
   },[deals,historicalWeeks]);
 
-  const isBucket=(vm:ViewMode):vm is Bucket=>['Week 1','Week 2','Week 3','Week 4+'].includes(vm);
+  const isBucket=(vm:ViewMode):vm is Bucket=>['Week 1','Week 2','Week 3','Week 4','Week 5+'].includes(vm);
   const viewColor=WEEK_COLORS[viewMode]||'#f97316';
 
 
@@ -638,7 +639,7 @@ export default function PipelinePage(){
                 </div>
                 <div className="border-t border-gray-100 pt-4">
                   <div className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Bucket Breakdown</div>
-                  <div className="grid grid-cols-4 gap-3">
+                  <div className="grid grid-cols-5 gap-3">
                     {(()=>{
                       // Day index: Mon=0 Tue=1 Wed=2 Thu=3 Fri=4 (cap at 4)
                       const dow=new Date().getDay();
@@ -654,9 +655,10 @@ export default function PipelinePage(){
                         'Week 1':Math.max(0,2520-dayIdx*504),
                         'Week 2':Math.max(0,1920+dayIdx*124),
                         'Week 3':Math.max(0,600+dayIdx*260),
-                        'Week 4+':Math.max(0,960-dayIdx*80),
+                        'Week 4':Math.max(0,960-dayIdx*80),
+                        'Week 5+':dayIdx*200,
                       };
-                      return(['Week 1','Week 2','Week 3','Week 4+'] as Bucket[]).map(b=>{
+                      return(['Week 1','Week 2','Week 3','Week 4','Week 5+'] as Bucket[]).map(b=>{
                       const wkVal=Math.round(totalByBucket[b]/4.33);
                       const wkTarget=BUCKET_WK_TARGETS[b];
                       const diff=wkVal-wkTarget;
@@ -698,8 +700,8 @@ export default function PipelinePage(){
                 <button onClick={fetchDeals} className="text-xs text-orange-500 font-bold hover:text-orange-600">↻ Refresh</button>
               </div>
               {/* Week buckets */}
-              <div className="grid grid-cols-4 gap-6">
-                {(['Week 1','Week 2','Week 3','Week 4+'] as Bucket[]).map(b=>{
+              <div className="grid grid-cols-5 gap-6">
+                {(['Week 1','Week 2','Week 3','Week 4','Week 5+'] as Bucket[]).map(b=>{
                   const bs=bucketStats[b];
                   const closedVal=bs.wonVal+bs.lostVal;
                   const winRate=closedVal>0?Math.round((bs.wonVal/closedVal)*100):null;
@@ -977,7 +979,7 @@ export default function PipelinePage(){
                           <div className="text-xs text-gray-500 mt-1 font-semibold">{wk.movedCount} deal{wk.movedCount!==1?'s':''}</div>
                           {wk.movedCount>0&&(
                             <div className="mt-2 flex flex-col gap-1.5">
-                              {(['Week 1','Week 2','Week 3','Week 4+'] as const).filter(b=>wk.movedToBuckets[b]?.count>0).map(b=>(
+                              {(['Week 1','Week 2','Week 3','Week 4','Week 5+'] as const).filter(b=>wk.movedToBuckets[b]?.count>0).map(b=>(
                                 <div key={b} className="text-[9px] flex items-center justify-between gap-2">
                                   <span className="font-bold px-1.5 py-0.5 rounded-full"
                                     style={{background:WEEK_COLORS[b]+'20',color:WEEK_COLORS[b]}}>
