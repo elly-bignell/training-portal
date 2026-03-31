@@ -787,6 +787,18 @@ export default function PipelinePage(){
                   <span className="text-xs text-gray-400">
                     — {dealsForView.length} deal{dealsForView.length!==1?'s':''}
                   </span>
+                  {isBucket(viewMode)&&(()=>{
+                    const wkGth=dealsForView.filter(d=>d.Status==='Active').reduce((a,d)=>d.GTH==='GTH'?a+d.WeeklyValue:a,0);
+                    const wkNon=dealsForView.filter(d=>d.Status==='Active').reduce((a,d)=>d.GTH!=='GTH'?a+d.WeeklyValue:a,0);
+                    const wkTot=wkGth+wkNon;
+                    return(
+                      <span className="flex items-center gap-3 text-xs ml-1">
+                        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-orange-400 inline-block"/><span className="font-bold text-orange-500">GTH</span><span className="font-black text-gray-700">{fmt$(wkGth)}</span></span>
+                        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-purple-400 inline-block"/><span className="font-bold text-purple-500">Non-GTH</span><span className="font-black text-gray-700">{fmt$(wkNon)}</span></span>
+                        <span className="flex items-center gap-1"><span className="font-bold text-gray-400">Total</span><span className="font-black text-gray-700">{fmt$(wkTot)}</span></span>
+                      </span>
+                    );
+                  })()}
                 </div>
                 {isBucket(viewMode)&&(
                   <div className="flex items-center gap-2">
@@ -838,18 +850,6 @@ export default function PipelinePage(){
                           <div className="h-px flex-1 bg-gray-200"/>
                         </div>
 
-                        {/* Deal cards — stacked */}
-                        <div className="flex flex-col gap-3 mb-4">
-                          {dayDeals.map(deal=>(
-                            <DealCard key={deal.id} deal={deal}
-                              onStatusChange={handleStatusChange}
-                              onReschedule={handleReschedule}
-                              onGTHToggle={handleGTHToggle}
-                              canEdit={canLog}
-                              overdue={overdue && deal.Status==='Active'}/>
-                          ))}
-                        </div>
-
                         {/* Day summary bar */}
                         <div className="rounded-xl border border-gray-200 bg-white px-5 py-3 flex flex-wrap gap-x-6 gap-y-2 items-center">
                           <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 mr-2">Day Total</span>
@@ -872,6 +872,18 @@ export default function PipelinePage(){
                             <span className="text-sm font-black text-gray-700">{fmt$(totalWeekly)}</span>
                             <span className="text-[10px] text-gray-400">/wk</span>
                           </div>
+                        </div>
+
+                        {/* Deal cards — stacked */}
+                        <div className="flex flex-col gap-3 mt-4">
+                          {dayDeals.map(deal=>(
+                            <DealCard key={deal.id} deal={deal}
+                              onStatusChange={handleStatusChange}
+                              onReschedule={handleReschedule}
+                              onGTHToggle={handleGTHToggle}
+                              canEdit={canLog}
+                              overdue={overdue && deal.Status==='Active'}/>
+                          ))}
                         </div>
                       </div>
                     );
