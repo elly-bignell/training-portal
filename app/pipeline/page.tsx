@@ -907,6 +907,8 @@ export default function PipelinePage(){
                   const closedVal=wk.wonVal+wk.lostVal;
                   const resolvedVal=wk.wonVal+wk.lostVal+wk.movedVal;
                   const winRate=resolvedVal>0?Math.round((wk.wonVal/resolvedVal)*100):null;
+                  const lostRate=resolvedVal>0?Math.round((wk.lostVal/resolvedVal)*100):null;
+                  const movedRate=resolvedVal>0?Math.round((wk.movedVal/resolvedVal)*100):null;
                   return(
                     <div key={wk.weekOffset} className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
                       {/* Week header */}
@@ -919,10 +921,20 @@ export default function PipelinePage(){
                         </div>
                         <div className="flex items-center gap-3">
                           {winRate!==null&&(
-                            <div className={`px-3 py-1.5 rounded-xl border-2 text-center ${winRate>=50?'border-emerald-200 bg-emerald-50':'border-red-200 bg-red-50'}`}>
-                              <div className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Win Rate</div>
-                              <div className={`text-lg font-black ${winRate>=50?'text-emerald-600':'text-red-500'}`}>{winRate}%</div>
-                            </div>
+                            <>
+                              <div className="px-3 py-1.5 rounded-xl border-2 text-center border-emerald-200 bg-emerald-50">
+                                <div className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Win Rate</div>
+                                <div className={`text-lg font-black ${winRate>=50?'text-emerald-600':'text-red-500'}`}>{winRate}%</div>
+                              </div>
+                              <div className="px-3 py-1.5 rounded-xl border-2 text-center border-red-200 bg-red-50">
+                                <div className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Lost Rate</div>
+                                <div className="text-lg font-black text-red-500">{lostRate}%</div>
+                              </div>
+                              <div className="px-3 py-1.5 rounded-xl border-2 text-center border-purple-200 bg-purple-50">
+                                <div className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Moved Rate</div>
+                                <div className="text-lg font-black text-purple-500">{movedRate}%</div>
+                              </div>
+                            </>
                           )}
                           <div className="text-right">
                             <div className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Total in bucket</div>
