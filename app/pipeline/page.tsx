@@ -141,7 +141,7 @@ function groupDealsByDay(deals: Deal[]): Array<{ dateStr: string; label: string;
 }
 
 function fmt$(n:number){return '$'+n.toLocaleString(undefined,{maximumFractionDigits:0});}
-function todayStr(){return new Date().toISOString().split('T')[0];}
+function todayStr(){return new Date().toLocaleDateString('en-CA',{timeZone:'Australia/Adelaide'});}
 
 function Field({label,children,required}:{label:string;children:React.ReactNode;required?:boolean}){
   return(
