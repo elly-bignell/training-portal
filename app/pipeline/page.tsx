@@ -462,8 +462,7 @@ export default function PipelinePage(){
       };
       const res=await fetch('/api/pipeline/deals',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
       if(res.ok){
-        const saved=await res.json();
-        setDeals(prev=>[saved,...prev]);
+        await fetchDeals();
         setSuccess(true);setTimeout(()=>setSuccess(false),3000);
         const closedBucket=getWeekBucket(fCloseDate);
         setFBusiness('');setFCloseDate('');setFCloseTime('');setFCloser('');
