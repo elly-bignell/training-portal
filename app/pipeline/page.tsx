@@ -48,6 +48,7 @@ interface Deal {
   Brand:Brand; Plan?:string; Extras?:string; WeekBucket:Bucket;
   Status:Status; LoggedBy:string; Notes?:string; CloseDateHistory?:string;
   DateAddedToPipe?:string; FirstCloseDate?:string; WonLostDate?:string; MovesInPipe?:number;
+  LostReason?:string; LostNote?:string;
 }
 
 function getWeekBucket(closeDate:string):Bucket {
@@ -158,7 +159,7 @@ const selectCls="border-2 border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gr
 
 function DealCard({deal,onStatusChange,onReschedule,onGTHToggle,canEdit,overdue}:{
   deal:Deal;
-  onStatusChange:(id:string,s:Status)=>void;
+  onStatusChange:(id:string,s:Status,extra?:Record<string,unknown>)=>void;
   onReschedule:(id:string,newDate:string,history:string)=>void;
   onGTHToggle:(id:string,newGTH:string)=>void;
   canEdit:boolean;
@@ -170,9 +171,30 @@ function DealCard({deal,onStatusChange,onReschedule,onGTHToggle,canEdit,overdue}
   const [showReschedule,setShowReschedule]=useState(false);
   const [newCloseDate,setNewCloseDate]=useState('');
   const [rescheduling,setRescheduling]=useState(false);
+  const [showLostModal,setShowLostModal]=useState(false);
+  const [lostReasons,setLostReasons]=useState<string[]>([]);
+  const [lostNote,setLostNote]=useState('');
+  const [submittingLost,setSubmittingLost]=useState(false);
 
-  async function handleStatus(s:Status){
-    setChanging(true); await onStatusChange(deal.id,s); setChanging(false);
+  const LOST_REASONS=['Too expensive','Gone MIA','Competitor','Not DM / no sign off','Wrong timing','Other'];
+
+  function toggleLostReason(r:string){
+    setLostReasons(prev=>prev.includes(r)?prev.filter(x=>x!==r):prev.length<3?[...prev,r]:prev);
+  }
+
+  const onlyOther=lostReasons.length===1&&lostReasons[0]==='Other';
+  const lostCommentRequired=onlyOther;
+  const lostCanSubmit=lostReasons.length>0&&(!lostCommentRequired||lostNote.trim().length>0);
+
+  async function submitLost(){
+    if(!lostCanSubmit) return;
+    setSubmittingLost(true);
+    await onStatusChange(deal.id,'Lost',{LostReason:lostReasons.join(', '),LostNote:lostNote.trim()||undefined});
+    setShowLostModal(false);setLostReasons([]);setLostNote('');setSubmittingLost(false);
+  }
+
+  async function handleStatus(s:Status,extra?:Record<string,unknown>){
+    setChanging(true); await onStatusChange(deal.id,s,extra); setChanging(false);
   }
 
   async function handleReschedule(){
@@ -387,8 +409,8 @@ export default function PipelinePage(){
   useEffect(()=>{fetchDeals();},[fetchDeals]);
   useEffect(()=>{setFPlan('');setFPlanQuodo('');setFExtras([]);},[fBrand]);
 
-  async function handleStatusChange(id:string,status:Status){
-    const fields:Record<string,unknown>={Status:status};
+  async function handleStatusChange(id:string,status:Status,extra?:Record<string,unknown>){
+    const fields:Record<string,unknown>={Status:status,...(extra||{})};
     if(status==='Won'||status==='Lost') fields.WonLostDate=todayStr();
     const res=await fetch(`/api/pipeline/deals/${id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(fields)});
     if(res.ok){const u=await res.json();setDeals(prev=>prev.map(d=>d.id===id?{...d,...u}:d));}
