@@ -483,7 +483,11 @@ export default function PipelinePage(){
     const ydDeals=deals.filter(d=>d.DateAddedToPipe===ydStr);
     const ydMo=ydDeals.reduce((s,d)=>s+d.MonthlyValue,0);
     const ydWk=Math.round(ydMo/4.33);
-    return {ydWk,count:ydDeals.length,dayLabel};
+    const ydWonDeals=deals.filter(d=>d.WonLostDate===ydStr&&d.Status==='Won');
+    const ydLostDeals=deals.filter(d=>d.WonLostDate===ydStr&&d.Status==='Lost');
+    const ydWonWk=Math.round(ydWonDeals.reduce((s,d)=>s+d.MonthlyValue,0)/4.33);
+    const ydLostWk=Math.round(ydLostDeals.reduce((s,d)=>s+d.MonthlyValue,0)/4.33);
+    return {ydWk,count:ydDeals.length,dayLabel,ydWonWk,ydLostWk};
   },[deals]);
 
   const dealsForView=useMemo(()=>{
@@ -636,6 +640,8 @@ export default function PipelinePage(){
                   <div>🔥 We currently have <span className="font-black text-gray-900">${totalWk.toLocaleString()}/wk (${totalMoRounded.toLocaleString()}/mo)</span> — we are <span className={`font-black ${aheadTotal?'text-emerald-600':'text-red-600'}`}>${Math.abs(diffWk).toLocaleString()}/wk {aheadTotal?'ahead 🟢':'behind 🔴'} (${Math.abs(diffMo).toLocaleString()}/mo)</span></div>
                   <div>➕ We need to be adding <span className="font-black text-gray-900">$1,200/day</span> to the pipe every day to maintain $6K</div>
                   <div>📅 {yesterdayStats.dayLabel} we added <span className="font-black text-gray-900">${yesterdayStats.ydWk.toLocaleString()}</span>{yesterdayStats.ydWk===0?' (no deals logged)':' — '}{yesterdayStats.ydWk>0&&<span className={`font-black ${aheadYd?'text-emerald-600':'text-red-600'}`}>{aheadYd?'ahead':'behind'} by ${Math.abs(ydDiff).toLocaleString()} {aheadYd?'🟢':'🔴'}</span>}</div>
+                  <div>🏆 {yesterdayStats.dayLabel} we won <span className="font-black text-gray-900">${yesterdayStats.ydWonWk.toLocaleString()}/wk</span> from the pipe — <span className={`font-black ${yesterdayStats.ydWonWk>=600?'text-emerald-600':'text-red-600'}`}>{yesterdayStats.ydWonWk>=600?'ahead':'behind'} by ${Math.abs(yesterdayStats.ydWonWk-600).toLocaleString()} {yesterdayStats.ydWonWk>=600?'🟢':'🔴'}</span></div>
+                  <div>❌ {yesterdayStats.dayLabel} we lost <span className="font-black text-gray-900">${yesterdayStats.ydLostWk.toLocaleString()}/wk</span> from the pipe — <span className={`font-black ${yesterdayStats.ydLostWk<=600?'text-emerald-600':'text-red-600'}`}>{yesterdayStats.ydLostWk<=600?'within target':'over target'} by ${Math.abs(yesterdayStats.ydLostWk-600).toLocaleString()} {yesterdayStats.ydLostWk<=600?'🟢':'🔴'}</span></div>
                 </div>
                 <div className="border-t border-gray-100 pt-4">
                   <div className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Bucket Breakdown</div>
