@@ -752,7 +752,7 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
 export default function CallFlowchartPage() {
   const [activeNode, setActiveNode] = useState<string | null>(null);
   const [brand, setBrand] = useState<"quodo" | "ms">("quodo");
-  const [rebookingType, setRebookingType] = useState<'noshow' | 'reschedule' | null>(null);
+  const [rebookingType, setRebookingType] = useState<'noshow' | 'reschedule'>('reschedule');
   const toggle = (id: string) => setActiveNode(activeNode === id ? null : id);
 
   return (
@@ -950,265 +950,295 @@ export default function CallFlowchartPage() {
       
 
 
+
       {/* ===== REBOOKING CALL SECTION ===== */}
-      <div id="rebooking-call">
+      <div id="rebooking-call" style={{marginTop:'3rem',paddingTop:'3rem',borderTop:'2px solid #f1f5f9'}}>
 
-        {/* Section header — matches Follow Up style */}
-        <div className="flex items-center gap-2 mt-12 mb-1">
-          <span className="text-xl">📅</span>
-          <h2 className="text-xl font-black text-gray-800">Rebooking Call</h2>
+        {/* Header */}
+        <div style={{marginBottom:'0.25rem'}}>
+          <span style={{fontSize:'0.6rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#94a3b8'}}>📅 Rebooking Call</span>
         </div>
-        <p className="text-gray-400 text-sm mb-6">For booked meetings that were rescheduled or missed</p>
+        <h2 style={{fontSize:'1.5rem',fontWeight:900,color:'#0f172a',marginBottom:'0.25rem'}}>Rebooking Call</h2>
+        <p style={{fontSize:'0.875rem',color:'#94a3b8',marginBottom:'1.5rem'}}>For booked meetings that didn&apos;t proceed as planned</p>
 
-        {/* Selector — matches Quodo / MS tab style */}
-        <div className="flex rounded-2xl overflow-hidden border border-gray-200 mb-8 cursor-pointer select-none">
+        {/* Scenario selector — matches Quodo / MS tab style */}
+        <div style={{display:'flex',borderRadius:'1rem',overflow:'hidden',border:'1.5px solid #e2e8f0',marginBottom:'2rem',cursor:'pointer'}}>
+          <button
+            onClick={() => setRebookingType('reschedule')}
+            style={{
+              flex:1, padding:'0.75rem 1rem', fontSize:'0.875rem', fontWeight:700,
+              border:'none', cursor:'pointer', transition:'all 0.15s',
+              background: rebookingType === 'reschedule' ? 'linear-gradient(135deg, #60a5fa, #3b82f6)' : 'white',
+              color: rebookingType === 'reschedule' ? 'white' : '#475569',
+            }}
+          >
+            📅 Rescheduled
+          </button>
           <button
             onClick={() => setRebookingType('noshow')}
-            className={`flex-1 py-3 px-4 text-sm font-bold transition-all ${
-              rebookingType === 'noshow'
-                ? 'bg-gray-900 text-white'
-                : 'bg-white text-gray-500 hover:bg-gray-50'
-            }`}
+            style={{
+              flex:1, padding:'0.75rem 1rem', fontSize:'0.875rem', fontWeight:700,
+              border:'none', borderLeft:'1.5px solid #e2e8f0', cursor:'pointer', transition:'all 0.15s',
+              background: rebookingType === 'noshow' ? 'linear-gradient(135deg, #fb923c, #f97316)' : 'white',
+              color: rebookingType === 'noshow' ? 'white' : '#475569',
+            }}
           >
             🚫 No Show
           </button>
-          <button
-            onClick={() => setRebookingType('reschedule')}
-            className={`flex-1 py-3 px-4 text-sm font-bold transition-all border-l border-gray-200 ${
-              rebookingType === 'reschedule'
-                ? 'bg-gray-900 text-white'
-                : 'bg-white text-gray-500 hover:bg-gray-50'
-            }`}
-          >
-            📅 Reschedule
-          </button>
         </div>
 
-        {/* ═══ NO SHOW FLOW ═══ */}
-        {rebookingType === 'noshow' && (
-          <div>
-
-            {/* Dark intro card */}
-            <div className="bg-gray-900 rounded-2xl p-5 mb-3">
-              <div className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-3">SAY</div>
-              <h3 className="font-bold text-white text-sm mb-2">Introduction</h3>
-              <p className="text-gray-300 text-sm leading-relaxed italic mb-2">
-                &ldquo;Hey [Name], it&apos;s [Rep Name] here from Marketing Sweet. How are you going?&rdquo;
-              </p>
-              <p className="text-gray-500 text-xs mb-2">If they respond positively, continue.</p>
-              <p className="text-gray-300 text-sm leading-relaxed italic">
-                &ldquo;Yeah, really good, thanks. We had a meeting booked in yesterday at [Time]. I sent you through a Zoom link and gave you a call, but I couldn&apos;t get through to you. I assumed you must have been busy or something must have popped up.&rdquo;
-              </p>
-            </div>
-
-            <div className="flex justify-center my-3 text-gray-300 text-lg">↓</div>
-
-            <div className="text-center mb-4">
-              <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400">What do they say?</span>
-            </div>
-
-            {/* Two path columns */}
-            <div className="grid grid-cols-2 gap-3">
-
-              {/* PATH A — Still interested */}
-              <div>
-                <div className="text-[10px] font-bold uppercase tracking-wider text-green-600 mb-2">✅ A — Still interested</div>
-
-                <div className="bg-white border border-gray-200 rounded-2xl p-4 mb-2">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-2">SAY</div>
-                  <h3 className="font-bold text-gray-900 text-sm mb-2">Rebook the Meeting</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed italic mb-2">
-                    &ldquo;No, all good — don&apos;t stress. I&apos;ve already done all the preparation and we&apos;re ready to rock and roll. It should only take about 15 minutes. Do you have time later today around [Time]?&rdquo;
-                  </p>
-                  <p className="text-gray-400 text-xs mb-2">If they can&apos;t do that time:</p>
-                  <p className="text-gray-500 text-sm leading-relaxed italic mb-2">
-                    &ldquo;Yeah, sure thing. When&apos;s good for you? I&apos;ll try to work around you.&rdquo;
-                  </p>
-                  <p className="text-gray-400 text-xs mb-2">If needed, guide them toward options:</p>
-                  <p className="text-gray-500 text-sm leading-relaxed italic mb-1">
-                    &ldquo;Are you any good on like Thursday or Friday?&rdquo;
-                  </p>
-                  <p className="text-gray-500 text-sm leading-relaxed italic">
-                    &ldquo;Yeah, I&apos;ve got a spot at [Option 1] or [Option 2] — what suits you best?&rdquo;
-                  </p>
-                </div>
-
-                <div className="flex justify-center my-2 text-gray-300">↓</div>
-
-                <div className="bg-green-50 border border-green-200 rounded-2xl p-4">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-green-600 mb-2">BOOK</div>
-                  <h3 className="font-bold text-gray-900 text-sm mb-2">Confirm the Rebooking</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed italic">
-                    &ldquo;Perfect. I&apos;ll resend the calendar invitation, and I&apos;ll send you a text the morning of the meeting as well. Looking forward to showing you the research.&rdquo;
-                  </p>
-                </div>
-              </div>
-
-              {/* PATH B — No longer interested */}
-              <div>
-                <div className="text-[10px] font-bold uppercase tracking-wider text-red-500 mb-2">🚫 B — No longer interested</div>
-
-                <div className="bg-white border border-gray-200 rounded-2xl p-4 mb-2">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-2">SAY</div>
-                  <h3 className="font-bold text-gray-900 text-sm mb-2">Initial Pushback</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed italic">
-                    &ldquo;No stress at all. Is the timing just a bit off, or has something changed on your end?&rdquo;
-                  </p>
-                </div>
-
-                <div className="flex justify-center my-2 text-gray-300">↓</div>
-                <div className="text-center mb-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">What&apos;s the reason?</span>
-                </div>
-
-                {/* B(i) Timing off */}
-                <div className="text-[9px] font-bold uppercase tracking-wider text-yellow-600 mb-1">⏱ B(i) — Timing off</div>
-                <div className="bg-white border border-gray-200 rounded-2xl p-3 mb-1">
-                  <div className="text-[9px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                  <p className="text-gray-500 text-xs leading-relaxed italic">
-                    &ldquo;Yeah, no worries at all. Do you want me to touch base in a month or a couple of months? Where&apos;s your headspace at with it all?&rdquo;
-                  </p>
-                </div>
-                <div className="flex justify-center my-1 text-gray-300 text-sm">↓</div>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-3 mb-3">
-                  <div className="text-[9px] font-bold tracking-widest uppercase text-yellow-600 mb-1">FOLLOW UP</div>
-                  <p className="text-gray-500 text-xs leading-relaxed italic">
-                    &ldquo;Too easy. I&apos;ll make a note to touch base then and we&apos;ll go from there.&rdquo;
-                  </p>
-                </div>
-
-                {/* B(ii) No interest */}
-                <div className="text-[9px] font-bold uppercase tracking-wider text-red-500 mb-1">🚫 B(ii) — No interest / changed mind</div>
-                <div className="bg-white border border-gray-200 rounded-2xl p-3 mb-1">
-                  <div className="text-[9px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                  <p className="text-gray-500 text-xs leading-relaxed italic mb-1">
-                    &ldquo;All good — just so I don&apos;t chase you unnecessarily, was there something specific that changed?&rdquo;
-                  </p>
-                  <p className="text-gray-400 text-[10px] italic">Acknowledge briefly — don&apos;t push hard.</p>
-                </div>
-                <div className="flex justify-center my-1 text-gray-300 text-sm">↓</div>
-                <div className="bg-gray-50 border border-gray-200 rounded-2xl p-3">
-                  <div className="text-[9px] font-bold tracking-widest uppercase text-gray-400 mb-1">CLOSE</div>
-                  <p className="text-gray-500 text-xs leading-relaxed italic">
-                    &ldquo;No worries at all. Thanks for letting me know. If things change on your end down the track, feel free to reach back out.&rdquo;
-                  </p>
-                </div>
-              </div>
-
-            </div>
-
-            <p className="text-xs text-gray-300 mt-8 text-center">Rebooking Call — No Show</p>
-          </div>
-        )}
-
-        {/* ═══ RESCHEDULE FLOW ═══ */}
+        {/* ════════════════════════════════════════ */}
+        {/* RESCHEDULE FLOW (default)               */}
+        {/* ════════════════════════════════════════ */}
         {rebookingType === 'reschedule' && (
           <div>
 
             {/* Dark intro card */}
-            <div className="bg-gray-900 rounded-2xl p-5 mb-3">
-              <div className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-3">SAY</div>
-              <h3 className="font-bold text-white text-sm mb-2">Introduction</h3>
-              <p className="text-gray-300 text-sm leading-relaxed italic mb-2">
+            <div style={{background:'#0f172a',borderRadius:'1rem',padding:'1.25rem',marginBottom:'0.75rem'}}>
+              <div style={{fontSize:'0.6rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#475569',marginBottom:'0.5rem'}}>SAY</div>
+              <h3 style={{fontWeight:800,color:'white',fontSize:'0.875rem',marginBottom:'0.5rem'}}>Opening</h3>
+              <p style={{color:'#94a3b8',fontSize:'0.875rem',fontStyle:'italic',lineHeight:1.6,marginBottom:'0.5rem'}}>
                 &ldquo;Hey [Name], it&apos;s [Rep Name] here from Marketing Sweet. How are you going?&rdquo;
               </p>
-              <p className="text-gray-300 text-sm leading-relaxed italic mb-2">
-                &ldquo;Yeah, really good, thanks. I saw your message about needing to reschedule — I assumed something must have popped up.&rdquo;
+              <p style={{color:'#94a3b8',fontSize:'0.875rem',fontStyle:'italic',lineHeight:1.6,marginBottom:'0.5rem'}}>
+                &ldquo;Yeah, really good, thanks. I saw your message about needing to reschedule — I assumed something must&apos;ve popped up.&rdquo;
               </p>
-              <p className="text-gray-300 text-sm leading-relaxed italic">
-                &ldquo;I&apos;ve just got my diary in front of me now — are you still looking to lock something in this week?&rdquo;
+              <p style={{color:'#94a3b8',fontSize:'0.875rem',fontStyle:'italic',lineHeight:1.6}}>
+                &ldquo;I&apos;ve got my diary in front of me now — are you still looking to lock something in?&rdquo;
               </p>
             </div>
 
-            <div className="flex justify-center my-3 text-gray-300 text-lg">↓</div>
-
-            <div className="text-center mb-4">
-              <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400">Are they still looking to rebook?</span>
+            <div style={{textAlign:'center',color:'#cbd5e1',fontSize:'1.25rem',margin:'0.5rem 0'}}>↓</div>
+            <div style={{textAlign:'center',marginBottom:'1rem'}}>
+              <span style={{fontSize:'0.65rem',fontWeight:800,letterSpacing:'0.12em',textTransform:'uppercase',color:'#94a3b8'}}>Response?</span>
             </div>
 
-            {/* Two path columns */}
-            <div className="grid grid-cols-2 gap-3">
+            {/* Two paths */}
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem'}}>
 
-              {/* PATH A — Yes */}
+              {/* PATH A: YES */}
               <div>
-                <div className="text-[10px] font-bold uppercase tracking-wider text-green-600 mb-2">✅ A — Yes</div>
+                <div style={{fontSize:'0.6rem',fontWeight:800,letterSpacing:'0.1em',textTransform:'uppercase',color:'#16a34a',marginBottom:'0.5rem'}}>✅ A — Yes, still keen</div>
 
-                <div className="bg-white border border-gray-200 rounded-2xl p-4 mb-2">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-2">SAY</div>
-                  <h3 className="font-bold text-gray-900 text-sm mb-2">Offer New Times</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed italic mb-2">
+                <div style={{background:'white',border:'1.5px solid #e2e8f0',borderRadius:'0.875rem',padding:'1rem',marginBottom:'0.5rem'}}>
+                  <div style={{fontSize:'0.55rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#818cf8',marginBottom:'0.5rem'}}>SAY</div>
+                  <p style={{color:'#64748b',fontSize:'0.8rem',fontStyle:'italic',lineHeight:1.6,marginBottom:'0.5rem'}}>
                     &ldquo;Perfect. How are you looking towards the end of the week — like Thursday morning?&rdquo;
                   </p>
-                  <p className="text-gray-400 text-xs mb-2">If that works:</p>
-                  <p className="text-gray-500 text-sm leading-relaxed italic">
-                    &ldquo;Beautiful. I&apos;ve got two spots available, one at [Option 1] and one at [Option 2]. What works better for you?&rdquo;
+                  <p style={{color:'#64748b',fontSize:'0.8rem',fontStyle:'italic',lineHeight:1.6}}>
+                    &ldquo;I&apos;ve got [Option 1] or [Option 2] — what works best?&rdquo;
                   </p>
                 </div>
 
-                <div className="flex justify-center my-2 text-gray-300">↓</div>
+                <div style={{textAlign:'center',color:'#cbd5e1',margin:'0.4rem 0'}}>↓</div>
 
-                <div className="bg-green-50 border border-green-200 rounded-2xl p-4">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-green-600 mb-2">BOOK</div>
-                  <h3 className="font-bold text-gray-900 text-sm mb-2">Confirm New Time</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed italic">
-                    &ldquo;Too easy. I&apos;ll update the current invite now and send you the confirmation through. We&apos;ll lock in [Day] at [Time].&rdquo;
+                <div style={{background:'#f0fdf4',border:'1.5px solid #bbf7d0',borderRadius:'0.875rem',padding:'1rem'}}>
+                  <div style={{fontSize:'0.55rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#16a34a',marginBottom:'0.5rem'}}>BOOK</div>
+                  <p style={{color:'#64748b',fontSize:'0.8rem',fontStyle:'italic',lineHeight:1.6}}>
+                    &ldquo;Too easy. I&apos;ll update the invite now and send that through — we&apos;ll lock in [Day] at [Time].&rdquo;
                   </p>
                 </div>
               </div>
 
-              {/* PATH B — Not right now */}
+              {/* PATH B: NOT RIGHT NOW */}
               <div>
-                <div className="text-[10px] font-bold uppercase tracking-wider text-yellow-600 mb-2">⏱ B — Not right now</div>
+                <div style={{fontSize:'0.6rem',fontWeight:800,letterSpacing:'0.1em',textTransform:'uppercase',color:'#d97706',marginBottom:'0.5rem'}}>⏱ B — Not right now</div>
 
-                <div className="bg-white border border-gray-200 rounded-2xl p-4 mb-2">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-2">SAY</div>
-                  <h3 className="font-bold text-gray-900 text-sm mb-2">Clarify Timing</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed italic">
-                    &ldquo;No worries at all. Is that just because this week&apos;s no good, or has the timing become a bit tricky in general?&rdquo;
+                <div style={{background:'#eff6ff',border:'1.5px solid #bfdbfe',borderRadius:'0.875rem',padding:'1rem',marginBottom:'0.5rem'}}>
+                  <div style={{fontSize:'0.55rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#3b82f6',marginBottom:'0.5rem'}}>THEY SAY</div>
+                  <p style={{color:'#1d4ed8',fontSize:'0.8rem',fontStyle:'italic',fontWeight:600,lineHeight:1.6}}>
+                    &ldquo;This week won&apos;t work&rdquo; / &ldquo;Not right now&rdquo;
                   </p>
                 </div>
 
-                <div className="flex justify-center my-2 text-gray-300">↓</div>
-                <div className="text-center mb-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">What do they mean?</span>
-                </div>
-
-                {/* B(i) Needs later date */}
-                <div className="text-[9px] font-bold uppercase tracking-wider text-yellow-600 mb-1">📆 B(i) — Needs later date</div>
-                <div className="bg-white border border-gray-200 rounded-2xl p-3 mb-1">
-                  <div className="text-[9px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                  <p className="text-gray-500 text-xs leading-relaxed italic">
-                    &ldquo;Yep, no problem. When do you reckon it&apos;ll be back on your radar — next week, next month, or a bit further out?&rdquo;
-                  </p>
-                </div>
-                <div className="flex justify-center my-1 text-gray-300 text-sm">↓</div>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-3 mb-3">
-                  <div className="text-[9px] font-bold tracking-widest uppercase text-yellow-600 mb-1">FOLLOW UP</div>
-                  <p className="text-gray-500 text-xs leading-relaxed italic">
-                    &ldquo;Too easy. I&apos;ll make a note to touch base around then and we&apos;ll go from there.&rdquo;
+                <div style={{background:'white',border:'1.5px solid #e2e8f0',borderRadius:'0.875rem',padding:'1rem',marginBottom:'0.5rem'}}>
+                  <div style={{fontSize:'0.55rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#818cf8',marginBottom:'0.5rem'}}>SAY</div>
+                  <p style={{color:'#64748b',fontSize:'0.8rem',fontStyle:'italic',lineHeight:1.6}}>
+                    &ldquo;No worries — is that just this week that&apos;s no good, or has timing become a bit tricky in general?&rdquo;
                   </p>
                 </div>
 
-                {/* B(ii) No longer interested */}
-                <div className="text-[9px] font-bold uppercase tracking-wider text-red-500 mb-1">🚫 B(ii) — No longer interested</div>
-                <div className="bg-white border border-gray-200 rounded-2xl p-3 mb-1">
-                  <div className="text-[9px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                  <p className="text-gray-500 text-xs leading-relaxed italic">
-                    &ldquo;No worries at all. Thanks for letting me know.&rdquo;
+                <div style={{textAlign:'center',color:'#cbd5e1',margin:'0.4rem 0'}}>↓</div>
+                <div style={{textAlign:'center',marginBottom:'0.5rem'}}>
+                  <span style={{fontSize:'0.6rem',fontWeight:800,letterSpacing:'0.1em',textTransform:'uppercase',color:'#94a3b8'}}>Decision</span>
+                </div>
+
+                {/* B1 */}
+                <div style={{fontSize:'0.55rem',fontWeight:800,letterSpacing:'0.1em',textTransform:'uppercase',color:'#d97706',marginBottom:'0.35rem'}}>📆 B1 — Needs later date</div>
+                <div style={{background:'white',border:'1.5px solid #e2e8f0',borderRadius:'0.875rem',padding:'0.75rem',marginBottom:'0.35rem'}}>
+                  <div style={{fontSize:'0.5rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#818cf8',marginBottom:'0.35rem'}}>SAY</div>
+                  <p style={{color:'#64748b',fontSize:'0.75rem',fontStyle:'italic',lineHeight:1.5}}>
+                    &ldquo;Gotcha. When do you reckon it&apos;ll be back on your radar — next week, next month, or a bit further out?&rdquo;
                   </p>
                 </div>
-                <div className="flex justify-center my-1 text-gray-300 text-sm">↓</div>
-                <div className="bg-gray-50 border border-gray-200 rounded-2xl p-3">
-                  <div className="text-[9px] font-bold tracking-widest uppercase text-gray-400 mb-1">CLOSE</div>
-                  <p className="text-gray-500 text-xs leading-relaxed italic">
-                    &ldquo;If anything changes down the track, feel free to reach back out.&rdquo;
+                <div style={{textAlign:'center',color:'#cbd5e1',margin:'0.25rem 0',fontSize:'0.875rem'}}>↓</div>
+                <div style={{background:'#fefce8',border:'1.5px solid #fde68a',borderRadius:'0.875rem',padding:'0.75rem',marginBottom:'0.75rem'}}>
+                  <div style={{fontSize:'0.5rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#d97706',marginBottom:'0.35rem'}}>FOLLOW UP</div>
+                  <p style={{color:'#64748b',fontSize:'0.75rem',fontStyle:'italic',lineHeight:1.5}}>
+                    &ldquo;Too easy. I&apos;ll make a note to touch base around then.&rdquo;
+                  </p>
+                </div>
+
+                {/* B2 */}
+                <div style={{fontSize:'0.55rem',fontWeight:800,letterSpacing:'0.1em',textTransform:'uppercase',color:'#dc2626',marginBottom:'0.35rem'}}>🚫 B2 — No longer interested</div>
+                <div style={{background:'white',border:'1.5px solid #e2e8f0',borderRadius:'0.875rem',padding:'0.75rem',marginBottom:'0.35rem'}}>
+                  <div style={{fontSize:'0.5rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#818cf8',marginBottom:'0.35rem'}}>SAY</div>
+                  <p style={{color:'#64748b',fontSize:'0.75rem',fontStyle:'italic',lineHeight:1.5}}>
+                    &ldquo;No worries at all — appreciate you letting me know.&rdquo;
+                  </p>
+                </div>
+                <div style={{textAlign:'center',color:'#cbd5e1',margin:'0.25rem 0',fontSize:'0.875rem'}}>↓</div>
+                <div style={{background:'#f8fafc',border:'1.5px solid #e2e8f0',borderRadius:'0.875rem',padding:'0.75rem'}}>
+                  <div style={{fontSize:'0.5rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#94a3b8',marginBottom:'0.35rem'}}>CLOSE</div>
+                  <p style={{color:'#64748b',fontSize:'0.75rem',fontStyle:'italic',lineHeight:1.5}}>
+                    &ldquo;If anything changes down the track, feel free to reach out.&rdquo;
                   </p>
                 </div>
               </div>
 
             </div>
 
-            <p className="text-xs text-gray-300 mt-8 text-center">Rebooking Call — Reschedule</p>
+            <p style={{fontSize:'0.7rem',color:'#cbd5e1',marginTop:'2rem',textAlign:'center'}}>Rebooking Call — Reschedule Script</p>
+          </div>
+        )}
+
+        {/* ════════════════════════════════════════ */}
+        {/* NO SHOW FLOW                            */}
+        {/* ════════════════════════════════════════ */}
+        {rebookingType === 'noshow' && (
+          <div>
+
+            {/* Dark intro card */}
+            <div style={{background:'#0f172a',borderRadius:'1rem',padding:'1.25rem',marginBottom:'0.75rem'}}>
+              <div style={{fontSize:'0.6rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#475569',marginBottom:'0.5rem'}}>SAY</div>
+              <h3 style={{fontWeight:800,color:'white',fontSize:'0.875rem',marginBottom:'0.5rem'}}>Opening</h3>
+              <p style={{color:'#94a3b8',fontSize:'0.875rem',fontStyle:'italic',lineHeight:1.6,marginBottom:'0.5rem'}}>
+                &ldquo;Hey [Name], it&apos;s [Rep Name] here from Marketing Sweet. How are you going?&rdquo;
+              </p>
+              <p style={{color:'#94a3b8',fontSize:'0.875rem',fontStyle:'italic',lineHeight:1.6}}>
+                &ldquo;Yeah, really good, thanks. We had a meeting booked in yesterday at [Time]. I sent you through a Zoom link and gave you a call, but I couldn&apos;t get through. I assumed you must&apos;ve been busy or something popped up.&rdquo;
+              </p>
+            </div>
+
+            <div style={{textAlign:'center',color:'#cbd5e1',fontSize:'1.25rem',margin:'0.5rem 0'}}>↓</div>
+            <div style={{textAlign:'center',marginBottom:'1rem'}}>
+              <span style={{fontSize:'0.65rem',fontWeight:800,letterSpacing:'0.12em',textTransform:'uppercase',color:'#94a3b8'}}>What do they say?</span>
+            </div>
+
+            {/* Two paths */}
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem'}}>
+
+              {/* PATH A: STILL INTERESTED */}
+              <div>
+                <div style={{fontSize:'0.6rem',fontWeight:800,letterSpacing:'0.1em',textTransform:'uppercase',color:'#16a34a',marginBottom:'0.5rem'}}>✅ A — Still interested</div>
+
+                <div style={{background:'white',border:'1.5px solid #e2e8f0',borderRadius:'0.875rem',padding:'1rem',marginBottom:'0.5rem'}}>
+                  <div style={{fontSize:'0.55rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#818cf8',marginBottom:'0.5rem'}}>SAY</div>
+                  <p style={{color:'#64748b',fontSize:'0.8rem',fontStyle:'italic',lineHeight:1.6,marginBottom:'0.4rem'}}>
+                    &ldquo;No stress at all — don&apos;t worry about it.&rdquo;
+                  </p>
+                  <p style={{color:'#64748b',fontSize:'0.8rem',fontStyle:'italic',lineHeight:1.6}}>
+                    &ldquo;I&apos;ve already done all the prep and we&apos;re ready to rock and roll. It&apos;ll only take about 15 minutes.&rdquo;
+                  </p>
+                </div>
+
+                <div style={{textAlign:'center',color:'#cbd5e1',margin:'0.4rem 0'}}>↓</div>
+
+                <div style={{background:'white',border:'1.5px solid #e2e8f0',borderRadius:'0.875rem',padding:'1rem',marginBottom:'0.5rem'}}>
+                  <div style={{fontSize:'0.55rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#818cf8',marginBottom:'0.4rem'}}>SAY</div>
+                  <div style={{fontSize:'0.6rem',fontWeight:700,color:'#94a3b8',marginBottom:'0.4rem'}}>Attempt same-day rebook</div>
+                  <p style={{color:'#64748b',fontSize:'0.8rem',fontStyle:'italic',lineHeight:1.6,marginBottom:'0.4rem'}}>
+                    &ldquo;Are you free later today around [Time]?&rdquo;
+                  </p>
+                  <div style={{fontSize:'0.6rem',color:'#94a3b8',marginBottom:'0.3rem'}}>If yes → lock it in</div>
+                  <div style={{fontSize:'0.6rem',color:'#94a3b8',marginBottom:'0.3rem'}}>If no → offer options</div>
+                  <p style={{color:'#64748b',fontSize:'0.8rem',fontStyle:'italic',lineHeight:1.6,marginBottom:'0.4rem'}}>
+                    &ldquo;No worries — when&apos;s generally good for you?&rdquo;
+                  </p>
+                  <p style={{color:'#64748b',fontSize:'0.8rem',fontStyle:'italic',lineHeight:1.6,marginBottom:'0.4rem'}}>
+                    &ldquo;Are you any good Thursday or Friday?&rdquo;
+                  </p>
+                  <p style={{color:'#64748b',fontSize:'0.8rem',fontStyle:'italic',lineHeight:1.6}}>
+                    &ldquo;I&apos;ve got [Option 1] or [Option 2] — what works best?&rdquo;
+                  </p>
+                </div>
+
+                <div style={{textAlign:'center',color:'#cbd5e1',margin:'0.4rem 0'}}>↓</div>
+
+                <div style={{background:'#f0fdf4',border:'1.5px solid #bbf7d0',borderRadius:'0.875rem',padding:'1rem'}}>
+                  <div style={{fontSize:'0.55rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#16a34a',marginBottom:'0.5rem'}}>BOOK</div>
+                  <p style={{color:'#64748b',fontSize:'0.8rem',fontStyle:'italic',lineHeight:1.6}}>
+                    &ldquo;Too easy. I&apos;ll resend the calendar invite and shoot you a text before the meeting as well.&rdquo;
+                  </p>
+                </div>
+              </div>
+
+              {/* PATH B: NOT INTERESTED */}
+              <div>
+                <div style={{fontSize:'0.6rem',fontWeight:800,letterSpacing:'0.1em',textTransform:'uppercase',color:'#dc2626',marginBottom:'0.5rem'}}>🚫 B — Not interested</div>
+
+                <div style={{background:'#eff6ff',border:'1.5px solid #bfdbfe',borderRadius:'0.875rem',padding:'1rem',marginBottom:'0.5rem'}}>
+                  <div style={{fontSize:'0.55rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#3b82f6',marginBottom:'0.5rem'}}>THEY SAY</div>
+                  <p style={{color:'#1d4ed8',fontSize:'0.8rem',fontStyle:'italic',fontWeight:600,lineHeight:1.6}}>
+                    &ldquo;We&apos;re not really interested anymore&rdquo;
+                  </p>
+                </div>
+
+                <div style={{background:'white',border:'1.5px solid #e2e8f0',borderRadius:'0.875rem',padding:'1rem',marginBottom:'0.5rem'}}>
+                  <div style={{fontSize:'0.55rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#818cf8',marginBottom:'0.5rem'}}>SAY</div>
+                  <div style={{fontSize:'0.6rem',fontWeight:700,color:'#94a3b8',marginBottom:'0.4rem'}}>Soft probe</div>
+                  <p style={{color:'#64748b',fontSize:'0.8rem',fontStyle:'italic',lineHeight:1.6}}>
+                    &ldquo;No stress at all — just quickly, was that more a timing thing or has something changed on your end?&rdquo;
+                  </p>
+                </div>
+
+                <div style={{textAlign:'center',color:'#cbd5e1',margin:'0.4rem 0'}}>↓</div>
+                <div style={{textAlign:'center',marginBottom:'0.5rem'}}>
+                  <span style={{fontSize:'0.6rem',fontWeight:800,letterSpacing:'0.1em',textTransform:'uppercase',color:'#94a3b8'}}>Reason?</span>
+                </div>
+
+                {/* B1: Timing */}
+                <div style={{fontSize:'0.55rem',fontWeight:800,letterSpacing:'0.1em',textTransform:'uppercase',color:'#d97706',marginBottom:'0.35rem'}}>⏱ B1 — Timing issue</div>
+                <div style={{background:'white',border:'1.5px solid #e2e8f0',borderRadius:'0.875rem',padding:'0.75rem',marginBottom:'0.35rem'}}>
+                  <div style={{fontSize:'0.5rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#818cf8',marginBottom:'0.35rem'}}>SAY</div>
+                  <p style={{color:'#64748b',fontSize:'0.75rem',fontStyle:'italic',lineHeight:1.5,marginBottom:'0.3rem'}}>
+                    &ldquo;Gotcha, that makes sense.&rdquo;
+                  </p>
+                  <p style={{color:'#64748b',fontSize:'0.75rem',fontStyle:'italic',lineHeight:1.5}}>
+                    &ldquo;When do you reckon it might be back on your radar — next couple of months or further out?&rdquo;
+                  </p>
+                </div>
+                <div style={{textAlign:'center',color:'#cbd5e1',margin:'0.25rem 0',fontSize:'0.875rem'}}>↓</div>
+                <div style={{background:'#fefce8',border:'1.5px solid #fde68a',borderRadius:'0.875rem',padding:'0.75rem',marginBottom:'0.75rem'}}>
+                  <div style={{fontSize:'0.5rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#d97706',marginBottom:'0.35rem'}}>FOLLOW UP</div>
+                  <p style={{color:'#64748b',fontSize:'0.75rem',fontStyle:'italic',lineHeight:1.5}}>
+                    &ldquo;Too easy. I&apos;ll make a note to touch base then and we&apos;ll go from there.&rdquo;
+                  </p>
+                </div>
+
+                {/* B2: No longer interested */}
+                <div style={{fontSize:'0.55rem',fontWeight:800,letterSpacing:'0.1em',textTransform:'uppercase',color:'#dc2626',marginBottom:'0.35rem'}}>🚫 B2 — No longer interested</div>
+                <div style={{background:'white',border:'1.5px solid #e2e8f0',borderRadius:'0.875rem',padding:'0.75rem',marginBottom:'0.35rem'}}>
+                  <div style={{fontSize:'0.5rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#818cf8',marginBottom:'0.35rem'}}>SAY</div>
+                  <p style={{color:'#64748b',fontSize:'0.75rem',fontStyle:'italic',lineHeight:1.5}}>
+                    &ldquo;All good — just so I don&apos;t chase you unnecessarily, was there something specific that changed?&rdquo;
+                  </p>
+                </div>
+                <div style={{textAlign:'center',color:'#cbd5e1',margin:'0.25rem 0',fontSize:'0.875rem'}}>↓</div>
+                <div style={{background:'#f8fafc',border:'1.5px solid #e2e8f0',borderRadius:'0.875rem',padding:'0.75rem'}}>
+                  <div style={{fontSize:'0.5rem',fontWeight:900,letterSpacing:'0.12em',textTransform:'uppercase',color:'#94a3b8',marginBottom:'0.35rem'}}>CLOSE</div>
+                  <p style={{color:'#64748b',fontSize:'0.75rem',fontStyle:'italic',lineHeight:1.5,marginBottom:'0.3rem'}}>
+                    &ldquo;No worries at all, I appreciate you letting me know.&rdquo;
+                  </p>
+                  <p style={{color:'#64748b',fontSize:'0.75rem',fontStyle:'italic',lineHeight:1.5}}>
+                    &ldquo;If things change down the track, feel free to reach out.&rdquo;
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
+            <p style={{fontSize:'0.7rem',color:'#cbd5e1',marginTop:'2rem',textAlign:'center'}}>Rebooking Call — No Show Script</p>
           </div>
         )}
 
