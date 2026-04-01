@@ -757,11 +757,6 @@ export default function CallFlowchartPage() {
   const [noShowReason, setNoShowReason] = useState<'timing' | 'no-interest' | null>(null);
   const [rescheduleResponse, setRescheduleResponse] = useState<'yes' | 'not-now' | null>(null);
   const [rescheduleReason, setRescheduleReason] = useState<'later' | 'not-interested' | null>(null);
-  const [rebookingType, setRebookingType] = useState<'noshow' | 'reschedule' | null>(null);
-  const [noShowResponse, setNoShowResponse] = useState<'interested' | 'not-interested' | null>(null);
-  const [noShowReason, setNoShowReason] = useState<'timing' | 'no-interest' | null>(null);
-  const [rescheduleResponse, setRescheduleResponse] = useState<'yes' | 'not-now' | null>(null);
-  const [rescheduleReason, setRescheduleReason] = useState<'later' | 'not-interested' | null>(null);
   const toggle = (id: string) => setActiveNode(activeNode === id ? null : id);
 
   return (
