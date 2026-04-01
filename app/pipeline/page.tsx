@@ -955,26 +955,10 @@ export default function PipelinePage(){
                           <div className="text-sm font-black text-gray-800 mt-0.5">{wk.label}</div>
                         </div>
                         <div className="flex items-center gap-3">
-                          {winRate!==null&&(
-                            <>
-                              <div className="px-3 py-1.5 rounded-xl border-2 text-center border-emerald-200 bg-emerald-50">
-                                <div className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Win Rate</div>
-                                <div className={`text-lg font-black ${winRate>=50?'text-emerald-600':'text-red-500'}`}>{winRate}%</div>
-                              </div>
-                              <div className="px-3 py-1.5 rounded-xl border-2 text-center border-red-200 bg-red-50">
-                                <div className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Lost Rate</div>
-                                <div className="text-lg font-black text-red-500">{lostRate}%</div>
-                              </div>
-                              <div className="px-3 py-1.5 rounded-xl border-2 text-center border-purple-200 bg-purple-50">
-                                <div className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Moved Rate</div>
-                                <div className="text-lg font-black text-purple-500">{movedRate}%</div>
-                              </div>
-                            </>
-                          )}
                           <div className="text-right">
                             <div className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Total in bucket</div>
-                            <div className="text-lg font-black text-gray-800">{fmt$(wk.totalVal)}</div>
-                            <div className="text-[10px] text-gray-400">{wk.wkDeals.length + wk.movedCount} deals</div>
+                            <div className="text-lg font-black text-gray-800">{fmt$(Math.round(wk.totalVal/4.33))}/wk</div>
+                            <div className="text-[10px] text-gray-400">{fmt$(wk.totalVal)}/mo · {wk.wkDeals.length + wk.movedCount} deals</div>
                           </div>
                         </div>
                       </div>
@@ -983,12 +967,15 @@ export default function PipelinePage(){
                       <div className="grid grid-cols-4 divide-x divide-gray-100">
                         {/* Won */}
                         <div className="px-4 py-4">
-                          <div className="flex items-center gap-1.5 mb-2">
-                            <span className="text-base">🏆</span>
-                            <span className="text-xs font-black text-emerald-600">Won</span>
+                          <div className="flex items-center justify-between gap-1.5 mb-2">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-base">🏆</span>
+                              <span className="text-xs font-black text-emerald-600">Won</span>
+                            </div>
+                            {winRate!==null&&<div className="px-2 py-0.5 rounded-lg border-2 border-emerald-200 bg-emerald-50 text-xs font-black text-emerald-600">{winRate}%</div>}
                           </div>
-                          <div className="text-2xl font-black text-emerald-700">{fmt$(wk.wonVal)}</div>
-                          <div className="text-[10px] text-gray-400 mt-0.5">{fmt$(Math.round(wk.wonVal/4.33))}/wk equiv</div>
+                          <div className="text-2xl font-black text-emerald-700">{fmt$(Math.round(wk.wonVal/4.33))}/wk</div>
+                          <div className="text-[10px] text-gray-400 mt-0.5">{fmt$(wk.wonVal)}/mo</div>
                           <div className="text-xs text-gray-500 mt-1 font-semibold">{wk.wonCount} deal{wk.wonCount!==1?'s':''}</div>
                           {wk.wonCount>0&&(
                             <div className="mt-2 flex flex-col gap-1">
@@ -1003,11 +990,15 @@ export default function PipelinePage(){
 
                         {/* Lost */}
                         <div className="px-4 py-4">
-                          <div className="flex items-center gap-1.5 mb-2">
-                            <span className="text-base">✕</span>
-                            <span className="text-xs font-black text-red-500">Lost</span>
+                          <div className="flex items-center justify-between gap-1.5 mb-2">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-base">✕</span>
+                              <span className="text-xs font-black text-red-500">Lost</span>
+                            </div>
+                            {lostRate!==null&&<div className="px-2 py-0.5 rounded-lg border-2 border-red-200 bg-red-50 text-xs font-black text-red-500">{lostRate}%</div>}
                           </div>
-                          <div className="text-2xl font-black text-red-600">{fmt$(wk.lostVal)}</div>
+                          <div className="text-2xl font-black text-red-600">{fmt$(Math.round(wk.lostVal/4.33))}/wk</div>
+                          <div className="text-[10px] text-gray-400 mt-0.5">{fmt$(wk.lostVal)}/mo</div>
                           <div className="text-[10px] text-gray-400 mt-0.5">{fmt$(Math.round(wk.lostVal/4.33))}/wk equiv</div>
                           <div className="text-xs text-gray-500 mt-1 font-semibold">{wk.lostCount} deal{wk.lostCount!==1?'s':''}</div>
                           {wk.lostCount>0&&(
