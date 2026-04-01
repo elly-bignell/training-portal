@@ -608,6 +608,8 @@ export default function PipelinePage(){
   },[deals,historicalWeeks]);
 
   const isBucket=(vm:ViewMode):vm is Bucket=>['Week 1','Week 2','Week 3','Week 4','Week 5+'].includes(vm);
+  const [expandedWeeks,setExpandedWeeks]=useState<Set<number>>(new Set([1]));
+  function toggleWeek(offset:number){setExpandedWeeks(prev=>{const n=new Set(prev);n.has(offset)?n.delete(offset):n.add(offset);return n;});}
   const viewColor=WEEK_COLORS[viewMode]||'#f97316';
 
 
