@@ -606,8 +606,6 @@ export default function PipelinePage(){
   },[deals,historicalWeeks]);
 
   const isBucket=(vm:ViewMode):vm is Bucket=>['Week 1','Week 2','Week 3','Week 4','Week 5+'].includes(vm);
-  const [expandedWeeks,setExpandedWeeks]=useState<Set<number>>(new Set([1]));
-  function toggleWeek(offset:number){setExpandedWeeks(prev=>{const n=new Set(prev);n.has(offset)?n.delete(offset):n.add(offset);return n;});}
   const viewColor=WEEK_COLORS[viewMode]||'#f97316';
 
 
@@ -949,15 +947,14 @@ export default function PipelinePage(){
                   return(
                     <div key={wk.weekOffset} className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
                       {/* Week header — clickable accordion */}
-                      <button onClick={()=>toggleWeek(wk.weekOffset)} className="w-full px-5 py-4 border-b border-gray-100 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                        <div className="text-left">
+                      <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+                        <div>
                           <div className="text-xs font-black uppercase tracking-widest text-gray-500">
                             {wk.weekOffset===1?'Last Week':wk.weekOffset===2?'2 Weeks Ago':`${wk.weekOffset} Weeks Ago`}
                           </div>
                           <div className="text-sm font-black text-gray-800 mt-0.5">{wk.label}</div>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="text-gray-400 text-sm ml-2">{expandedWeeks.has(wk.weekOffset)?'▲':'▼'}</span>
                           <div className="text-right">
                             <div className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Total in Week 1 bucket @ start of week</div>
                             <div className="text-lg font-black text-gray-800">{fmt$(Math.round(wk.totalVal/4.33))}/wk</div>
@@ -974,9 +971,8 @@ export default function PipelinePage(){
                             })()}
                           </div>
                         </div>
-                      </button>
+                      </div>
 
-                      {expandedWeeks.has(wk.weekOffset)&&<>
                       {/* Won / Lost / Moved / Active breakdown */}
                       <div className="grid grid-cols-4 divide-x divide-gray-100">
                         {/* Won */}
