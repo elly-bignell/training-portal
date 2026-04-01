@@ -985,7 +985,7 @@ export default function CallFlowchartPage() {
             {/* ══ RESCHEDULE FLOW (default) ══ */}
             {rebookingType === 'reschedule' && (
               <div>
-                <div className="bg-slate-900 rounded-2xl p-6 mb-4 max-w-3xl">
+                <div className="bg-slate-900 rounded-2xl p-6 mb-4 max-w-3xl mx-auto">
                   <div className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-3">SAY</div>
                   <h3 className="font-bold text-white text-base mb-3">Opening</h3>
                   <p className="text-slate-300 text-sm italic leading-relaxed mb-2">
@@ -1004,7 +1004,7 @@ export default function CallFlowchartPage() {
                   <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Response?</span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 max-w-3xl">
+                <div className="grid grid-cols-2 gap-4 max-w-3xl mx-auto">
 
                   {/* A: Yes still keen */}
                   <div>
@@ -1086,7 +1086,7 @@ export default function CallFlowchartPage() {
             {/* ══ NO SHOW FLOW ══ */}
             {rebookingType === 'noshow' && (
               <div>
-                <div className="bg-slate-900 rounded-2xl p-6 mb-4 max-w-3xl">
+                <div className="bg-slate-900 rounded-2xl p-6 mb-4 max-w-3xl mx-auto">
                   <div className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-3">SAY</div>
                   <h3 className="font-bold text-white text-base mb-3">Opening</h3>
                   <p className="text-slate-300 text-sm italic leading-relaxed mb-2">
@@ -1102,7 +1102,7 @@ export default function CallFlowchartPage() {
                   <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">What do they say?</span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 max-w-3xl">
+                <div className="grid grid-cols-2 gap-4 max-w-3xl mx-auto">
 
                   {/* A: Still interested */}
                   <div>
