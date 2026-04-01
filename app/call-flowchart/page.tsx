@@ -949,295 +949,269 @@ export default function CallFlowchartPage() {
         </div>
       
 
+
       {/* ===== REBOOKING CALL SECTION ===== */}
-      <div id="rebooking-call" className="mt-16">
-        <div className="border-t-2 border-gray-100 pt-12">
+      <div id="rebooking-call">
 
-          {/* Section header */}
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-sm">📅</div>
-            <div>
-              <h2 className="text-2xl font-black text-gray-900 leading-tight">Rebooking Call</h2>
-              <p className="text-gray-400 text-sm">For booked meetings that were rescheduled or missed</p>
+        {/* Section header — matches Follow Up style */}
+        <div className="flex items-center gap-2 mt-12 mb-1">
+          <span className="text-xl">📅</span>
+          <h2 className="text-xl font-black text-gray-800">Rebooking Call</h2>
+        </div>
+        <p className="text-gray-400 text-sm mb-6">For booked meetings that were rescheduled or missed</p>
+
+        {/* Selector — matches Quodo / MS tab style */}
+        <div className="flex rounded-2xl overflow-hidden border border-gray-200 mb-8 cursor-pointer select-none">
+          <button
+            onClick={() => setRebookingType('noshow')}
+            className={`flex-1 py-3 px-4 text-sm font-bold transition-all ${
+              rebookingType === 'noshow'
+                ? 'bg-gray-900 text-white'
+                : 'bg-white text-gray-500 hover:bg-gray-50'
+            }`}
+          >
+            🚫 No Show
+          </button>
+          <button
+            onClick={() => setRebookingType('reschedule')}
+            className={`flex-1 py-3 px-4 text-sm font-bold transition-all border-l border-gray-200 ${
+              rebookingType === 'reschedule'
+                ? 'bg-gray-900 text-white'
+                : 'bg-white text-gray-500 hover:bg-gray-50'
+            }`}
+          >
+            📅 Reschedule
+          </button>
+        </div>
+
+        {/* ═══ NO SHOW FLOW ═══ */}
+        {rebookingType === 'noshow' && (
+          <div>
+
+            {/* Dark intro card */}
+            <div className="bg-gray-900 rounded-2xl p-5 mb-3">
+              <div className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-3">SAY</div>
+              <h3 className="font-bold text-white text-sm mb-2">Introduction</h3>
+              <p className="text-gray-300 text-sm leading-relaxed italic mb-2">
+                &ldquo;Hey [Name], it&apos;s [Rep Name] here from Marketing Sweet. How are you going?&rdquo;
+              </p>
+              <p className="text-gray-500 text-xs mb-2">If they respond positively, continue.</p>
+              <p className="text-gray-300 text-sm leading-relaxed italic">
+                &ldquo;Yeah, really good, thanks. We had a meeting booked in yesterday at [Time]. I sent you through a Zoom link and gave you a call, but I couldn&apos;t get through to you. I assumed you must have been busy or something must have popped up.&rdquo;
+              </p>
             </div>
-          </div>
 
-          {/* Selector */}
-          <div className="grid grid-cols-2 gap-3 mt-6 mb-8">
-            <button
-              onClick={() => setRebookingType('noshow')}
-              className={`p-4 rounded-2xl border-2 text-sm font-bold transition-all text-left cursor-pointer ${
-                rebookingType === 'noshow'
-                  ? 'border-orange-500 bg-orange-50 text-orange-700'
-                  : 'border-gray-200 bg-white text-gray-500 hover:border-orange-300'
-              }`}
-            >
-              <div className="text-lg mb-1">🚫</div>
-              No Show
-              <div className="text-xs font-normal text-gray-400 mt-0.5">Prospect didn&apos;t attend</div>
-            </button>
-            <button
-              onClick={() => setRebookingType('reschedule')}
-              className={`p-4 rounded-2xl border-2 text-sm font-bold transition-all text-left cursor-pointer ${
-                rebookingType === 'reschedule'
-                  ? 'border-orange-500 bg-orange-50 text-orange-700'
-                  : 'border-gray-200 bg-white text-gray-500 hover:border-orange-300'
-              }`}
-            >
-              <div className="text-lg mb-1">📅</div>
-              Reschedule
-              <div className="text-xs font-normal text-gray-400 mt-0.5">No new time locked in</div>
-            </button>
-          </div>
+            <div className="flex justify-center my-3 text-gray-300 text-lg">↓</div>
 
-          {/* ═══════════ NO SHOW FLOW ═══════════ */}
-          {rebookingType === 'noshow' && (
-            <div>
-              <div className="flex justify-center my-2 text-gray-300">↓</div>
+            <div className="text-center mb-4">
+              <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400">What do they say?</span>
+            </div>
 
-              {/* Intro */}
-              <div className="mb-1">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-orange-500 mb-1">SAY</div>
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                  <h3 className="font-bold text-gray-900 text-sm mb-2">Introduction</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed mb-2">
-                    &ldquo;Hey [Name], it&apos;s [Rep Name] here from Marketing Sweet. How are you going?&rdquo;
-                  </p>
-                  <p className="text-gray-400 text-xs italic mb-2">If they respond positively, continue.</p>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    &ldquo;Yeah, really good, thanks. We had a meeting booked in yesterday at [Time]. I sent you through a Zoom link and gave you a call, but I couldn&apos;t get through to you. I assumed you must have been busy or something must have popped up.&rdquo;
-                  </p>
-                </div>
-              </div>
+            {/* Two path columns */}
+            <div className="grid grid-cols-2 gap-3">
 
-              <div className="flex justify-center my-2 text-gray-300">↓</div>
+              {/* PATH A — Still interested */}
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-green-600 mb-2">✅ A — Still interested</div>
 
-              {/* Decision label */}
-              <div className="mb-3">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-gray-400 mb-1">WHAT DO THEY SAY?</div>
-              </div>
-
-              {/* PATH A */}
-              <div className="mb-1">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-green-600 mb-1">✅ A — STILL INTERESTED</div>
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <div className="bg-white border border-gray-200 rounded-2xl p-4 mb-2">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-2">SAY</div>
                   <h3 className="font-bold text-gray-900 text-sm mb-2">Rebook the Meeting</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed mb-2">
+                  <p className="text-gray-500 text-sm leading-relaxed italic mb-2">
                     &ldquo;No, all good — don&apos;t stress. I&apos;ve already done all the preparation and we&apos;re ready to rock and roll. It should only take about 15 minutes. Do you have time later today around [Time]?&rdquo;
                   </p>
-                  <p className="text-gray-400 text-xs italic mb-2">If they can&apos;t do that time:</p>
-                  <p className="text-gray-700 text-sm leading-relaxed mb-2">
+                  <p className="text-gray-400 text-xs mb-2">If they can&apos;t do that time:</p>
+                  <p className="text-gray-500 text-sm leading-relaxed italic mb-2">
                     &ldquo;Yeah, sure thing. When&apos;s good for you? I&apos;ll try to work around you.&rdquo;
                   </p>
-                  <p className="text-gray-400 text-xs italic mb-2">If needed, guide them to options:</p>
-                  <p className="text-gray-700 text-sm leading-relaxed mb-2">
+                  <p className="text-gray-400 text-xs mb-2">If needed, guide them toward options:</p>
+                  <p className="text-gray-500 text-sm leading-relaxed italic mb-1">
                     &ldquo;Are you any good on like Thursday or Friday?&rdquo;
                   </p>
-                  <p className="text-gray-700 text-sm leading-relaxed">
+                  <p className="text-gray-500 text-sm leading-relaxed italic">
                     &ldquo;Yeah, I&apos;ve got a spot at [Option 1] or [Option 2] — what suits you best?&rdquo;
                   </p>
                 </div>
-              </div>
 
-              <div className="flex justify-center my-2 text-gray-300">↓</div>
+                <div className="flex justify-center my-2 text-gray-300">↓</div>
 
-              <div className="mb-4">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-green-600 mb-1">BOOK</div>
-                <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                <div className="bg-green-50 border border-green-200 rounded-2xl p-4">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-green-600 mb-2">BOOK</div>
                   <h3 className="font-bold text-gray-900 text-sm mb-2">Confirm the Rebooking</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
+                  <p className="text-gray-500 text-sm leading-relaxed italic">
                     &ldquo;Perfect. I&apos;ll resend the calendar invitation, and I&apos;ll send you a text the morning of the meeting as well. Looking forward to showing you the research.&rdquo;
                   </p>
                 </div>
               </div>
 
-              {/* PATH B */}
-              <div className="mb-1">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-red-500 mb-1">🚫 B — NO LONGER INTERESTED</div>
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+              {/* PATH B — No longer interested */}
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-red-500 mb-2">🚫 B — No longer interested</div>
+
+                <div className="bg-white border border-gray-200 rounded-2xl p-4 mb-2">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-2">SAY</div>
                   <h3 className="font-bold text-gray-900 text-sm mb-2">Initial Pushback</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
+                  <p className="text-gray-500 text-sm leading-relaxed italic">
                     &ldquo;No stress at all. Is the timing just a bit off, or has something changed on your end?&rdquo;
                   </p>
                 </div>
-              </div>
 
-              <div className="flex justify-center my-2 text-gray-300">↓</div>
+                <div className="flex justify-center my-2 text-gray-300">↓</div>
+                <div className="text-center mb-2">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">What&apos;s the reason?</span>
+                </div>
 
-              <div className="mb-3">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-gray-400 mb-1">WHAT&apos;S THE REASON?</div>
-              </div>
-
-              {/* PATH B(i) */}
-              <div className="mb-1">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-yellow-600 mb-1">⏱ B(i) — TIMING OFF</div>
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                  <p className="text-gray-700 text-sm leading-relaxed">
+                {/* B(i) Timing off */}
+                <div className="text-[9px] font-bold uppercase tracking-wider text-yellow-600 mb-1">⏱ B(i) — Timing off</div>
+                <div className="bg-white border border-gray-200 rounded-2xl p-3 mb-1">
+                  <div className="text-[9px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                  <p className="text-gray-500 text-xs leading-relaxed italic">
                     &ldquo;Yeah, no worries at all. Do you want me to touch base in a month or a couple of months? Where&apos;s your headspace at with it all?&rdquo;
                   </p>
                 </div>
-              </div>
-
-              <div className="flex justify-center my-2 text-gray-300">↓</div>
-
-              <div className="mb-4">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-yellow-600 mb-1">FOLLOW UP</div>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-                  <h3 className="font-bold text-gray-900 text-sm mb-2">Future Follow Up</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
+                <div className="flex justify-center my-1 text-gray-300 text-sm">↓</div>
+                <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-3 mb-3">
+                  <div className="text-[9px] font-bold tracking-widest uppercase text-yellow-600 mb-1">FOLLOW UP</div>
+                  <p className="text-gray-500 text-xs leading-relaxed italic">
                     &ldquo;Too easy. I&apos;ll make a note to touch base then and we&apos;ll go from there.&rdquo;
                   </p>
                 </div>
-              </div>
 
-              {/* PATH B(ii) */}
-              <div className="mb-1">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-red-500 mb-1">🚫 B(ii) — NO INTEREST / CHANGED MIND</div>
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                  <p className="text-gray-700 text-sm leading-relaxed mb-2">
+                {/* B(ii) No interest */}
+                <div className="text-[9px] font-bold uppercase tracking-wider text-red-500 mb-1">🚫 B(ii) — No interest / changed mind</div>
+                <div className="bg-white border border-gray-200 rounded-2xl p-3 mb-1">
+                  <div className="text-[9px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                  <p className="text-gray-500 text-xs leading-relaxed italic mb-1">
                     &ldquo;All good — just so I don&apos;t chase you unnecessarily, was there something specific that changed?&rdquo;
                   </p>
-                  <p className="text-gray-400 text-xs italic">Acknowledge briefly — don&apos;t push hard.</p>
+                  <p className="text-gray-400 text-[10px] italic">Acknowledge briefly — don&apos;t push hard.</p>
                 </div>
-              </div>
-
-              <div className="flex justify-center my-2 text-gray-300">↓</div>
-
-              <div className="mb-4">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-1">CLOSE</div>
-                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
-                  <h3 className="font-bold text-gray-900 text-sm mb-2">Leave Door Open</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
+                <div className="flex justify-center my-1 text-gray-300 text-sm">↓</div>
+                <div className="bg-gray-50 border border-gray-200 rounded-2xl p-3">
+                  <div className="text-[9px] font-bold tracking-widest uppercase text-gray-400 mb-1">CLOSE</div>
+                  <p className="text-gray-500 text-xs leading-relaxed italic">
                     &ldquo;No worries at all. Thanks for letting me know. If things change on your end down the track, feel free to reach back out.&rdquo;
                   </p>
                 </div>
               </div>
 
-              <p className="text-xs text-gray-400 mt-8 text-center italic">Rebooking Call — No Show Script</p>
             </div>
-          )}
 
-          {/* ═══════════ RESCHEDULE FLOW ═══════════ */}
-          {rebookingType === 'reschedule' && (
-            <div>
-              <div className="flex justify-center my-2 text-gray-300">↓</div>
+            <p className="text-xs text-gray-300 mt-8 text-center">Rebooking Call — No Show</p>
+          </div>
+        )}
 
-              {/* Intro */}
-              <div className="mb-1">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-orange-500 mb-1">SAY</div>
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                  <h3 className="font-bold text-gray-900 text-sm mb-2">Introduction</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed mb-2">
-                    &ldquo;Hey [Name], it&apos;s [Rep Name] here from Marketing Sweet. How are you going?&rdquo;
-                  </p>
-                  <p className="text-gray-700 text-sm leading-relaxed mb-2">
-                    &ldquo;Yeah, really good, thanks. I saw your message about needing to reschedule — I assumed something must have popped up.&rdquo;
-                  </p>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    &ldquo;I&apos;ve just got my diary in front of me now — are you still looking to lock something in this week?&rdquo;
-                  </p>
-                </div>
-              </div>
+        {/* ═══ RESCHEDULE FLOW ═══ */}
+        {rebookingType === 'reschedule' && (
+          <div>
 
-              <div className="flex justify-center my-2 text-gray-300">↓</div>
+            {/* Dark intro card */}
+            <div className="bg-gray-900 rounded-2xl p-5 mb-3">
+              <div className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-3">SAY</div>
+              <h3 className="font-bold text-white text-sm mb-2">Introduction</h3>
+              <p className="text-gray-300 text-sm leading-relaxed italic mb-2">
+                &ldquo;Hey [Name], it&apos;s [Rep Name] here from Marketing Sweet. How are you going?&rdquo;
+              </p>
+              <p className="text-gray-300 text-sm leading-relaxed italic mb-2">
+                &ldquo;Yeah, really good, thanks. I saw your message about needing to reschedule — I assumed something must have popped up.&rdquo;
+              </p>
+              <p className="text-gray-300 text-sm leading-relaxed italic">
+                &ldquo;I&apos;ve just got my diary in front of me now — are you still looking to lock something in this week?&rdquo;
+              </p>
+            </div>
 
-              <div className="mb-3">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-gray-400 mb-1">ARE THEY STILL LOOKING TO REBOOK?</div>
-              </div>
+            <div className="flex justify-center my-3 text-gray-300 text-lg">↓</div>
 
-              {/* PATH A */}
-              <div className="mb-1">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-green-600 mb-1">✅ A — YES</div>
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+            <div className="text-center mb-4">
+              <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400">Are they still looking to rebook?</span>
+            </div>
+
+            {/* Two path columns */}
+            <div className="grid grid-cols-2 gap-3">
+
+              {/* PATH A — Yes */}
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-green-600 mb-2">✅ A — Yes</div>
+
+                <div className="bg-white border border-gray-200 rounded-2xl p-4 mb-2">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-2">SAY</div>
                   <h3 className="font-bold text-gray-900 text-sm mb-2">Offer New Times</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed mb-2">
+                  <p className="text-gray-500 text-sm leading-relaxed italic mb-2">
                     &ldquo;Perfect. How are you looking towards the end of the week — like Thursday morning?&rdquo;
                   </p>
-                  <p className="text-gray-400 text-xs italic mb-2">If that works:</p>
-                  <p className="text-gray-700 text-sm leading-relaxed">
+                  <p className="text-gray-400 text-xs mb-2">If that works:</p>
+                  <p className="text-gray-500 text-sm leading-relaxed italic">
                     &ldquo;Beautiful. I&apos;ve got two spots available, one at [Option 1] and one at [Option 2]. What works better for you?&rdquo;
                   </p>
                 </div>
-              </div>
 
-              <div className="flex justify-center my-2 text-gray-300">↓</div>
+                <div className="flex justify-center my-2 text-gray-300">↓</div>
 
-              <div className="mb-4">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-green-600 mb-1">BOOK</div>
-                <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                <div className="bg-green-50 border border-green-200 rounded-2xl p-4">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-green-600 mb-2">BOOK</div>
                   <h3 className="font-bold text-gray-900 text-sm mb-2">Confirm New Time</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
+                  <p className="text-gray-500 text-sm leading-relaxed italic">
                     &ldquo;Too easy. I&apos;ll update the current invite now and send you the confirmation through. We&apos;ll lock in [Day] at [Time].&rdquo;
                   </p>
                 </div>
               </div>
 
-              {/* PATH B */}
-              <div className="mb-1">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-yellow-600 mb-1">⏱ B — NOT RIGHT NOW</div>
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+              {/* PATH B — Not right now */}
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-yellow-600 mb-2">⏱ B — Not right now</div>
+
+                <div className="bg-white border border-gray-200 rounded-2xl p-4 mb-2">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-2">SAY</div>
                   <h3 className="font-bold text-gray-900 text-sm mb-2">Clarify Timing</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
+                  <p className="text-gray-500 text-sm leading-relaxed italic">
                     &ldquo;No worries at all. Is that just because this week&apos;s no good, or has the timing become a bit tricky in general?&rdquo;
                   </p>
                 </div>
-              </div>
 
-              <div className="flex justify-center my-2 text-gray-300">↓</div>
+                <div className="flex justify-center my-2 text-gray-300">↓</div>
+                <div className="text-center mb-2">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">What do they mean?</span>
+                </div>
 
-              <div className="mb-3">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-gray-400 mb-1">WHAT DO THEY MEAN?</div>
-              </div>
-
-              {/* PATH B(i) */}
-              <div className="mb-1">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-yellow-600 mb-1">📆 B(i) — NEEDS LATER DATE</div>
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                  <p className="text-gray-700 text-sm leading-relaxed">
+                {/* B(i) Needs later date */}
+                <div className="text-[9px] font-bold uppercase tracking-wider text-yellow-600 mb-1">📆 B(i) — Needs later date</div>
+                <div className="bg-white border border-gray-200 rounded-2xl p-3 mb-1">
+                  <div className="text-[9px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                  <p className="text-gray-500 text-xs leading-relaxed italic">
                     &ldquo;Yep, no problem. When do you reckon it&apos;ll be back on your radar — next week, next month, or a bit further out?&rdquo;
                   </p>
                 </div>
-              </div>
-
-              <div className="flex justify-center my-2 text-gray-300">↓</div>
-
-              <div className="mb-4">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-yellow-600 mb-1">FOLLOW UP</div>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-                  <h3 className="font-bold text-gray-900 text-sm mb-2">Set Follow Up</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
+                <div className="flex justify-center my-1 text-gray-300 text-sm">↓</div>
+                <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-3 mb-3">
+                  <div className="text-[9px] font-bold tracking-widest uppercase text-yellow-600 mb-1">FOLLOW UP</div>
+                  <p className="text-gray-500 text-xs leading-relaxed italic">
                     &ldquo;Too easy. I&apos;ll make a note to touch base around then and we&apos;ll go from there.&rdquo;
                   </p>
                 </div>
-              </div>
 
-              {/* PATH B(ii) */}
-              <div className="mb-1">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-red-500 mb-1">🚫 B(ii) — NO LONGER INTERESTED</div>
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                  <p className="text-gray-700 text-sm leading-relaxed">
+                {/* B(ii) No longer interested */}
+                <div className="text-[9px] font-bold uppercase tracking-wider text-red-500 mb-1">🚫 B(ii) — No longer interested</div>
+                <div className="bg-white border border-gray-200 rounded-2xl p-3 mb-1">
+                  <div className="text-[9px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                  <p className="text-gray-500 text-xs leading-relaxed italic">
                     &ldquo;No worries at all. Thanks for letting me know.&rdquo;
                   </p>
                 </div>
-              </div>
-
-              <div className="flex justify-center my-2 text-gray-300">↓</div>
-
-              <div className="mb-4">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-1">CLOSE</div>
-                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
-                  <h3 className="font-bold text-gray-900 text-sm mb-2">Close Out Politely</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
+                <div className="flex justify-center my-1 text-gray-300 text-sm">↓</div>
+                <div className="bg-gray-50 border border-gray-200 rounded-2xl p-3">
+                  <div className="text-[9px] font-bold tracking-widest uppercase text-gray-400 mb-1">CLOSE</div>
+                  <p className="text-gray-500 text-xs leading-relaxed italic">
                     &ldquo;If anything changes down the track, feel free to reach back out.&rdquo;
                   </p>
                 </div>
               </div>
 
-              <p className="text-xs text-gray-400 mt-8 text-center italic">Rebooking Call — Reschedule Script</p>
             </div>
-          )}
 
-        </div>
+            <p className="text-xs text-gray-300 mt-8 text-center">Rebooking Call — Reschedule</p>
+          </div>
+        )}
+
       </div>
 </main>
     </>
