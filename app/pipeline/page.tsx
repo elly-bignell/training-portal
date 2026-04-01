@@ -956,9 +956,19 @@ export default function PipelinePage(){
                         </div>
                         <div className="flex items-center gap-3">
                           <div className="text-right">
-                            <div className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Total in bucket</div>
+                            <div className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Total in Week 1 bucket @ start of week</div>
                             <div className="text-lg font-black text-gray-800">{fmt$(Math.round(wk.totalVal/4.33))}/wk</div>
                             <div className="text-[10px] text-gray-400">{fmt$(wk.totalVal)}/mo · {wk.wkDeals.length + wk.movedCount} deals</div>
+                            <div className="text-[10px] text-gray-400 mt-1">Target: {fmt$(BUCKET_WK_TARGETS['Week 1'])}/wk</div>
+                            {(()=>{
+                              const wkVal=Math.round(wk.totalVal/4.33);
+                              const diff=wkVal-BUCKET_WK_TARGETS['Week 1'];
+                              const pct=Math.round((diff/BUCKET_WK_TARGETS['Week 1'])*100);
+                              const ahead=diff>=0;
+                              return <div className={`text-[10px] font-bold ${ahead?'text-emerald-600':'text-red-600'}`}>
+                                Variance: {ahead?'+':''}{fmt$(diff)}/wk ({ahead?'+':''}{pct}%)
+                              </div>;
+                            })()}
                           </div>
                         </div>
                       </div>
