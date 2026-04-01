@@ -796,12 +796,26 @@ export default function CallFlowchartPage() {
                     <span className="w-2 h-2 rounded-full bg-[#E6017D]"></span> Follow Up
                   </span>
                 </div>
-                <a
-                  href="#followup-script"
-                  className="px-4 py-2 bg-[#E6017D] hover:bg-[#c9016b] text-white text-sm font-semibold rounded-lg transition-colors print:hidden"
-                >
-                  📞 Follow Up Script ↓
-                </a>
+                <div className="flex items-center gap-2 print:hidden">
+                  <a
+                    href="#cold-call-script"
+                    className="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold rounded-lg transition-colors"
+                  >
+                    📞 Cold Call
+                  </a>
+                  <a
+                    href="#followup-script"
+                    className="px-3 py-2 bg-[#E6017D] hover:bg-[#c9016b] text-white text-xs font-semibold rounded-lg transition-colors"
+                  >
+                    📞 Follow Up
+                  </a>
+                  <a
+                    href="#rebooking-call"
+                    className="px-3 py-2 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-lg transition-colors"
+                  >
+                    📅 Rebooking
+                  </a>
+                </div>
                 <button
                   onClick={() => window.print()}
                   className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm rounded-lg transition-colors print:hidden"
@@ -813,7 +827,7 @@ export default function CallFlowchartPage() {
           </div>
         </header>
 
-        <div className="max-w-[1600px] mx-auto px-8 py-8 print:py-4">
+        <div id="cold-call-script" className="max-w-[1600px] mx-auto px-8 py-8 print:py-4">
 
           {/* Shared intro */}
           <div className="max-w-2xl mx-auto">
@@ -1086,7 +1100,7 @@ export default function CallFlowchartPage() {
                   <div className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-3">SAY</div>
                   <h3 className="font-bold text-white text-base mb-3">Opening</h3>
                   <p className="text-slate-300 text-sm italic leading-relaxed mb-2">
-                    &ldquo;Hey [Name], it&apos;s [Rep Name] here from Marketing Sweet. How are you going?&rdquo;
+                    &ldquo;Hey [Name], it&apos;s [Your Name] here from Marketing Sweet. How are you going?&rdquo;
                   </p>
                   <p className="text-slate-300 text-sm italic leading-relaxed">
                     &ldquo;Yeah, really good, thanks. We had a meeting booked in yesterday at [Time]. I sent you through a Zoom link and gave you a call, but I couldn&apos;t get through. I assumed you must&apos;ve been busy or something popped up.&rdquo;
