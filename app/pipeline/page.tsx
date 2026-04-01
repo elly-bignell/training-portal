@@ -169,6 +169,8 @@ function DealCard({deal,onStatusChange,onReschedule,onGTHToggle,canEdit,overdue}
   const borderColor = overdue ? '#fca5a5' : sc.border;
   const [changing,setChanging]=useState(false);
   const [showReschedule,setShowReschedule]=useState(false);
+  const [expandedWeeks,setExpandedWeeks]=useState<Set<number>>(new Set([1]));
+  function toggleWeek(offset:number){setExpandedWeeks(prev=>{const n=new Set(prev);n.has(offset)?n.delete(offset):n.add(offset);return n;});}
   const [newCloseDate,setNewCloseDate]=useState('');
   const [rescheduling,setRescheduling]=useState(false);
   const [showLostModal,setShowLostModal]=useState(false);
@@ -908,7 +910,8 @@ export default function PipelinePage(){
                               overdue={overdue && deal.Status==='Active'}/>
                           ))}
                         </div>
-                      </div>
+                      </> }
+                    </div>
                     );
                   })}
                 </div>
@@ -946,15 +949,16 @@ export default function PipelinePage(){
                   const movedRate=resolvedVal>0?Math.round((wk.movedVal/resolvedVal)*100):null;
                   return(
                     <div key={wk.weekOffset} className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                      {/* Week header */}
-                      <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-                        <div>
+                      {/* Week header — clickable accordion */}
+                      <button onClick={()=>toggleWeek(wk.weekOffset)} className="w-full px-5 py-4 border-b border-gray-100 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                        <div className="text-left">
                           <div className="text-xs font-black uppercase tracking-widest text-gray-500">
                             {wk.weekOffset===1?'Last Week':wk.weekOffset===2?'2 Weeks Ago':`${wk.weekOffset} Weeks Ago`}
                           </div>
                           <div className="text-sm font-black text-gray-800 mt-0.5">{wk.label}</div>
                         </div>
                         <div className="flex items-center gap-3">
+                          <span className="text-gray-400 text-sm ml-2">{expandedWeeks.has(wk.weekOffset)?'▲':'▼'}</span>
                           <div className="text-right">
                             <div className="text-[9px] font-bold uppercase tracking-wider text-gray-400">Total in Week 1 bucket @ start of week</div>
                             <div className="text-lg font-black text-gray-800">{fmt$(Math.round(wk.totalVal/4.33))}/wk</div>
@@ -971,8 +975,9 @@ export default function PipelinePage(){
                             })()}
                           </div>
                         </div>
-                      </div>
+                      </button>
 
+                      {expandedWeeks.has(wk.weekOffset)&&<>
                       {/* Won / Lost / Moved / Active breakdown */}
                       <div className="grid grid-cols-4 divide-x divide-gray-100">
                         {/* Won */}
