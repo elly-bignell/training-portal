@@ -959,27 +959,29 @@ export default function CallFlowchartPage() {
             </div>
 
             {/* Scenario selector */}
-            <div className="inline-flex rounded-xl overflow-hidden border-2 border-slate-200 bg-white shadow-lg mb-8">
-              <button
-                onClick={() => setRebookingType('reschedule')}
-                className="px-8 py-4 text-base font-bold transition-all"
-                style={{
-                  background: rebookingType === 'reschedule' ? 'linear-gradient(135deg, #60a5fa, #3b82f6)' : 'white',
-                  color: rebookingType === 'reschedule' ? 'white' : '#475569',
-                }}
-              >
-                📅 Rescheduled
-              </button>
-              <button
-                onClick={() => setRebookingType('noshow')}
-                className="px-8 py-4 text-base font-bold transition-all"
-                style={{
-                  background: rebookingType === 'noshow' ? 'linear-gradient(135deg, #fb923c, #f97316)' : 'white',
-                  color: rebookingType === 'noshow' ? 'white' : '#475569',
-                }}
-              >
-                🚫 No Show
-              </button>
+            <div className="flex justify-center mb-8">
+              <div className="inline-flex rounded-xl overflow-hidden border-2 border-slate-200 bg-white shadow-lg">
+                <button
+                  onClick={() => setRebookingType('reschedule')}
+                  className="px-8 py-4 text-base font-bold transition-all"
+                  style={{
+                    background: rebookingType === 'reschedule' ? 'linear-gradient(135deg, #fdba74, #fb923c)' : 'white',
+                    color: rebookingType === 'reschedule' ? 'white' : '#475569',
+                  }}
+                >
+                  📅 Rescheduled
+                </button>
+                <button
+                  onClick={() => setRebookingType('noshow')}
+                  className="px-8 py-4 text-base font-bold transition-all"
+                  style={{
+                    background: rebookingType === 'noshow' ? 'linear-gradient(135deg, #f97316, #ea580c)' : 'white',
+                    color: rebookingType === 'noshow' ? 'white' : '#475569',
+                  }}
+                >
+                  🚫 No Show
+                </button>
+              </div>
             </div>
 
             {/* ══ RESCHEDULE FLOW (default) ══ */}
@@ -989,13 +991,10 @@ export default function CallFlowchartPage() {
                   <div className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-3">SAY</div>
                   <h3 className="font-bold text-white text-base mb-3">Opening</h3>
                   <p className="text-slate-300 text-sm italic leading-relaxed mb-2">
-                    &ldquo;Hey [Name], it&apos;s [Rep Name] here from Marketing Sweet. How are you going?&rdquo;
-                  </p>
-                  <p className="text-slate-300 text-sm italic leading-relaxed mb-2">
-                    &ldquo;Yeah, really good, thanks. I saw your message about needing to reschedule — I assumed something must&apos;ve popped up.&rdquo;
+                    &ldquo;Hey [Name], it&apos;s [Your Name] here from Marketing Sweet. How are you going?&rdquo;
                   </p>
                   <p className="text-slate-300 text-sm italic leading-relaxed">
-                    &ldquo;I&apos;ve got my diary in front of me now — are you still looking to lock something in?&rdquo;
+                    &ldquo;Yeah, really good, thank you for asking. Thanks for letting us know you couldn&apos;t make your meeting yesterday — I&apos;ve got my diary in front of me now. Can we lock in a new time?&rdquo;
                   </p>
                 </div>
 
@@ -1011,18 +1010,15 @@ export default function CallFlowchartPage() {
                     <div className="text-[10px] font-bold uppercase tracking-wider text-green-600 mb-2">✅ A — Yes, still keen</div>
                     <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
                       <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-2">SAY</div>
-                      <p className="text-slate-500 text-sm italic leading-relaxed mb-2">
-                        &ldquo;Perfect. How are you looking towards the end of the week — like Thursday morning?&rdquo;
-                      </p>
                       <p className="text-slate-500 text-sm italic leading-relaxed">
-                        &ldquo;I&apos;ve got [Option 1] or [Option 2] — what works best?&rdquo;
+                        &ldquo;Perfect. I&apos;ve actually got an opening at [Time] on [Day] — would that work for you?&rdquo;
                       </p>
                     </div>
                     <div className="flex justify-center my-2 text-slate-300">↓</div>
                     <div className="bg-green-50 border border-green-200 rounded-xl p-4">
                       <div className="text-[10px] font-bold tracking-widest uppercase text-green-600 mb-2">BOOK</div>
                       <p className="text-slate-500 text-sm italic leading-relaxed">
-                        &ldquo;Too easy. I&apos;ll update the invite now and send that through — we&apos;ll lock in [Day] at [Time].&rdquo;
+                        &ldquo;Perfect. I&apos;ll update the invite now and send the confirmation through — we&apos;ll lock in [Day] at [Time].&rdquo;
                       </p>
                     </div>
                   </div>
@@ -1039,7 +1035,7 @@ export default function CallFlowchartPage() {
                     <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
                       <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-2">SAY</div>
                       <p className="text-slate-500 text-sm italic leading-relaxed">
-                        &ldquo;No worries — is that just this week that&apos;s no good, or has timing become a bit tricky in general?&rdquo;
+                        &ldquo;No worries — is it just this week that&apos;s no good? We can look at something for next week instead if that suits better?&rdquo;
                       </p>
                     </div>
                     <div className="flex justify-center my-2 text-slate-300">↓</div>
