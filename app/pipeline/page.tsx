@@ -910,7 +910,6 @@ export default function PipelinePage(){
                               overdue={overdue && deal.Status==='Active'}/>
                           ))}
                         </div>
-                      </> }
                     </div>
                     );
                   })}
