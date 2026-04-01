@@ -122,7 +122,7 @@ export default function SchedulePage() {
             className="grid"
             style={{
               gridTemplateColumns: "80px repeat(5, 1fr)",
-              gridTemplateRows: `repeat(${totalRows}, 28px)`,
+              gridTemplateRows: `repeat(${totalRows}, 38px)`,
             }}
           >
             {/* Time labels */}
