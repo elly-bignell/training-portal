@@ -169,8 +169,6 @@ function DealCard({deal,onStatusChange,onReschedule,onGTHToggle,canEdit,overdue}
   const borderColor = overdue ? '#fca5a5' : sc.border;
   const [changing,setChanging]=useState(false);
   const [showReschedule,setShowReschedule]=useState(false);
-  const [expandedWeeks,setExpandedWeeks]=useState<Set<number>>(new Set([1]));
-  function toggleWeek(offset:number){setExpandedWeeks(prev=>{const n=new Set(prev);n.has(offset)?n.delete(offset):n.add(offset);return n;});}
   const [newCloseDate,setNewCloseDate]=useState('');
   const [rescheduling,setRescheduling]=useState(false);
   const [showLostModal,setShowLostModal]=useState(false);
