@@ -499,7 +499,7 @@ export default function PipelinePage(){
     const dow=today.getDay(); // 0=Sun,1=Mon,...,6=Sat
     const daysBack=dow===1?3:dow===0?2:1; // Mon→Fri(3), Sun→Fri(2), else→1
     const yd=new Date(); yd.setDate(yd.getDate()-daysBack);
-    const ydStr=yd.toISOString().slice(0,10);
+    const ydStr=yd.toLocaleDateString('en-CA',{timeZone:'Australia/Adelaide'});
     const dayLabel=daysBack===3?'Friday':daysBack===2?'Friday':'Yesterday';
     const ydDeals=deals.filter(d=>d.DateAddedToPipe===ydStr);
     const ydMo=ydDeals.reduce((s,d)=>s+d.MonthlyValue,0);
