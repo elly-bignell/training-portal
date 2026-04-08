@@ -332,6 +332,74 @@ function DealCard({deal,onStatusChange,onReschedule,onGTHToggle,canEdit,overdue}
           )}
         </div>
       )}
+      {/* Won confirmation modal */}
+      {showWonModal&&(
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-5 w-full max-w-sm flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <span className="font-black text-gray-900 text-sm">🏆 Confirm Won Value</span>
+              <button onClick={()=>setShowWonModal(false)} className="text-gray-400 hover:text-gray-600 text-lg leading-none">✕</button>
+            </div>
+            <div className="text-[11px] text-gray-500 -mt-2">Confirm or adjust the value for <span className="font-bold text-gray-700">{deal.BusinessName}</span></div>
+            <div className="flex flex-col gap-3">
+              <div>
+                <label className="text-[10px] font-black text-gray-500 uppercase tracking-wider block mb-1">Monthly $ (ex GST)</label>
+                <input type="number" value={wonMonthly} onChange={e=>setWonMonthly(e.target.value)}
+                  className="border-2 border-gray-200 rounded-xl px-3 py-2 text-sm font-semibold text-gray-800 outline-none focus:border-orange-400 w-full"
+                  placeholder="e.g. 900"/>
+                {wonMonthly&&Number(wonMonthly)>0&&(
+                  <div className="text-[10px] text-gray-400 mt-1">
+                    Weekly: <span className="font-bold text-gray-600">${Math.round((Number(wonMonthly)*12)/52*1.1)}/wk</span>
+                  </div>
+                )}
+              </div>
+              {(deal.Brand==='Quodo'||deal.Brand==='Both')&&(
+                <div>
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-wider block mb-1">Upfront $ (optional)</label>
+                  <input type="number" value={wonUpfront} onChange={e=>setWonUpfront(e.target.value)}
+                    className="border-2 border-gray-200 rounded-xl px-3 py-2 text-sm font-semibold text-gray-800 outline-none focus:border-orange-400 w-full"
+                    placeholder="e.g. 5198"/>
+                </div>
+              )}
+            </div>
+            <button onClick={submitWon} disabled={submittingWon||!wonMonthly||Number(wonMonthly)<=0}
+              className="w-full py-2.5 rounded-xl text-sm font-black text-white transition-all"
+              style={{background:submittingWon||!wonMonthly||Number(wonMonthly)<=0?'#d1d5db':'#22c55e'}}>
+              {submittingWon?'Saving…':'✅ Confirm Won'}
+            </button>
+          </div>
+        </div>
+      )}
+      {/* Lost reason modal */}
+      {showLostModal&&(
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-5 w-full max-w-sm flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <span className="font-black text-gray-900 text-sm">✕ Mark as Lost</span>
+              <button onClick={()=>setShowLostModal(false)} className="text-gray-400 hover:text-gray-600 text-lg leading-none">✕</button>
+            </div>
+            <div className="text-[11px] text-gray-500 -mt-2">Why did <span className="font-bold text-gray-700">{deal.BusinessName}</span> not go ahead?</div>
+            <div className="flex flex-wrap gap-2">
+              {LOST_REASONS.map(r=>(
+                <button key={r} onClick={()=>toggleLostReason(r)}
+                  className="px-3 py-1.5 rounded-lg text-[11px] font-bold border-2 transition-all"
+                  style={{background:lostReasons.includes(r)?'#fef2f2':'#f9fafb',color:lostReasons.includes(r)?'#dc2626':'#6b7280',borderColor:lostReasons.includes(r)?'#fca5a5':'#e5e7eb'}}>
+                  {r}
+                </button>
+              ))}
+            </div>
+            {lostReasons.length>0&&<div className="text-[10px] text-gray-400">{lostReasons.length}/3 selected</div>}
+            <textarea value={lostNote} onChange={e=>setLostNote(e.target.value)}
+              placeholder={lostCommentRequired?"Required — explain 'Other'...":"Optional note..."}
+              className="border-2 border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 outline-none focus:border-orange-400 resize-none h-16"/>
+            <button onClick={submitLost} disabled={submittingLost||!lostCanSubmit}
+              className="w-full py-2.5 rounded-xl text-sm font-black text-white transition-all"
+              style={{background:submittingLost||!lostCanSubmit?'#d1d5db':'#ef4444'}}>
+              {submittingLost?'Saving…':'Confirm Lost'}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
