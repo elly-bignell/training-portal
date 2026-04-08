@@ -175,6 +175,10 @@ function DealCard({deal,onStatusChange,onReschedule,onGTHToggle,canEdit,overdue}
   const [lostReasons,setLostReasons]=useState<string[]>([]);
   const [lostNote,setLostNote]=useState('');
   const [submittingLost,setSubmittingLost]=useState(false);
+  const [showWonModal,setShowWonModal]=useState(false);
+  const [wonMonthly,setWonMonthly]=useState('');
+  const [wonUpfront,setWonUpfront]=useState('');
+  const [submittingWon,setSubmittingWon]=useState(false);
 
   const LOST_REASONS=['Too expensive','Gone MIA','Competitor','Not DM / no sign off','Wrong timing','Other'];
 
@@ -191,6 +195,17 @@ function DealCard({deal,onStatusChange,onReschedule,onGTHToggle,canEdit,overdue}
     setSubmittingLost(true);
     await onStatusChange(deal.id,'Lost',{LostReason:lostReasons.join(', '),LostNote:lostNote.trim()||undefined});
     setShowLostModal(false);setLostReasons([]);setLostNote('');setSubmittingLost(false);
+  }
+
+  async function submitWon(){
+    setSubmittingWon(true);
+    const monthly=Number(wonMonthly)||deal.MonthlyValue;
+    const weekly=Math.round((monthly*12)/52*1.1*100)/100;
+    const extra:Record<string,unknown>={MonthlyValue:monthly,WeeklyValue:weekly};
+    const upfront=Number(wonUpfront);
+    if(upfront>0) extra.UpfrontValue=upfront;
+    await onStatusChange(deal.id,'Won',extra);
+    setShowWonModal(false);setWonMonthly('');setWonUpfront('');setSubmittingWon(false);
   }
 
   async function handleStatus(s:Status,extra?:Record<string,unknown>){
@@ -284,7 +299,12 @@ function DealCard({deal,onStatusChange,onReschedule,onGTHToggle,canEdit,overdue}
               </button>
               <div className="flex-1"/>
               {(['Active','Won','Lost'] as Status[]).map(s=>(
-                <button key={s} onClick={()=>handleStatus(s)} disabled={changing||deal.Status===s}
+                <button key={s} disabled={changing||deal.Status===s}
+                  onClick={()=>{
+                    if(s==='Won'){setWonMonthly(String(deal.MonthlyValue));setWonUpfront(deal.UpfrontValue?String(deal.UpfrontValue):'');setShowWonModal(true);}
+                    else if(s==='Lost'){setShowLostModal(true);}
+                    else handleStatus(s);
+                  }}
                   className="rounded-lg px-2.5 py-1 text-[9px] font-black border transition-all"
                   style={{background:deal.Status===s?STATUS_COLORS[s].bg:'#f9fafb',color:deal.Status===s?STATUS_COLORS[s].text:'#9ca3af',borderColor:deal.Status===s?STATUS_COLORS[s].border:'#e5e7eb'}}>
                   {s==='Active'?'Active':s==='Won'?'🏆 Won':'✕ Lost'}
