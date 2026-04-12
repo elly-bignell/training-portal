@@ -435,7 +435,7 @@ function BucketVisual({bucket,deals,targetValue}:{bucket:Bucket;deals:Deal[];tar
       </div>
       <div className="text-center">
         <div className="text-xs font-black text-gray-700">{fmt$(totalM)}</div>
-        <div className="text-[10px] text-gray-400">of {fmt$(targetValue)} <span className="text-gray-300">·</span> {fmt$(Math.round(targetValue/4.33/100)*100)}/wk</div>
+        <div className="text-[10px] text-gray-400">of {fmt$(targetValue)} <span className="text-gray-300">·</span> {fmt$(Math.round(targetValue*12/52*1.1/100)*100)}/wk</div>
         {wonM>0&&<div className="text-[10px] text-emerald-600 font-semibold">🏆 {fmt$(wonM)} won</div>}
       </div>
     </div>
@@ -576,7 +576,7 @@ export default function PipelinePage(){
     const map:Record<Bucket,number>={'Week 1':0,'Week 2':0,'Week 3':0,'Week 4':0,'Week 5+':0};
     deals.filter(d=>d.Status==='Active').forEach(d=>{
       const bucket = d.CloseDate ? getWeekBucket(d.CloseDate) : d.WeekBucket;
-      map[bucket]+=d.MonthlyValue;
+      map[bucket]+=d.WeeklyValue;
     });
     return map;
   },[deals]);
@@ -773,7 +773,7 @@ export default function PipelinePage(){
                         'Week 5+':dayIdx*200,
                       };
                       return(['Week 1','Week 2','Week 3','Week 4','Week 5+'] as Bucket[]).map(b=>{
-                      const wkVal=Math.round(totalByBucket[b]/4.33);
+                      const wkVal=Math.round(totalByBucket[b]);
                       const wkTarget=BUCKET_WK_TARGETS[b];
                       const diff=wkVal-wkTarget;
                       const ahead=diff>=0;
@@ -936,8 +936,8 @@ export default function PipelinePage(){
               ):(
                 <div className="flex flex-col gap-8">
                   {groupDealsByDay(dealsForView).map(({dateStr,label,deals:dayDeals,overdue})=>{
-                    const gthWeekly=dayDeals.reduce((a,d)=>d.GTH==='GTH'?a+d.WeeklyValue:a,0);
-                    const nonGthWeekly=dayDeals.reduce((a,d)=>d.GTH!=='GTH'?a+d.WeeklyValue:a,0);
+                    const gthWeekly=dayDeals.filter(d=>d.Status==='Active').reduce((a,d)=>d.GTH==='GTH'?a+d.WeeklyValue:a,0);
+                    const nonGthWeekly=dayDeals.filter(d=>d.Status==='Active').reduce((a,d)=>d.GTH!=='GTH'?a+d.WeeklyValue:a,0);
                     const totalWeekly=gthWeekly+nonGthWeekly;
                     return(
                       <div key={dateStr}>
