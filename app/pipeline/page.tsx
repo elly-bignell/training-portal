@@ -732,8 +732,8 @@ export default function PipelinePage(){
 
             {/* Exec Summary */}
             {(()=>{
-              const totalMo=Object.values(totalByBucket).reduce((s,v)=>s+v,0);
-              const totalWk=Math.round(totalMo/4.33);
+              const totalWk=Math.round(Object.values(totalByBucket).reduce((s,v)=>s+v,0));
+              const totalMo=Math.round(totalWk/12*52/1.1);
               const totalMoRounded=Math.round(totalMo/100)*100;
               const diffWk=totalWk-PIPE_MIN_WK;
               const diffMo=Math.round(totalMo-PIPE_MIN_MO);
