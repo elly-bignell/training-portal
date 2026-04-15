@@ -8,8 +8,6 @@ import { getTraineeBySlug } from "@/data/trainees";
 import { isSenior, isJunior } from "@/data/buddyPairs";
 import PasswordGate from "@/components/PasswordGate";
 import Scorecard from "@/components/Scorecard";
-import EasterPromoSenior from "@/components/EasterPromoSenior";
-import EasterPromoJunior from "@/components/EasterPromoJunior";
 import ScorecardRulesSenior from "@/components/ScorecardRulesSenior";
 import RennieDealTracker from "@/components/RennieDealTracker";
 import ScorecardRulesJunior from "@/components/ScorecardRulesJunior";
@@ -37,8 +35,6 @@ function ScorecardPageContent() {
     );
   }
 
-  const showSeniorEaster = isSenior(slug);
-  const showJuniorEaster = isJunior(slug);
 
   return (
     <main className="min-h-screen bg-slate-100">
@@ -86,14 +82,7 @@ function ScorecardPageContent() {
         {/* Existing Scorecard — untouched */}
         <Scorecard traineeSlug={slug} traineeName={trainee.name} />
 
-        {/* Easter Promotion Section */}
-        {showSeniorEaster && (
-          <EasterPromoSenior traineeSlug={slug} traineeName={trainee.name} />
-        )}
-        {showJuniorEaster && (
-          <EasterPromoJunior traineeSlug={slug} traineeName={trainee.name} />
-        )}
-        
+
 
         {slug === "thomas-rennie" && <RennieDealTracker date={new Date().toLocaleDateString("en-CA")} />}
         {isSenior(slug) && <ScorecardRulesSenior slug={slug} />}

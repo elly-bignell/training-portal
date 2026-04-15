@@ -26,12 +26,7 @@ export default function ScorecardRulesJunior({ slug }: { slug: string }) {
             If {buddyName} <strong>closes</strong> a deal that <strong>you booked</strong>, you mark <strong>0.5</strong> on your Sales Units tile and enter <strong>50%</strong> of the deal value in your Sales Revenue tile. {buddyName} will do the same on their side.
           </p>
         </div>
-        <div className="flex gap-2">
-          <span className="text-slate-400 font-bold shrink-0">3.</span>
-          <p>
-            Any Quodo booking you make during the Easter Promotion needs to be logged <strong>twice</strong> — +1 Booking on your regular scorecard (top) <strong>and</strong> +1 Booking in the Easter Promo section below.
-          </p>
-        </div>
+
       </div>
     </div>
   );

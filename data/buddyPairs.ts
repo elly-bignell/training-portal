@@ -1,6 +1,6 @@
 // data/buddyPairs.ts
 
-// Senior (sales) → Junior (lead gen) buddy pairs
+// Senior (sales) → primary Junior (lead gen) buddy pairs
 export const buddyPairs: Record<string, string> = {
   "lucas-tirri": "cindy-rose-rondez-manrique",
   "felipe-garcia": "sydney-arnold",
@@ -8,9 +8,11 @@ export const buddyPairs: Record<string, string> = {
 };
 
 // Reverse lookup: Junior → Senior
-export const reverseBuddyPairs: Record<string, string> = Object.fromEntries(
-  Object.entries(buddyPairs).map(([senior, junior]) => [junior, senior])
-);
+// Riley is also paired with Lucas (two juniors, one senior)
+export const reverseBuddyPairs: Record<string, string> = {
+  ...Object.fromEntries(Object.entries(buddyPairs).map(([senior, junior]) => [junior, senior])),
+  "riley-kerrison": "lucas-tirri",
+};
 
 // Friendly names for display
 export const buddyNames: Record<string, string> = {
@@ -20,6 +22,7 @@ export const buddyNames: Record<string, string> = {
   "cindy-rose-rondez-manrique": "Cindy",
   "sydney-arnold": "Sydney",
   "krishna-patel": "Krishna",
+  "riley-kerrison": "Riley",
 };
 
 export function isSenior(slug: string): boolean {
