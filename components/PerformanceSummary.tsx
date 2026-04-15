@@ -57,6 +57,7 @@ const TRAINEES_WITH_TARGET = new Set([
   "sydney-arnold",
   "krishna-patel",
   "thomas-rennie",
+  "riley-kerrison",
 ]);
 
 // Booking targets
@@ -67,26 +68,47 @@ const TEAM_BOOKINGS_TARGET_EOW = 35; // 7/day × 5 days
 // Days of the week
 const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
-// Week-on-board badges per lead gen trainee
-const WEEK_BADGES: Record<string, { label: string; color: string; bg: string }> = {
-  "cindy-rose-rondez-manrique": { label: "Wk 6", color: "#16a34a", bg: "#dcfce7" },
-  "krishna-patel":              { label: "Wk 6", color: "#16a34a", bg: "#dcfce7" },
-  "riley-kerrison":             { label: "Wk 0", color: "#7c3aed", bg: "#ede9fe" },
-  "sydney-arnold":              { label: "Wk 1", color: "#2563eb", bg: "#dbeafe" },
+// Program start week (0-indexed from Feb 16) for each lead gen trainee
+const TRAINEE_PROGRAM_START_WEEK: Record<string, number> = {
+  "cindy-rose-rondez-manrique": 0,
+  "krishna-patel":              0,
+  "sydney-arnold":              5,
+  "riley-kerrison":             6,
 };
 
-// Week date ranges for display
-const weekDateRanges: Record<number, string> = {
-  0: "Mon 16 Feb – Fri 20 Feb",
-  1: "Mon 23 Feb – Fri 27 Feb",
-  2: "Mon 2 Mar – Fri 6 Mar",
-  3: "Mon 9 Mar – Fri 13 Mar",
-  4: "Mon 16 Mar – Fri 20 Mar",
-  5: "Mon 23 Mar – Fri 27 Mar",
-  6: "Mon 30 Mar – Fri 3 Apr",
-  7: "Mon 6 Apr – Fri 10 Apr",
-  8: "Mon 13 Apr – Fri 17 Apr",
-};
+function getWeekBadge(slug: string, currentWeek: number): { label: string; color: string; bg: string } | null {
+  if (!(slug in TRAINEE_PROGRAM_START_WEEK)) return null;
+  const weeksIn = Math.max(0, currentWeek - TRAINEE_PROGRAM_START_WEEK[slug]);
+  let color: string, bg: string;
+  if (weeksIn === 0)      { color = "#7c3aed"; bg = "#ede9fe"; } // purple — training
+  else if (weeksIn <= 3)  { color = "#2563eb"; bg = "#dbeafe"; } // blue — early ramp
+  else if (weeksIn <= 6)  { color = "#d97706"; bg = "#fef3c7"; } // amber — mid ramp
+  else                    { color = "#16a34a"; bg = "#dcfce7"; } // green — established
+  return { label: `Wk ${weeksIn}`, color, bg };
+}
+
+// Calendar week helper (ISO-ish week of year in Adelaide time)
+function getCalendarWeekInfo(): { week: number; pct: number; remaining: number } {
+  const now = new Date();
+  const str = now.toLocaleDateString("en-CA", { timeZone: "Australia/Adelaide" });
+  const [y, m, d] = str.split("-").map(Number);
+  const startOfYear = new Date(Date.UTC(y, 0, 1));
+  const today = new Date(Date.UTC(y, m - 1, d));
+  const dayOfYear = Math.floor((today.getTime() - startOfYear.getTime()) / 86400000) + 1;
+  const week = Math.ceil(dayOfYear / 7);
+  const pct = Math.round((week / 52) * 100);
+  return { week, pct, remaining: 100 - pct };
+}
+
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const WEEK0_BASE = new Date(Date.UTC(2026, 1, 16)); // Mon 16 Feb 2026
+
+function getWeekDateRange(weekNum: number): string {
+  const mon = new Date(WEEK0_BASE.getTime() + weekNum * 7 * 86400000);
+  const fri = new Date(mon.getTime() + 4 * 86400000);
+  const fmt = (d: Date) => `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}`;
+  return `Mon ${fmt(mon)} – Fri ${fmt(fri)}`;
+}
 
 // Week 0 ramp booking targets (Mon=0 … Fri=4) — applies to any Week 0 trainee
 const WEEK0_TRAINEE_BOOKING_TARGETS = [3, 4, 5, 6, 7];
@@ -139,38 +161,13 @@ function getTeamBookingStatusClass(actual: number, target: number): string {
   return "text-red-500 font-bold";
 }
 
-function getWeekLabel(currentWeek: number) {
-  if (currentWeek === 0) return "Training Week";
-  if (currentWeek === 6) return "Week 6 — The Standard";
-  if (currentWeek > 6) return `Week ${currentWeek} — Maintaining`;
-  return `Week ${currentWeek} — Ramp Up`;
-}
 
-function getWeekPhaseTag(currentWeek: number) {
-  if (currentWeek === 0) return { label: "Training", color: "bg-blue-100 text-blue-700" };
-  if (currentWeek === 6) return { label: "🎯 The Standard", color: "bg-[#E6017D]/10 text-[#E6017D]" };
-  if (currentWeek > 6) return { label: "Maintain", color: "bg-[#84D4BD]/20 text-teal-700" };
-  return { label: "Ramp", color: "bg-slate-100 text-slate-600" };
-}
 
-// Generate the 5 weekday dates for a given week
+// Generate the 5 weekday dates for a given week (dynamic, unbounded)
 function getWeekDates(weekNum: number): string[] {
-  const weekConfigs: Record<number, string> = {
-    0: "2026-02-16",
-    1: "2026-02-23",
-    2: "2026-03-02",
-    3: "2026-03-09",
-    4: "2026-03-16",
-    5: "2026-03-23",
-    6: "2026-03-30",
-    7: "2026-04-06",
-    8: "2026-04-13",
-  };
-  const startStr = weekConfigs[weekNum] || weekConfigs[0];
-  const [year, month, day] = startStr.split("-").map(Number);
   const dates: string[] = [];
   for (let i = 0; i < 5; i++) {
-    const d = new Date(Date.UTC(year, month - 1, day + i));
+    const d = new Date(WEEK0_BASE.getTime() + (weekNum * 7 + i) * 86400000);
     dates.push(d.toISOString().split("T")[0]);
   }
   return dates;
@@ -270,7 +267,7 @@ export default function PerformanceSummary() {
     );
   }
 
-  const phaseTag = getWeekPhaseTag(currentWeek);
+  const calWeek = getCalendarWeekInfo();
   const dataMap = new Map(weekData.map((t) => [t.slug, t]));
 
   // Get team day totals
@@ -324,12 +321,12 @@ export default function PerformanceSummary() {
             <div>
               <h3 className="text-lg font-bold text-gray-800">📊 Calls & Bookings</h3>
               <div className="flex items-center gap-2 mt-1">
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${phaseTag.color}`}>
-                  {phaseTag.label}
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                  Week {calWeek.week}/52
                 </span>
-                <span className="text-sm text-gray-600">{getWeekLabel(currentWeek)}</span>
+                <span className="text-sm text-gray-500">{calWeek.pct}% of year used · {calWeek.remaining}% remaining</span>
               </div>
-              <p className="text-sm text-gray-400 mt-1">{weekDateRanges[currentWeek]}</p>
+              <p className="text-sm text-gray-400 mt-1">{getWeekDateRange(currentWeek)}</p>
             </div>
             <Link href="/roadmap" className="text-sm text-[#E6017D] hover:underline">
               View Standards →
@@ -393,14 +390,14 @@ export default function PerformanceSummary() {
                             >
                               {td.name}
                             </Link>
-                            {WEEK_BADGES[td.slug] && (
+                            {(() => { const badge = getWeekBadge(td.slug, currentWeek); return badge ? (
                               <span
                                 className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold"
-                                style={{ color: WEEK_BADGES[td.slug].color, background: WEEK_BADGES[td.slug].bg }}
+                                style={{ color: badge.color, background: badge.bg }}
                               >
-                                {WEEK_BADGES[td.slug].label}
+                                {badge.label}
                               </span>
-                            )}
+                            ) : null; })()}
                           </td>
                           <td className="px-1 py-1.5 text-center">
                             <span className="text-[10px] text-gray-400 uppercase font-semibold">Book</span>
@@ -637,7 +634,7 @@ export default function PerformanceSummary() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="p-4 border-b border-gray-100">
           <h3 className="text-lg font-bold text-gray-800">📈 Meetings, Units & Revenue</h3>
-          <p className="text-sm text-gray-400 mt-1">{weekDateRanges[currentWeek]}</p>
+          <p className="text-sm text-gray-400 mt-1">{getWeekDateRange(currentWeek)}</p>
         </div>
 
         <div className="overflow-x-auto">

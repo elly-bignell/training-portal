@@ -48,31 +48,17 @@ export const WEEK0_RAMP: Record<number, DailyActivity> = {
   4: { calls_made: 0, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 },
 };
 
-// Week start dates (Sundays before each Monday)
-const weekStartDates: Record<number, string> = {
-  0: "2026-02-15", // Training: Sun before Mon 16 Feb
-  1: "2026-02-22", // Week 1: Sun before Mon 23 Feb
-  2: "2026-03-01",
-  3: "2026-03-08",
-  4: "2026-03-15",
-  5: "2026-03-22",
-  6: "2026-03-29",
-  7: "2026-04-05",
-  8: "2026-04-12",
-};
+// Week 0 started Mon 16 Feb 2026 — all weeks computed dynamically from this base
+const WEEK0_MONDAY = new Date(Date.UTC(2026, 1, 16)); // Feb 16 2026
 
-// Get current week number based on Adelaide time
+// Get current week number based on Adelaide time (0 = week of Feb 16, unbounded)
 export function getCurrentWeekNumber(): number {
   const now = new Date();
-  const adelaide = new Date(now.toLocaleString("en-US", { timeZone: "Australia/Adelaide" }));
-  
-  for (let i = 8; i >= 0; i--) {
-    const weekStart = new Date(weekStartDates[i]);
-    if (adelaide >= weekStart) {
-      return i;
-    }
-  }
-  return 0;
+  const adelaideStr = now.toLocaleDateString("en-CA", { timeZone: "Australia/Adelaide" });
+  const [y, m, d] = adelaideStr.split("-").map(Number);
+  const adelaideMidnight = new Date(Date.UTC(y, m - 1, d));
+  const diffMs = adelaideMidnight.getTime() - WEEK0_MONDAY.getTime();
+  return Math.max(0, Math.floor(diffMs / (7 * 86400000)));
 }
 
 // Get Adelaide date string
@@ -80,16 +66,13 @@ function getAdelaideDate(): string {
   return new Date().toLocaleDateString("en-CA", { timeZone: "Australia/Adelaide" });
 }
 
-// Get week boundaries for a given week number
+// Get week boundaries for a given week number (dynamic)
 export function getWeekBoundaries(weekNum: number): { start: string; end: string } {
-  const startDate = new Date(weekStartDates[weekNum]);
-  startDate.setDate(startDate.getDate() + 1); // Monday
-  const endDate = new Date(startDate);
-  endDate.setDate(endDate.getDate() + 4); // Friday
-  
+  const monday = new Date(WEEK0_MONDAY.getTime() + weekNum * 7 * 86400000);
+  const friday = new Date(monday.getTime() + 4 * 86400000);
   return {
-    start: startDate.toISOString().split("T")[0],
-    end: endDate.toISOString().split("T")[0],
+    start: monday.toISOString().split("T")[0],
+    end: friday.toISOString().split("T")[0],
   };
 }
 
