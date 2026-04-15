@@ -34,10 +34,7 @@ export const weeklyStandards: Record<number, DailyActivity> = {
 };
 
 // Per-trainee week number overrides (slug → effective week for standards/display)
-export const TRAINEE_WEEK_OVERRIDES: Record<string, number> = {
-  "sydney-arnold": 1, // Sydney is in Week 1
-  "riley-kerrison": 0,  // Riley is in Week 0 (Training Week)
-};
+export const TRAINEE_WEEK_OVERRIDES: Record<string, number> = {};
 
 // Sydney Week 0 ramp-up targets by day (0 = Mon, 1 = Tue, 2 = Wed, 3 = Thu, 4 = Fri)
 export const WEEK0_RAMP: Record<number, DailyActivity> = {
