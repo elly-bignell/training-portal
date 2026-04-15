@@ -94,6 +94,12 @@ export const trainees: Trainee[] = [
     startDate: "2026-03-27",
   },
   {
+    id: "khushi-patel",
+    name: "Khushi Patel",
+    slug: "khushi-patel",
+    startDate: "2026-04-15",
+  },
+  {
     id: "sydney-arnold",
     name: "Sydney Arnold",
     slug: "sydney-arnold",
