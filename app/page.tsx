@@ -367,8 +367,8 @@ function HomeContent() {
           <div className="space-y-4">
             {(() => {
               const CS_APPLICANT_SLUGS: string[] = [];
-              const NO_SCORECARD_SLUGS = ["dasha-axenova", "jeremy-valiente", "shani-thomas", "khushi-patel"];
-              return ["jeremy-valiente", "dasha-axenova", "shani-thomas", "khushi-patel"]
+              const NO_SCORECARD_SLUGS = ["dasha-axenova", "jeremy-valiente", "shani-thomas", "khushi-patel", "lauren-kim"];
+              return ["jeremy-valiente", "dasha-axenova", "shani-thomas", "khushi-patel", "lauren-kim"]
                 .map(s => trainees.find(t => t.slug === s)!)
                 .filter(Boolean)
                 .map((trainee) => {
@@ -432,7 +432,7 @@ function HomeContent() {
           </h2>
           {(() => {
             const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold", "riley-kerrison"];
-            const CS_SLUGS = ["jeremy-valiente", "dasha-axenova", "shani-thomas", "khushi-patel"];
+            const CS_SLUGS = ["jeremy-valiente", "dasha-axenova", "shani-thomas", "khushi-patel", "lauren-kim"];
             const ARCHIVED_SLUGS = ["connie-matthews", "reegan-james", "rachel-astachnowicz", "aston-marsh"];
 
             return trainees.filter((t) => !ARCHIVED_SLUGS.includes(t.slug)).map((trainee) => {
