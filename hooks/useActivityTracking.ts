@@ -23,14 +23,14 @@ interface WeeklyData {
 // Revenue: $350 per deal
 export const weeklyStandards: Record<number, DailyActivity> = {
   0: { calls_made: 0, calls: 0, bookings: 0, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 }, // Training
-  1: { calls_made: 125, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  2: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  3: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  4: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  5: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  6: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 }, // The Standard
-  7: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  8: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  1: { calls_made: 120, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  2: { calls_made: 120, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  3: { calls_made: 120, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  4: { calls_made: 120, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  5: { calls_made: 120, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  6: { calls_made: 120, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  7: { calls_made: 120, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  8: { calls_made: 120, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
 };
 
 // Per-trainee week number overrides (slug → effective week for standards/display)
