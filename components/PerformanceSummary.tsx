@@ -110,37 +110,13 @@ function getWeekDateRange(weekNum: number): string {
   return `Mon ${fmt(mon)} – Fri ${fmt(fri)}`;
 }
 
-// Week 0 ramp booking targets (Mon=0 … Fri=4) — applies to any Week 0 trainee
-const WEEK0_TRAINEE_BOOKING_TARGETS = [3, 4, 5, 6, 7];
-const WEEK0_BUDDY_BOOKING_TARGETS   = [4, 3, 2, 1, 0];
-const WEEK0_TRAINEE_EOW = 25; // 3+4+5+6+7
-const WEEK0_BUDDY_EOW   = 10; // 4+3+2+1+0
-
-// Map each Week 0 trainee → the buddy who picks up the slack
-const WEEK0_BUDDIES: Record<string, string> = {
-  "riley-kerrison": "lucas-tirri",
-};
-
-function getIndividualDayTarget(slug: string, dayIdx: number): number {
-  // Is this slug a Week 0 trainee?
-  if (TRAINEE_WEEK_OVERRIDES[slug] === 0) {
-    return WEEK0_TRAINEE_BOOKING_TARGETS[dayIdx] ?? 7;
-  }
-  // Is this slug the buddy of an active Week 0 trainee?
-  const week0Trainee = Object.keys(WEEK0_BUDDIES).find(
-    (t) => WEEK0_BUDDIES[t] === slug && TRAINEE_WEEK_OVERRIDES[t] === 0
-  );
-  if (week0Trainee) return WEEK0_BUDDY_BOOKING_TARGETS[dayIdx] ?? 0;
+// Individual day and EOW booking targets — flat 7/day for all trainees with target
+function getIndividualDayTarget(slug: string, _dayIdx: number): number {
   return TRAINEES_WITH_TARGET.has(slug) ? TRAINEE_BOOKINGS_TARGET_DAILY : 0;
 }
 
 function getIndividualEowTarget(slug: string): number {
-  if (TRAINEE_WEEK_OVERRIDES[slug] === 0) return WEEK0_TRAINEE_EOW;
-  const week0Trainee = Object.keys(WEEK0_BUDDIES).find(
-    (t) => WEEK0_BUDDIES[t] === slug && TRAINEE_WEEK_OVERRIDES[t] === 0
-  );
-  if (week0Trainee) return WEEK0_BUDDY_EOW;
-  return TRAINEES_WITH_TARGET.has(slug) ? TEAM_BOOKINGS_TARGET_EOW : 0;
+  return TRAINEES_WITH_TARGET.has(slug) ? TRAINEE_BOOKINGS_TARGET_DAILY * 5 : 0;
 }
 
 // Per-team targets based on how many trainees with targets are in the team
