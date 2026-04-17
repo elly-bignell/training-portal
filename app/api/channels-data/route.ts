@@ -40,11 +40,19 @@ async function fetchTable(table: string, fields: string[], formula?: string): Pr
   return records;
 }
 
-type Bucket = { calls: number; callBooks: number; validated: number; rejected: number; htl: number };
+type Bucket = {
+  calls: number;
+  callBooks: number;
+  callMeetings: number; // for ch3: meetings ÷ bookings
+  validated: number;
+  rejected: number;
+  htl: number;
+};
 
 function mkBuckets(count: number): Record<number, Bucket> {
   const m: Record<number, Bucket> = {};
-  for (let i = 1; i <= count; i++) m[i] = { calls: 0, callBooks: 0, validated: 0, rejected: 0, htl: 0 };
+  for (let i = 1; i <= count; i++)
+    m[i] = { calls: 0, callBooks: 0, callMeetings: 0, validated: 0, rejected: 0, htl: 0 };
   return m;
 }
 
@@ -53,15 +61,17 @@ const r1 = (n: number) => Math.round(n * 10) / 10;
 function formatBuckets(buckets: Record<number, Bucket>, curWeek: number) {
   return Object.entries(buckets).map(([k, b]) => {
     const w      = parseInt(k);
-    const ch1    = b.calls > 0 ? r1((b.callBooks / b.calls) * 100) : null;
+    const ch1    = b.calls > 0     ? r1((b.callBooks    / b.calls)     * 100) : null;
+    const ch3    = b.callBooks > 0 ? r1((b.callMeetings / b.callBooks) * 100) : null;
     const valRej = b.validated + b.rejected;
-    const ch2    = valRej > 0 ? r1((b.validated / valRej) * 100) : null;
-    const htlRate = (valRej + b.htl) > 0 ? r1((b.htl / (valRej + b.htl)) * 100) : null;
+    const ch2    = valRej > 0      ? r1((b.validated    / valRej)      * 100) : null;
+    const htlRate = (valRej + b.htl) > 0
+      ? r1((b.htl / (valRej + b.htl)) * 100) : null;
     return {
       weekNum: w,
       isCurrentWeek: w === curWeek,
-      ch1, ch2, htlRate,
-      calls: b.calls, callBooks: b.callBooks,
+      ch1, ch2, ch3, htlRate,
+      calls: b.calls, callBooks: b.callBooks, callMeetings: b.callMeetings,
       validated: b.validated, rejected: b.rejected, htl: b.htl,
     };
   }).sort((a, b) => a.weekNum - b.weekNum);
@@ -73,7 +83,7 @@ export async function GET() {
     const curTeamWk = weekNum(today, TEAM_START);
 
     const [dailyRecs, bookingRecs] = await Promise.all([
-      fetchTable('DailyActivity', ['trainee_slug', 'date', 'calls', 'bookings']),
+      fetchTable('DailyActivity', ['trainee_slug', 'date', 'calls', 'bookings', 'meetings']),
       fetchTable('Bookings', ['booking_date', 'staff_member', 'status'], `NOT({status}="pending")`),
     ]);
 
@@ -84,33 +94,43 @@ export async function GET() {
       buckets: mkBuckets(weekNum(today, s.startDate)),
     }));
 
+    // DailyActivity → ch1 (calls→books) + ch3 (books→meetings)
     for (const rec of dailyRecs) {
       const f = rec.fields;
-      if (!f.date || !f.trainee_slug || !(f.calls > 0)) continue;
+      if (!f.date || !f.trainee_slug) continue;
       const st = staffAcc.find(s => s.slug === f.trainee_slug);
       if (!st) continue;
-      const calls = f.calls as number;
-      const books = (f.bookings ?? 0) as number;
+      const calls    = (f.calls    ?? 0) as number;
+      const books    = (f.bookings ?? 0) as number;
+      const meetings = (f.meetings ?? 0) as number;
+      if (calls === 0 && books === 0) continue;
+
       const tw = weekNum(f.date, TEAM_START);
       const pw = weekNum(f.date, st.startDate);
+
       if (tw >= 1 && tw <= TEAM_TOTAL_WEEKS) {
-        teamBuckets[tw].calls     += calls;
-        teamBuckets[tw].callBooks += books;
+        teamBuckets[tw].calls         += calls;
+        teamBuckets[tw].callBooks     += books;
+        teamBuckets[tw].callMeetings  += meetings;
       }
       if (pw >= 1 && st.buckets[pw]) {
-        st.buckets[pw].calls     += calls;
-        st.buckets[pw].callBooks += books;
+        st.buckets[pw].calls         += calls;
+        st.buckets[pw].callBooks     += books;
+        st.buckets[pw].callMeetings  += meetings;
       }
     }
 
+    // Bookings → ch2 (book→validated) + HTL
     for (const rec of bookingRecs) {
       const f = rec.fields;
       if (!f.booking_date || !f.staff_member || !f.status) continue;
       const status = f.status as string;
       const st = staffAcc.find(s => (f.staff_member as string).includes(s.nameMatch));
       if (!st) continue;
+
       const tw = weekNum(f.booking_date, TEAM_START);
       const pw = weekNum(f.booking_date, st.startDate);
+
       const addTo = (b: Bucket) => {
         if (status === 'validated')          b.validated++;
         else if (status === 'rejected')      b.rejected++;
@@ -121,7 +141,7 @@ export async function GET() {
     }
 
     return NextResponse.json({
-      team:  { weeks: formatBuckets(teamBuckets, curTeamWk) },
+      team:  { weeks: formatBuckets(teamBuckets,  curTeamWk) },
       staff: staffAcc.map(s => ({
         name: s.name, avatar: s.avatar, color: s.color,
         currentWeekNum: s.curWk,
