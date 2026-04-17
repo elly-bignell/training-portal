@@ -19,7 +19,7 @@ type WeekRow = {
   htlRate: number | null;
   htl: number;
   calls: number; callBooks: number; callMeetings: number;
-  validated: number; rejected: number;
+  validated: number; rejected: number; naRetry: number;
 };
 
 type PersonData = {
