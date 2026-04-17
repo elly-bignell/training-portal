@@ -1308,7 +1308,7 @@ export default function CallFlowchartPage() {
                   <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
                   <h3 className="font-bold text-slate-900 text-sm mb-2">Reconnect &amp; Reiterate</h3>
                   <p className="text-slate-600 text-sm italic leading-relaxed">
-                    &ldquo;Now, I know we caught up [timeframe] and had a bit of a chat about your website and how it was performing online. I&apos;ve kept an eye on things and I&apos;ve noticed your traffic hasn&apos;t really increased over the last 6&ndash;12 months, so I thought it might be worth your while reconnecting &mdash; I&apos;ve got a few different ideas I wouldn&apos;t mind sharing with you.&rdquo;
+                    &ldquo;Now, obviously we caught up &mdash; you spoke with my right-hand man/woman [Previous Team Member] going back [timeframe], talking about getting your website fixed up. I&apos;ve noticed nothing&apos;s changed and I assume you&apos;ve been busy and haven&apos;t really had the time to get to it.&rdquo;
                   </p>
                 </div>
 
@@ -1319,7 +1319,7 @@ export default function CallFlowchartPage() {
                   <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
                   <h3 className="font-bold text-slate-900 text-sm mb-2">Reconnect &amp; Reiterate</h3>
                   <p className="text-slate-600 text-sm italic leading-relaxed">
-                    &ldquo;Now, obviously we caught up &mdash; you spoke with my right-hand man/woman [Previous Team Member] going back [timeframe], talking about getting your website fixed up. I&apos;ve noticed nothing&apos;s changed and I assume you&apos;ve been busy and haven&apos;t really had the time to get to it.&rdquo;
+                    &ldquo;Now, I know we caught up [timeframe] and had a bit of a chat about your website and how it was performing online. I&apos;ve kept an eye on things and I&apos;ve noticed your traffic hasn&apos;t really increased over the last 6&ndash;12 months, so I thought it might be worth your while reconnecting &mdash; I&apos;ve got a few different ideas I wouldn&apos;t mind sharing with you.&rdquo;
                   </p>
                 </div>
               </div>
