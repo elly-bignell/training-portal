@@ -1253,10 +1253,10 @@ export default function CallFlowchartPage() {
             </div>
 
             {/* Introduction */}
-            <div className="bg-slate-900 rounded-2xl p-6 mb-4 max-w-3xl mx-auto">
-              <div className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-3">SAY</div>
-              <h3 className="font-bold text-white text-base mb-3">Introduction</h3>
-              <p className="text-slate-300 text-sm italic leading-relaxed">
+            <div className="bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 mb-4 max-w-3xl mx-auto">
+              <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-500 mb-3">SAY</div>
+              <h3 className="font-bold text-slate-900 text-base mb-3">Introduction</h3>
+              <p className="text-slate-700 text-sm italic leading-relaxed">
                 &ldquo;Hi [Name], it&apos;s [Your Name] here from Marketing Sweet, how are you?&rdquo;
               </p>
             </div>
@@ -1341,10 +1341,10 @@ export default function CallFlowchartPage() {
                   </div>
                 </div>
 
-                <div className="bg-slate-900 rounded-2xl p-6 mb-6">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-3">SAY</div>
-                  <h3 className="font-bold text-white text-base mb-3">Go For Booking</h3>
-                  <p className="text-slate-300 text-sm italic leading-relaxed">
+                <div className="bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 mb-6">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-500 mb-3">SAY</div>
+                  <h3 className="font-bold text-slate-900 text-base mb-3">Go For Booking</h3>
+                  <p className="text-slate-700 text-sm italic leading-relaxed">
                     &ldquo;Are you available on [Day] at [Time]?&rdquo;
                   </p>
                 </div>
@@ -1411,11 +1411,11 @@ export default function CallFlowchartPage() {
                         &ldquo;Yeah, I&apos;m open to a chat.&rdquo;
                       </p>
                     </div>
-                    <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-                      <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">BOOK</div>
+                    <div className="bg-white border border-slate-200 rounded-xl p-4">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Set the Scene for the Meeting</h4>
                       <p className="text-slate-600 text-sm italic leading-relaxed">
-                        Proceed to <strong>Confirm Email</strong> &amp; offer to send example sites before the meeting. Then <strong>Warm Close</strong>.
+                        &ldquo;Awesome. I&apos;ll send through a few example sites we&apos;ve done &mdash; particularly for trade-based businesses like yours &mdash; so you&apos;ve got something to look at before we jump on the call. From there we&apos;ll walk you through our process and put together a tailored quote.&rdquo;
                       </p>
                     </div>
                   </div>
@@ -1567,10 +1567,10 @@ export default function CallFlowchartPage() {
                   </p>
                 </div>
 
-                <div className="bg-slate-900 rounded-2xl p-6 mb-6">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-3">SAY</div>
-                  <h3 className="font-bold text-white text-base mb-3">Go For Booking</h3>
-                  <p className="text-slate-300 text-sm italic leading-relaxed">
+                <div className="bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 mb-6">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-500 mb-3">SAY</div>
+                  <h3 className="font-bold text-slate-900 text-base mb-3">Go For Booking</h3>
+                  <p className="text-slate-700 text-sm italic leading-relaxed">
                     &ldquo;Are you available on [Day] at [Time]?&rdquo;
                   </p>
                 </div>
@@ -1637,11 +1637,11 @@ export default function CallFlowchartPage() {
                         &ldquo;Yeah, I&apos;m open to a chat.&rdquo;
                       </p>
                     </div>
-                    <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-                      <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">BOOK</div>
+                    <div className="bg-white border border-slate-200 rounded-xl p-4">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Set the Scene for the Meeting</h4>
                       <p className="text-slate-600 text-sm italic leading-relaxed">
-                        Proceed to <strong>Confirm Email</strong> &amp; <strong>Warm Close</strong> below. Mention that in the meeting you&apos;ll benchmark them against local competitors.
+                        &ldquo;Awesome. In the meeting I&apos;ll walk you through how you&apos;re currently performing online, benchmark you against some of your local competitors, and from there we&apos;ll put together a tailored quote. You can do with that information as you wish.&rdquo;
                       </p>
                     </div>
                   </div>
@@ -1788,20 +1788,20 @@ export default function CallFlowchartPage() {
                 <span className="inline-block bg-emerald-50 text-emerald-700 text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">If booked → close the loop</span>
               </div>
 
-              <div className="bg-slate-900 rounded-2xl p-6 mb-4">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-3">SAY</div>
-                <h3 className="font-bold text-white text-base mb-3">Confirm Email</h3>
-                <p className="text-slate-300 text-sm italic leading-relaxed">
+              <div className="bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 mb-4">
+                <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-500 mb-3">SAY</div>
+                <h3 className="font-bold text-slate-900 text-base mb-3">Confirm Email</h3>
+                <p className="text-slate-700 text-sm italic leading-relaxed">
                   &ldquo;Awesome, I&apos;ll book that in. We&apos;ll do it over Zoom so we can show you visually. Is your best email still [xyz@xyz.com.au]?&rdquo;
                 </p>
               </div>
 
               <div className="flex justify-center my-3 text-slate-300 text-xl">↓</div>
 
-              <div className="bg-slate-900 rounded-2xl p-6">
-                <div className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-3">BOOK</div>
-                <h3 className="font-bold text-white text-base mb-3">Warm Close</h3>
-                <p className="text-slate-300 text-sm italic leading-relaxed">
+              <div className="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-6">
+                <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-3">BOOK</div>
+                <h3 className="font-bold text-slate-900 text-base mb-3">Warm Close</h3>
+                <p className="text-slate-700 text-sm italic leading-relaxed">
                   &ldquo;Alright fantastic, thanks so much [Name] &mdash; look forward to catching up on [Day] at [Time]!&rdquo;
                 </p>
               </div>
