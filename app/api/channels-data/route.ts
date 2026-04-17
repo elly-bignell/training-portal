@@ -62,7 +62,7 @@ function formatBuckets(buckets: Record<number, Bucket>, curWeek: number) {
   return Object.entries(buckets).map(([k, b]) => {
     const w      = parseInt(k);
     const ch1    = b.calls > 0     ? r1((b.callBooks    / b.calls)     * 100) : null;
-    const ch3    = b.callBooks > 0 ? r1((b.callMeetings / b.callBooks) * 100) : null;
+    const ch3    = b.validated > 0 ? r1((b.callMeetings / b.validated) * 100) : null;
     const valRej = b.validated + b.rejected;
     const ch2    = valRej > 0      ? r1((b.validated    / valRej)      * 100) : null;
     const htlRate = (valRej + b.htl) > 0
