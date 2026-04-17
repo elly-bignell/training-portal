@@ -1033,7 +1033,7 @@ export default function CallFlowchartPage() {
                     <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
                       <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-2">SAY</div>
                       <p className="text-slate-500 text-sm italic leading-relaxed">
-                        &ldquo;Perfect. I&apos;ve actually got an opening at [Time] on [Day] — would that work for you?&rdquo;
+                        &ldquo;Perfect. I&apos;ve actually got an opening at [Time] on [Day] — would that work for you? It should only take 10 minutes.&rdquo;
                       </p>
                     </div>
                     <div className="flex justify-center my-2 text-slate-300">↓</div>
@@ -1057,7 +1057,7 @@ export default function CallFlowchartPage() {
                     <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
                       <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-2">SAY</div>
                       <p className="text-slate-500 text-sm italic leading-relaxed">
-                        &ldquo;No worries — is it just this week that&apos;s no good? We can look at something for next week instead if that suits better?&rdquo;
+                        &ldquo;No worries — is it just this week that&apos;s no good? We can look at something for next week instead if that suits better. It will only take 10 minutes.&rdquo;
                       </p>
                     </div>
                     <div className="flex justify-center my-2 text-slate-300">↓</div>
@@ -1131,7 +1131,7 @@ export default function CallFlowchartPage() {
                         &ldquo;No stress at all — don&apos;t worry about it.&rdquo;
                       </p>
                       <p className="text-slate-500 text-sm italic leading-relaxed">
-                        &ldquo;I&apos;ve already done all the prep and we&apos;re ready to rock and roll. It&apos;ll only take about 15 minutes.&rdquo;
+                        &ldquo;I&apos;ve already done all the prep and we&apos;re ready to rock and roll. It&apos;ll only take about 10 minutes.&rdquo;
                       </p>
                     </div>
                     <div className="flex justify-center my-2 text-slate-300">↓</div>
