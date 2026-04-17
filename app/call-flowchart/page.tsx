@@ -1411,13 +1411,7 @@ export default function CallFlowchartPage() {
                         &ldquo;Yeah, I&apos;m open to a chat.&rdquo;
                       </p>
                     </div>
-                    <div className="bg-white border border-slate-200 rounded-xl p-4">
-                      <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                      <h4 className="font-bold text-slate-900 text-sm mb-2">Set the Scene for the Meeting</h4>
-                      <p className="text-slate-600 text-sm italic leading-relaxed">
-                        &ldquo;Awesome. I&apos;ll send through a few example sites we&apos;ve done &mdash; particularly for trade-based businesses like yours &mdash; so you&apos;ve got something to look at before we jump on the call. From there we&apos;ll walk you through our process and put together a tailored quote.&rdquo;
-                      </p>
-                    </div>
+
                   </div>
                 )}
 
@@ -1637,13 +1631,7 @@ export default function CallFlowchartPage() {
                         &ldquo;Yeah, I&apos;m open to a chat.&rdquo;
                       </p>
                     </div>
-                    <div className="bg-white border border-slate-200 rounded-xl p-4">
-                      <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                      <h4 className="font-bold text-slate-900 text-sm mb-2">Set the Scene for the Meeting</h4>
-                      <p className="text-slate-600 text-sm italic leading-relaxed">
-                        &ldquo;Awesome. In the meeting I&apos;ll walk you through how you&apos;re currently performing online, benchmark you against some of your local competitors, and from there we&apos;ll put together a tailored quote. You can do with that information as you wish.&rdquo;
-                      </p>
-                    </div>
+
                   </div>
                 )}
 
@@ -1790,10 +1778,16 @@ export default function CallFlowchartPage() {
 
               <div className="bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 mb-4">
                 <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-500 mb-3">SAY</div>
-                <h3 className="font-bold text-slate-900 text-base mb-3">Confirm Email</h3>
-                <p className="text-slate-700 text-sm italic leading-relaxed">
-                  &ldquo;Awesome, I&apos;ll book that in. We&apos;ll do it over Zoom so we can show you visually. Is your best email still [xyz@xyz.com.au]?&rdquo;
-                </p>
+                <h3 className="font-bold text-slate-900 text-base mb-3">Set the Scene + Confirm Email</h3>
+                {tryLaterPitch === 'quodo' ? (
+                  <p className="text-slate-700 text-sm italic leading-relaxed">
+                    &ldquo;Awesome, I&apos;ll book that in. We&apos;ll do it over Zoom so we can show you visually. I&apos;ll also send through a few example sites we&apos;ve done &mdash; particularly for trade-based businesses like yours &mdash; so you&apos;ve got something to look at before we jump on the call. From there we&apos;ll walk you through our process and put together a tailored quote. Is your best email still [xyz@xyz.com.au]?&rdquo;
+                  </p>
+                ) : (
+                  <p className="text-slate-700 text-sm italic leading-relaxed">
+                    &ldquo;Awesome, I&apos;ll book that in. We&apos;ll do it over Zoom so we can show you visually. In the meeting I&apos;ll walk you through how you&apos;re currently performing online, benchmark you against some of your local competitors, and from there we&apos;ll put together a tailored quote. You can do with that information as you wish. Is your best email still [xyz@xyz.com.au]?&rdquo;
+                  </p>
+                )}
               </div>
 
               <div className="flex justify-center my-3 text-slate-300 text-xl">↓</div>
