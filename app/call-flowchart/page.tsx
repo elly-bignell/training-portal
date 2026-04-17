@@ -753,6 +753,8 @@ export default function CallFlowchartPage() {
   const [activeNode, setActiveNode] = useState<string | null>(null);
   const [brand, setBrand] = useState<"quodo" | "ms">("quodo");
   const [rebookingType, setRebookingType] = useState<'noshow' | 'reschedule'>('reschedule');
+  const [tryLaterPitch, setTryLaterPitch] = useState<'quodo' | 'ms'>('ms');
+  const [tryLaterBranch, setTryLaterBranch] = useState<'A' | 'B' | 'C' | 'D'>('A');
   const toggle = (id: string) => setActiveNode(activeNode === id ? null : id);
 
   return (
@@ -1265,7 +1267,7 @@ export default function CallFlowchartPage() {
             </div>
 
             {/* Positive / Negative split */}
-            <div className="grid md:grid-cols-2 gap-4 mb-8 max-w-3xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-4 mb-10 max-w-3xl mx-auto">
               <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
                 <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
                 <div className="text-[11px] font-bold uppercase tracking-wider text-emerald-600 mb-2">✅ Positive</div>
@@ -1295,23 +1297,42 @@ export default function CallFlowchartPage() {
               </div>
             </div>
 
-            {/* Reconnect & Reiterate — Quodo / MS split */}
-            <div className="mb-6 max-w-3xl mx-auto">
-              <div className="text-center mb-4">
-                <span className="inline-block bg-slate-100 text-slate-600 text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">Which pitch applies?</span>
+            {/* ═══ PITCH TYPE TOGGLE ═══ */}
+            <div className="flex justify-center mb-6">
+              <div className="inline-flex rounded-xl overflow-hidden border-2 border-slate-200 bg-white shadow-lg">
+                <button
+                  onClick={() => setTryLaterPitch('quodo')}
+                  className={`px-6 py-3 text-sm font-bold transition-all ${
+                    tryLaterPitch === 'quodo'
+                      ? 'bg-purple-600 text-white'
+                      : 'bg-white text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  🌐 Quodo — Replacing Websites
+                </button>
+                <button
+                  onClick={() => setTryLaterPitch('ms')}
+                  className={`px-6 py-3 text-sm font-bold transition-all ${
+                    tryLaterPitch === 'ms'
+                      ? 'bg-[#E6017D] text-white'
+                      : 'bg-white text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  📈 Marketing Sweet — Existing Websites
+                </button>
               </div>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="bg-white border-2 border-purple-200 rounded-xl p-5">
-                  <div className="inline-flex items-center gap-1.5 bg-purple-50 text-purple-700 px-2.5 py-1 rounded-full text-[10px] font-bold mb-3 uppercase tracking-wider">
-                    🌐 Quodo — Replacing Websites
-                  </div>
+            </div>
+
+            {/* ═══ QUODO PITCH ═══ */}
+            {tryLaterPitch === 'quodo' && (
+              <div className="max-w-3xl mx-auto">
+                <div className="bg-white border-2 border-purple-200 rounded-xl p-5 mb-6">
                   <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
                   <h3 className="font-bold text-slate-900 text-sm mb-2">Reconnect &amp; Reiterate</h3>
-                  <p className="text-slate-600 text-sm italic leading-relaxed">
+                  <p className="text-slate-600 text-sm italic leading-relaxed mb-4">
                     &ldquo;Now, obviously we caught up &mdash; you spoke with my right-hand man/woman [Previous Team Member] going back [timeframe], talking about getting your website fixed up. I&apos;ve noticed nothing&apos;s changed and I assume you&apos;ve been busy and haven&apos;t really had the time to get to it.&rdquo;
                   </p>
-
-                  <div className="mt-4 pt-4 border-t border-purple-100">
+                  <div className="pt-4 border-t border-purple-100">
                     <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
                     <h3 className="font-bold text-slate-900 text-sm mb-2">Show the Value</h3>
                     <p className="text-slate-600 text-sm italic leading-relaxed">
@@ -1320,186 +1341,446 @@ export default function CallFlowchartPage() {
                   </div>
                 </div>
 
-                <div className="bg-white border-2 border-[#E6017D]/30 rounded-xl p-5">
-                  <div className="inline-flex items-center gap-1.5 bg-[#E6017D]/10 text-[#E6017D] px-2.5 py-1 rounded-full text-[10px] font-bold mb-3 uppercase tracking-wider">
-                    📈 Marketing Sweet — Existing Websites
+                <div className="bg-slate-900 rounded-2xl p-6 mb-6">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-3">SAY</div>
+                  <h3 className="font-bold text-white text-base mb-3">Go For Booking</h3>
+                  <p className="text-slate-300 text-sm italic leading-relaxed">
+                    &ldquo;Are you available on [Day] at [Time]?&rdquo;
+                  </p>
+                </div>
+
+                <div className="text-center mb-4">
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">How do they respond? Select a branch:</span>
+                </div>
+
+                {/* Branch tabs — Quodo */}
+                <div className="flex flex-wrap gap-2 justify-center mb-6">
+                  <button
+                    onClick={() => setTryLaterBranch('A')}
+                    className={`px-4 py-2.5 text-xs font-bold rounded-lg transition-all ${
+                      tryLaterBranch === 'A'
+                        ? 'bg-emerald-600 text-white shadow-md'
+                        : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    ✅ A — Open
+                  </button>
+                  <button
+                    onClick={() => setTryLaterBranch('B')}
+                    className={`px-4 py-2.5 text-xs font-bold rounded-lg transition-all ${
+                      tryLaterBranch === 'B'
+                        ? 'bg-slate-700 text-white shadow-md'
+                        : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    🔒 B — With Provider
+                  </button>
+                  <button
+                    onClick={() => setTryLaterBranch('C')}
+                    className={`px-4 py-2.5 text-xs font-bold rounded-lg transition-all ${
+                      tryLaterBranch === 'C'
+                        ? 'bg-amber-600 text-white shadow-md'
+                        : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    🤔 C — Hesitant
+                  </button>
+                  <button
+                    onClick={() => setTryLaterBranch('D')}
+                    className={`px-4 py-2.5 text-xs font-bold rounded-lg transition-all ${
+                      tryLaterBranch === 'D'
+                        ? 'bg-red-600 text-white shadow-md'
+                        : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    🚫 D — Not Now
+                  </button>
+                </div>
+
+                {/* Quodo Branch A */}
+                {tryLaterBranch === 'A' && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="h-px flex-1 bg-emerald-200"></div>
+                      <span className="text-sm font-bold text-emerald-700">✅ A — OPEN TO RECONNECTING</span>
+                      <div className="h-px flex-1 bg-emerald-200"></div>
+                    </div>
+                    <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
+                      <p className="text-blue-700 text-sm italic font-semibold leading-relaxed">
+                        &ldquo;Yeah, I&apos;m open to a chat.&rdquo;
+                      </p>
+                    </div>
+                    <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">BOOK</div>
+                      <p className="text-slate-600 text-sm italic leading-relaxed">
+                        Proceed to <strong>Confirm Email</strong> &amp; offer to send example sites before the meeting. Then <strong>Warm Close</strong>.
+                      </p>
+                    </div>
                   </div>
+                )}
+
+                {/* Quodo Branch B */}
+                {tryLaterBranch === 'B' && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="h-px flex-1 bg-slate-200"></div>
+                      <span className="text-sm font-bold text-slate-700">🔒 B — STILL WITH CURRENT PROVIDER</span>
+                      <div className="h-px flex-1 bg-slate-200"></div>
+                    </div>
+                    <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
+                      <p className="text-blue-700 text-sm italic font-semibold leading-relaxed">
+                        &ldquo;I&apos;m still with my current provider &mdash; I&apos;m liking how they&apos;re performing.&rdquo;
+                      </p>
+                    </div>
+                    <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Second Unbiased Opinion</h4>
+                      <p className="text-slate-600 text-sm italic leading-relaxed">
+                        &ldquo;Yeah, perfect. Well, let me give you a second unbiased opinion. I don&apos;t expect you to sign on the day or anything like that &mdash; it&apos;s more so to show you what they&apos;ve been doing, and from there you can make a decision. How does that sound?&rdquo;
+                      </p>
+                    </div>
+                    <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
+                    <div className="text-center mb-3">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Do they agree?</span>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-3">
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">BOOK</div>
+                        <p className="text-slate-600 text-xs italic leading-relaxed">
+                          Proceed to <strong>Confirm Email</strong> &amp; offer to send example sites. Then <strong>Warm Close</strong>.
+                        </p>
+                      </div>
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3">
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-yellow-600 mb-1">FOLLOW UP</div>
+                        <p className="text-slate-600 text-xs italic leading-relaxed">
+                          &ldquo;No worries at all &mdash; I&apos;ll send through some examples of our recent work so you&apos;ve got something to reference. I&apos;ll touch base again in a few months.&rdquo;
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Quodo Branch C */}
+                {tryLaterBranch === 'C' && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="h-px flex-1 bg-amber-200"></div>
+                      <span className="text-sm font-bold text-amber-700">🤔 C — HESITANT / &ldquo;ON THE TOOLS&rdquo;</span>
+                      <div className="h-px flex-1 bg-amber-200"></div>
+                    </div>
+                    <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
+                      <p className="text-blue-700 text-sm italic font-semibold leading-relaxed">
+                        &ldquo;I&apos;m on the tools / I don&apos;t have much time &mdash; how does it actually work?&rdquo;
+                      </p>
+                    </div>
+                    <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Overcome the Time Objection</h4>
+                      <p className="text-slate-600 text-sm italic leading-relaxed">
+                        &ldquo;Yeah sweet. Well, our process is designed to make your life an absolute dream. We do 90&ndash;95% of the heavy lifting. I just need 5% of your input to say yes, we&apos;re on the money, or no, we&apos;re off the money. If we&apos;re off, we&apos;ll keep iterating until we get it right.&rdquo;
+                      </p>
+                    </div>
+                    <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Reinforce Credibility</h4>
+                      <p className="text-slate-600 text-sm italic leading-relaxed">
+                        &ldquo;We&apos;ve got over 3,000 clients, 70% of them are trade-based businesses just like yours. We&apos;ve perfected our process &mdash; you&apos;ll absolutely love it. But let me go through it in more detail on [Day]. How&apos;s that sound?&rdquo;
+                      </p>
+                    </div>
+                    <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
+                    <div className="text-center mb-3">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Do they agree?</span>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-3">
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">BOOK</div>
+                        <p className="text-slate-600 text-xs italic leading-relaxed">
+                          Proceed to <strong>Confirm Email</strong> &amp; offer to send example sites. Then <strong>Warm Close</strong>.
+                        </p>
+                      </div>
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3">
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-yellow-600 mb-1">FOLLOW UP</div>
+                        <p className="text-slate-600 text-xs italic leading-relaxed">
+                          &ldquo;No worries &mdash; I&apos;ll send through some examples of our work so you&apos;ve got a reference point, and I&apos;ll touch base again in a month or so.&rdquo;
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Quodo Branch D */}
+                {tryLaterBranch === 'D' && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="h-px flex-1 bg-red-200"></div>
+                      <span className="text-sm font-bold text-red-600">🚫 D — NOT INTERESTED / TIMING STILL OFF</span>
+                      <div className="h-px flex-1 bg-red-200"></div>
+                    </div>
+                    <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
+                      <p className="text-blue-700 text-sm italic font-semibold leading-relaxed">
+                        &ldquo;Still not the right time / Cashflow is still tight / Not a priority right now.&rdquo;
+                      </p>
+                    </div>
+                    <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Acknowledge &amp; Probe</h4>
+                      <p className="text-slate-600 text-sm italic leading-relaxed">
+                        &ldquo;Yeah, completely fair. Last time we spoke you mentioned [reference their previous objection &mdash; cashflow, pipeline, staffing, etc.]. How&apos;s that looking now heading into [next quarter / 2026 / next year]?&rdquo;
+                      </p>
+                    </div>
+                    <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
+                    <div className="text-center mb-3">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Their response?</span>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-3">
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">IMPROVING → LOOP BACK</div>
+                        <p className="text-slate-600 text-xs italic leading-relaxed">
+                          Return to <strong>Go For Booking</strong> and try to lock in a time.
+                        </p>
+                      </div>
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3">
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-yellow-600 mb-1">FOLLOW UP</div>
+                        <p className="text-slate-600 text-xs italic leading-relaxed">
+                          &ldquo;No stress at all &mdash; I&apos;ll send through some example sites so you&apos;ve got something to reference when the timing&apos;s right. I&apos;ll touch base again in [3/6/9 months].&rdquo;
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ═══ MS PITCH ═══ */}
+            {tryLaterPitch === 'ms' && (
+              <div className="max-w-3xl mx-auto">
+                <div className="bg-white border-2 border-[#E6017D]/30 rounded-xl p-5 mb-6">
                   <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
                   <h3 className="font-bold text-slate-900 text-sm mb-2">Reconnect &amp; Reiterate</h3>
                   <p className="text-slate-600 text-sm italic leading-relaxed">
                     &ldquo;Now, I know we caught up [timeframe] and had a bit of a chat about your website and how it was performing online. I&apos;ve kept an eye on things and I&apos;ve noticed your traffic hasn&apos;t really increased over the last 6&ndash;12 months, so I thought it might be worth your while reconnecting &mdash; I&apos;ve got a few different ideas I wouldn&apos;t mind sharing with you.&rdquo;
                   </p>
                 </div>
+
+                <div className="bg-slate-900 rounded-2xl p-6 mb-6">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-3">SAY</div>
+                  <h3 className="font-bold text-white text-base mb-3">Go For Booking</h3>
+                  <p className="text-slate-300 text-sm italic leading-relaxed">
+                    &ldquo;Are you available on [Day] at [Time]?&rdquo;
+                  </p>
+                </div>
+
+                <div className="text-center mb-4">
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">How do they respond? Select a branch:</span>
+                </div>
+
+                {/* Branch tabs — MS */}
+                <div className="flex flex-wrap gap-2 justify-center mb-6">
+                  <button
+                    onClick={() => setTryLaterBranch('A')}
+                    className={`px-4 py-2.5 text-xs font-bold rounded-lg transition-all ${
+                      tryLaterBranch === 'A'
+                        ? 'bg-emerald-600 text-white shadow-md'
+                        : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    ✅ A — Open
+                  </button>
+                  <button
+                    onClick={() => setTryLaterBranch('B')}
+                    className={`px-4 py-2.5 text-xs font-bold rounded-lg transition-all ${
+                      tryLaterBranch === 'B'
+                        ? 'bg-slate-700 text-white shadow-md'
+                        : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    🔒 B — With Provider
+                  </button>
+                  <button
+                    onClick={() => setTryLaterBranch('C')}
+                    className={`px-4 py-2.5 text-xs font-bold rounded-lg transition-all ${
+                      tryLaterBranch === 'C'
+                        ? 'bg-amber-600 text-white shadow-md'
+                        : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    🤔 C — Hesitant
+                  </button>
+                  <button
+                    onClick={() => setTryLaterBranch('D')}
+                    className={`px-4 py-2.5 text-xs font-bold rounded-lg transition-all ${
+                      tryLaterBranch === 'D'
+                        ? 'bg-red-600 text-white shadow-md'
+                        : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    🚫 D — Not Now
+                  </button>
+                </div>
+
+                {/* MS Branch A */}
+                {tryLaterBranch === 'A' && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="h-px flex-1 bg-emerald-200"></div>
+                      <span className="text-sm font-bold text-emerald-700">✅ A — OPEN TO RECONNECTING</span>
+                      <div className="h-px flex-1 bg-emerald-200"></div>
+                    </div>
+                    <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
+                      <p className="text-blue-700 text-sm italic font-semibold leading-relaxed">
+                        &ldquo;Yeah, I&apos;m open to a chat.&rdquo;
+                      </p>
+                    </div>
+                    <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">BOOK</div>
+                      <p className="text-slate-600 text-sm italic leading-relaxed">
+                        Proceed to <strong>Confirm Email</strong> &amp; <strong>Warm Close</strong> below. Mention that in the meeting you&apos;ll benchmark them against local competitors.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* MS Branch B */}
+                {tryLaterBranch === 'B' && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="h-px flex-1 bg-slate-200"></div>
+                      <span className="text-sm font-bold text-slate-700">🔒 B — STILL WITH CURRENT PROVIDER</span>
+                      <div className="h-px flex-1 bg-slate-200"></div>
+                    </div>
+                    <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
+                      <p className="text-blue-700 text-sm italic font-semibold leading-relaxed">
+                        &ldquo;I&apos;m still with my current provider &mdash; I&apos;m liking how they&apos;re performing.&rdquo;
+                      </p>
+                    </div>
+                    <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Second Unbiased Opinion</h4>
+                      <p className="text-slate-600 text-sm italic leading-relaxed">
+                        &ldquo;Yeah, perfect. Well, let me give you a second unbiased opinion. I don&apos;t expect you to sign on the day or anything like that &mdash; it&apos;s more so to show you what they&apos;ve been doing, benchmark your performance against local competitors, and from there you can make a decision. How does that sound?&rdquo;
+                      </p>
+                    </div>
+                    <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
+                    <div className="text-center mb-3">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Do they agree?</span>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-3">
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">BOOK</div>
+                        <p className="text-slate-600 text-xs italic leading-relaxed">
+                          Proceed to <strong>Confirm Email</strong> &amp; <strong>Warm Close</strong>.
+                        </p>
+                      </div>
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3">
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-yellow-600 mb-1">FOLLOW UP</div>
+                        <p className="text-slate-600 text-xs italic leading-relaxed">
+                          &ldquo;No worries at all &mdash; I&apos;ll keep an eye on how things are tracking and touch base again in a few months.&rdquo;
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* MS Branch C */}
+                {tryLaterBranch === 'C' && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="h-px flex-1 bg-amber-200"></div>
+                      <span className="text-sm font-bold text-amber-700">🤔 C — HESITANT / &ldquo;ON THE TOOLS&rdquo;</span>
+                      <div className="h-px flex-1 bg-amber-200"></div>
+                    </div>
+                    <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
+                      <p className="text-blue-700 text-sm italic font-semibold leading-relaxed">
+                        &ldquo;I&apos;m on the tools / I don&apos;t have much time &mdash; how does it actually work?&rdquo;
+                      </p>
+                    </div>
+                    <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Overcome the Time Objection</h4>
+                      <p className="text-slate-600 text-sm italic leading-relaxed">
+                        &ldquo;Yeah sweet. Well, our process is designed to make your life an absolute dream. We do 90&ndash;95% of the heavy lifting. I just need 5% of your input along the way, and we&apos;ll keep iterating until we&apos;re getting you the results you want.&rdquo;
+                      </p>
+                    </div>
+                    <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Reinforce Credibility</h4>
+                      <p className="text-slate-600 text-sm italic leading-relaxed">
+                        &ldquo;We&apos;ve got over 3,000 clients, 70% of them are trade-based businesses just like yours. We&apos;ve perfected our process &mdash; you&apos;ll absolutely love it. Let me run you through how we&apos;d fix up your current site&apos;s performance on [Day]. How&apos;s that sound?&rdquo;
+                      </p>
+                    </div>
+                    <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
+                    <div className="text-center mb-3">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Do they agree?</span>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-3">
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">BOOK</div>
+                        <p className="text-slate-600 text-xs italic leading-relaxed">
+                          Proceed to <strong>Confirm Email</strong> &amp; <strong>Warm Close</strong>.
+                        </p>
+                      </div>
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3">
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-yellow-600 mb-1">FOLLOW UP</div>
+                        <p className="text-slate-600 text-xs italic leading-relaxed">
+                          &ldquo;No worries &mdash; I&apos;ll keep monitoring how you&apos;re performing online and touch base again in a month or so.&rdquo;
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* MS Branch D */}
+                {tryLaterBranch === 'D' && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="h-px flex-1 bg-red-200"></div>
+                      <span className="text-sm font-bold text-red-600">🚫 D — NOT INTERESTED / TIMING STILL OFF</span>
+                      <div className="h-px flex-1 bg-red-200"></div>
+                    </div>
+                    <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
+                      <p className="text-blue-700 text-sm italic font-semibold leading-relaxed">
+                        &ldquo;Still not the right time / Cashflow is still tight / Not a priority right now.&rdquo;
+                      </p>
+                    </div>
+                    <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Acknowledge &amp; Probe</h4>
+                      <p className="text-slate-600 text-sm italic leading-relaxed">
+                        &ldquo;Yeah, completely fair. Last time we spoke you mentioned [reference their previous objection &mdash; cashflow, pipeline, staffing, etc.]. How&apos;s that looking now heading into [next quarter / 2026 / next year]?&rdquo;
+                      </p>
+                    </div>
+                    <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
+                    <div className="text-center mb-3">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Their response?</span>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-3">
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">IMPROVING → LOOP BACK</div>
+                        <p className="text-slate-600 text-xs italic leading-relaxed">
+                          Return to <strong>Go For Booking</strong> and try to lock in a time.
+                        </p>
+                      </div>
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3">
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-yellow-600 mb-1">FOLLOW UP</div>
+                        <p className="text-slate-600 text-xs italic leading-relaxed">
+                          &ldquo;No stress at all &mdash; I&apos;ll keep an eye on your performance and touch base again in [3/6/9 months] when the timing&apos;s better.&rdquo;
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
-
-            {/* Go For Booking */}
-            <div className="bg-slate-900 rounded-2xl p-6 mb-4 max-w-3xl mx-auto">
-              <div className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-3">SAY</div>
-              <h3 className="font-bold text-white text-base mb-3">Go For Booking</h3>
-              <p className="text-slate-300 text-sm italic leading-relaxed">
-                &ldquo;Are you available on [Day] at [Time]?&rdquo;
-              </p>
-            </div>
-
-            <div className="flex justify-center my-3 text-slate-300 text-xl">↓</div>
-            <div className="text-center mb-6">
-              <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">How do they respond?</span>
-            </div>
-
-            {/* Four branches: A / B / C / D */}
-            <div className="space-y-8 max-w-3xl mx-auto">
-
-              {/* BRANCH A — Open to reconnecting */}
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="h-px flex-1 bg-emerald-200"></div>
-                  <span className="text-sm font-bold text-emerald-700">✅ A — OPEN TO RECONNECTING (≈40%)</span>
-                  <div className="h-px flex-1 bg-emerald-200"></div>
-                </div>
-                <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-3">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
-                  <p className="text-blue-700 text-sm italic font-semibold leading-relaxed">
-                    &ldquo;Yeah, I&apos;m open to a chat.&rdquo;
-                  </p>
-                </div>
-                <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
-                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">BOOK</div>
-                  <p className="text-slate-600 text-sm italic leading-relaxed">
-                    Proceed to <strong>Confirm Email</strong> &amp; <strong>Warm Close</strong> below.
-                  </p>
-                </div>
-              </div>
-
-              {/* BRANCH B — Still with current provider */}
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="h-px flex-1 bg-slate-200"></div>
-                  <span className="text-sm font-bold text-slate-700">🔒 B — STILL WITH CURRENT PROVIDER (≈30%)</span>
-                  <div className="h-px flex-1 bg-slate-200"></div>
-                </div>
-                <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-3">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
-                  <p className="text-blue-700 text-sm italic font-semibold leading-relaxed">
-                    &ldquo;I&apos;m still with my current provider &mdash; I&apos;m liking how they&apos;re performing.&rdquo;
-                  </p>
-                </div>
-                <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                  <h4 className="font-bold text-slate-900 text-sm mb-2">Reframe as Second Opinion</h4>
-                  <p className="text-slate-600 text-sm italic leading-relaxed">
-                    &ldquo;Yeah, perfect. Well, let me give you a second unbiased opinion. I don&apos;t expect you to sign on the day or anything like that &mdash; it&apos;s more so to show you what they&apos;ve been doing, and from there you can make a decision. How does that sound?&rdquo;
-                  </p>
-                </div>
-                <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
-                <div className="text-center mb-3">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Do they agree?</span>
-                </div>
-                <div className="grid md:grid-cols-2 gap-3">
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
-                    <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">BOOK</div>
-                    <p className="text-slate-600 text-xs italic leading-relaxed">
-                      Proceed to <strong>Confirm Email</strong> &amp; <strong>Warm Close</strong>.
-                    </p>
-                  </div>
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3">
-                    <div className="text-[10px] font-bold tracking-widest uppercase text-yellow-600 mb-1">FOLLOW UP</div>
-                    <p className="text-slate-600 text-xs italic leading-relaxed">
-                      &ldquo;No worries at all &mdash; I&apos;ll send through some examples of our recent work so you&apos;ve got something to reference. I&apos;ll touch base again in a few months.&rdquo;
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* BRANCH C — Hesitant / Has questions */}
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="h-px flex-1 bg-amber-200"></div>
-                  <span className="text-sm font-bold text-amber-700">🤔 C — HESITANT / HAS QUESTIONS (≈20%)</span>
-                  <div className="h-px flex-1 bg-amber-200"></div>
-                </div>
-                <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-3">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
-                  <p className="text-blue-700 text-sm italic font-semibold leading-relaxed">
-                    &ldquo;I&apos;m on the tools / I don&apos;t have much time &mdash; how does it actually work?&rdquo;
-                  </p>
-                </div>
-                <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                  <h4 className="font-bold text-slate-900 text-sm mb-2">Overcome the Time Objection</h4>
-                  <p className="text-slate-600 text-sm italic leading-relaxed">
-                    &ldquo;Yeah sweet. Well, our process is designed to make your life an absolute dream. We do 90&ndash;95% of the heavy lifting. I just need 5% of your input to say yes, we&apos;re on the money, or no, we&apos;re off the money. If we&apos;re off, we&apos;ll keep iterating until we get it right.&rdquo;
-                  </p>
-                </div>
-                <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                  <h4 className="font-bold text-slate-900 text-sm mb-2">Reinforce Credibility</h4>
-                  <p className="text-slate-600 text-sm italic leading-relaxed">
-                    &ldquo;We&apos;ve got over 3,000 clients, 70% of them are trade-based businesses just like yours. We&apos;ve perfected our process &mdash; you&apos;ll absolutely love it. But let me go through it in more detail on [Day]. How&apos;s that sound?&rdquo;
-                  </p>
-                </div>
-                <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
-                <div className="text-center mb-3">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Do they agree?</span>
-                </div>
-                <div className="grid md:grid-cols-2 gap-3">
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
-                    <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">BOOK</div>
-                    <p className="text-slate-600 text-xs italic leading-relaxed">
-                      Proceed to <strong>Confirm Email</strong> &amp; <strong>Warm Close</strong>.
-                    </p>
-                  </div>
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3">
-                    <div className="text-[10px] font-bold tracking-widest uppercase text-yellow-600 mb-1">FOLLOW UP</div>
-                    <p className="text-slate-600 text-xs italic leading-relaxed">
-                      &ldquo;No worries &mdash; I&apos;ll send through some examples of our work in the meantime and touch base again in a month or so.&rdquo;
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* BRANCH D — Not interested / Timing still off */}
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="h-px flex-1 bg-red-200"></div>
-                  <span className="text-sm font-bold text-red-600">🚫 D — NOT INTERESTED / TIMING STILL OFF (≈10%)</span>
-                  <div className="h-px flex-1 bg-red-200"></div>
-                </div>
-                <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-3">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
-                  <p className="text-blue-700 text-sm italic font-semibold leading-relaxed">
-                    &ldquo;Still not the right time / Cashflow is still tight / Not a priority right now.&rdquo;
-                  </p>
-                </div>
-                <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                  <h4 className="font-bold text-slate-900 text-sm mb-2">Acknowledge &amp; Probe</h4>
-                  <p className="text-slate-600 text-sm italic leading-relaxed">
-                    &ldquo;Yeah, completely fair. Last time we spoke you mentioned [reference their previous objection &mdash; cashflow, pipeline, staffing, etc.]. How&apos;s that looking now heading into [next quarter / 2026 / next year]?&rdquo;
-                  </p>
-                </div>
-                <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
-                <div className="text-center mb-3">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Their response?</span>
-                </div>
-                <div className="grid md:grid-cols-2 gap-3">
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
-                    <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">IMPROVING → LOOP BACK</div>
-                    <p className="text-slate-600 text-xs italic leading-relaxed">
-                      Return to <strong>Go For Booking</strong> and try to lock in a time.
-                    </p>
-                  </div>
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3">
-                    <div className="text-[10px] font-bold tracking-widest uppercase text-yellow-600 mb-1">FOLLOW UP</div>
-                    <p className="text-slate-600 text-xs italic leading-relaxed">
-                      &ldquo;No stress at all &mdash; I&apos;ll make a note to touch base again in [3/6/9 months]. In the meantime I&apos;ll send through some examples so you&apos;ve got something to reference when the timing&apos;s right.&rdquo;
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-            </div>
+            )}
 
             {/* Confirm Email + Warm Close — shared endings */}
             <div className="mt-10 pt-8 border-t border-slate-200 max-w-3xl mx-auto">
