@@ -1310,6 +1310,14 @@ export default function CallFlowchartPage() {
                   <p className="text-slate-600 text-sm italic leading-relaxed">
                     &ldquo;Now, obviously we caught up &mdash; you spoke with my right-hand man/woman [Previous Team Member] going back [timeframe], talking about getting your website fixed up. I&apos;ve noticed nothing&apos;s changed and I assume you&apos;ve been busy and haven&apos;t really had the time to get to it.&rdquo;
                   </p>
+
+                  <div className="mt-4 pt-4 border-t border-purple-100">
+                    <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                    <h3 className="font-bold text-slate-900 text-sm mb-2">Show the Value</h3>
+                    <p className="text-slate-600 text-sm italic leading-relaxed">
+                      &ldquo;Look, we&apos;ve done many trade-based sites just like yours. I&apos;d love to show you how we operate, our process, and some sites we&apos;ve done. Just revisit it &mdash; and from there you can say yes, you can say no, you can say let me think about it. But I do think it&apos;s costing you money having your current site looking like this.&rdquo;
+                    </p>
+                  </div>
                 </div>
 
                 <div className="bg-white border-2 border-[#E6017D]/30 rounded-xl p-5">
