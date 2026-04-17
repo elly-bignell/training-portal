@@ -83,7 +83,7 @@ export async function GET() {
     const curTeamWk = weekNum(today, TEAM_START);
 
     const [dailyRecs, bookingRecs] = await Promise.all([
-      fetchTable('DailyActivity', ['trainee_slug', 'date', 'calls', 'bookings', 'meetings']),
+      fetchTable('DailyActivity', ['trainee_name', 'date', 'calls', 'bookings', 'meetings']),
       fetchTable('Bookings', ['booking_date', 'staff_member', 'status'], `NOT({status}="pending")`),
     ]);
 
@@ -97,8 +97,9 @@ export async function GET() {
     // DailyActivity → ch1 (calls→books) + ch3 (books→meetings)
     for (const rec of dailyRecs) {
       const f = rec.fields;
-      if (!f.date || !f.trainee_slug) continue;
-      const st = staffAcc.find(s => s.slug === f.trainee_slug);
+      if (!f.date || !f.trainee_name) continue;
+      // Match by first name — avoids slug truncation issues
+      const st = staffAcc.find(s => (f.trainee_name as string).includes(s.nameMatch));
       if (!st) continue;
       const calls    = (f.calls    ?? 0) as number;
       const books    = (f.bookings ?? 0) as number;
