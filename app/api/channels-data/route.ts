@@ -44,7 +44,7 @@ async function fetchTable(table: string, fields: string[], formula?: string): Pr
 type Bucket = {
   calls: number;
   callBooks: number;
-  callMeetings: number; // for ch3: meetings ÷ bookings
+  callMeetings: number;
   validated: number;
   rejected: number;
   htl: number;
@@ -63,7 +63,7 @@ function formatBuckets(buckets: Record<number, Bucket>, curWeek: number) {
   return Object.entries(buckets).map(([k, b]) => {
     const w      = parseInt(k);
     const ch1    = b.calls > 0     ? r1((b.callBooks    / b.calls)     * 100) : null;
-    const ch3    = b.validated > 0 ? r1((b.callMeetings / b.validated) * 100) : null;
+    const ch3    = b.callBooks > 0 ? r1((b.callMeetings / b.callBooks) * 100) : null;
     const valRej = b.validated + b.rejected;
     const ch2    = valRej > 0      ? r1((b.validated    / valRej)      * 100) : null;
     const htlRate = (valRej + b.htl) > 0
@@ -95,11 +95,9 @@ export async function GET() {
       buckets: mkBuckets(weekNum(today, s.startDate)),
     }));
 
-    // DailyActivity → ch1 (calls→books) + ch3 (books→meetings)
     for (const rec of dailyRecs) {
       const f = rec.fields;
       if (!f.date || !f.trainee_name) continue;
-      // Match by first name — avoids slug truncation issues
       const st = staffAcc.find(s => (f.trainee_name as string).includes(s.nameMatch));
       if (!st) continue;
       const calls    = (f.calls    ?? 0) as number;
@@ -111,18 +109,17 @@ export async function GET() {
       const pw = weekNum(f.date, st.startDate);
 
       if (tw >= 1 && tw <= TEAM_TOTAL_WEEKS) {
-        teamBuckets[tw].calls         += calls;
-        teamBuckets[tw].callBooks     += books;
-        teamBuckets[tw].callMeetings  += meetings;
+        teamBuckets[tw].calls        += calls;
+        teamBuckets[tw].callBooks    += books;
+        teamBuckets[tw].callMeetings += meetings;
       }
       if (pw >= 1 && st.buckets[pw]) {
-        st.buckets[pw].calls         += calls;
-        st.buckets[pw].callBooks     += books;
-        st.buckets[pw].callMeetings  += meetings;
+        st.buckets[pw].calls        += calls;
+        st.buckets[pw].callBooks    += books;
+        st.buckets[pw].callMeetings += meetings;
       }
     }
 
-    // Bookings → ch2 (book→validated) + HTL
     for (const rec of bookingRecs) {
       const f = rec.fields;
       if (!f.booking_date || !f.staff_member || !f.status) continue;
