@@ -120,7 +120,7 @@ function ValidationContent({ role }: { role: UserRole }) {
         {activeTab === "flowchart" && <FlowchartTab />}
         {activeTab === "create" && <CreateBookingTab onCreated={fetchBookings} saving={saving} setSaving={setSaving} />}
         {activeTab === "queue" && <ValidationQueueTab bookings={bookings} onUpdate={fetchBookings} allBookings={bookings} />}
-        {activeTab === "lodgement" && <LodgementTab bookings={bookings} />}
+        {activeTab === "lodgement" && <LodgementTab bookings={bookings} onUpdate={fetchBookings} />}
         {activeTab === "schedule" && <ObservationScheduleTab bookings={bookings} />}
         {activeTab === "reports" && <ReportsTab bookings={bookings} />}
       </div>
@@ -859,7 +859,7 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
 // TAB 3: Daily Lodgement
 // ═══════════════════════════════════════════════════════════════════════════════
 
-function LodgementTab({ bookings }: { bookings: Booking[] }) {
+function LodgementTab({ bookings, onUpdate }: { bookings: Booking[]; onUpdate: () => void }) {
   const [fromDate, setFromDate] = useState(toISODate(new Date()));
   const [toDate, setToDate] = useState(toISODate(new Date()));
   const [staffFilter, setStaffFilter] = useState("all");
@@ -1109,19 +1109,58 @@ function LodgementTab({ bookings }: { bookings: Booking[] }) {
           </h3>
           <p className="text-xs text-gray-400 mb-3">Called twice with no answer — removed from the validation queue.</p>
           <div className="grid grid-cols-2 gap-3">
-            {na2Filtered.map((b) => (
-              <div key={b.id} className="rounded-lg border-2 border-orange-200 bg-orange-50/50 p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-[10px] font-bold rounded-full uppercase">
-                    📞 NA × {(b as any).na_count || 0}
-                  </span>
-                  <span className="text-[10px] text-gray-400">{formatDate(b.booking_date)}</span>
+            {na2Filtered.map((b) => {
+              const isProcessing = na2Processing === b.id;
+              const isRejecting = !!na2RejectMode[b.id];
+              const note = na2Notes[b.id] || "";
+              return (
+                <div key={b.id} className="rounded-lg border-2 border-orange-200 bg-orange-50/50 p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-[10px] font-bold rounded-full uppercase">
+                      📞 NA × {(b as any).na_count || 0}
+                    </span>
+                    <span className="text-[10px] text-gray-400">{formatDate(b.booking_date)}</span>
+                  </div>
+                  <h4 className="font-semibold text-sm text-slate-800">{b.business_name}</h4>
+                  <p className="text-xs text-slate-500 mt-1">👤 {b.staff_member} · 🤝 {b.buddy}</p>
+                  {b.contact_name && <p className="text-xs text-slate-400 mt-0.5">📇 {b.contact_name} {b.contact_phone ? ` · 📞 ${b.contact_phone}` : ""}</p>}
+                  <div className="mt-3 pt-3 border-t border-orange-200">
+                    <p className="text-[10px] font-semibold text-orange-600 uppercase mb-2">Got through? Mark outcome:</p>
+                    <textarea
+                      value={note}
+                      onChange={(e) => setNa2Notes((prev) => ({ ...prev, [b.id]: e.target.value }))}
+                      placeholder={isRejecting ? "Rejection reason (optional)..." : "Validation note (optional)..."}
+                      className="w-full border border-orange-200 rounded-lg px-3 py-2 text-xs resize-none h-14 focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white mb-2"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleNa2Validate(b)}
+                        disabled={isProcessing}
+                        className="flex-1 py-2 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors text-xs flex items-center justify-center gap-1"
+                      >
+                        ✅ Validate
+                      </button>
+                      {isRejecting ? (
+                        <button
+                          onClick={() => handleNa2Reject(b)}
+                          disabled={isProcessing}
+                          className="flex-1 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors text-xs flex items-center justify-center gap-1"
+                        >
+                          ❌ Confirm Reject
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setNa2RejectMode((prev) => ({ ...prev, [b.id]: true }))}
+                          className="flex-1 py-2 bg-white text-red-600 border-2 border-red-200 font-semibold rounded-lg hover:bg-red-50 transition-colors text-xs flex items-center justify-center gap-1"
+                        >
+                          ❌ Reject
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <h4 className="font-semibold text-sm text-slate-800">{b.business_name}</h4>
-                <p className="text-xs text-slate-500 mt-1">👤 {b.staff_member} · 🤝 {b.buddy}</p>
-                {b.contact_name && <p className="text-xs text-slate-400 mt-0.5">📇 {b.contact_name} {b.contact_phone ? ` · 📞 ${b.contact_phone}` : ""}</p>}
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
