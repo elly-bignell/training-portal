@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 const CHANNELS = [
   { id: 1, label: 'Call → Book',      low: 11, high: 15, color: '#7c3aed', dataKey: 'ch1' as const },
   { id: 2, label: 'Book → Validated', low: 70, high: 85, color: '#0284c7', dataKey: 'ch2' as const, note: 'Excludes unresponsive clients (NA ×2) — only includes bookings where contact was made and a quality decision was reached' },
-  { id: 3, label: 'Val → Attended',   low: 60, high: 60, color: '#059669', dataKey: 'ch3' as const, note: 'meetings ÷ validated bookings · 60% of validated appointments should attend' },
+  { id: 3, label: 'Book → Attended',  low: 42, high: 51, color: '#059669', dataKey: 'ch3' as const, note: 'meetings ÷ bookings · derived from 70–85% Book→Val × 60% Val→Attended' },
 ];
 
 type WeekRow = {
@@ -416,7 +416,7 @@ function TeamTab({ team }: { team: { weeks: WeekRow[] } }) {
 
   const allTimeCh1 = totCalls > 0     ? Math.round((totBooks  / totCalls)          * 1000) / 10 : null;
   const allTimeCh2 = (totVal + totRej) > 0 ? Math.round((totVal / (totVal + totRej)) * 1000) / 10 : null;
-  const allTimeCh3 = totVal > 0       ? Math.round((totMeets  / totVal)            * 1000) / 10 : null;
+  const allTimeCh3 = totBooks > 0     ? Math.round((totMeets  / totBooks)          * 1000) / 10 : null;
   const allTimeHtl = (totVal + totRej + totHtl) > 0
     ? Math.round((totHtl / (totVal + totRej + totHtl)) * 1000) / 10 : null;
 
@@ -470,7 +470,7 @@ function PersonTab({ person }: { person: PersonData }) {
 
   const allTimeCh1 = totCalls > 0         ? Math.round((totBooks / totCalls)          * 1000) / 10 : null;
   const allTimeCh2 = (totVal + totRej) > 0 ? Math.round((totVal  / (totVal + totRej)) * 1000) / 10 : null;
-  const allTimeCh3 = totVal > 0           ? Math.round((totMeets / totVal)            * 1000) / 10 : null;
+  const allTimeCh3 = totBooks > 0         ? Math.round((totMeets / totBooks)          * 1000) / 10 : null;
   const allTimeHtl = (totVal + totRej + totHtl) > 0
     ? Math.round((totHtl / (totVal + totRej + totHtl)) * 1000) / 10 : null;
 
