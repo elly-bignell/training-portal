@@ -9,6 +9,7 @@ const TEAM_TOTAL_WEEKS = 8;
 const STAFF = [
   { name: 'Cindy',   avatar: 'C', color: '#7c3aed', slug: 'cindy-rose-rondez-manfre', startDate: '2026-02-23', nameMatch: 'Cindy'   },
   { name: 'Krishna', avatar: 'K', color: '#0891b2', slug: 'krishna-patel',            startDate: '2026-02-23', nameMatch: 'Krishna' },
+  { name: 'Tom',     avatar: 'T', color: '#be185d', slug: 'thomas-rennie',            startDate: '2026-02-23', nameMatch: 'Rennie'  },
   { name: 'Sydney',  avatar: 'S', color: '#059669', slug: 'sydney-arnold',            startDate: '2026-03-24', nameMatch: 'Sydney'  },
   { name: 'Riley',   avatar: 'R', color: '#d97706', slug: 'riley-kerrison',           startDate: '2026-03-30', nameMatch: 'Riley'   },
 ];
