@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 // ch3: Book→Attended uses meetings÷bookings. low===high===60 = single dashed target line
 const CHANNELS = [
   { id: 1, label: 'Call → Book',      low: 11, high: 15, color: '#7c3aed', dataKey: 'ch1' as const },
-  { id: 2, label: 'Book → Validated', low: 70, high: 85, color: '#0284c7', dataKey: 'ch2' as const, note: 'Excludes unresponsive clients (NA ×2) — only includes bookings where contact was made and a quality decision was reached' },
+  { id: 2, label: 'Book → Validated', low: 70, high: 85, color: '#0284c7', dataKey: 'ch2' as const, note: 'Excludes bookings pending first contact · NA×1 retry pending included in denominator' },
   { id: 3, label: 'Book → Attended',  low: 42, high: 51, color: '#059669', dataKey: 'ch3' as const, note: 'meetings ÷ bookings · derived from 70–85% Book→Val × 60% Val→Attended' },
 ];
 
