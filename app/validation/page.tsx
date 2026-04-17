@@ -863,6 +863,42 @@ function LodgementTab({ bookings, onUpdate }: { bookings: Booking[]; onUpdate: (
   const [fromDate, setFromDate] = useState(toISODate(new Date()));
   const [toDate, setToDate] = useState(toISODate(new Date()));
   const [staffFilter, setStaffFilter] = useState("all");
+  const [na2Processing, setNa2Processing] = useState<string | null>(null);
+  const [na2RejectMode, setNa2RejectMode] = useState<Record<string, boolean>>({});
+  const [na2Notes, setNa2Notes] = useState<Record<string, string>>({});
+
+  const today = toISODate(new Date());
+
+  const handleNa2Validate = async (b: Booking) => {
+    setNa2Processing(b.id);
+    try {
+      const res = await fetch(`/api/validation/${b.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "validated", validation_date: today, validation_note: na2Notes[b.id] || "" }),
+      });
+      if (!res.ok) throw new Error("PATCH failed");
+      setNa2Notes((prev) => { const n = { ...prev }; delete n[b.id]; return n; });
+      onUpdate();
+    } catch { alert("Failed to validate — check console."); }
+    finally { setNa2Processing(null); }
+  };
+
+  const handleNa2Reject = async (b: Booking) => {
+    setNa2Processing(b.id);
+    try {
+      const res = await fetch(`/api/validation/${b.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "rejected", validation_date: today, validation_note: na2Notes[b.id] || "" }),
+      });
+      if (!res.ok) throw new Error("PATCH failed");
+      setNa2Notes((prev) => { const n = { ...prev }; delete n[b.id]; return n; });
+      setNa2RejectMode((prev) => { const r = { ...prev }; delete r[b.id]; return r; });
+      onUpdate();
+    } catch { alert("Failed to reject — check console."); }
+    finally { setNa2Processing(null); }
+  };
 
   const processed = bookings.filter((b) => b.status !== "pending");
   const filtered = processed.filter((b) => {
