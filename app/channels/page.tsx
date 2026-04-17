@@ -2,339 +2,501 @@
 
 import { useEffect, useState } from 'react';
 
+// ─── Channel definitions ───────────────────────────────────────────────────
 const CHANNELS = [
-  { id: 1, from: 'Call', to: 'Booking',    low: 10.7, high: 15, color: '#7c3aed', bg: '#ede9fe' },
-  { id: 2, from: 'Booked', to: 'Attended', low: 43,   high: 49, color: '#0284c7', bg: '#e0f2fe' },
+  { id: 1, label: 'Call → Book',       low: 11, high: 15, color: '#7c3aed', dataKey: 'ch1' as const, fixed: false },
+  { id: 2, label: 'Book → Validated',  low: 70, high: 85, color: '#0284c7', dataKey: 'ch2' as const, fixed: false },
+  { id: 3, label: 'Val → Attended',    low: 60, high: 60, color: '#059669', dataKey: null,            fixed: true  },
 ];
 
-// Metrics in bottom→top order for the dot stack (smallest = bottom)
-const METRICS: { key: string; label: string; weekKey: string; radius: number }[] = [
-  { key: 'bestDay',     label: 'Best Day',     weekKey: 'bestDayWeek',      radius: 4   },
-  { key: 'bestWeek',    label: 'Best Week',    weekKey: 'bestWeekLabel',     radius: 5   },
-  { key: 'currentWeek', label: 'Current Week', weekKey: 'currentWeekLabel',  radius: 5.5 },
-  { key: 'avg',         label: 'Average',      weekKey: '',                  radius: 7   },
-];
-
-const MAX_WEEKS = 8;
-
-type ChannelData = {
-  avg:              number | null;
-  bestDay:          number | null;
-  bestDayWeek:      string | null;
-  bestWeek:         number | null;
-  bestWeekLabel:    string | null;
-  currentWeek:      number | null;
-  currentWeekLabel: string | null;
+type WeekRow = {
+  weekNum: number;
+  isCurrentWeek: boolean;
+  ch1: number | null;
+  ch2: number | null;
+  htlRate: number | null;
+  htl: number;
+  calls: number; callBooks: number;
+  validated: number; rejected: number;
 };
 
-type StaffMember = {
-  name:         string;
-  avatar:       string;
-  color:        string;
-  weeksOnBoard: number;
-  channels:     (ChannelData | null)[];
+type PersonData = {
+  name: string;
+  avatar: string;
+  color: string;
+  currentWeekNum: number;
+  weeks: WeekRow[];
 };
 
-// When multiple staff share the same weeksOnBoard, spread them slightly on X
-// so mouse hit areas don't overlap. Returns a pixel offset per staff index.
-function xOffsets(staff: StaffMember[]): Record<string, number> {
-  const groups: Record<number, string[]> = {};
-  for (const s of staff) {
-    if (!groups[s.weeksOnBoard]) groups[s.weeksOnBoard] = [];
-    groups[s.weeksOnBoard].push(s.name);
-  }
-  const result: Record<string, number> = {};
-  for (const names of Object.values(groups)) {
-    const spread = 18; // px between members at same week
-    names.forEach((name, i) => {
-      result[name] = (i - (names.length - 1) / 2) * spread;
-    });
-  }
-  return result;
+type ApiData = {
+  team:  { weeks: WeekRow[] };
+  staff: PersonData[];
+};
+
+// ─── Helpers ───────────────────────────────────────────────────────────────
+
+function bandStatus(val: number | null, low: number, high: number, fixed: boolean) {
+  if (val === null || fixed) return null;
+  if (val < low)  return { label: `↓ ${(low  - val).toFixed(1)}pp below`, color: '#ef4444' };
+  if (val > high) return { label: `↑ ${(val  - high).toFixed(1)}pp above`, color: '#7c3aed' };
+  return { label: '✓ In band', color: '#10b981' };
 }
 
-function ChannelPanel({ ch, chIdx, staff }: {
+function wtdColor(val: number | null, low: number, high: number) {
+  if (val === null) return '#94a3b8';
+  if (val < low)   return '#ef4444';
+  if (val > high)  return '#7c3aed';
+  return '#10b981';
+}
+
+// ─── Week Chart SVG ────────────────────────────────────────────────────────
+function WeekChart({
+  weeks,
+  ch,
+  maxWeeks,
+  dotColor,
+}: {
+  weeks: WeekRow[];
   ch: typeof CHANNELS[0];
-  chIdx: number;
-  staff: StaffMember[];
+  maxWeeks: number;
+  dotColor: string;
 }) {
-  const [hovered, setHovered] = useState<string | null>(null);
-  const offsets = xOffsets(staff);
-
-  const yPad   = (ch.high - ch.low) * 1.5;
-  const yMin   = Math.max(0, ch.low - yPad);
-  const yMax   = ch.high + yPad;
-  const yRange = yMax - yMin;
-
-  const W = 720, H = 290;
-  const pL = 52, pR = 28, pT = 32, pB = 52;
+  const W = 640, H = 185;
+  const pL = 42, pR = 20, pT = 28, pB = 34;
   const plotW = W - pL - pR;
   const plotH = H - pT - pB;
 
-  const xPos = (weeks: number) => pL + (weeks / MAX_WEEKS) * plotW;
-  const yPos = (val: number)   => pT + plotH - ((val - yMin) / yRange) * plotH;
+  const yPad = ch.fixed ? 12 : Math.max((ch.high - ch.low) * 1.8, 10);
+  const yMin = Math.max(0,   ch.low  - yPad);
+  const yMax = Math.min(100, ch.high + yPad);
+  const yRange = yMax - yMin;
 
-  const bandTop    = yPos(ch.high);
-  const bandBottom = yPos(ch.low);
-  const bandH      = bandBottom - bandTop;
+  const n = Math.max(maxWeeks, 1);
+  const xPos = (w: number) => n === 1 ? pL + plotW / 2 : pL + ((w - 1) / (n - 1)) * plotW;
+  const yPos = (v: number) => pT + plotH - ((v - yMin) / yRange) * plotH;
 
-  const step = (ch.high - ch.low) > 20 ? 10 : 5;
+  const bandTop = yPos(ch.high);
+  const bandBot = yPos(ch.low);
+
+  // Y grid
+  const step = (ch.high - ch.low) <= 10 ? 5 : 10;
   const gridY: number[] = [];
   let g = Math.ceil(yMin / step) * step;
   while (g <= yMax) { gridY.push(g); g += step; }
 
-  const progPts = [0, 1, 2, 3, 4, 5, 6, 7, 8].map(w => ({
-    x: xPos(w),
-    y: yPos(ch.low + (ch.high - ch.low) * Math.min(1, w / 7)),
-  }));
-  const progPath = progPts.map((p, i) =>
-    `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`
-  ).join(' ');
+  // Data points
+  const pts = ch.dataKey
+    ? weeks.filter(w => w[ch.dataKey!] !== null).map(w => ({
+        wk: w.weekNum,
+        val: w[ch.dataKey!] as number,
+        isCur: w.isCurrentWeek,
+      }))
+    : [];
+
+  const linePath = pts.length > 1
+    ? pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${xPos(p.wk).toFixed(1)},${yPos(p.val).toFixed(1)}`).join(' ')
+    : '';
+
+  return (
+    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display: 'block', overflow: 'visible' }}>
+      {/* Y grid */}
+      {gridY.map(v => (
+        <g key={v}>
+          <line x1={pL} y1={yPos(v)} x2={W - pR} y2={yPos(v)} stroke="#f1f5f9" strokeWidth="1" />
+          <text x={pL - 5} y={yPos(v) + 4} textAnchor="end"
+            fontSize="9" fill="#94a3b8" fontFamily="sans-serif">{v}%</text>
+        </g>
+      ))}
+
+      {/* X axis week labels */}
+      {Array.from({ length: maxWeeks }, (_, i) => i + 1).map(w => {
+        const isCur = weeks.find(r => r.weekNum === w)?.isCurrentWeek;
+        return (
+          <text key={w} x={xPos(w)} y={H - pB + 16} textAnchor="middle"
+            fontSize="9" fontWeight={isCur ? '700' : '400'}
+            fill={isCur ? dotColor : '#94a3b8'} fontFamily="sans-serif">
+            {isCur ? `W${w}` : `W${w}`}
+          </text>
+        );
+      })}
+
+      {/* Band fill */}
+      {!ch.fixed && (
+        <rect x={pL} y={bandTop} width={plotW} height={bandBot - bandTop}
+          fill={ch.color} opacity="0.08" />
+      )}
+
+      {/* High line */}
+      <line x1={pL} y1={bandTop} x2={W - pR} y2={bandTop}
+        stroke={ch.color} strokeWidth="2" />
+      <rect x={pL} y={bandTop - 17} width={ch.fixed ? 72 : 46} height={15} rx="3" fill={ch.color} />
+      <text x={pL + (ch.fixed ? 36 : 23)} y={bandTop - 6} textAnchor="middle"
+        fontSize="8.5" fill="#fff" fontFamily="sans-serif" fontWeight="700">
+        {ch.fixed ? `TARGET ${ch.high}%` : `${ch.high}% ↑`}
+      </text>
+
+      {/* Low line */}
+      {!ch.fixed && (
+        <>
+          <line x1={pL} y1={bandBot} x2={W - pR} y2={bandBot}
+            stroke={ch.color} strokeWidth="2" opacity="0.5" />
+          <rect x={pL} y={bandBot + 2} width={46} height={15} rx="3"
+            fill={ch.color} opacity="0.5" />
+          <text x={pL + 23} y={bandBot + 13} textAnchor="middle"
+            fontSize="8.5" fill="#fff" fontFamily="sans-serif" fontWeight="700">
+            {ch.low}% ↓
+          </text>
+        </>
+      )}
+
+      {/* Data line */}
+      {linePath && (
+        <path d={linePath} stroke={dotColor} strokeWidth="2.5"
+          fill="none" opacity="0.55" strokeLinejoin="round" />
+      )}
+
+      {/* Dots */}
+      {pts.map(p => {
+        const cx = xPos(p.wk);
+        const cy = yPos(p.val);
+        const bs = bandStatus(p.val, ch.low, ch.high, ch.fixed);
+        return (
+          <g key={p.wk}>
+            {p.isCur ? (
+              <>
+                {/* Pulsing halo */}
+                <circle cx={cx} cy={cy} r="10" fill={dotColor} opacity="0.15">
+                  <animate attributeName="r" values="10;18;10" dur="2s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.15;0.03;0.15" dur="2s" repeatCount="indefinite" />
+                </circle>
+                <circle cx={cx} cy={cy} r="7" fill={dotColor} stroke="#fff" strokeWidth="2.5" />
+                {/* Value badge */}
+                <rect x={cx - 20} y={cy - 30} width="40" height="17" rx="5"
+                  fill={bs ? bs.color : dotColor} />
+                <text x={cx} y={cy - 17} textAnchor="middle"
+                  fontSize="9.5" fill="#fff" fontFamily="sans-serif" fontWeight="800">
+                  {p.val}% WTD
+                </text>
+              </>
+            ) : (
+              <circle cx={cx} cy={cy} r="5" fill={dotColor}
+                stroke="#fff" strokeWidth="2" opacity="0.8" />
+            )}
+          </g>
+        );
+      })}
+
+      {/* Channel 3: no-data note */}
+      {ch.fixed && pts.length === 0 && (
+        <text x={pL + plotW / 2} y={pT + plotH / 2 + 5} textAnchor="middle"
+          fontSize="11" fill="#cbd5e1" fontFamily="sans-serif" fontStyle="italic">
+          60% target — data tracked via meeting attendance
+        </text>
+      )}
+
+      {/* Axes */}
+      <line x1={pL} y1={pT} x2={pL} y2={H - pB} stroke="#e2e8f0" strokeWidth="1.5" />
+      <line x1={pL} y1={H - pB} x2={W - pR} y2={H - pB} stroke="#e2e8f0" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+// ─── Channel Panel ─────────────────────────────────────────────────────────
+function ChannelPanel({
+  ch, weeks, maxWeeks, dotColor,
+}: {
+  ch: typeof CHANNELS[0];
+  weeks: WeekRow[];
+  maxWeeks: number;
+  dotColor: string;
+}) {
+  const curWeek = weeks.find(w => w.isCurrentWeek);
+  const wtdVal  = curWeek && ch.dataKey ? curWeek[ch.dataKey] : null;
+  const bs      = bandStatus(wtdVal, ch.low, ch.high, ch.fixed);
+
+  // HTL weeks that have any data
+  const htlWeeks = weeks.filter(w => w.htlRate !== null && (w.validated + w.rejected + w.htl) > 0);
 
   return (
     <div style={{
       background: '#fff', border: '1px solid #e2e8f0',
-      borderRadius: '14px', overflow: 'hidden',
-      boxShadow: '0 1px 6px rgba(0,0,0,0.05)',
+      borderRadius: '12px', overflow: 'hidden',
+      boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+      marginBottom: '16px',
     }}>
       {/* Header */}
       <div style={{
-        padding: '14px 22px', borderBottom: '1px solid #f1f5f9',
-        background: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '13px 20px', borderBottom: '1px solid #f1f5f9',
+        background: '#fafafa',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
-            width: '30px', height: '30px', borderRadius: '8px',
-            background: ch.bg, color: ch.color,
+            width: '28px', height: '28px', borderRadius: '8px',
+            background: ch.color + '20', color: ch.color,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '14px', fontWeight: 800,
+            fontSize: '13px', fontWeight: 800,
           }}>
-            {chIdx + 1}
+            {ch.id}
           </div>
-          <span style={{ fontSize: '16px', fontWeight: 700, color: '#1e293b', letterSpacing: '-0.01em' }}>
-            {ch.from} → {ch.to}
+          <span style={{ fontSize: '15px', fontWeight: 700, color: '#1e293b' }}>
+            {ch.label}
           </span>
+          {ch.fixed && (
+            <span style={{
+              fontSize: '10px', fontWeight: 600, color: ch.color,
+              background: ch.color + '18', padding: '2px 8px', borderRadius: '10px',
+            }}>
+              60% target line
+            </span>
+          )}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '10px', color: '#f97316', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Low</div>
-            <div style={{ fontSize: '22px', fontWeight: 800, color: '#1e293b', lineHeight: 1 }}>{ch.low}%</div>
-          </div>
-          <div style={{ fontSize: '16px', color: '#e2e8f0' }}>↔</div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '10px', color: '#10b981', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>High</div>
-            <div style={{ fontSize: '22px', fontWeight: 800, color: '#1e293b', lineHeight: 1 }}>{ch.high}%</div>
-          </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          {/* WTD value */}
+          {wtdVal !== null && (
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '9px', color: '#94a3b8', textTransform: 'uppercase',
+                letterSpacing: '0.06em', fontWeight: 600 }}>WTD</div>
+              <div style={{ fontSize: '20px', fontWeight: 800, lineHeight: 1,
+                color: bs ? bs.color : '#1e293b' }}>
+                {wtdVal}%
+              </div>
+              {bs && (
+                <div style={{ fontSize: '9.5px', color: bs.color, fontWeight: 600, marginTop: '1px' }}>
+                  {bs.label}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Band range */}
+          {!ch.fixed && (
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '9px', color: '#f97316', fontWeight: 700,
+                  textTransform: 'uppercase', letterSpacing: '0.05em' }}>Low</div>
+                <div style={{ fontSize: '16px', fontWeight: 800, color: '#1e293b', lineHeight: 1 }}>
+                  {ch.low}%
+                </div>
+              </div>
+              <div style={{ color: '#e2e8f0', fontSize: '14px' }}>↔</div>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '9px', color: '#10b981', fontWeight: 700,
+                  textTransform: 'uppercase', letterSpacing: '0.05em' }}>High</div>
+                <div style={{ fontSize: '16px', fontWeight: 800, color: '#1e293b', lineHeight: 1 }}>
+                  {ch.high}%
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Chart */}
-      <div style={{ padding: '4px 14px 14px', overflowX: 'auto' }}>
-        <svg width="100%" viewBox={`0 0 ${W} ${H}`}
-          style={{ display: 'block', minWidth: '380px', overflow: 'visible' }}
-          onMouseLeave={() => setHovered(null)}>
-
-          {/* Y grid */}
-          {gridY.map(v => (
-            <g key={v}>
-              <line x1={pL} y1={yPos(v)} x2={W - pR} y2={yPos(v)} stroke="#f1f5f9" strokeWidth="1" />
-              <text x={pL - 6} y={yPos(v) + 4} textAnchor="end"
-                fontSize="10" fill="#94a3b8" fontFamily="sans-serif">{v}%</text>
-            </g>
-          ))}
-
-          {/* X grid */}
-          {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(w => (
-            <g key={w}>
-              <line x1={xPos(w)} y1={pT} x2={xPos(w)} y2={H - pB} stroke="#f1f5f9" strokeWidth="1" />
-              <text x={xPos(w)} y={H - pB + 16} textAnchor="middle"
-                fontSize="10" fill="#94a3b8" fontFamily="sans-serif">
-                {w === 0 ? 'Start' : `W${w}`}
-              </text>
-            </g>
-          ))}
-
-          <text x={pL + plotW / 2} y={H - 5} textAnchor="middle"
-            fontSize="11" fill="#94a3b8" fontFamily="sans-serif" fontStyle="italic">
-            Weeks on board →
-          </text>
-
-          {/* Band */}
-          <rect x={pL} y={bandTop} width={plotW} height={bandH} fill={ch.color} opacity="0.07" />
-
-          <line x1={pL} y1={bandTop} x2={W - pR} y2={bandTop} stroke={ch.color} strokeWidth="2.5" />
-          <rect x={pL} y={bandTop - 19} width={56} height={18} rx="4" fill={ch.color} />
-          <text x={pL + 28} y={bandTop - 6} textAnchor="middle"
-            fontSize="9.5" fill="#fff" fontFamily="sans-serif" fontWeight="700">
-            HIGH {ch.high}%
-          </text>
-
-          <line x1={pL} y1={bandBottom} x2={W - pR} y2={bandBottom}
-            stroke={ch.color} strokeWidth="2.5" opacity="0.55" />
-          <rect x={pL} y={bandBottom + 2} width={52} height={18} rx="4" fill={ch.color} opacity="0.55" />
-          <text x={pL + 26} y={bandBottom + 14} textAnchor="middle"
-            fontSize="9.5" fill="#fff" fontFamily="sans-serif" fontWeight="700">
-            LOW {ch.low}%
-          </text>
-
-          {/* Expected ramp */}
-          <path d={progPath} stroke={ch.color} strokeWidth="1.5"
-            strokeDasharray="6 3" fill="none" opacity="0.3" />
-          <text x={xPos(4.5)} y={yPos(ch.high) - 7} fontSize="9" fill={ch.color}
-            fontFamily="sans-serif" opacity="0.5" textAnchor="middle">
-            expected ramp
-          </text>
-
-          {/* Staff — render hovered last so tooltip sits on top */}
-          {[...staff]
-            .sort((a, b) => (hovered === a.name ? 1 : hovered === b.name ? -1 : 0))
-            .map(s => {
-              const chData = s.channels[chIdx];
-              if (!chData) return null;
-
-              const availableMetrics = METRICS.filter(m => (chData as any)[m.key] !== null);
-              const isHov  = hovered === s.name;
-              const xOff   = offsets[s.name] ?? 0;
-              const xCoord = xPos(s.weeksOnBoard) + xOff;
-
-              // No data at all
-              if (availableMetrics.length === 0) {
-                return (
-                  <g key={s.name} onMouseEnter={() => setHovered(s.name)} style={{ cursor: 'pointer' }}>
-                    <circle cx={xCoord} cy={yPos(yMin + yRange * 0.25)}
-                      r={22} fill="transparent" />
-                    <circle cx={xCoord} cy={yPos(yMin + yRange * 0.25)}
-                      r={6} fill={s.color} opacity="0.3" stroke="#fff" strokeWidth="1.5" />
-                    <text x={xCoord + 10} y={yPos(yMin + yRange * 0.25) - 2}
-                      fontSize="9.5" fill={s.color} fontFamily="sans-serif" fontWeight="800">
-                      {s.name}
-                    </text>
-                  </g>
-                );
-              }
-
-              const allVals = availableMetrics.map(m => (chData as any)[m.key] as number);
-              const topVal  = Math.max(...allVals);
-              const botVal  = Math.min(...allVals);
-
-              // Tooltip
-              const tipLines = availableMetrics.map(m => {
-                const val      = (chData as any)[m.key] as number;
-                const weekNote = m.weekKey ? (chData as any)[m.weekKey] as string | null : null;
-                const label    = weekNote ? `${m.label} (${weekNote})` : m.label;
-                return `${label}: ${val.toFixed(1)}%`;
-              });
-
-              const avg = chData.avg;
-              const bandStatus = avg === null ? null
-                : avg < ch.low  ? { label: `↓ ${(ch.low - avg).toFixed(1)}pp below band`, color: '#ef4444' }
-                : avg > ch.high ? { label: `↑ ${(avg - ch.high).toFixed(1)}pp above band`, color: '#7c3aed' }
-                : { label: '✓ In band', color: '#10b981' };
-
-              const tipW   = 200;
-              const tipH   = 30 + tipLines.length * 16 + (bandStatus ? 20 : 4);
-              const flipLeft = xCoord > W * 0.65;
-              const tipX   = flipLeft ? xCoord - tipW - 12 : xCoord + 14;
-              const tipY   = yPos(topVal) - 18;
-
-              return (
-                <g key={s.name}
-                  style={{ cursor: 'pointer' }}
-                  onMouseEnter={() => setHovered(s.name)}>
-
-                  {/* Wider invisible hit area */}
-                  <rect
-                    x={xCoord - 20}
-                    y={yPos(topVal) - 20}
-                    width={40}
-                    height={yPos(botVal) - yPos(topVal) + 40}
-                    fill="transparent"
-                  />
-
-                  {/* Connector */}
-                  {availableMetrics.length > 1 && (
-                    <line x1={xCoord} y1={yPos(topVal)} x2={xCoord} y2={yPos(botVal)}
-                      stroke={s.color} strokeWidth="1.5" opacity="0.2" />
-                  )}
-
-                  {/* Dots */}
-                  {availableMetrics.map((m, mi) => {
-                    const val = (chData as any)[m.key] as number;
-                    const cy  = yPos(val);
-                    const r   = isHov ? m.radius + 2.5 : m.radius;
-                    return (
-                      <g key={m.key}>
-                        {isHov && <circle cx={xCoord} cy={cy} r={r + 5} fill={s.color} opacity="0.12" />}
-                        <circle cx={xCoord} cy={cy} r={r}
-                          fill={s.color} stroke="#fff" strokeWidth="2"
-                          opacity={mi === availableMetrics.length - 1 ? 1 : 0.6} />
-                      </g>
-                    );
-                  })}
-
-                  {/* Name label */}
-                  {!isHov && (
-                    <text x={xCoord + (METRICS[METRICS.length - 1].radius + 4)} y={yPos(topVal) - 4}
-                      fontSize="9.5" fill={s.color} fontFamily="sans-serif" fontWeight="800">
-                      {s.name}
-                    </text>
-                  )}
-
-                  {/* Tooltip */}
-                  {isHov && (
-                    <g>
-                      <rect x={tipX} y={tipY} width={tipW} height={tipH} rx="7"
-                        fill="#1e293b" opacity="0.95" />
-                      {/* Name + week */}
-                      <text x={tipX + 10} y={tipY + 18}
-                        fontSize="12" fill="#f1f5f9" fontFamily="sans-serif" fontWeight="700">
-                        {s.name} · {s.weeksOnBoard === 0 ? 'Day 1' : `W${s.weeksOnBoard}`}
-                      </text>
-                      {/* Metric lines */}
-                      {tipLines.map((line, i) => (
-                        <text key={i} x={tipX + 10} y={tipY + 35 + i * 16}
-                          fontSize="10.5" fill="#cbd5e1" fontFamily="sans-serif">
-                          {line}
-                        </text>
-                      ))}
-                      {/* Band status */}
-                      {bandStatus && (
-                        <text x={tipX + 10} y={tipY + tipH - 7}
-                          fontSize="10.5" fill={bandStatus.color}
-                          fontFamily="sans-serif" fontWeight="700">
-                          {bandStatus.label}
-                        </text>
-                      )}
-                    </g>
-                  )}
-                </g>
-              );
-            })}
-
-          {/* Axes */}
-          <line x1={pL} y1={pT} x2={pL} y2={H - pB} stroke="#e2e8f0" strokeWidth="1.5" />
-          <line x1={pL} y1={H - pB} x2={W - pR} y2={H - pB} stroke="#e2e8f0" strokeWidth="1.5" />
-        </svg>
+      <div style={{ padding: '6px 16px 6px' }}>
+        <WeekChart weeks={weeks} ch={ch} maxWeeks={maxWeeks} dotColor={dotColor} />
       </div>
+
+      {/* HTL row — Channel 2 only */}
+      {ch.id === 2 && (
+        <div style={{
+          padding: '6px 20px 14px',
+          borderTop: '1px solid #f8fafc',
+          display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap',
+        }}>
+          <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 700,
+            textTransform: 'uppercase', letterSpacing: '0.05em', marginRight: '2px' }}>
+            HTL
+          </span>
+          {htlWeeks.length === 0 ? (
+            <span style={{ fontSize: '10px', color: '#cbd5e1', fontStyle: 'italic' }}>
+              No HTL recorded
+            </span>
+          ) : (
+            htlWeeks.map(w => (
+              <div key={w.weekNum} style={{
+                display: 'flex', alignItems: 'center', gap: '4px',
+                background: w.isCurrentWeek ? '#fef3c7' : '#f8fafc',
+                border: `1px solid ${w.isCurrentWeek ? '#fbbf24' : '#e2e8f0'}`,
+                borderRadius: '12px', padding: '2px 8px',
+              }}>
+                <span style={{ fontSize: '9px', color: '#94a3b8', fontWeight: 600 }}>
+                  W{w.weekNum}{w.isCurrentWeek ? ' WTD' : ''}
+                </span>
+                <span style={{ fontSize: '11px', fontWeight: 800, color: '#d97706' }}>
+                  {w.htlRate}%
+                </span>
+                <span style={{ fontSize: '9px', color: '#94a3b8' }}>
+                  ({w.htl} bookings)
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 }
 
+// ─── Team Tab ──────────────────────────────────────────────────────────────
+function TeamTab({ team }: { team: { weeks: WeekRow[] } }) {
+  const curWeek = team.weeks.find(w => w.isCurrentWeek);
+
+  // All-time aggregate stats
+  const totCalls  = team.weeks.reduce((s, w) => s + w.calls, 0);
+  const totBooks  = team.weeks.reduce((s, w) => s + w.callBooks, 0);
+  const totVal    = team.weeks.reduce((s, w) => s + w.validated, 0);
+  const totRej    = team.weeks.reduce((s, w) => s + w.rejected, 0);
+  const totHtl    = team.weeks.reduce((s, w) => s + w.htl, 0);
+  const allTimeCh1 = totCalls > 0 ? Math.round((totBooks / totCalls) * 1000) / 10 : null;
+  const allTimeCh2 = (totVal + totRej) > 0 ? Math.round((totVal / (totVal + totRej)) * 1000) / 10 : null;
+  const allTimeHtl = (totVal + totRej + totHtl) > 0
+    ? Math.round((totHtl / (totVal + totRej + totHtl)) * 1000) / 10 : null;
+
+  return (
+    <div>
+      {/* All-time headline stats */}
+      <div style={{
+        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+        gap: '12px', marginBottom: '20px',
+      }}>
+        {[
+          { label: 'All-time Call→Book', val: allTimeCh1, ch: CHANNELS[0] },
+          { label: 'All-time Book→Val',  val: allTimeCh2, ch: CHANNELS[1] },
+          { label: 'All-time HTL rate',  val: allTimeHtl, color: '#d97706' },
+        ].map(({ label, val, ch, color }) => {
+          const c = ch ? ch.color : (color ?? '#94a3b8');
+          const bs = ch ? bandStatus(val ?? null, ch.low, ch.high, ch.fixed) : null;
+          return (
+            <div key={label} style={{
+              background: '#fff', border: '1px solid #e2e8f0',
+              borderRadius: '10px', padding: '14px 18px',
+              boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+            }}>
+              <div style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 600,
+                textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>
+                {label}
+              </div>
+              <div style={{ fontSize: '28px', fontWeight: 800, color: bs ? bs.color : c, lineHeight: 1 }}>
+                {val !== null ? `${val}%` : '—'}
+              </div>
+              {bs && (
+                <div style={{ fontSize: '10px', color: bs.color, fontWeight: 600, marginTop: '3px' }}>
+                  {bs.label}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Channel panels */}
+      {CHANNELS.map(ch => (
+        <ChannelPanel
+          key={ch.id}
+          ch={ch}
+          weeks={team.weeks}
+          maxWeeks={8}
+          dotColor={ch.color}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ─── Person Tab ────────────────────────────────────────────────────────────
+function PersonTab({ person }: { person: PersonData }) {
+  const totCalls = person.weeks.reduce((s, w) => s + w.calls, 0);
+  const totBooks = person.weeks.reduce((s, w) => s + w.callBooks, 0);
+  const totVal   = person.weeks.reduce((s, w) => s + w.validated, 0);
+  const totRej   = person.weeks.reduce((s, w) => s + w.rejected, 0);
+  const totHtl   = person.weeks.reduce((s, w) => s + w.htl, 0);
+
+  const allTimeCh1 = totCalls > 0 ? Math.round((totBooks / totCalls) * 1000) / 10 : null;
+  const allTimeCh2 = (totVal + totRej) > 0 ? Math.round((totVal / (totVal + totRej)) * 1000) / 10 : null;
+  const allTimeHtl = (totVal + totRej + totHtl) > 0
+    ? Math.round((totHtl / (totVal + totRej + totHtl)) * 1000) / 10 : null;
+
+  return (
+    <div>
+      {/* Person header */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: '14px',
+        marginBottom: '20px',
+        padding: '16px 20px',
+        background: '#fff', border: '1px solid #e2e8f0',
+        borderRadius: '12px', boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+      }}>
+        <div style={{
+          width: '44px', height: '44px', borderRadius: '50%',
+          background: person.color,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: '18px', fontWeight: 800, color: '#fff',
+        }}>
+          {person.avatar}
+        </div>
+        <div>
+          <div style={{ fontSize: '18px', fontWeight: 800, color: '#1e293b', letterSpacing: '-0.01em' }}>
+            {person.name}
+          </div>
+          <div style={{ fontSize: '12px', color: '#94a3b8', fontWeight: 500 }}>
+            Currently in Week {person.currentWeekNum} · {person.weeks.length} weeks of data
+          </div>
+        </div>
+        {/* All-time stats */}
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: '20px' }}>
+          {[
+            { label: 'Call→Book', val: allTimeCh1, ch: CHANNELS[0] },
+            { label: 'Book→Val',  val: allTimeCh2, ch: CHANNELS[1] },
+            { label: 'HTL rate',  val: allTimeHtl, color: '#d97706' },
+          ].map(({ label, val, ch, color }) => {
+            const c = ch ? ch.color : (color ?? '#94a3b8');
+            const bs = ch ? bandStatus(val ?? null, ch.low, ch.high, ch.fixed) : null;
+            return (
+              <div key={label} style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '9px', color: '#94a3b8', fontWeight: 700,
+                  textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
+                <div style={{ fontSize: '20px', fontWeight: 800, lineHeight: 1,
+                  color: bs ? bs.color : c }}>
+                  {val !== null ? `${val}%` : '—'}
+                </div>
+                {bs && <div style={{ fontSize: '8.5px', color: bs.color, fontWeight: 600 }}>{bs.label}</div>}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Channel panels */}
+      {CHANNELS.map(ch => (
+        <ChannelPanel
+          key={ch.id}
+          ch={ch}
+          weeks={person.weeks}
+          maxWeeks={person.currentWeekNum}
+          dotColor={person.color}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ─── Page ──────────────────────────────────────────────────────────────────
 export default function ChannelsPage() {
-  const [staff, setStaff]           = useState<StaffMember[]>([]);
-  const [loading, setLoading]       = useState(true);
-  const [error, setError]           = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+  const [data, setData]       = useState<ApiData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError]     = useState<string | null>(null);
+  const [tab, setTab]         = useState<string>('team');
+  const [updated, setUpdated] = useState<string | null>(null);
 
   const load = async () => {
-    setLoading(true);
-    setError(null);
+    setLoading(true); setError(null);
     try {
       const res = await fetch('/api/channels-data');
-      if (!res.ok) throw new Error(`API error ${res.status}`);
-      const data = await res.json();
-      setStaff(data.staff);
-      setLastUpdated(new Date().toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' }));
+      if (!res.ok) throw new Error(`API ${res.status}`);
+      setData(await res.json());
+      setUpdated(new Date().toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' }));
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -344,121 +506,91 @@ export default function ChannelsPage() {
 
   useEffect(() => { load(); }, []);
 
+  const TABS = [
+    { key: 'team', label: 'Team', color: '#1e293b' },
+    ...( data?.staff ?? [] ).map(s => ({ key: s.name, label: s.name, color: s.color })),
+  ];
+
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: "'DM Sans','Inter',sans-serif" }}>
 
       {/* Header */}
       <div style={{
         background: '#fff', borderBottom: '1px solid #e2e8f0',
-        padding: '20px 40px',
-        display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
-        gap: '16px', flexWrap: 'wrap',
+        padding: '18px 40px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap',
       }}>
         <div>
-          <h1 style={{ margin: 0, fontSize: '22px', fontWeight: 800, color: '#1e293b', letterSpacing: '-0.02em' }}>
+          <h1 style={{ margin: 0, fontSize: '21px', fontWeight: 800, color: '#1e293b', letterSpacing: '-0.02em' }}>
             Lead Gen Performance Channels
           </h1>
-          <p style={{ margin: '3px 0 0', fontSize: '13px', color: '#64748b' }}>
-            Live from Airtable · Y = cut-through rate · X = actual weeks on board
+          <p style={{ margin: '2px 0 0', fontSize: '12px', color: '#94a3b8' }}>
+            Week-on-week cut-through rates · Live from Airtable
           </p>
         </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'flex-end' }}>
-          {METRICS.map((m, i) => (
-            <div key={m.key} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '11px', color: '#64748b' }}>{m.label}</span>
-              <div style={{
-                width: `${m.radius * 2}px`, height: `${m.radius * 2}px`,
-                borderRadius: '50%', background: '#94a3b8',
-                opacity: i === METRICS.length - 1 ? 1 : 0.5,
-                border: '2px solid #fff', boxShadow: '0 0 0 1px #cbd5e1',
-              }} />
-            </div>
-          ))}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '2px' }}>
-            <span style={{ fontSize: '11px', color: '#64748b' }}>Expected ramp</span>
-            <svg width="28" height="8">
-              <line x1="0" y1="4" x2="28" y2="4" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="4 2" />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      {/* Staff row */}
-      <div style={{
-        background: '#fff', borderBottom: '1px solid #f1f5f9',
-        padding: '10px 40px', display: 'flex', gap: '8px',
-        flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between',
-      }}>
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600,
-            textTransform: 'uppercase', letterSpacing: '0.06em' }}>Staff</span>
-          {staff.map(s => (
-            <div key={s.name} style={{
-              display: 'flex', alignItems: 'center', gap: '6px',
-              background: '#f8fafc', border: '1px solid #e2e8f0',
-              borderRadius: '20px', padding: '4px 12px 4px 5px',
-            }}>
-              <div style={{
-                width: '22px', height: '22px', borderRadius: '50%', background: s.color,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '10px', fontWeight: 800, color: '#fff',
-              }}>{s.avatar}</div>
-              <span style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b' }}>{s.name}</span>
-              <span style={{
-                fontSize: '11px', fontWeight: 600,
-                color: s.weeksOnBoard === 0 ? '#f97316' : '#64748b',
-                background: s.weeksOnBoard === 0 ? '#fff7ed' : 'transparent',
-                padding: s.weeksOnBoard === 0 ? '1px 5px' : '0',
-                borderRadius: '4px',
-              }}>
-                {s.weeksOnBoard === 0 ? 'Day 1' : `W${s.weeksOnBoard}`}
-              </span>
-            </div>
-          ))}
-        </div>
-
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {lastUpdated && (
-            <span style={{ fontSize: '11px', color: '#94a3b8' }}>Updated {lastUpdated}</span>
-          )}
+          {updated && <span style={{ fontSize: '11px', color: '#94a3b8' }}>Updated {updated}</span>}
           <button onClick={load} disabled={loading} style={{
             padding: '6px 14px', borderRadius: '8px', border: '1px solid #e2e8f0',
-            background: loading ? '#f8fafc' : '#fff', color: '#475569',
-            fontSize: '12px', fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer',
+            background: '#fff', color: '#475569', fontSize: '12px', fontWeight: 600,
+            cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.6 : 1,
           }}>
             {loading ? 'Loading…' : '↻ Refresh'}
           </button>
         </div>
       </div>
 
-      {/* Panels */}
-      <div style={{ padding: '28px 40px', maxWidth: '1100px', margin: '0 auto' }}>
+      {/* Tabs */}
+      <div style={{
+        background: '#fff', borderBottom: '1px solid #e2e8f0',
+        padding: '0 40px',
+        display: 'flex', gap: '0', alignItems: 'flex-end',
+      }}>
+        {TABS.map(t => (
+          <button key={t.key} onClick={() => setTab(t.key)} style={{
+            padding: '12px 20px',
+            border: 'none',
+            borderBottom: tab === t.key ? `3px solid ${t.color}` : '3px solid transparent',
+            background: 'none',
+            color: tab === t.key ? t.color : '#64748b',
+            fontSize: '13px',
+            fontWeight: tab === t.key ? 700 : 500,
+            cursor: 'pointer',
+            transition: 'all 0.15s',
+            fontFamily: 'inherit',
+          }}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Content */}
+      <div style={{ padding: '28px 40px', maxWidth: '1050px', margin: '0 auto' }}>
         {error ? (
           <div style={{
-            padding: '16px 20px', background: '#fef2f2', border: '1px solid #fecaca',
-            borderRadius: '10px', color: '#dc2626', fontSize: '13px',
+            padding: '16px 20px', background: '#fef2f2',
+            border: '1px solid #fecaca', borderRadius: '10px',
+            color: '#dc2626', fontSize: '13px',
           }}>
             Failed to load: {error}
           </div>
         ) : loading ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {CHANNELS.map(ch => (
               <div key={ch.id} style={{
-                height: '340px', background: '#fff', border: '1px solid #e2e8f0',
-                borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                height: '260px', background: '#fff',
+                border: '1px solid #e2e8f0', borderRadius: '12px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <span style={{ color: '#94a3b8', fontSize: '13px' }}>Loading {ch.from} → {ch.to}…</span>
+                <span style={{ color: '#94a3b8', fontSize: '13px' }}>Loading {ch.label}…</span>
               </div>
             ))}
           </div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {CHANNELS.map((ch, i) => (
-              <ChannelPanel key={ch.id} ch={ch} chIdx={i} staff={staff} />
-            ))}
-          </div>
-        )}
+        ) : data ? (
+          tab === 'team'
+            ? <TeamTab team={data.team} />
+            : <PersonTab person={data.staff.find(s => s.name === tab)!} />
+        ) : null}
       </div>
     </div>
   );
