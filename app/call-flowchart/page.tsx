@@ -1433,7 +1433,7 @@ export default function CallFlowchartPage() {
                       <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
                       <h4 className="font-bold text-slate-900 text-sm mb-2">Second Unbiased Opinion</h4>
                       <p className="text-slate-600 text-sm italic leading-relaxed">
-                        &ldquo;Yeah, perfect. Well, let me give you a second unbiased opinion. I don&apos;t expect you to sign on the day or anything like that &mdash; it&apos;s more so to show you what they&apos;ve been doing, and from there you can make a decision. How does that sound?&rdquo;
+                        &ldquo;Yeah, perfect. Well, let me get you in front of [Closer] &mdash; he&apos;s the best in the business and I think you&apos;ll get some serious value out of what he has to show you regardless of what you decide to do. He&apos;ll give you a second unbiased opinion, show you what your current provider&apos;s been doing, and from there you can make a decision. Don&apos;t expect you to sign on the day or anything like that. How does that sound?&rdquo;
                       </p>
                     </div>
                     <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
@@ -1482,7 +1482,7 @@ export default function CallFlowchartPage() {
                       <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
                       <h4 className="font-bold text-slate-900 text-sm mb-2">Reinforce Credibility</h4>
                       <p className="text-slate-600 text-sm italic leading-relaxed">
-                        &ldquo;We&apos;ve got over 3,000 clients, 70% of them are trade-based businesses just like yours. We&apos;ve perfected our process &mdash; you&apos;ll absolutely love it. But let me go through it in more detail on [Day]. How&apos;s that sound?&rdquo;
+                        &ldquo;We&apos;ve got over 3,000 clients, 70% of them are trade-based businesses just like yours. We&apos;ve perfected our process &mdash; you&apos;ll absolutely love it. [Closer] is amazing at what he does &mdash; he&apos;ll walk you through it all on [Day] and I think you&apos;ll get some serious value regardless of what you decide. How&apos;s that sound?&rdquo;
                       </p>
                     </div>
                     <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
@@ -1653,7 +1653,7 @@ export default function CallFlowchartPage() {
                       <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
                       <h4 className="font-bold text-slate-900 text-sm mb-2">Second Unbiased Opinion</h4>
                       <p className="text-slate-600 text-sm italic leading-relaxed">
-                        &ldquo;Yeah, perfect. Well, let me give you a second unbiased opinion. I don&apos;t expect you to sign on the day or anything like that &mdash; it&apos;s more so to show you what they&apos;ve been doing, benchmark your performance against local competitors, and from there you can make a decision. How does that sound?&rdquo;
+                        &ldquo;Yeah, perfect. Well, let me get you in front of [Closer] &mdash; he&apos;s the best in the business and I think you&apos;ll get some serious value out of what he has to show you regardless of what you decide to do. He&apos;ll give you a second unbiased opinion, benchmark your performance against local competitors, and from there you can make a decision. Don&apos;t expect you to sign on the day or anything like that. How does that sound?&rdquo;
                       </p>
                     </div>
                     <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
@@ -1702,7 +1702,7 @@ export default function CallFlowchartPage() {
                       <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
                       <h4 className="font-bold text-slate-900 text-sm mb-2">Reinforce Credibility</h4>
                       <p className="text-slate-600 text-sm italic leading-relaxed">
-                        &ldquo;We&apos;ve got over 3,000 clients, 70% of them are trade-based businesses just like yours. We&apos;ve perfected our process &mdash; you&apos;ll absolutely love it. Let me run you through how we&apos;d fix up your current site&apos;s performance on [Day]. How&apos;s that sound?&rdquo;
+                        &ldquo;We&apos;ve got over 3,000 clients, 70% of them are trade-based businesses just like yours. We&apos;ve perfected our process &mdash; you&apos;ll absolutely love it. [Closer] is amazing at what he does &mdash; he&apos;ll run you through how we&apos;d fix up your site&apos;s performance on [Day] and I think you&apos;ll get some serious value regardless of what you decide. How&apos;s that sound?&rdquo;
                       </p>
                     </div>
                     <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
@@ -1781,11 +1781,11 @@ export default function CallFlowchartPage() {
                 <h3 className="font-bold text-slate-900 text-base mb-3">Set the Scene + Confirm Email</h3>
                 {tryLaterPitch === 'quodo' ? (
                   <p className="text-slate-700 text-sm italic leading-relaxed">
-                    &ldquo;Awesome, I&apos;ll book that in. We&apos;ll do it over Zoom so we can show you visually. I&apos;ll also send through a few example sites we&apos;ve done &mdash; particularly for trade-based businesses like yours &mdash; so you&apos;ve got something to look at before we jump on the call. From there we&apos;ll walk you through our process and put together a tailored quote. Is your best email still [xyz@xyz.com.au]?&rdquo;
+                    &ldquo;Awesome, I&apos;ll book that in with [Closer] &mdash; he&apos;s absolutely amazing and you&apos;ll get some serious value out of what he has to show you regardless of what you decide. We&apos;ll do it over Zoom so he can show you visually. I&apos;ll also send through a few example sites we&apos;ve done &mdash; particularly for trade-based businesses like yours &mdash; so you&apos;ve got something to look at before the call. From there [Closer] will walk you through our process and put together a tailored quote. Is your best email still [xyz@xyz.com.au]?&rdquo;
                   </p>
                 ) : (
                   <p className="text-slate-700 text-sm italic leading-relaxed">
-                    &ldquo;Awesome, I&apos;ll book that in. We&apos;ll do it over Zoom so we can show you visually. In the meeting I&apos;ll walk you through how you&apos;re currently performing online, benchmark you against some of your local competitors, and from there we&apos;ll put together a tailored quote. You can do with that information as you wish. Is your best email still [xyz@xyz.com.au]?&rdquo;
+                    &ldquo;Awesome, I&apos;ll book that in with [Closer] &mdash; he&apos;s absolutely amazing and you&apos;ll get some serious value out of what he has to show you regardless of what you decide. We&apos;ll do it over Zoom so he can show you visually. In the meeting he&apos;ll walk you through how you&apos;re currently performing online, benchmark you against some of your local competitors, and from there we&apos;ll put together a tailored quote. Is your best email still [xyz@xyz.com.au]?&rdquo;
                   </p>
                 )}
               </div>
@@ -1796,7 +1796,7 @@ export default function CallFlowchartPage() {
                 <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-3">BOOK</div>
                 <h3 className="font-bold text-slate-900 text-base mb-3">Warm Close</h3>
                 <p className="text-slate-700 text-sm italic leading-relaxed">
-                  &ldquo;Alright fantastic, thanks so much [Name] &mdash; look forward to catching up on [Day] at [Time]!&rdquo;
+                  &ldquo;Alright fantastic, thanks so much [Name] &mdash; [Closer]&apos;s going to take great care of you on [Day] at [Time]. Speak soon!&rdquo;
                 </p>
               </div>
             </div>
