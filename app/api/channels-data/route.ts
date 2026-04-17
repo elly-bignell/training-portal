@@ -48,12 +48,13 @@ type Bucket = {
   validated: number;
   rejected: number;
   htl: number;
+  naRetry: number;
 };
 
 function mkBuckets(count: number): Record<number, Bucket> {
   const m: Record<number, Bucket> = {};
   for (let i = 1; i <= count; i++)
-    m[i] = { calls: 0, callBooks: 0, callMeetings: 0, validated: 0, rejected: 0, htl: 0 };
+    m[i] = { calls: 0, callBooks: 0, callMeetings: 0, validated: 0, rejected: 0, htl: 0, naRetry: 0 };
   return m;
 }
 
@@ -64,16 +65,16 @@ function formatBuckets(buckets: Record<number, Bucket>, curWeek: number) {
     const w      = parseInt(k);
     const ch1    = b.calls > 0     ? r1((b.callBooks    / b.calls)     * 100) : null;
     const ch3    = b.callBooks > 0 ? r1((b.callMeetings / b.callBooks) * 100) : null;
-    const valRej = b.validated + b.rejected;
+    const valRej = b.validated + b.rejected + b.htl + b.naRetry;
     const ch2    = valRej > 0      ? r1((b.validated    / valRej)      * 100) : null;
-    const htlRate = (valRej + b.htl) > 0
-      ? r1((b.htl / (valRej + b.htl)) * 100) : null;
+    const htlRate = (b.validated + b.rejected + b.htl + b.naRetry) > 0
+      ? r1((b.htl / (b.validated + b.rejected + b.htl + b.naRetry)) * 100) : null;
     return {
       weekNum: w,
       isCurrentWeek: w === curWeek,
       ch1, ch2, ch3, htlRate,
       calls: b.calls, callBooks: b.callBooks, callMeetings: b.callMeetings,
-      validated: b.validated, rejected: b.rejected, htl: b.htl,
+      validated: b.validated, rejected: b.rejected, htl: b.htl, naRetry: b.naRetry,
     };
   }).sort((a, b) => a.weekNum - b.weekNum);
 }
@@ -85,7 +86,7 @@ export async function GET() {
 
     const [dailyRecs, bookingRecs] = await Promise.all([
       fetchTable('DailyActivity', ['trainee_name', 'date', 'calls', 'bookings', 'meetings']),
-      fetchTable('Bookings', ['booking_date', 'staff_member', 'status'], `NOT({status}="pending")`),
+      fetchTable('Bookings', ['booking_date', 'staff_member', 'status', 'na_count']),
     ]);
 
     const teamBuckets = mkBuckets(TEAM_TOTAL_WEEKS);
@@ -130,10 +131,13 @@ export async function GET() {
       const tw = weekNum(f.booking_date, TEAM_START);
       const pw = weekNum(f.booking_date, st.startDate);
 
+      const naCount = (f.na_count ?? 0) as number;
+      if (status === 'pending' && naCount < 1) continue;
       const addTo = (b: Bucket) => {
-        if (status === 'validated')          b.validated++;
-        else if (status === 'rejected')      b.rejected++;
-        else if (status === 'hot_try_later') b.htl++;
+        if (status === 'validated')                    b.validated++;
+        else if (status === 'rejected')                b.rejected++;
+        else if (status === 'hot_try_later')           b.htl++;
+        else if (status === 'pending' && naCount >= 1) b.naRetry++;
       };
       if (tw >= 1 && tw <= TEAM_TOTAL_WEEKS) addTo(teamBuckets[tw]);
       if (pw >= 1 && st.buckets[pw])         addTo(st.buckets[pw]);
