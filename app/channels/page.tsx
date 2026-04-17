@@ -6,8 +6,8 @@ import { useEffect, useState } from 'react';
 // ch3: Book→Attended uses meetings÷bookings. low===high===60 = single dashed target line
 const CHANNELS = [
   { id: 1, label: 'Call → Book',      low: 11, high: 15, color: '#7c3aed', dataKey: 'ch1' as const },
-  { id: 2, label: 'Book → Validated', low: 70, high: 85, color: '#0284c7', dataKey: 'ch2' as const },
-  { id: 3, label: 'Book → Attended',  low: 60, high: 60, color: '#059669', dataKey: 'ch3' as const },
+  { id: 2, label: 'Book → Validated', low: 70, high: 85, color: '#0284c7', dataKey: 'ch2' as const, note: 'Excludes unresponsive clients (NA ×2) — only includes bookings where contact was made and a quality decision was reached' },
+  { id: 3, label: 'Book → Attended',  low: 60, high: 60, color: '#059669', dataKey: 'ch3' as const, note: 'meetings ÷ bookings from DailyActivity' },
 ];
 
 type WeekRow = {
@@ -245,7 +245,7 @@ function WeekChart({
       {pts.length === 0 && ch.id === 3 && (
         <text x={pL + plotW / 2} y={pT + plotH / 2 + 5} textAnchor="middle"
           fontSize="11" fill="#cbd5e1" fontFamily="sans-serif" fontStyle="italic">
-          No meeting attendance data yet
+          No meetings recorded in DailyActivity yet for this period
         </text>
       )}
 
@@ -298,9 +298,12 @@ function ChannelPanel({
               60% reference line
             </span>
           )}
-          {ch.id === 3 && (
-            <span style={{ fontSize: '10px', color: '#94a3b8', fontStyle: 'italic' }}>
-              meetings ÷ bookings
+          {(ch as any).note && ch.id === 2 && (
+            <span style={{
+              fontSize: '10px', color: '#64748b', fontStyle: 'italic',
+              maxWidth: '360px',
+            }}>
+              ℹ️ {(ch as any).note}
             </span>
           )}
         </div>
@@ -356,6 +359,19 @@ function ChannelPanel({
       <div style={{ padding: '6px 24px 6px 16px', overflow: 'visible' }}>
         <WeekChart weeks={weeks} ch={ch} maxWeeks={maxWeeks} dotColor={dotColor} />
       </div>
+
+      {/* Ch2 note */}
+      {ch.id === 2 && (ch as any).note && (
+        <div style={{
+          margin: '0 20px', padding: '8px 12px',
+          background: '#f8fafc', border: '1px solid #e2e8f0',
+          borderRadius: '8px', marginBottom: '8px',
+          fontSize: '11px', color: '#64748b', lineHeight: 1.5,
+        }}>
+          <span style={{ fontWeight: 700, color: '#475569' }}>ℹ️ Note: </span>
+          {(ch as any).note}
+        </div>
+      )}
 
       {/* HTL row — Channel 2 only */}
       {ch.id === 2 && (
