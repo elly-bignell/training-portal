@@ -415,7 +415,8 @@ function TeamTab({ team }: { team: { weeks: WeekRow[] } }) {
   const totHtl    = team.weeks.reduce((s, w) => s + w.htl,       0);
 
   const allTimeCh1 = totCalls > 0     ? Math.round((totBooks  / totCalls)          * 1000) / 10 : null;
-  const allTimeCh2 = (totVal + totRej) > 0 ? Math.round((totVal / (totVal + totRej)) * 1000) / 10 : null;
+  const totNaRetryTeam = team.weeks.reduce((s, w) => s + (w.naRetry ?? 0), 0);
+  const allTimeCh2 = (totVal + totRej + totHtl + totNaRetryTeam) > 0 ? Math.round((totVal / (totVal + totRej + totHtl + totNaRetryTeam)) * 1000) / 10 : null;
   const allTimeCh3 = totBooks > 0     ? Math.round((totMeets  / totBooks)          * 1000) / 10 : null;
   const allTimeHtl = (totVal + totRej + totHtl) > 0
     ? Math.round((totHtl / (totVal + totRej + totHtl)) * 1000) / 10 : null;
@@ -469,7 +470,8 @@ function PersonTab({ person }: { person: PersonData }) {
   const totHtl   = person.weeks.reduce((s, w) => s + w.htl,         0);
 
   const allTimeCh1 = totCalls > 0         ? Math.round((totBooks / totCalls)          * 1000) / 10 : null;
-  const allTimeCh2 = (totVal + totRej) > 0 ? Math.round((totVal  / (totVal + totRej)) * 1000) / 10 : null;
+  const totNaRetry = person.weeks.reduce((s, w) => s + (w.naRetry ?? 0), 0);
+  const allTimeCh2 = (totVal + totRej + totHtl + totNaRetry) > 0 ? Math.round((totVal / (totVal + totRej + totHtl + totNaRetry)) * 1000) / 10 : null;
   const allTimeCh3 = totBooks > 0         ? Math.round((totMeets / totBooks)          * 1000) / 10 : null;
   const allTimeHtl = (totVal + totRej + totHtl) > 0
     ? Math.round((totHtl / (totVal + totRej + totHtl)) * 1000) / 10 : null;
