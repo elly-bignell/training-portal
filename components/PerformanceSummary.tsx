@@ -122,17 +122,24 @@ function getIndividualEowTarget(slug: string): number {
   return TRAINEES_WITH_TARGET.has(slug) ? TRAINEE_BOOKINGS_TARGET_DAILY * 5 : 0;
 }
 
-// Per-team targets based on how many trainees with targets are in the team
-function getTeamDailyBookingTarget(memberSlugs: string[]): number {
-  return memberSlugs.filter((s) => TRAINEES_WITH_TARGET.has(s)).length * TRAINEE_BOOKINGS_TARGET_DAILY;
+// A trainee is "active" for target purposes once their program start week has arrived.
+// Trainees not in TRAINEE_PROGRAM_START_WEEK are treated as always-active (established staff).
+function isTraineeActive(slug: string, currentWeek: number): boolean {
+  if (!(slug in TRAINEE_PROGRAM_START_WEEK)) return true;
+  return currentWeek >= TRAINEE_PROGRAM_START_WEEK[slug];
 }
-function getTeamEowBookingTarget(memberSlugs: string[]): number {
-  return getTeamDailyBookingTarget(memberSlugs) * 5;
+
+// Per-team targets based on how many trainees with targets are in the team AND have started
+function getTeamDailyBookingTarget(memberSlugs: string[], currentWeek: number): number {
+  return memberSlugs.filter((s) => TRAINEES_WITH_TARGET.has(s) && isTraineeActive(s, currentWeek)).length * TRAINEE_BOOKINGS_TARGET_DAILY;
+}
+function getTeamEowBookingTarget(memberSlugs: string[], currentWeek: number): number {
+  return getTeamDailyBookingTarget(memberSlugs, currentWeek) * 5;
 }
 // Calls targets
 const TRAINEE_CALLS_TARGET_DAILY = 70;
-function getTeamDailyCallsTarget(memberSlugs: string[]): number {
-  return memberSlugs.filter((s) => TRAINEES_WITH_TARGET.has(s)).length * TRAINEE_CALLS_TARGET_DAILY;
+function getTeamDailyCallsTarget(memberSlugs: string[], currentWeek: number): number {
+  return memberSlugs.filter((s) => TRAINEES_WITH_TARGET.has(s) && isTraineeActive(s, currentWeek)).length * TRAINEE_CALLS_TARGET_DAILY;
 }
 
 // Get booking status colour for a person
@@ -299,8 +306,10 @@ export default function PerformanceSummary() {
     };
   })();
 
-  // Grand targets — based on total trainees with individual targets
-  const allTraineesWithTarget = teams.flatMap((t) => t.members).filter((s) => TRAINEES_WITH_TARGET.has(s));
+  // Grand targets — based on total trainees with individual targets AND who have started
+  const allTraineesWithTarget = teams
+    .flatMap((t) => t.members)
+    .filter((s) => TRAINEES_WITH_TARGET.has(s) && isTraineeActive(s, currentWeek));
   const grandDailyTarget = allTraineesWithTarget.length * TRAINEE_BOOKINGS_TARGET_DAILY;
   const grandEowTarget = allTraineesWithTarget.length * TRAINEE_BOOKINGS_TARGET_DAILY * 5;
   const grandDailyCallsTarget = allTraineesWithTarget.length * TRAINEE_CALLS_TARGET_DAILY;
@@ -358,10 +367,10 @@ export default function PerformanceSummary() {
                         <span className="text-sm font-bold text-white">{team.name}</span>
                         <div className="flex items-center gap-4">
                           <span className="text-xs text-slate-300">
-                            Booking target: <span className="font-semibold text-white">{getTeamDailyBookingTarget(team.members)}/team/day</span> · <span className="font-semibold text-white">{TRAINEE_BOOKINGS_TARGET_DAILY}/trainee</span>
+                            Booking target: <span className="font-semibold text-white">{getTeamDailyBookingTarget(team.members, currentWeek)}/team/day</span> · <span className="font-semibold text-white">{TRAINEE_BOOKINGS_TARGET_DAILY}/trainee</span>
                           </span>
                           <span className="text-xs text-slate-300">
-                            EOW: <span className="font-semibold text-white">{getTeamEowBookingTarget(team.members)} bookings</span>
+                            EOW: <span className="font-semibold text-white">{getTeamEowBookingTarget(team.members, currentWeek)} bookings</span>
                           </span>
                         </div>
                       </div>
@@ -445,7 +454,7 @@ export default function PerformanceSummary() {
                       <span className="text-[10px] text-slate-400 uppercase font-semibold">Book</span>
                     </td>
                     {teamDayTotals.map((dayTotal, idx) => {
-                      const teamDailyTarget = getTeamDailyBookingTarget(team.members);
+                      const teamDailyTarget = getTeamDailyBookingTarget(team.members, currentWeek);
                       const statusClass = getTeamBookingStatusClass(dayTotal.bookings, teamDailyTarget);
                       return (
                         <td key={`team-${team.name}-${idx}`} className={`px-2 py-2 text-center text-sm ${statusClass}`}>
@@ -454,9 +463,9 @@ export default function PerformanceSummary() {
                         </td>
                       );
                     })}
-                    <td className={`px-3 py-2 text-center text-sm ${getTeamBookingStatusClass(teamWeekTotals.bookings, getTeamEowBookingTarget(team.members))}`}>
+                    <td className={`px-3 py-2 text-center text-sm ${getTeamBookingStatusClass(teamWeekTotals.bookings, getTeamEowBookingTarget(team.members, currentWeek))}`}>
                       {teamWeekTotals.bookings}
-                      <span className="text-gray-400 font-normal text-xs">/{getTeamEowBookingTarget(team.members)}</span>
+                      <span className="text-gray-400 font-normal text-xs">/{getTeamEowBookingTarget(team.members, currentWeek)}</span>
                     </td>
                     <td className="px-2 py-2 text-center text-xs font-bold text-slate-600">
                       {teamWeekTotals.calls > 0 ? `${Math.round((teamWeekTotals.bookings / teamWeekTotals.calls) * 100)}%` : "–"}
