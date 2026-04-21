@@ -1257,7 +1257,7 @@ export default function CallFlowchartPage() {
               <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-500 mb-3">SAY</div>
               <h3 className="font-bold text-slate-900 text-base mb-3">Introduction</h3>
               <p className="text-slate-700 text-sm italic leading-relaxed">
-                &ldquo;Hi [Name], it&apos;s [Your Name] here from Marketing Sweet, how are you?&rdquo;
+                &ldquo;Hi [Name], it&apos;s [Your Name] here from Marketing Sweet, how have you been?&rdquo;
               </p>
             </div>
 
@@ -1330,13 +1330,13 @@ export default function CallFlowchartPage() {
                   <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
                   <h3 className="font-bold text-slate-900 text-sm mb-2">Reconnect &amp; Reiterate</h3>
                   <p className="text-slate-600 text-sm italic leading-relaxed mb-4">
-                    &ldquo;Now, obviously we caught up &mdash; you spoke with my right-hand man/woman [Previous Team Member] going back [timeframe], talking about getting your website fixed up. I&apos;ve noticed nothing&apos;s changed and I assume you&apos;ve been busy and haven&apos;t really had the time to get to it.&rdquo;
+                    &ldquo;Look, I don&apos;t expect you to remember us &mdash; I know you probably get hundreds of calls like this &mdash; but we were chatting about [topic] back in [timeframe] and discussed fixing up the website. I&apos;ve noticed nothing really has changed, so I assumed you must have been too busy and haven&apos;t had time to get to it?&rdquo;
                   </p>
                   <div className="pt-4 border-t border-purple-100">
                     <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
                     <h3 className="font-bold text-slate-900 text-sm mb-2">Show the Value</h3>
                     <p className="text-slate-600 text-sm italic leading-relaxed">
-                      &ldquo;Look, we&apos;ve done many trade-based sites just like yours. I&apos;d love to show you how we operate, our process, and some sites we&apos;ve done. Just revisit it &mdash; and from there you can say yes, you can say no, you can say let me think about it. But I do think it&apos;s costing you money having your current site looking like this.&rdquo;
+                      &ldquo;Look, we&apos;ve done many trade-based sites just like yours. I&apos;d love to show you how we operate, our process, and some sites we&apos;ve done. From there we can run through our packages and you can do what you wish with the quotation &mdash; the catch-up takes no longer than 15 minutes.&rdquo;
                     </p>
                   </div>
                 </div>
@@ -1431,9 +1431,25 @@ export default function CallFlowchartPage() {
                     </div>
                     <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
                       <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                      <h4 className="font-bold text-slate-900 text-sm mb-2">Second Unbiased Opinion</h4>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Probe on Price</h4>
                       <p className="text-slate-600 text-sm italic leading-relaxed">
-                        &ldquo;Yeah, perfect. Well, let me get you in front of [Closer] &mdash; he&apos;s the best in the business and I think you&apos;ll get some serious value out of what he has to show you regardless of what you decide to do. He&apos;ll give you a second unbiased opinion, show you what your current provider&apos;s been doing, and from there you can make a decision. Don&apos;t expect you to sign on the day or anything like that. How does that sound?&rdquo;
+                        &ldquo;No stress at all &mdash; what were you paying, roughly, just out of interest?&rdquo;
+                      </p>
+                      <p className="text-[11px] text-slate-400 mt-2">↳ Let them answer.</p>
+                    </div>
+                    <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">The Hook</h4>
+                      <p className="text-slate-600 text-sm italic leading-relaxed">
+                        &ldquo;If I could reduce your cost and build you a much better website, would you be open to catching up?&rdquo;
+                      </p>
+                      <p className="text-[11px] text-slate-400 mt-2">↳ Let them answer.</p>
+                    </div>
+                    <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
+                      <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Go For Booking</h4>
+                      <p className="text-slate-600 text-sm italic leading-relaxed">
+                        &ldquo;I have availability on [Day] at [Time] &mdash; does that work with you?&rdquo;
                       </p>
                     </div>
                     <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
@@ -1473,16 +1489,17 @@ export default function CallFlowchartPage() {
                     </div>
                     <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
                       <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                      <h4 className="font-bold text-slate-900 text-sm mb-2">Overcome the Time Objection</h4>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Qualify Their Lead Source</h4>
                       <p className="text-slate-600 text-sm italic leading-relaxed">
-                        &ldquo;Yeah sweet. Well, our process is designed to make your life an absolute dream. We do 90&ndash;95% of the heavy lifting. I just need 5% of your input to say yes, we&apos;re on the money, or no, we&apos;re off the money. If we&apos;re off, we&apos;ll keep iterating until we get it right.&rdquo;
+                        &ldquo;Totally understand. Just quickly &mdash; I&apos;m assuming most of your work comes through word-of-mouth and referrals?&rdquo;
                       </p>
+                      <p className="text-[11px] text-slate-400 mt-2">↳ Let them answer (usually yes).</p>
                     </div>
                     <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
                       <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                      <h4 className="font-bold text-slate-900 text-sm mb-2">Reinforce Credibility</h4>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">The Hook — Referrals Check Your Website</h4>
                       <p className="text-slate-600 text-sm italic leading-relaxed">
-                        &ldquo;We&apos;ve got over 3,000 clients, 70% of them are trade-based businesses just like yours. We&apos;ve perfected our process &mdash; you&apos;ll absolutely love it. [Closer] is amazing at what he does &mdash; he&apos;ll walk you through it all on [Day] and I think you&apos;ll get some serious value regardless of what you decide. How&apos;s that sound?&rdquo;
+                        &ldquo;Yep, sweet. I&apos;m extremely confident that the people being recommended to you are checking out your website before they call &mdash; and right now, I can almost guarantee they&apos;re going to be let down when they land on it. Best thing to do is to hear us out. I&apos;ve got [Day] at [Time] free &mdash; did you have 15 minutes?&rdquo;
                       </p>
                     </div>
                     <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
@@ -1522,9 +1539,9 @@ export default function CallFlowchartPage() {
                     </div>
                     <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
                       <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                      <h4 className="font-bold text-slate-900 text-sm mb-2">Acknowledge &amp; Probe</h4>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Anchor on Time + Relevance</h4>
                       <p className="text-slate-600 text-sm italic leading-relaxed">
-                        &ldquo;Yeah, completely fair. Last time we spoke you mentioned [reference their previous objection &mdash; cashflow, pipeline, staffing, etc.]. How&apos;s that looking now heading into [next quarter / 2026 / next year]?&rdquo;
+                        &ldquo;Well, the good thing is the meeting only takes 10&ndash;15 minutes, and in terms of industry experience we&apos;ve done heaps of [their trade] websites &mdash; which I can show you when we catch up. Are you available for a chat on [Day] at [Time]?&rdquo;
                       </p>
                     </div>
                     <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
@@ -1533,9 +1550,9 @@ export default function CallFlowchartPage() {
                     </div>
                     <div className="grid md:grid-cols-2 gap-3">
                       <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
-                        <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">IMPROVING → LOOP BACK</div>
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">OPEN → BOOK</div>
                         <p className="text-slate-600 text-xs italic leading-relaxed">
-                          Return to <strong>Go For Booking</strong> and try to lock in a time.
+                          Proceed to <strong>Confirm Email</strong> &amp; offer to send example sites. Then <strong>Warm Close</strong>.
                         </p>
                       </div>
                       <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3">
@@ -1557,7 +1574,7 @@ export default function CallFlowchartPage() {
                   <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
                   <h3 className="font-bold text-slate-900 text-sm mb-2">Reconnect &amp; Reiterate</h3>
                   <p className="text-slate-600 text-sm italic leading-relaxed">
-                    &ldquo;Now, I know we caught up [timeframe] and had a bit of a chat about your website and how it was performing online. I&apos;ve kept an eye on things and I&apos;ve noticed your traffic hasn&apos;t really increased over the last 6&ndash;12 months, so I thought it might be worth your while reconnecting &mdash; I&apos;ve got a few different ideas I wouldn&apos;t mind sharing with you.&rdquo;
+                    &ldquo;Look, I don&apos;t expect you to remember us &mdash; I know you probably get hundreds of calls like this &mdash; but we were chatting about [topic] back in [timeframe]. I&apos;ve been keeping an eye on things and noticed not much has changed, so I thought it might be worth your while reconnecting &mdash; I&apos;ve got a few different ideas I wouldn&apos;t mind sharing with you.&rdquo;
                   </p>
                 </div>
 
@@ -1649,13 +1666,83 @@ export default function CallFlowchartPage() {
                         &ldquo;I&apos;m still with my current provider &mdash; I&apos;m liking how they&apos;re performing.&rdquo;
                       </p>
                     </div>
+
+                    {/* Step 1: Probe satisfaction */}
                     <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
-                      <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                      <h4 className="font-bold text-slate-900 text-sm mb-2">Second Unbiased Opinion</h4>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-bold">1</span>
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400">SAY</div>
+                      </div>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Probe Satisfaction</h4>
                       <p className="text-slate-600 text-sm italic leading-relaxed">
-                        &ldquo;Yeah, perfect. Well, let me get you in front of [Closer] &mdash; he&apos;s the best in the business and I think you&apos;ll get some serious value out of what he has to show you regardless of what you decide to do. He&apos;ll give you a second unbiased opinion, benchmark your performance against local competitors, and from there you can make a decision. Don&apos;t expect you to sign on the day or anything like that. How does that sound?&rdquo;
+                        &ldquo;No stress at all &mdash; how are you finding them?&rdquo;
                       </p>
                     </div>
+
+                    {/* Step 2: How long with them */}
+                    <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-bold">2</span>
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400">SAY</div>
+                      </div>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Qualify Tenure</h4>
+                      <p className="text-slate-600 text-sm italic leading-relaxed mb-3">
+                        &ldquo;How long have you been with them?&rdquo;
+                      </p>
+
+                      <div className="grid md:grid-cols-2 gap-3 pt-3 border-t border-slate-100">
+                        {/* 2a — More than 6 months */}
+                        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                          <div className="text-[10px] font-bold tracking-widest uppercase text-amber-700 mb-1">IF &gt; 6 MONTHS</div>
+                          <div className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-1">🔧 BEFORE THE CALL (TIP)</div>
+                          <p className="text-slate-600 text-xs leading-relaxed mb-2">
+                            Run their site through SEMrush. Pinpoint total traffic and identify keywords they <em>should</em> be ranking for that aren&apos;t on page 1.
+                          </p>
+                          <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mt-2 mb-1">SAY</div>
+                          <p className="text-slate-600 text-xs italic leading-relaxed">
+                            &ldquo;Based on my research I&apos;ve noticed the total traffic to the website isn&apos;t great &mdash; most of it&apos;s coming from your brand name, which is built from referrals, not SEO. For example, when someone types in [target keyword], you&apos;d want to be appearing &mdash; currently you&apos;re on page [X].&rdquo;
+                          </p>
+                        </div>
+
+                        {/* 2b — Less than 3 months */}
+                        <div className="bg-sky-50 border border-sky-200 rounded-lg p-3">
+                          <div className="text-[10px] font-bold tracking-widest uppercase text-sky-700 mb-1">IF &lt; 3 MONTHS</div>
+                          <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
+                          <p className="text-slate-600 text-xs italic leading-relaxed mb-2">
+                            &ldquo;No worries &mdash; we&apos;ll keep an eye on things over the next few months and touch base in 3 months. That gives the campaign enough time to show whether it&apos;s working or not.&rdquo;
+                          </p>
+                          <div className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mt-2 mb-1">📋 ACTION</div>
+                          <p className="text-slate-600 text-xs leading-relaxed">
+                            Log current traffic numbers in ClickUp so you can refer back when you call in 3 months.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Step 3: Ask about spend */}
+                    <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-bold">3</span>
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400">SAY</div>
+                      </div>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Probe on Spend</h4>
+                      <p className="text-slate-600 text-sm italic leading-relaxed">
+                        &ldquo;If you don&apos;t mind me asking &mdash; what were you spending on this?&rdquo;
+                      </p>
+                    </div>
+
+                    {/* Step 4: Pitch the second opinion */}
+                    <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-bold">4</span>
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400">SAY</div>
+                      </div>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Pitch the Second Opinion</h4>
+                      <p className="text-slate-600 text-sm italic leading-relaxed">
+                        &ldquo;Best thing to do is get a second unbiased opinion. I can run through exactly what I&apos;m seeing on my software, plus I&apos;ll benchmark you against your local competition.&rdquo;
+                      </p>
+                    </div>
+
                     <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
                     <div className="text-center mb-3">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Do they agree?</span>
@@ -1693,16 +1780,9 @@ export default function CallFlowchartPage() {
                     </div>
                     <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
                       <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                      <h4 className="font-bold text-slate-900 text-sm mb-2">Overcome the Time Objection</h4>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Lost-Business Hook</h4>
                       <p className="text-slate-600 text-sm italic leading-relaxed">
-                        &ldquo;Yeah sweet. Well, our process is designed to make your life an absolute dream. We do 90&ndash;95% of the heavy lifting. I just need 5% of your input along the way, and we&apos;ll keep iterating until we&apos;re getting you the results you want.&rdquo;
-                      </p>
-                    </div>
-                    <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
-                      <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                      <h4 className="font-bold text-slate-900 text-sm mb-2">Reinforce Credibility</h4>
-                      <p className="text-slate-600 text-sm italic leading-relaxed">
-                        &ldquo;We&apos;ve got over 3,000 clients, 70% of them are trade-based businesses just like yours. We&apos;ve perfected our process &mdash; you&apos;ll absolutely love it. [Closer] is amazing at what he does &mdash; he&apos;ll run you through how we&apos;d fix up your site&apos;s performance on [Day] and I think you&apos;ll get some serious value regardless of what you decide. How&apos;s that sound?&rdquo;
+                        &ldquo;People are trying to find you, but at the moment they&apos;re being forced to go to the competition because we&apos;re not appearing online. Just out of interest &mdash; do you have the capacity for more work?&rdquo;
                       </p>
                     </div>
                     <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
@@ -1742,9 +1822,9 @@ export default function CallFlowchartPage() {
                     </div>
                     <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
                       <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-1">SAY</div>
-                      <h4 className="font-bold text-slate-900 text-sm mb-2">Acknowledge &amp; Probe</h4>
+                      <h4 className="font-bold text-slate-900 text-sm mb-2">Anchor on Time + Results</h4>
                       <p className="text-slate-600 text-sm italic leading-relaxed">
-                        &ldquo;Yeah, completely fair. Last time we spoke you mentioned [reference their previous objection &mdash; cashflow, pipeline, staffing, etc.]. How&apos;s that looking now heading into [next quarter / 2026 / next year]?&rdquo;
+                        &ldquo;Well, the good thing is the meeting only takes 10&ndash;15 minutes, and in terms of industry experience we work with heaps of [their industry] businesses across Australia and get really good results &mdash; which I&apos;d love to show you. Are you available for a chat on [Day] at [Time]?&rdquo;
                       </p>
                     </div>
                     <div className="flex justify-center my-2 text-slate-300 text-sm">↓</div>
@@ -1753,9 +1833,9 @@ export default function CallFlowchartPage() {
                     </div>
                     <div className="grid md:grid-cols-2 gap-3">
                       <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
-                        <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">IMPROVING → LOOP BACK</div>
+                        <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-1">OPEN → BOOK</div>
                         <p className="text-slate-600 text-xs italic leading-relaxed">
-                          Return to <strong>Go For Booking</strong> and try to lock in a time.
+                          Proceed to <strong>Confirm Email</strong> &amp; <strong>Warm Close</strong>.
                         </p>
                       </div>
                       <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3">
