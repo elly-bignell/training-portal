@@ -74,6 +74,21 @@ function HomeContent() {
   const totalModules = trainingProgram.length;
   const currentWeek = getCurrentWeekNumber();
 
+  // Customer Service trainees don't complete Module 4 (sales-specific) — mirror
+  // the filter applied in app/trainees/[slug]/page.tsx so the home-page progress
+  // circle reflects 100% when all CS-eligible boxes are ticked.
+  const EXCLUDE_MODULE_4_SLUGS = ["jeremy-valiente", "dasha-axenova", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith"];
+  const module4Items = (trainingProgram.find((m) => m.id === "module-4")?.checklist || []).filter((item) => !item.isSection);
+  const module4ItemIds = new Set(module4Items.map((i) => i.id));
+  const module4ItemCount = module4Items.length;
+  const getTraineeTotalItems = (slug: string) =>
+    EXCLUDE_MODULE_4_SLUGS.includes(slug) ? totalItems - module4ItemCount : totalItems;
+  const getTraineeCheckedCount = (slug: string, checked: Record<string, boolean> | undefined) => {
+    if (!checked) return 0;
+    const isCS = EXCLUDE_MODULE_4_SLUGS.includes(slug);
+    return Object.entries(checked).filter(([id, val]) => val && !(isCS && module4ItemIds.has(id))).length;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -289,7 +304,7 @@ function HomeContent() {
                           <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
                         </div>
                       ) : (
-                        <CircularProgress percentage={progress?.checked_items ? Math.round(Object.values(progress.checked_items).filter(Boolean).length / totalItems * 100) : 0} />
+                        <CircularProgress percentage={progress?.checked_items ? Math.min(100, Math.round(getTraineeCheckedCount(trainee.slug, progress.checked_items) / getTraineeTotalItems(trainee.slug) * 100)) : 0} />
                       )}
                       <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
