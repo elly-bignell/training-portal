@@ -70,7 +70,7 @@ const TEAM_BOOKINGS_TARGET_EOW = 35; // 7/day × 5 days
 const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
 // Program start week (0-indexed from Feb 16) for each lead gen trainee
-const TRAINEE_PROGRAM_START_WEEK: Record<string, number> = {
+export const TRAINEE_PROGRAM_START_WEEK: Record<string, number> = {
   "cindy-rose-rondez-manrique": 0,
   "krishna-patel":              0,
   "sydney-arnold":              5,
@@ -78,15 +78,16 @@ const TRAINEE_PROGRAM_START_WEEK: Record<string, number> = {
   "emma-ward":                  10,
 };
 
-function getWeekBadge(slug: string, currentWeek: number): { label: string; color: string; bg: string } | null {
+export function getWeekBadge(slug: string, currentWeek: number): { label: string; color: string; bg: string } | null {
   if (!(slug in TRAINEE_PROGRAM_START_WEEK)) return null;
   const weeksIn = Math.max(0, currentWeek - TRAINEE_PROGRAM_START_WEEK[slug]);
   let color: string, bg: string;
-  if (weeksIn === 0)      { color = "#7c3aed"; bg = "#ede9fe"; } // purple — training
+  let label = `Wk ${weeksIn}`;
+  if (weeksIn === 0)      { color = "#7c3aed"; bg = "#ede9fe"; label = "Wk 0 · Training"; } // purple — training
   else if (weeksIn <= 3)  { color = "#2563eb"; bg = "#dbeafe"; } // blue — early ramp
   else if (weeksIn <= 6)  { color = "#d97706"; bg = "#fef3c7"; } // amber — mid ramp
   else                    { color = "#16a34a"; bg = "#dcfce7"; } // green — established
-  return { label: `Wk ${weeksIn}`, color, bg };
+  return { label, color, bg };
 }
 
 // Calendar week helper (ISO-ish week of year in Adelaide time)

@@ -7,7 +7,8 @@ import Link from "next/link";
 import { trainees } from "@/data/trainees";
 import { trainingProgram, getTotalChecklistItems } from "@/data/trainingProgram";
 import PasswordGate from "@/components/PasswordGate";
-import PerformanceSummary from "@/components/PerformanceSummary";
+import PerformanceSummary, { getWeekBadge } from "@/components/PerformanceSummary";
+import { getCurrentWeekNumber } from "@/hooks/useActivityTracking";
 
 interface TraineeProgressData {
   trainee_slug: string;
@@ -71,13 +72,7 @@ function HomeContent() {
   
   const totalItems = getTotalChecklistItems();
   const totalModules = trainingProgram.length;
-
-  const weekLabels: Record<string, { label: string; color: string; bg: string }> = {
-    "krishna-patel":              { label: "Week 6",            color: "#16a34a", bg: "#dcfce7" },
-    "cindy-rose-rondez-manrique": { label: "Week 6",            color: "#16a34a", bg: "#dcfce7" },
-    "riley-kerrison":             { label: "Week 0 · Training", color: "#7c3aed", bg: "#ede9fe" },
-    "sydney-arnold":              { label: "Week 1",            color: "#2563eb", bg: "#dbeafe" },
-  };
+  const currentWeek = getCurrentWeekNumber();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -223,207 +218,7 @@ function HomeContent() {
           <PerformanceSummary />
         </div>
 
-        {/* Trainee Admin Panel */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">
-            📋 Trainee Quick Access
-          </h2>
-
-          {/* Trainees */}
-          <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">Trainees</h3>
-          <div className="space-y-4 mb-6">
-            {trainees.filter((t) => ["riley-kerrison", "sydney-arnold", "krishna-patel", "cindy-rose-rondez-manrique", "caia-cuggy", "emma-ward", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "kateryna-bakumenko", "shahmir-saajad"].includes(t.slug)).map((trainee) => {
-              const module1Attempts = getTraineeExamAttempts(trainee.slug, "exam-module-1");
-              const module1Passed = module1Attempts.some((a) => a.passed);
-              const module1BestScore = module1Attempts.length > 0
-                ? Math.max(...module1Attempts.map((a) => a.percentage))
-                : null;
-
-              const scheduleSlug: Record<string, string> = {
-                "cindy-rose-rondez-manrique": "cindy",
-                "krishna-patel": "krishna",
-                "connie-matthews": "connie",
-                "sydney-arnold": "sydney",
-              };
-              const hasSchedule = trainee.slug in scheduleSlug;
-
-              return (
-              <div key={trainee.slug} className="border border-gray-200 rounded-lg p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-[#E6017D] flex items-center justify-center text-white font-bold text-sm">
-                    {trainee.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
-                  </div>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="font-semibold text-gray-800">{trainee.name}</h3>
-                    {weekLabels[trainee.slug] && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold"
-                        style={{ color: weekLabels[trainee.slug].color, background: weekLabels[trainee.slug].bg }}>
-                        {weekLabels[trainee.slug].label}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                  {/* Dashboard Link */}
-                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                    <span className="text-gray-600">Training Dashboard</span>
-                    <Link href={`/trainees/${trainee.slug}`} className="text-blue-600 hover:underline">Open →</Link>
-                  </div>
-                  
-                  {/* Scorecard Link */}
-                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                    <span className="text-gray-600">Activity Scorecard</span>
-                    <Link href={`/scorecard/${trainee.slug}`} className="text-blue-600 hover:underline">Open →</Link>
-                  </div>
-                  
-                  {/* Schedule Link */}
-                  {hasSchedule && (
-                  <div className="flex items-center justify-between p-2 bg-blue-50 rounded">
-                    <span className="text-gray-600">📅 Schedule</span>
-                    <Link href={`/schedule/${scheduleSlug[trainee.slug]}/week-1`} className="text-blue-600 hover:underline">Open →</Link>
-                  </div>
-                  )}
-                  
-                  {/* Module 1 Exam */}
-                  <div className={`flex items-center justify-between p-2 rounded ${
-                    module1Passed 
-                      ? "bg-green-50" 
-                      : module1Attempts.length > 0 
-                        ? "bg-amber-50" 
-                        : "bg-emerald-50"
-                  }`}>
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-600">Module 1 Exam</span>
-                      {module1BestScore !== null && (
-                        <span className={`text-xs font-semibold px-1.5 py-0.5 rounded ${
-                          module1Passed 
-                            ? "bg-green-100 text-green-700" 
-                            : "bg-amber-100 text-amber-700"
-                        }`}>
-                          {module1Passed ? "✓" : ""} {module1BestScore}%
-                        </span>
-                      )}
-                    </div>
-                    <Link
-                      href={`/exam/module-1/${trainee.slug}`}
-                      className={`hover:underline ${
-                        module1Passed 
-                          ? "text-green-600" 
-                          : module1Attempts.length > 0 
-                            ? "text-amber-600" 
-                            : "text-emerald-600"
-                      }`}
-                    >
-                      {module1Passed ? "View →" : module1Attempts.length > 0 ? `Retry (${3 - module1Attempts.length} left) →` : "Open →"}
-                    </Link>
-                  </div>
-                  
-                  {/* Placeholder for future exams */}
-                  <div className="flex items-center justify-between p-2 bg-gray-100 rounded opacity-50">
-                    <span className="text-gray-500">Module 2 & 3 Exams</span>
-                    <span className="text-gray-400 text-xs">Coming soon</span>
-                  </div>
-                </div>
-              </div>
-              );
-            })}
-          </div>
-
-          {/* Senior Team Quick Access */}
-          <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3 mt-6">Senior Team Quick Access</h3>
-          <div className="space-y-4">
-            {["lucas-tirri", "felipe-garcia", "dylan-munro", "thomas-rennie"].map(s => trainees.find(t => t.slug === s)!).filter(Boolean).map((trainee) => {
-              return (
-              <div key={trainee.slug} className="border border-gray-200 rounded-lg p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-slate-600 flex items-center justify-center text-white font-bold text-sm">
-                    {trainee.name.split(" ").map((n: string) => n[0]).join("").slice(0, 2)}
-                  </div>
-                  <h3 className="font-semibold text-gray-800">{trainee.name}</h3>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                    <span className="text-gray-600">Training Dashboard</span>
-                    <Link href={`/trainees/${trainee.slug}`} className="text-blue-600 hover:underline">Open →</Link>
-                  </div>
-                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                    <span className="text-gray-600">Activity Scorecard</span>
-                    <Link href={`/scorecard/${trainee.slug}`} className="text-blue-600 hover:underline">Open →</Link>
-                  </div>
-                  {["lucas-tirri", "felipe-garcia", "dylan-munro"].includes(trainee.slug) && (
-                  <div className="flex items-center justify-between p-2 bg-amber-50 rounded sm:col-span-2">
-                    <span className="text-gray-600">📅 Daily Schedule</span>
-                    <Link href="/schedule/senior-team" className="text-blue-600 hover:underline">Open →</Link>
-                  </div>
-                  )}
-                </div>
-              </div>
-              );
-            })}
-          </div>
-          {/* Customer Service Team Quick Access */}
-          <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3 mt-6">Customer Service Team Quick Access</h3>
-          <div className="space-y-4">
-            {(() => {
-              const CS_APPLICANT_SLUGS: string[] = [];
-              const NO_SCORECARD_SLUGS = ["dasha-axenova", "jeremy-valiente", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith"];
-              return ["jeremy-valiente", "dasha-axenova", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith"]
-                .map(s => trainees.find(t => t.slug === s)!)
-                .filter(Boolean)
-                .map((trainee) => {
-                  const isApplicant = CS_APPLICANT_SLUGS.includes(trainee.slug);
-                  return (
-                    <div key={trainee.slug} className="border border-gray-200 rounded-lg p-4">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 rounded-full bg-teal-600 flex items-center justify-center text-white font-bold text-sm">
-                          {trainee.name.split(" ").map((n: string) => n[0]).join("").slice(0, 2)}
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-gray-800">{trainee.name}</h3>
-                          {isApplicant && <span className="text-xs text-amber-600 font-medium">Applicant — closes 6pm Sun 8 Mar</span>}
-                          
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                        <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                          <span className="text-gray-600">Training Dashboard</span>
-                          <Link href={`/trainees/${trainee.slug}`} className="text-blue-600 hover:underline">Open →</Link>
-                        </div>
-                        {!NO_SCORECARD_SLUGS.includes(trainee.slug) && (
-                          <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                            <span className="text-gray-600">Activity Scorecard</span>
-                            <Link href={`/scorecard/${trainee.slug}`} className="text-blue-600 hover:underline">Open →</Link>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                });
-            })()}
-          </div>
-
-          {/* Sales Training Dashboard Access */}
-          <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3 mt-6">Sales Training — Dashboard Access</h3>
-          <div className="space-y-4">
-            {[].map(s => trainees.find(t => t.slug === s)!).filter(Boolean).map((trainee) => (
-              <div key={trainee.slug} className="border border-gray-200 rounded-lg p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-[#E6017D] flex items-center justify-center text-white font-bold text-sm">
-                    {trainee.name.split(" ").map((n: string) => n[0]).join("").slice(0, 2)}
-                  </div>
-                  <h3 className="font-semibold text-gray-800">{trainee.name}</h3>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                    <span className="text-gray-600">Training Dashboard</span>
-                    <Link href={`/trainees/${trainee.slug}`} className="text-blue-600 hover:underline">Open →</Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Trainee Admin Panel removed — quick-access tiles live elsewhere on the site. */}
 
         {/* Trainee Cards */}
         <div className="space-y-4">
@@ -434,12 +229,16 @@ function HomeContent() {
             const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold", "riley-kerrison", "caia-cuggy", "emma-ward", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "kateryna-bakumenko", "shahmir-saajad"];
             const CS_SLUGS = ["jeremy-valiente", "dasha-axenova", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith"];
             const ARCHIVED_SLUGS = ["connie-matthews", "reegan-james", "rachel-astachnowicz", "aston-marsh", "shani-thomas"];
+            const HIDDEN_FROM_HOME_SLUGS = ["khushi-patel", "kristy-lee-busk", "jj-chatrawee", "ella-smith"];
 
-            return trainees.filter((t) => !ARCHIVED_SLUGS.includes(t.slug)).map((trainee) => {
+            return trainees
+              .filter((t) => !ARCHIVED_SLUGS.includes(t.slug) && !HIDDEN_FROM_HOME_SLUGS.includes(t.slug))
+              .map((trainee) => {
               const progress = getTraineeProgress(trainee.slug);
               const hasStarted = progress && progress.overall_progress > 0;
               const isSalesTag = SALES_SLUGS.includes(trainee.slug);
               const isCSTag = CS_SLUGS.includes(trainee.slug);
+              const weekBadge = getWeekBadge(trainee.slug, currentWeek);
 
               return (
                 <Link
@@ -465,10 +264,10 @@ function HomeContent() {
                               🎧 Customer Service
                             </span>
                           )}
-                          {weekLabels[trainee.slug] && (
+                          {weekBadge && (
                             <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold"
-                              style={{ color: weekLabels[trainee.slug].color, background: weekLabels[trainee.slug].bg }}>
-                              {weekLabels[trainee.slug].label}
+                              style={{ color: weekBadge.color, background: weekBadge.bg }}>
+                              {weekBadge.label}
                             </span>
                           )}
                         </div>
