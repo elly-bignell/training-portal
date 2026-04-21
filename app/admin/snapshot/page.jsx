@@ -193,6 +193,75 @@ function TraineeCard({ t, all, archived }) {
   );
 }
 
+function UpcomingTraineeCard({ name, fullName, startDateISO, team, buddy }) {
+  const startDate = new Date(startDateISO + "T00:00:00");
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const daysUntil = Math.round((startDate - today) / 86400000);
+  const fmt = (d) =>
+    d.toLocaleDateString("en-AU", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  const addMonthsISO = (iso, months) => {
+    const [y, m, dd] = iso.split("-").map(Number);
+    const dt = new Date(Date.UTC(y, m - 1 + months, dd));
+    return dt.toISOString().slice(0, 10);
+  };
+  const fmtShort = (iso) => {
+    const [y, m, dd] = iso.split("-").map(Number);
+    return new Date(Date.UTC(y, m - 1, dd)).toLocaleDateString("en-AU", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      timeZone: "UTC",
+    });
+  };
+
+  const milestones = [
+    { label: "Month 1", iso: addMonthsISO(startDateISO, 1) },
+    { label: "Month 2", iso: addMonthsISO(startDateISO, 2) },
+    { label: "Month 4", iso: addMonthsISO(startDateISO, 4) },
+    { label: "Month 6", iso: addMonthsISO(startDateISO, 6) },
+  ];
+
+  return (
+    <div className="card" style={{ background: C.cardBg, border: "1px dashed " + C.blue, borderRadius: 12, padding: "20px 22px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)", position: "relative" }}>
+      <div style={{ position: "absolute", top: 12, right: 16 }}>
+        <Badge color={C.blue} bg={C.blueBg}>Upcoming · Starts in {daysUntil}d</Badge>
+      </div>
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ fontSize: 18, fontWeight: 700, color: C.heading }}>{name}</div>
+        <div style={{ fontSize: 11, color: C.muted, marginTop: 1 }}>{fullName}</div>
+        <div style={{ fontSize: 11, color: C.muted, marginTop: 4 }}>
+          {team} · buddied with {buddy}
+        </div>
+      </div>
+
+      <div style={{ background: C.blueBg, border: "1px solid " + C.blue + "55", borderRadius: 8, padding: "12px 14px", marginBottom: 14 }}>
+        <div style={{ fontSize: 10, color: C.blue, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 3 }}>Start Date</div>
+        <div style={{ fontSize: 17, fontWeight: 700, color: C.heading }}>{fmt(startDate)}</div>
+        <div style={{ fontSize: 11, color: C.blue, marginTop: 3 }}>Week 0 — Training Week</div>
+      </div>
+
+      <div style={{ marginBottom: 6 }}>
+        <div style={{ fontSize: 10, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
+          Review Milestones
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+          {milestones.map((m) => (
+            <div key={m.label} style={{ background: "#f8fafc", border: "1px solid " + C.border, borderRadius: 6, padding: "8px 10px" }}>
+              <div style={{ fontSize: 10, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em" }}>{m.label}</div>
+              <div style={{ fontFamily: "monospace", fontSize: 12, fontWeight: 600, color: C.heading, marginTop: 2 }}>{fmtShort(m.iso)}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ fontSize: 11, color: C.muted, marginTop: 12, paddingTop: 10, borderTop: "1px solid " + C.border }}>
+        No activity yet — scorecard data will populate once training begins.
+      </div>
+    </div>
+  );
+}
+
 function SectionDivider({ label, colSpan }) {
   return (
     <tr>
@@ -481,6 +550,20 @@ export default function SnapshotPage() {
           )}
 
           {loading && !data && <div style={{ textAlign: "center", padding: "80px 0", color: C.muted }}>Loading live data...</div>}
+
+          {/* Upcoming Trainees */}
+          <div style={{ fontSize: 11, fontWeight: 600, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
+            Upcoming Trainees
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 28 }}>
+            <UpcomingTraineeCard
+              name="Emma"
+              fullName="Emma Ward"
+              startDateISO="2026-04-27"
+              team="Team 3"
+              buddy="Dylan & Krishna"
+            />
+          </div>
 
           {/* Overview cards */}
           {trainees.length > 0 && (

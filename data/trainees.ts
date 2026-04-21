@@ -127,7 +127,7 @@ export const trainees: Trainee[] = [
     id: "emma-ward",
     name: "Emma Ward",
     slug: "emma-ward",
-    startDate: "2026-04-16",
+    startDate: "2026-04-27",
   },
   {
     id: "jj-chatrawee",

@@ -42,7 +42,7 @@ const teams = [
   },
   {
     name: "Team 3",
-    members: ["dylan-munro", "krishna-patel"],
+    members: ["dylan-munro", "krishna-patel", "emma-ward"],
   },
   {
     name: "Team 4",
@@ -58,6 +58,7 @@ const TRAINEES_WITH_TARGET = new Set([
   "krishna-patel",
   "thomas-rennie",
   "riley-kerrison",
+  "emma-ward",
 ]);
 
 // Booking targets
@@ -74,6 +75,7 @@ const TRAINEE_PROGRAM_START_WEEK: Record<string, number> = {
   "krishna-patel":              0,
   "sydney-arnold":              5,
   "riley-kerrison":             6,
+  "emma-ward":                  10,
 };
 
 function getWeekBadge(slug: string, currentWeek: number): { label: string; color: string; bg: string } | null {
