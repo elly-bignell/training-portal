@@ -272,10 +272,10 @@ function StaffReviewDatesContent() {
                     </div>
                   </div>
                   <Link
-                    href={`/trainees/${row.slug}`}
+                    href="/admin/snapshot"
                     className="text-xs text-blue-600 hover:underline whitespace-nowrap"
                   >
-                    Training Dashboard →
+                    Trainee Summary →
                   </Link>
                 </div>
 

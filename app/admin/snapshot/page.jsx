@@ -142,7 +142,7 @@ function TraineeCard({ t, all, archived }) {
     <div className="card" style={{ background: C.cardBg, border: "1px solid " + (archived ? "#94a3b8" : C.border), borderRadius: 12, padding: "20px 22px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)", opacity: archived ? 0.6 : 1, filter: archived ? "grayscale(60%)" : "none", position: "relative" }}>
       {archived && (
         <div style={{ position: "absolute", top: 12, left: 20, fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#94a3b8", background: "#f1f5f9", border: "1px solid #cbd5e1", padding: "2px 8px", borderRadius: 4 }}>
-          Archived · Last day 12 Mar
+          {t.lastDay ? `Archived · Last day ${new Date(t.lastDay + "T00:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "short" })}` : "Archived"}
         </div>
       )}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
@@ -285,7 +285,7 @@ const ROADMAP_WEEKS = [
   { week: 8, label: "Week 8+", start: "2026-04-13", daily: { bookings: 4, meetings: 2,   calls: 30, units: 1,   revenue: 500 } },
 ];
 
-const TRAINEE_SLUGS = ["cindy-rose-rondez-manrique", "krishna-patel", "riley-kerrison", "sydney-arnold", "connie-matthews"];
+const TRAINEE_SLUGS = ["cindy-rose-rondez-manrique", "krishna-patel", "riley-kerrison", "sydney-arnold"];
 
 function getWkDates(startStr) {
   const [y, m, d] = startStr.split("-").map(Number);
@@ -500,12 +500,15 @@ export default function SnapshotPage() {
     fetchActivity();
   }, []);
 
-  const TRAINEE_ORDER = ["cindy-rose-rondez-manrique", "krishna-patel", "riley-kerrison", "sydney-arnold", "connie-matthews"];
-  const trainees = (data?.trainees ?? []).slice().sort((a, b) => {
-    const ai = TRAINEE_ORDER.indexOf(a.slug);
-    const bi = TRAINEE_ORDER.indexOf(b.slug);
-    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
-  });
+  const TRAINEE_ORDER = ["cindy-rose-rondez-manrique", "krishna-patel", "riley-kerrison", "sydney-arnold"];
+  const trainees = (data?.trainees ?? [])
+    .filter((t) => TRAINEE_ORDER.includes(t.slug))
+    .slice()
+    .sort((a, b) => {
+      const ai = TRAINEE_ORDER.indexOf(a.slug);
+      const bi = TRAINEE_ORDER.indexOf(b.slug);
+      return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+    });
   const _now = new Date();
   const currentRoadmapWeek = (() => {
     for (let i = ROADMAP_WEEKS.length - 1; i >= 0; i--) {

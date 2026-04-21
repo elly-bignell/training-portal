@@ -13,14 +13,6 @@ const TRAINEES = {
     staffMatchNames: ["Cindy Manrique", "cindy-rose-rondez-manrique"],
     absences: { publicHolidays: 0, sickDays: 4 },
   },
-  "connie-matthews": {
-    name: "Connie",
-    fullName: "Connie Matthews",
-    staffMatchNames: ["Connie Matthews"],
-    absences: { publicHolidays: 1, sickDays: 0 },
-    lastDay: "2026-03-12",
-    isArchived: true,
-  },
   "krishna-patel": {
     name: "Krishna",
     fullName: "Krishna Patel",
