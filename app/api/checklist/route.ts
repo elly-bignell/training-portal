@@ -69,10 +69,14 @@ export async function GET(request: NextRequest) {
     }
 
     // --- single-week mode ---
+    // Sort by last_updated DESC so that if duplicate rows still exist from
+    // before the dedupe code landed, we always return the freshest one.
+    // Use DATETIME_FORMAT for the date comparison — Airtable's direct string
+    // equality on Date fields is fragile.
     const weekStart = weekParam || getCurrentWeekStart();
-    const filter = `AND({booker_slug} = "${booker}", {week_start} = "${weekStart}")`;
+    const filter = `AND({booker_slug} = "${booker}", DATETIME_FORMAT({week_start}, 'YYYY-MM-DD') = "${weekStart}")`;
     const res = await fetch(
-      `${AIRTABLE_URL}?filterByFormula=${encodeURIComponent(filter)}`,
+      `${AIRTABLE_URL}?filterByFormula=${encodeURIComponent(filter)}&sort%5B0%5D%5Bfield%5D=last_updated&sort%5B0%5D%5Bdirection%5D=desc`,
       {
         headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` },
         cache: "no-store",
