@@ -50,8 +50,8 @@ function statusLabel(s: ItemStatus): string {
 
 function statusClasses(s: ItemStatus): string {
   if (s === "complete") return "bg-emerald-500 text-white border-emerald-600";
-  if (s === "na") return "bg-slate-400 text-white border-slate-500";
-  return "bg-white text-slate-500 border-slate-300 hover:border-slate-400";
+  if (s === "na") return "bg-blue-500 text-white border-blue-600";
+  return "bg-orange-100 text-orange-800 border-orange-300 hover:bg-orange-200";
 }
 
 export default function ChecklistTab({
@@ -291,7 +291,7 @@ export default function ChecklistTab({
       <div className="px-4 sm:px-6 py-3 border-t border-slate-200 bg-slate-50 flex flex-wrap items-center gap-4 text-xs text-slate-600">
         <span className="font-medium">Legend:</span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded border border-slate-300 bg-white" />
+          <span className="w-3 h-3 rounded border border-orange-300 bg-orange-100" />
           Not Complete
         </span>
         <span className="inline-flex items-center gap-1.5">
@@ -299,7 +299,7 @@ export default function ChecklistTab({
           Complete
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded bg-slate-400" />
+          <span className="w-3 h-3 rounded bg-blue-500" />
           N/A
         </span>
         <span className="text-slate-400">
