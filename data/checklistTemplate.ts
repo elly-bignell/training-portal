@@ -91,7 +91,7 @@ export const CHECKLIST_SECTIONS: ChecklistSection[] = [
       { kind: "item", id: "pm-11", number: 11, label: "All No shows/Reschedules added to next day rebooking schedule" },
       { kind: "item", id: "pm-12", number: 12, label: "Review meetings for tomorrow" },
       { kind: "item", id: "pm-13", number: 13, label: "Discuss pipeline with Buddy (to be closed & upcoming meetings)" },
-      { kind: "item", id: "pm-14", number: 14, label: "Add questions / problems for the day to Question box (URL TBA)" },
+      { kind: "item", id: "pm-14", number: 14, label: "Add questions / problems for the day to Question Box (https://training-portal-mauve.vercel.app/question-box)" },
       { kind: "item", id: "pm-15", number: 15, label: "EOD Discord message sent" },
     ],
   },
