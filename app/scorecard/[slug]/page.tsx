@@ -135,7 +135,7 @@ function ScorecardPageContent() {
               <div>
                 <h3 className="text-sm sm:text-base font-semibold">Question Box</h3>
                 <p className="text-xs sm:text-sm text-white/80">
-                  Post anything you&apos;re stuck on — answered at the next stand-up
+                  Post anything you&apos;re stuck on — worked through every morning as a team
                 </p>
               </div>
             </div>

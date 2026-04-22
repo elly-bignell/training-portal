@@ -255,7 +255,7 @@ function Header({ isAdmin }: { isAdmin: boolean }) {
           <div>
             <h1 className="text-xl font-bold">Question Box</h1>
             <p className="text-xs sm:text-sm text-slate-400">
-              Ask anything — we&apos;ll talk through it at the next stand-up
+              Ask anything — we&apos;ll work through it together every morning
             </p>
           </div>
         </div>
@@ -384,7 +384,7 @@ function NewQuestionCard({
         )}
         <div className="flex items-center justify-between">
           <span className="text-xs text-slate-500">
-            Goes into the Unanswered bay for the next stand-up.
+            Goes into the Unanswered bay — we&apos;ll tackle it as a team in the morning.
           </span>
           <button
             type="submit"
