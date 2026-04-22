@@ -172,7 +172,12 @@ export async function POST(request: NextRequest) {
     const jsonHeader = { ...authHeader, "Content-Type": "application/json" };
 
     // 1) Find all matching rows, sorted newest-first.
-    const filter = `AND({booker_slug} = "${booker_slug}", {week_start} = "${week_start}")`;
+    // IMPORTANT: week_start is a Date field in Airtable — direct string equality
+    // is unreliable (Airtable may stringify it with a time/timezone component),
+    // so we use DATETIME_FORMAT to compare on the YYYY-MM-DD portion only.
+    // This MUST match the filter used in GET, otherwise the dedupe check returns
+    // zero matches and a new duplicate row is created on every save.
+    const filter = `AND({booker_slug} = "${booker_slug}", DATETIME_FORMAT({week_start}, 'YYYY-MM-DD') = "${week_start}")`;
     const checkRes = await fetch(
       `${AIRTABLE_URL}?filterByFormula=${encodeURIComponent(filter)}&sort%5B0%5D%5Bfield%5D=last_updated&sort%5B0%5D%5Bdirection%5D=desc`,
       { headers: authHeader, cache: "no-store" }
