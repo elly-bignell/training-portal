@@ -114,7 +114,7 @@ export async function GET(request: NextRequest) {
 }
 
 // ---------------------------------------------------------------------------
-// POST — upsert a week's data
+// POST — upsert a week's data (atomic via Airtable `performUpsert`)
 // ---------------------------------------------------------------------------
 export async function POST(request: NextRequest) {
   try {
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
       booker_slug: string;
       booker_name?: string;
       week_start: string;
-      data: unknown;
+      data: Record<string, Record<string, unknown>> | undefined;
     };
 
     if (!booker_slug || !week_start) {
@@ -136,50 +136,46 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "unknown booker" }, { status: 400 });
     }
 
-    // Look up existing record for (booker, week)
-    const filter = `AND({booker_slug} = "${booker_slug}", {week_start} = "${week_start}")`;
-    const checkRes = await fetch(
-      `${AIRTABLE_URL}?filterByFormula=${encodeURIComponent(filter)}`,
-      {
-        headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` },
-        cache: "no-store",
-      }
-    );
-    const checkData = await checkRes.json();
-    const existing = checkData.records?.[0];
+    // Skip writes when there's nothing meaningful to save. This prevents
+    // an empty row being created if a user merely opens the page without
+    // ticking anything, or cycles every item back to Not Complete.
+    const hasRealData =
+      data &&
+      Object.values(data).some(
+        (day) => day && typeof day === "object" && Object.keys(day).length > 0
+      );
+    if (!hasRealData) {
+      return NextResponse.json({ success: true, skipped: true });
+    }
 
     const fields = {
       booker_slug,
       booker_name: booker_name || bookerName(booker_slug),
       week_start,
-      data: JSON.stringify(data || {}),
+      data: JSON.stringify(data),
       last_updated: new Date().toISOString(),
     };
 
-    let res: Response;
-    if (existing) {
-      res = await fetch(`${AIRTABLE_URL}/${existing.id}`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-          "Content-Type": "application/json",
+    // Airtable's atomic upsert: match on (booker_slug, week_start), then
+    // update in place if a record is found, otherwise create. Eliminates
+    // the read-then-write race that produced duplicate rows.
+    const res = await fetch(AIRTABLE_URL, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        performUpsert: {
+          fieldsToMergeOn: ["booker_slug", "week_start"],
         },
-        body: JSON.stringify({ fields }),
-      });
-    } else {
-      res = await fetch(AIRTABLE_URL, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ fields }),
-      });
-    }
+        records: [{ fields }],
+      }),
+    });
 
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
-      console.error("Airtable write error:", errorData);
+      console.error("Airtable upsert error:", errorData);
       return NextResponse.json(
         { error: "Failed to save checklist" },
         { status: 500 }
