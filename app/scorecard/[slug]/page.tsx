@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { getTraineeBySlug } from "@/data/trainees";
 import { isSenior, isJunior } from "@/data/buddyPairs";
+import { BOOKERS } from "@/data/checklistTemplate";
 import PasswordGate from "@/components/PasswordGate";
 import Scorecard from "@/components/Scorecard";
 import ScorecardRulesSenior from "@/components/ScorecardRulesSenior";
@@ -82,7 +83,37 @@ function ScorecardPageContent() {
         {/* Existing Scorecard — untouched */}
         <Scorecard traineeSlug={slug} traineeName={trainee.name} />
 
-
+        {/* Daily Checklist — Lead Genners only */}
+        {BOOKERS.some((b) => b.slug === slug) && (
+          <Link
+            href={`/checklist?booker=${slug}`}
+            className="block rounded-xl p-4 sm:p-5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white hover:from-emerald-600 hover:to-emerald-700 transition-colors shadow-sm"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-semibold">Daily Checklist</h3>
+                  <p className="text-xs sm:text-sm text-white/80">
+                    Morning / midday / EOD routines — resets Sunday
+                  </p>
+                </div>
+              </div>
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </Link>
+        )}
 
         {slug === "thomas-rennie" && <RennieDealTracker date={new Date().toLocaleDateString("en-CA")} />}
         {isSenior(slug) && <ScorecardRulesSenior slug={slug} />}

@@ -108,7 +108,7 @@ export async function POST(request: Request) {
     // Admin-only pages (requireMaster)
     if (requireMaster) {
       if (isAdmin) {
-        return NextResponse.json({ valid: true, role: matchingUser.role });
+        return NextResponse.json({ valid: true, role: matchingUser.role, slug: matchingUser.slug });
       }
       return NextResponse.json({ valid: false });
     }
@@ -117,17 +117,17 @@ export async function POST(request: Request) {
     if (traineeSlug) {
       // Admin can access any page
       if (isAdmin) {
-        return NextResponse.json({ valid: true, role: matchingUser.role });
+        return NextResponse.json({ valid: true, role: matchingUser.role, slug: matchingUser.slug });
       }
       // Trainee can only access their own page
       if (matchingUser.slug === traineeSlug) {
-        return NextResponse.json({ valid: true, role: matchingUser.role });
+        return NextResponse.json({ valid: true, role: matchingUser.role, slug: matchingUser.slug });
       }
       return NextResponse.json({ valid: false });
     }
 
     // Generic page (no slug required) — any active user can access
-    return NextResponse.json({ valid: true, role: matchingUser.role });
+    return NextResponse.json({ valid: true, role: matchingUser.role, slug: matchingUser.slug });
 
   } catch (error) {
     console.error("Auth validate error:", error);
