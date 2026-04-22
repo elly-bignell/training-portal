@@ -132,8 +132,8 @@ function AdminDashboardContent() {
           </div>
         )}
 
-        {/* Quick access — Lead Genner Daily Checklist */}
-        <div className="mb-6">
+        {/* Quick access — Lead Genner Daily Checklist + Question Box */}
+        <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link
             href="/checklist"
             className="block rounded-xl p-5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white hover:from-emerald-600 hover:to-emerald-700 transition-colors shadow-sm"
@@ -154,6 +154,35 @@ function AdminDashboardContent() {
                   <h3 className="text-base font-semibold">Lead Genner Daily Checklists</h3>
                   <p className="text-sm text-white/85">
                     Review each booker&apos;s morning / midday / EOD routines. Flick between tabs.
+                  </p>
+                </div>
+              </div>
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </Link>
+
+          <Link
+            href="/question-box"
+            className="block rounded-xl p-5 bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600 transition-colors shadow-sm"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-4">
+                <div className="w-11 h-11 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold">Team Question Box</h3>
+                  <p className="text-sm text-white/85">
+                    Review open questions, write answers, and mark resolved.
                   </p>
                 </div>
               </div>
