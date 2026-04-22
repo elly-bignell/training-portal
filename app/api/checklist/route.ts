@@ -114,7 +114,15 @@ export async function GET(request: NextRequest) {
 }
 
 // ---------------------------------------------------------------------------
-// POST — upsert a week's data (atomic via Airtable `performUpsert`)
+// POST — save a week's data with self-healing dedupe
+//
+// Airtable has no unique constraints, and `performUpsert` isn't atomic
+// across concurrent HTTP requests. To handle both existing duplicates
+// and future races, every save does:
+//   1. Query all rows matching (booker_slug, week_start).
+//   2. If 0 rows → create one.
+//   3. If ≥1 row → keep the newest, delete the rest, update the survivor.
+// This guarantees exactly one row per booker per week after any save.
 // ---------------------------------------------------------------------------
 export async function POST(request: NextRequest) {
   try {
@@ -156,33 +164,73 @@ export async function POST(request: NextRequest) {
       last_updated: new Date().toISOString(),
     };
 
-    // Airtable's atomic upsert: match on (booker_slug, week_start), then
-    // update in place if a record is found, otherwise create. Eliminates
-    // the read-then-write race that produced duplicate rows.
-    const res = await fetch(AIRTABLE_URL, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        performUpsert: {
-          fieldsToMergeOn: ["booker_slug", "week_start"],
-        },
-        records: [{ fields }],
-      }),
-    });
+    const authHeader = { Authorization: `Bearer ${AIRTABLE_API_KEY}` };
+    const jsonHeader = { ...authHeader, "Content-Type": "application/json" };
 
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      console.error("Airtable upsert error:", errorData);
-      return NextResponse.json(
-        { error: "Failed to save checklist" },
-        { status: 500 }
-      );
+    // 1) Find all matching rows, sorted newest-first.
+    const filter = `AND({booker_slug} = "${booker_slug}", {week_start} = "${week_start}")`;
+    const checkRes = await fetch(
+      `${AIRTABLE_URL}?filterByFormula=${encodeURIComponent(filter)}&sort%5B0%5D%5Bfield%5D=last_updated&sort%5B0%5D%5Bdirection%5D=desc`,
+      { headers: authHeader, cache: "no-store" }
+    );
+    if (!checkRes.ok) {
+      const errorData = await checkRes.json().catch(() => ({}));
+      console.error("Airtable read error:", errorData);
+      return NextResponse.json({ error: "Failed to save checklist" }, { status: 500 });
+    }
+    const checkData = await checkRes.json();
+    const existing: { id: string }[] = checkData.records || [];
+
+    // 2) No existing row → create.
+    if (existing.length === 0) {
+      const createRes = await fetch(AIRTABLE_URL, {
+        method: "POST",
+        headers: jsonHeader,
+        body: JSON.stringify({ fields }),
+      });
+      if (!createRes.ok) {
+        const errorData = await createRes.json().catch(() => ({}));
+        console.error("Airtable create error:", errorData);
+        return NextResponse.json({ error: "Failed to save checklist" }, { status: 500 });
+      }
+      return NextResponse.json({ success: true, action: "created" });
     }
 
-    return NextResponse.json({ success: true });
+    // 3) ≥1 existing row → keep the newest, delete the rest, update the survivor.
+    const [keep, ...duplicates] = existing;
+
+    // Delete duplicates (Airtable DELETE allows up to 10 ids per call)
+    if (duplicates.length > 0) {
+      const idsInBatches: string[][] = [];
+      for (let i = 0; i < duplicates.length; i += 10) {
+        idsInBatches.push(duplicates.slice(i, i + 10).map((r) => r.id));
+      }
+      for (const batch of idsInBatches) {
+        const qs = batch.map((id) => `records[]=${encodeURIComponent(id)}`).join("&");
+        await fetch(`${AIRTABLE_URL}?${qs}`, {
+          method: "DELETE",
+          headers: authHeader,
+        });
+      }
+    }
+
+    // Update the survivor
+    const updateRes = await fetch(`${AIRTABLE_URL}/${keep.id}`, {
+      method: "PATCH",
+      headers: jsonHeader,
+      body: JSON.stringify({ fields }),
+    });
+    if (!updateRes.ok) {
+      const errorData = await updateRes.json().catch(() => ({}));
+      console.error("Airtable update error:", errorData);
+      return NextResponse.json({ error: "Failed to save checklist" }, { status: 500 });
+    }
+
+    return NextResponse.json({
+      success: true,
+      action: "updated",
+      deduped: duplicates.length,
+    });
   } catch (err) {
     console.error("Checklist POST error:", err);
     return NextResponse.json({ error: "Failed to save checklist" }, { status: 500 });

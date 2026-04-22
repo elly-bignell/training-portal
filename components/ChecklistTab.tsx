@@ -102,34 +102,56 @@ export default function ChecklistTab({
       .catch(() => setHistoryWeeks([]));
   }, [bookerSlug, isAdmin]);
 
-  // --- debounced auto-save ---
+  // --- debounced + serialized auto-save ---
+  // At most ONE save is in flight at a time. Rapid ticks coalesce via the
+  // debounce timer; if a save fires while an earlier one is still running,
+  // the latest data is queued and sent as soon as the current one finishes.
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const inflight = useRef(false);
+  const pendingData = useRef<WeekData | null>(null);
+
+  const performSave = useCallback(
+    async (next: WeekData) => {
+      if (inflight.current) {
+        pendingData.current = next;
+        return;
+      }
+      inflight.current = true;
+      setSaving(true);
+      try {
+        await fetch("/api/checklist", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            booker_slug: bookerSlug,
+            booker_name: bookerName,
+            week_start: weekStart,
+            data: next,
+          }),
+        });
+        setSavedAt(new Date());
+      } catch {
+        // Silently retry on next change
+      } finally {
+        setSaving(false);
+        inflight.current = false;
+        if (pendingData.current) {
+          const queued = pendingData.current;
+          pendingData.current = null;
+          performSave(queued);
+        }
+      }
+    },
+    [bookerSlug, bookerName, weekStart]
+  );
+
   const scheduleSave = useCallback(
     (next: WeekData) => {
       if (locked) return;
       if (saveTimer.current) clearTimeout(saveTimer.current);
-      saveTimer.current = setTimeout(async () => {
-        setSaving(true);
-        try {
-          await fetch("/api/checklist", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              booker_slug: bookerSlug,
-              booker_name: bookerName,
-              week_start: weekStart,
-              data: next,
-            }),
-          });
-          setSavedAt(new Date());
-        } catch {
-          // Silently retry on next change
-        } finally {
-          setSaving(false);
-        }
-      }, 400);
+      saveTimer.current = setTimeout(() => performSave(next), 400);
     },
-    [bookerSlug, bookerName, weekStart, locked]
+    [locked, performSave]
   );
 
   const updateCell = useCallback(
@@ -156,7 +178,15 @@ export default function ChecklistTab({
   const cycleStatus = (dayKey: string, itemId: string) => {
     if (locked) return;
     const cur = data[dayKey]?.[itemId]?.status ?? null;
-    updateCell(dayKey, itemId, { status: nextStatus(cur) });
+    const next = nextStatus(cur);
+    // When leaving N/A, clear any note (pencil only exists in N/A mode).
+    if (cur === "na" && next !== "na") {
+      updateCell(dayKey, itemId, { status: next, note: "" });
+      // Close any open note editor for this cell
+      if (openNote === `${dayKey}:${itemId}`) setOpenNote(null);
+    } else {
+      updateCell(dayKey, itemId, { status: next });
+    }
   };
 
   // --- progress counter for current tab ---
@@ -303,7 +333,7 @@ export default function ChecklistTab({
           N/A
         </span>
         <span className="text-slate-400">
-          Click a cell to cycle status. Click the pencil to add a note.
+          Click a cell to cycle status. The pencil appears on N/A cells for an optional reason.
         </span>
       </div>
     </div>
@@ -439,33 +469,35 @@ function ItemRow({
                 >
                   {statusLabel(status)}
                 </button>
-                <button
-                  onClick={() =>
-                    setOpenNote(openNote === noteKey ? null : noteKey)
-                  }
-                  title={hasNote ? "Edit note" : "Add note"}
-                  className={`p-1 rounded border text-xs ${
-                    hasNote
-                      ? "border-amber-300 bg-amber-50 text-amber-700"
-                      : "border-slate-200 text-slate-400 hover:text-slate-600 hover:border-slate-300"
-                  }`}
-                >
-                  <svg
-                    className="w-3 h-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                {status === "na" && (
+                  <button
+                    onClick={() =>
+                      setOpenNote(openNote === noteKey ? null : noteKey)
+                    }
+                    title={hasNote ? "Edit N/A reason" : "Add N/A reason"}
+                    className={`p-1 rounded border text-xs ${
+                      hasNote
+                        ? "border-amber-300 bg-amber-50 text-amber-700"
+                        : "border-slate-200 text-slate-400 hover:text-slate-600 hover:border-slate-300"
+                    }`}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                    />
-                  </svg>
-                </button>
+                    <svg
+                      className="w-3 h-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                      />
+                    </svg>
+                  </button>
+                )}
               </div>
-              {openNote === noteKey && (
+              {status === "na" && openNote === noteKey && (
                 <textarea
                   autoFocus
                   defaultValue={cell?.note || ""}
