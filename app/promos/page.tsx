@@ -69,6 +69,15 @@ const MONTHS = [
 // Helpers
 // ---------------------------------------------------------------------------
 
+// Return the 12 months in "soonest first from today" order — the current
+// month leads, then each subsequent month, wrapping around so that
+// already-passed months this calendar year sit at the end (they're
+// effectively "next year" from a planning perspective).
+function getMonthOrder(): string[] {
+  const currentIdx = new Date().getMonth(); // 0-11 in local time
+  return [...MONTHS.slice(currentIdx), ...MONTHS.slice(0, currentIdx)];
+}
+
 function formatRelative(iso: string): string {
   if (!iso) return "";
   const d = new Date(iso);
@@ -171,11 +180,11 @@ function PromosContent() {
         {loading ? (
           <div className="py-10 text-center text-slate-500">Loading…</div>
         ) : activeTab === "to_discuss" ? (
-          <PromoList list={toDiscuss} emptyTab="to_discuss" onChanged={refresh} />
+          <PromoMonthGrid list={toDiscuss} emptyTab="to_discuss" onChanged={refresh} />
         ) : activeTab === "approved" ? (
-          <ApprovedByMonth list={approved} onChanged={refresh} />
+          <PromoMonthGrid list={approved} emptyTab="approved" onChanged={refresh} />
         ) : (
-          <PromoList list={rejected} emptyTab="rejected" onChanged={refresh} />
+          <PromoMonthGrid list={rejected} emptyTab="rejected" onChanged={refresh} />
         )}
       </div>
     </main>
@@ -445,9 +454,16 @@ function NewPromoCard({ onSubmitted }: { onSubmitted: () => void }) {
 }
 
 // ---------------------------------------------------------------------------
-// Plain list (used for To discuss + Rejected)
+// Unified two-column month grid
+// -----------------------------------------------------------------------------
+// Used for all three tabs (To discuss / Approved / Rejected). Ideas are
+// grouped by month in "soonest-first from today" order, then split into
+// two columns within each month: Inbound (Team) on the left, External
+// (Clients) on the right. A month row with ideas on one side and nothing
+// on the other renders an empty placeholder cell so the alignment is
+// obvious at a glance.
 // ---------------------------------------------------------------------------
-function PromoList({
+function PromoMonthGrid({
   list,
   emptyTab,
   onChanged,
@@ -457,65 +473,105 @@ function PromoList({
   onChanged: () => void;
 }) {
   if (list.length === 0) return <EmptyState tab={emptyTab} />;
+
+  // Group by month + audience.
+  const buckets: Record<string, { Inbound: PromoRecord[]; External: PromoRecord[] }> = {};
+  for (const p of list) {
+    const key = p.month || "No month set";
+    if (!buckets[key]) buckets[key] = { Inbound: [], External: [] };
+    buckets[key][p.audience].push(p);
+  }
+
+  // Within each cell, newest submissions first.
+  for (const key of Object.keys(buckets)) {
+    buckets[key].Inbound.sort((a, b) =>
+      (b.submitted_at || "").localeCompare(a.submitted_at || "")
+    );
+    buckets[key].External.sort((a, b) =>
+      (b.submitted_at || "").localeCompare(a.submitted_at || "")
+    );
+  }
+
+  // Month order: soonest-first rotation starting at today's month.
+  // "No month set" lives at the bottom as a catch-all.
+  const monthOrder = getMonthOrder();
+  const orderedKeys: string[] = [
+    ...monthOrder.filter((m) => buckets[m]),
+    ...(buckets["No month set"] ? ["No month set"] : []),
+  ];
+
+  // Header accent swaps between tabs so each tab feels distinct.
+  const headerAccent =
+    emptyTab === "approved"
+      ? "bg-emerald-50 border-emerald-100 text-emerald-900"
+      : emptyTab === "rejected"
+      ? "bg-rose-50 border-rose-100 text-rose-900"
+      : "bg-amber-50 border-amber-100 text-amber-900";
+
   return (
-    <div className="space-y-3">
-      {list.map((p) => (
-        <PromoCard key={p.id} promo={p} onChanged={onChanged} />
-      ))}
+    <div className="space-y-5">
+      {/* Column legend — only once, at the top */}
+      <div className="grid grid-cols-2 gap-3 px-2">
+        <div className="flex items-center gap-2 text-[11px] uppercase tracking-wide font-bold text-emerald-700">
+          <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
+          Inbound (Team)
+        </div>
+        <div className="flex items-center gap-2 text-[11px] uppercase tracking-wide font-bold text-blue-700">
+          <span className="inline-block w-2 h-2 rounded-full bg-blue-500" />
+          External (Clients)
+        </div>
+      </div>
+
+      {orderedKeys.map((key) => {
+        const bucket = buckets[key];
+        const total = bucket.Inbound.length + bucket.External.length;
+        return (
+          <section
+            key={key}
+            className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"
+          >
+            <header
+              className={`px-4 sm:px-5 py-3 border-b flex items-center justify-between ${headerAccent}`}
+            >
+              <h3 className="text-sm font-semibold uppercase tracking-wide">
+                {key}
+              </h3>
+              <span className="text-xs opacity-80">
+                {total} promo{total === 1 ? "" : "s"}
+              </span>
+            </header>
+
+            <div className="grid grid-cols-2 divide-x divide-slate-100">
+              <div className="p-3 space-y-3 min-h-[90px]">
+                {bucket.Inbound.length === 0 ? (
+                  <EmptyCell label="No inbound ideas" />
+                ) : (
+                  bucket.Inbound.map((p) => (
+                    <PromoCard key={p.id} promo={p} onChanged={onChanged} dense />
+                  ))
+                )}
+              </div>
+              <div className="p-3 space-y-3 min-h-[90px]">
+                {bucket.External.length === 0 ? (
+                  <EmptyCell label="No external ideas" />
+                ) : (
+                  bucket.External.map((p) => (
+                    <PromoCard key={p.id} promo={p} onChanged={onChanged} dense />
+                  ))
+                )}
+              </div>
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }
 
-// ---------------------------------------------------------------------------
-// Approved, grouped by month
-// ---------------------------------------------------------------------------
-function ApprovedByMonth({
-  list,
-  onChanged,
-}: {
-  list: PromoRecord[];
-  onChanged: () => void;
-}) {
-  if (list.length === 0) return <EmptyState tab="approved" />;
-
-  // Group into month buckets. Missing month → "No month set".
-  const buckets: Record<string, PromoRecord[]> = {};
-  for (const p of list) {
-    const key = p.month || "No month set";
-    if (!buckets[key]) buckets[key] = [];
-    buckets[key].push(p);
-  }
-
-  // Month display order: calendar order, then "No month set" last.
-  const orderedKeys: string[] = [
-    ...MONTHS.filter((m) => buckets[m]),
-    ...(buckets["No month set"] ? ["No month set"] : []),
-  ];
-
+function EmptyCell({ label }: { label: string }) {
   return (
-    <div className="space-y-5">
-      {orderedKeys.map((key) => (
-        <section
-          key={key}
-          className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"
-        >
-          <header className="px-4 sm:px-5 py-3 bg-emerald-50 border-b border-emerald-100 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-emerald-900 uppercase tracking-wide">
-              {key}
-            </h3>
-            <span className="text-xs text-emerald-800">
-              {buckets[key].length} promo{buckets[key].length === 1 ? "" : "s"}
-            </span>
-          </header>
-          <div className="divide-y divide-slate-100">
-            {buckets[key].map((p) => (
-              <div key={p.id} className="p-3 sm:p-4">
-                <PromoCard promo={p} onChanged={onChanged} dense />
-              </div>
-            ))}
-          </div>
-        </section>
-      ))}
+    <div className="h-full flex items-center justify-center text-center text-xs text-slate-400 italic py-6">
+      {label}
     </div>
   );
 }
