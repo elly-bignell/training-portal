@@ -350,7 +350,7 @@ function NewPromoCard({ onSubmitted }: { onSubmitted: () => void }) {
               value={submittedBy}
               onChange={(e) => setSubmittedBy(e.target.value)}
               disabled={posting}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2.5 sm:py-2 text-base sm:text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white"
             >
               <option value="">Choose…</option>
               {SUBMITTERS.map((s) => (
@@ -371,7 +371,7 @@ function NewPromoCard({ onSubmitted }: { onSubmitted: () => void }) {
                 type="button"
                 onClick={() => setAudience("Inbound")}
                 disabled={posting}
-                className={`flex-1 px-3 py-2 text-sm font-medium transition-colors ${
+                className={`flex-1 px-3 py-2.5 sm:py-2 text-sm font-medium transition-colors ${
                   audience === "Inbound"
                     ? "bg-emerald-600 text-white"
                     : "bg-white text-slate-600 hover:bg-slate-50"
@@ -383,7 +383,7 @@ function NewPromoCard({ onSubmitted }: { onSubmitted: () => void }) {
                 type="button"
                 onClick={() => setAudience("External")}
                 disabled={posting}
-                className={`flex-1 px-3 py-2 text-sm font-medium transition-colors border-l border-slate-300 ${
+                className={`flex-1 px-3 py-2.5 sm:py-2 text-sm font-medium transition-colors border-l border-slate-300 ${
                   audience === "External"
                     ? "bg-blue-600 text-white"
                     : "bg-white text-slate-600 hover:bg-slate-50"
@@ -403,7 +403,7 @@ function NewPromoCard({ onSubmitted }: { onSubmitted: () => void }) {
               value={month}
               onChange={(e) => setMonth(e.target.value)}
               disabled={posting}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2.5 sm:py-2 text-base sm:text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white"
             >
               <option value="">Not relevant</option>
               {MONTHS.map((m) => (
@@ -426,7 +426,7 @@ function NewPromoCard({ onSubmitted }: { onSubmitted: () => void }) {
             placeholder="What's the promo? What's the hook? Any context the rest of the team needs when we review it in the morning."
             rows={3}
             disabled={posting}
-            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none resize-y min-h-[80px]"
+            className="w-full border border-slate-300 rounded-lg px-3 py-2.5 sm:py-2 text-base sm:text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none resize-y min-h-[100px] sm:min-h-[80px]"
           />
         </div>
 
@@ -436,14 +436,14 @@ function NewPromoCard({ onSubmitted }: { onSubmitted: () => void }) {
           </div>
         )}
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3">
           <span className="text-xs text-slate-500">
             Goes into &lsquo;To discuss&rsquo; for the team to work through.
           </span>
           <button
             type="submit"
             disabled={posting || !submittedBy || notes.trim().length === 0}
-            className="px-4 py-2 text-sm font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto px-4 py-3 sm:py-2 text-base sm:text-sm font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {posting ? "Submitting…" : "Submit idea"}
           </button>
@@ -510,8 +510,9 @@ function PromoMonthGrid({
 
   return (
     <div className="space-y-5">
-      {/* Column legend — only once, at the top */}
-      <div className="grid grid-cols-2 gap-3 px-2">
+      {/* Column legend — desktop only (mobile stacks, so each cell has
+          its own sub-header instead). */}
+      <div className="hidden md:grid grid-cols-2 gap-3 px-2">
         <div className="flex items-center gap-2 text-[11px] uppercase tracking-wide font-bold text-emerald-700">
           <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
           Inbound (Team)
@@ -541,8 +542,11 @@ function PromoMonthGrid({
               </span>
             </header>
 
-            <div className="grid grid-cols-2 divide-x divide-slate-100">
+            {/* grid-cols-1 on mobile (stacked) → grid-cols-2 on md+ (side-by-side).
+                The divider flips orientation to match. */}
+            <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-100">
               <div className="p-3 space-y-3 min-h-[90px]">
+                <CellHeader variant="inbound" />
                 {bucket.Inbound.length === 0 ? (
                   <EmptyCell label="No inbound ideas" />
                 ) : (
@@ -552,6 +556,7 @@ function PromoMonthGrid({
                 )}
               </div>
               <div className="p-3 space-y-3 min-h-[90px]">
+                <CellHeader variant="external" />
                 {bucket.External.length === 0 ? (
                   <EmptyCell label="No external ideas" />
                 ) : (
@@ -564,6 +569,25 @@ function PromoMonthGrid({
           </section>
         );
       })}
+    </div>
+  );
+}
+
+// Sub-header shown inside each cell on mobile only (so when the two
+// columns stack vertically it's still obvious which group is which).
+function CellHeader({ variant }: { variant: "inbound" | "external" }) {
+  if (variant === "inbound") {
+    return (
+      <div className="md:hidden flex items-center gap-2 text-[11px] uppercase tracking-wide font-bold text-emerald-700 pb-1">
+        <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
+        Inbound (Team)
+      </div>
+    );
+  }
+  return (
+    <div className="md:hidden flex items-center gap-2 text-[11px] uppercase tracking-wide font-bold text-blue-700 pb-1">
+      <span className="inline-block w-2 h-2 rounded-full bg-blue-500" />
+      External (Clients)
     </div>
   );
 }
@@ -821,7 +845,7 @@ function PromoCard({
                 value={submittedBy}
                 onChange={(e) => setSubmittedBy(e.target.value)}
                 disabled={saving}
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white"
+                className="w-full border border-slate-300 rounded-lg px-3 py-2.5 sm:py-2 text-base sm:text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white"
               >
                 <option value="">Choose…</option>
                 {SUBMITTERS.map((s) => (
@@ -841,7 +865,7 @@ function PromoCard({
                   type="button"
                   onClick={() => setAudience("Inbound")}
                   disabled={saving}
-                  className={`flex-1 px-3 py-2 text-sm font-medium transition-colors ${
+                  className={`flex-1 px-3 py-2.5 sm:py-2 text-sm font-medium transition-colors ${
                     audience === "Inbound"
                       ? "bg-emerald-600 text-white"
                       : "bg-white text-slate-600 hover:bg-slate-50"
@@ -853,7 +877,7 @@ function PromoCard({
                   type="button"
                   onClick={() => setAudience("External")}
                   disabled={saving}
-                  className={`flex-1 px-3 py-2 text-sm font-medium transition-colors border-l border-slate-300 ${
+                  className={`flex-1 px-3 py-2.5 sm:py-2 text-sm font-medium transition-colors border-l border-slate-300 ${
                     audience === "External"
                       ? "bg-blue-600 text-white"
                       : "bg-white text-slate-600 hover:bg-slate-50"
@@ -872,7 +896,7 @@ function PromoCard({
                 value={month}
                 onChange={(e) => setMonth(e.target.value)}
                 disabled={saving}
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white"
+                className="w-full border border-slate-300 rounded-lg px-3 py-2.5 sm:py-2 text-base sm:text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white"
               >
                 <option value="">Not relevant</option>
                 {MONTHS.map((m) => (
@@ -893,7 +917,7 @@ function PromoCard({
               onChange={(e) => setNotes(e.target.value)}
               rows={4}
               disabled={saving}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none resize-y min-h-[100px] bg-white"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2.5 sm:py-2 text-base sm:text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none resize-y min-h-[120px] sm:min-h-[100px] bg-white"
             />
           </div>
 
