@@ -132,8 +132,8 @@ function AdminDashboardContent() {
           </div>
         )}
 
-        {/* Quick access — Lead Genner Daily Checklist + Question Box */}
-        <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Quick access — Lead Genner Daily Checklist + Question Box + Promo Ideas */}
+        <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link
             href="/checklist"
             className="block rounded-xl p-5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white hover:from-emerald-600 hover:to-emerald-700 transition-colors shadow-sm"
@@ -183,6 +183,35 @@ function AdminDashboardContent() {
                   <h3 className="text-base font-semibold">Team Question Box</h3>
                   <p className="text-sm text-white/85">
                     Review open questions, write answers, and mark resolved.
+                  </p>
+                </div>
+              </div>
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </Link>
+
+          <Link
+            href="/promos"
+            className="block rounded-xl p-5 bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 transition-colors shadow-sm"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-4">
+                <div className="w-11 h-11 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold">Promotional Ideas</h3>
+                  <p className="text-sm text-white/85">
+                    Submit promo pitches, work through them, ship the winners.
                   </p>
                 </div>
               </div>
