@@ -43,13 +43,13 @@ export const trainees: Trainee[] = [
     id: "cindy-rose-rondez-manrique",
     name: "Cindy Rose Rondez Manrique",
     slug: "cindy-rose-rondez-manrique",
-    startDate: "2026-02-23",
+    startDate: "2024-01-15",
   },
   {
     id: "krishna-patel",
     name: "Krishna Patel",
     slug: "krishna-patel",
-    startDate: "2026-02-23",
+    startDate: "2024-01-15",
   },
   {
     id: "jeremy-valiente",
@@ -88,12 +88,6 @@ export const trainees: Trainee[] = [
     startDate: "2026-03-24",
   },
   {
-    id: "sydney-arnold",
-    name: "Sydney Arnold",
-    slug: "sydney-arnold",
-    startDate: "2026-03-17",
-  },
-  {
     id: "riley-kerrison",
     name: "Riley Kerrison",
     slug: "riley-kerrison",
@@ -130,12 +124,6 @@ export const trainees: Trainee[] = [
     startDate: "2026-04-16",
   },
   {
-    id: "emma-ward",
-    name: "Emma Ward",
-    slug: "emma-ward",
-    startDate: "2026-04-27",
-  },
-  {
     id: "jj-chatrawee",
     name: "JJ Chatrawee",
     slug: "jj-chatrawee",
@@ -170,6 +158,12 @@ export const trainees: Trainee[] = [
     name: "Ella Smith",
     slug: "ella-smith",
     startDate: "2026-04-16",
+  },
+  {
+    id: "sydney-arnold",
+    name: "Sydney Arnold",
+    slug: "sydney-arnold",
+    startDate: "2026-03-17",
   },
 ];
 

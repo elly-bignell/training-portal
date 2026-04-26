@@ -433,7 +433,7 @@ function HomeContent() {
           {(() => {
             const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold", "riley-kerrison", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "kateryna-bakumenko", "shahmir-saajad"];
             const CS_SLUGS = ["jeremy-valiente", "dasha-axenova", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith"];
-            const ARCHIVED_SLUGS = ["connie-matthews", "reegan-james", "rachel-astachnowicz", "aston-marsh", "shani-thomas", "emma-ward"];
+            const ARCHIVED_SLUGS = ["connie-matthews", "reegan-james", "rachel-astachnowicz", "aston-marsh", "shani-thomas"];
 
             return trainees.filter((t) => !ARCHIVED_SLUGS.includes(t.slug)).map((trainee) => {
               const progress = getTraineeProgress(trainee.slug);
