@@ -43,7 +43,7 @@ export const CHECKLIST_SECTIONS: ChecklistSection[] = [
     time: "9:00AM CHECKLIST",
     rows: [
       { kind: "item", id: "am-1",  number: 1, label: "Morning Mindset Video" },
-      { kind: "item", id: "am-2",  number: 2, label: "Alarms set for 15 min scheduled meetings" },
+      { kind: "item", id: "am-2",  number: 2, label: "Alarms set for 15 mins prior to all scheduled meetings" },
       { kind: "item", id: "am-3",  number: 3, label: "12:30pm alarm set for checklist update" },
       { kind: "item", id: "am-4",  number: 4, label: "Send Confirmed Meetings Texts (all confirmed meetings for the day)" },
       { kind: "subheading", id: "am-sub-1", label: "Before Starting Cold Calling" },
