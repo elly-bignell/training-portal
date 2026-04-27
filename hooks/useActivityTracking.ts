@@ -23,18 +23,21 @@ interface WeeklyData {
 // Revenue: $350 per deal
 export const weeklyStandards: Record<number, DailyActivity> = {
   0: { calls_made: 0, calls: 0, bookings: 0, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 }, // Training
-  1: { calls_made: 120, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  2: { calls_made: 120, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  3: { calls_made: 120, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  4: { calls_made: 120, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  5: { calls_made: 120, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  6: { calls_made: 120, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  7: { calls_made: 120, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  8: { calls_made: 120, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  1: { calls_made: 125, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  2: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  3: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  4: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  5: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  6: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 }, // The Standard
+  7: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  8: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
 };
 
 // Per-trainee week number overrides (slug → effective week for standards/display)
-export const TRAINEE_WEEK_OVERRIDES: Record<string, number> = {};
+export const TRAINEE_WEEK_OVERRIDES: Record<string, number> = {
+  "sydney-arnold": 1, // Sydney is in Week 1
+  "riley-kerrison": 0,  // Riley is in Week 0 (Training Week)
+};
 
 // Sydney Week 0 ramp-up targets by day (0 = Mon, 1 = Tue, 2 = Wed, 3 = Thu, 4 = Fri)
 export const WEEK0_RAMP: Record<number, DailyActivity> = {
@@ -45,17 +48,39 @@ export const WEEK0_RAMP: Record<number, DailyActivity> = {
   4: { calls_made: 0, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 },
 };
 
-// Week 0 started Mon 16 Feb 2026 — all weeks computed dynamically from this base
-const WEEK0_MONDAY = new Date(Date.UTC(2026, 1, 16)); // Feb 16 2026
+// Week start dates (Sundays before each Monday)
+const weekStartDates: Record<number, string> = {
+  0: "2026-02-15", // Training: Sun before Mon 16 Feb
+  1: "2026-02-22", // Week 1: Sun before Mon 23 Feb
+  2: "2026-03-01",
+  3: "2026-03-08",
+  4: "2026-03-15",
+  5: "2026-03-22",
+  6: "2026-03-29",
+  7: "2026-04-05",
+  8: "2026-04-12",
+  9: "2026-04-19",  // Week 9:  Mon 20 Apr
+  10: "2026-04-26", // Week 10: Mon 27 Apr
+  11: "2026-05-03", // Week 11: Mon 4 May
+  12: "2026-05-10", // Week 12: Mon 11 May
+  13: "2026-05-17", // Week 13: Mon 18 May
+  14: "2026-05-24", // Week 14: Mon 25 May
+  15: "2026-05-31", // Week 15: Mon 1 Jun
+  16: "2026-06-07", // Week 16: Mon 8 Jun
+};
 
-// Get current week number based on Adelaide time (0 = week of Feb 16, unbounded)
+// Get current week number based on Adelaide time
 export function getCurrentWeekNumber(): number {
   const now = new Date();
-  const adelaideStr = now.toLocaleDateString("en-CA", { timeZone: "Australia/Adelaide" });
-  const [y, m, d] = adelaideStr.split("-").map(Number);
-  const adelaideMidnight = new Date(Date.UTC(y, m - 1, d));
-  const diffMs = adelaideMidnight.getTime() - WEEK0_MONDAY.getTime();
-  return Math.max(0, Math.floor(diffMs / (7 * 86400000)));
+  const adelaide = new Date(now.toLocaleString("en-US", { timeZone: "Australia/Adelaide" }));
+  
+  for (let i = 16; i >= 0; i--) {
+    const weekStart = new Date(weekStartDates[i]);
+    if (adelaide >= weekStart) {
+      return i;
+    }
+  }
+  return 0;
 }
 
 // Get Adelaide date string
@@ -63,13 +88,16 @@ function getAdelaideDate(): string {
   return new Date().toLocaleDateString("en-CA", { timeZone: "Australia/Adelaide" });
 }
 
-// Get week boundaries for a given week number (dynamic)
+// Get week boundaries for a given week number
 export function getWeekBoundaries(weekNum: number): { start: string; end: string } {
-  const monday = new Date(WEEK0_MONDAY.getTime() + weekNum * 7 * 86400000);
-  const friday = new Date(monday.getTime() + 4 * 86400000);
+  const startDate = new Date(weekStartDates[weekNum]);
+  startDate.setDate(startDate.getDate() + 1); // Monday
+  const endDate = new Date(startDate);
+  endDate.setDate(endDate.getDate() + 4); // Friday
+  
   return {
-    start: monday.toISOString().split("T")[0],
-    end: friday.toISOString().split("T")[0],
+    start: startDate.toISOString().split("T")[0],
+    end: endDate.toISOString().split("T")[0],
   };
 }
 

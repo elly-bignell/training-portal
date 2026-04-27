@@ -86,6 +86,14 @@ const weekDateRanges: Record<number, string> = {
   6: "Mon 30 Mar – Fri 3 Apr",
   7: "Mon 6 Apr – Fri 10 Apr",
   8: "Mon 13 Apr – Fri 17 Apr",
+  9: "Mon 20 Apr – Fri 24 Apr",
+  10: "Mon 27 Apr – Fri 1 May",
+  11: "Mon 4 May – Fri 8 May",
+  12: "Mon 11 May – Fri 15 May",
+  13: "Mon 18 May – Fri 22 May",
+  14: "Mon 25 May – Fri 29 May",
+  15: "Mon 1 Jun – Fri 5 Jun",
+  16: "Mon 8 Jun – Fri 12 Jun",
 };
 
 // Week 0 ramp booking targets (Mon=0 … Fri=4) — applies to any Week 0 trainee
