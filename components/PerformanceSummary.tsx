@@ -179,7 +179,7 @@ function getWeekDates(weekNum: number): string[] {
 export default function PerformanceSummary() {
   const [weekData, setWeekData] = useState<TraineeWeekData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
+  const [refreshTick, setRefreshTick] = useState(0);
   const currentWeek = getCurrentWeekNumber();
 
   // All slugs we want to display (from team definitions)
@@ -253,14 +253,13 @@ export default function PerformanceSummary() {
 
       setWeekData(results);
       setIsLoading(false);
-      setLastRefreshed(new Date());
     };
 
     fetchAllData();
-    const interval = setInterval(fetchAllData, 5 * 60 * 1000); // refresh every 5 min
+    const interval = setInterval(() => setRefreshTick((t) => t + 1), 5 * 60 * 1000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentWeek, lastRefreshed]);
+  }, [currentWeek, refreshTick]);
 
   if (isLoading) {
     return (
@@ -337,7 +336,7 @@ export default function PerformanceSummary() {
             </div>
             <div className="flex items-center gap-3">
               <button
-                onClick={() => setLastRefreshed(new Date())}
+                onClick={() => setRefreshTick((t) => t + 1)}
                 className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 transition-colors"
                 title="Refresh data"
               >
