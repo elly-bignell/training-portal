@@ -139,6 +139,18 @@ function getIndividualEowTarget(slug: string): number {
   return TRAINEES_WITH_TARGET.has(slug) ? TEAM_BOOKINGS_TARGET_EOW : 0;
 }
 
+// Per-team daily and EOW booking targets — summed from each member's individual
+// target. Buddies (Lucas, Felipe, Dylan) have no individual target so they
+// contribute 0; a two-trainee team like Team 1 (Cindy + Riley) hits 14/day,
+// 70/EOW. Single-trainee teams hit 7/day, 35/EOW.
+function getTeamDailyTarget(memberSlugs: string[]): number {
+  return memberSlugs.reduce((sum, slug) => sum + getIndividualDayTarget(slug, 0), 0);
+}
+
+function getTeamEowTarget(memberSlugs: string[]): number {
+  return memberSlugs.reduce((sum, slug) => sum + getIndividualEowTarget(slug), 0);
+}
+
 // Get booking status colour for a person
 function getBookingStatusClass(actual: number, target: number): string {
   if (target === 0) return "text-gray-600";
@@ -320,9 +332,12 @@ export default function PerformanceSummary() {
     };
   })();
 
-  // Grand daily target = number of teams × 7
-  const grandDailyTarget = teams.length * TEAM_BOOKINGS_TARGET_DAILY;
-  const grandEowTarget = teams.length * TEAM_BOOKINGS_TARGET_EOW;
+  // Grand daily/EOW target = sum across all teams (each team's target is
+  // sum of its trainees' individual targets). Today: Team 1 (Cindy+Riley) 14
+  // + Team 2 (Sydney) 7 + Team 3 (Krishna) 7 + Team 4 (Thomas) 7 = 35/day,
+  // 175/EOW. Auto-adjusts as TRAINEES_WITH_TARGET membership changes.
+  const grandDailyTarget = teams.reduce((sum, t) => sum + getTeamDailyTarget(t.members), 0);
+  const grandEowTarget = teams.reduce((sum, t) => sum + getTeamEowTarget(t.members), 0);
 
   return (
     <div className="space-y-6">
@@ -379,6 +394,8 @@ export default function PerformanceSummary() {
             {teams.map((team, teamIndex) => {
               const teamDayTotals = getTeamDayTotals(team.members);
               const teamWeekTotals = getTeamWeekTotals(team.members);
+              const teamDailyTarget = getTeamDailyTarget(team.members);
+              const teamEowTarget = getTeamEowTarget(team.members);
 
               return (
                 <tbody key={team.name} className={teamIndex > 0 ? "border-t-2 border-gray-200" : ""}>
@@ -389,10 +406,10 @@ export default function PerformanceSummary() {
                         <span className="text-sm font-bold text-white">{team.name}</span>
                         <div className="flex items-center gap-4">
                           <span className="text-xs text-slate-300">
-                            Booking target: <span className="font-semibold text-white">{TEAM_BOOKINGS_TARGET_DAILY}/team/day</span> · <span className="font-semibold text-white">{TRAINEE_BOOKINGS_TARGET_DAILY}/trainee</span>
+                            Booking target: <span className="font-semibold text-white">{teamDailyTarget}/team/day</span> · <span className="font-semibold text-white">{TRAINEE_BOOKINGS_TARGET_DAILY}/trainee</span>
                           </span>
                           <span className="text-xs text-slate-300">
-                            EOW: <span className="font-semibold text-white">{TEAM_BOOKINGS_TARGET_EOW} bookings</span>
+                            EOW: <span className="font-semibold text-white">{teamEowTarget} bookings</span>
                           </span>
                         </div>
                       </div>
@@ -480,17 +497,17 @@ export default function PerformanceSummary() {
                       <span className="text-[10px] text-slate-400 uppercase font-semibold">Book</span>
                     </td>
                     {teamDayTotals.map((dayTotal, idx) => {
-                      const statusClass = getTeamBookingStatusClass(dayTotal.bookings, TEAM_BOOKINGS_TARGET_DAILY);
+                      const statusClass = getTeamBookingStatusClass(dayTotal.bookings, teamDailyTarget);
                       return (
                         <td key={`team-${team.name}-${idx}`} className={`px-2 py-2 text-center text-sm ${statusClass}`}>
                           {dayTotal.bookings}
-                          <span className="text-gray-400 font-normal text-xs">/{TEAM_BOOKINGS_TARGET_DAILY}</span>
+                          <span className="text-gray-400 font-normal text-xs">/{teamDailyTarget}</span>
                         </td>
                       );
                     })}
-                    <td className={`px-3 py-2 text-center text-sm ${getTeamBookingStatusClass(teamWeekTotals.bookings, TEAM_BOOKINGS_TARGET_EOW)}`}>
+                    <td className={`px-3 py-2 text-center text-sm ${getTeamBookingStatusClass(teamWeekTotals.bookings, teamEowTarget)}`}>
                       {teamWeekTotals.bookings}
-                      <span className="text-gray-400 font-normal text-xs">/{TEAM_BOOKINGS_TARGET_EOW}</span>
+                      <span className="text-gray-400 font-normal text-xs">/{teamEowTarget}</span>
                     </td>
                     <td className="px-2 py-2 text-center text-xs font-bold text-slate-600">
                       {teamWeekTotals.calls > 0 ? `${Math.round((teamWeekTotals.bookings / teamWeekTotals.calls) * 100)}%` : "–"}
@@ -546,10 +563,10 @@ export default function PerformanceSummary() {
           <div className="flex items-center justify-between">
             <div>
               <span className="font-semibold">Booking targets:</span>{" "}
-              {TRAINEE_BOOKINGS_TARGET_DAILY}/trainee/day · {TEAM_BOOKINGS_TARGET_DAILY}/team/day (buddy picks up the slack)
+              {TRAINEE_BOOKINGS_TARGET_DAILY}/trainee/day · {grandDailyTarget}/all-teams/day (buddies pick up the slack)
             </div>
             <div className="font-semibold text-[#E6017D]">
-              EOW: {TEAM_BOOKINGS_TARGET_EOW} bookings/team
+              EOW: {grandEowTarget} bookings total
             </div>
           </div>
         </div>
