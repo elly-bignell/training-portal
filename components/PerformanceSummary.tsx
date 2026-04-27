@@ -179,6 +179,7 @@ function getWeekDates(weekNum: number): string[] {
 export default function PerformanceSummary() {
   const [weekData, setWeekData] = useState<TraineeWeekData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
   const currentWeek = getCurrentWeekNumber();
 
   // All slugs we want to display (from team definitions)
@@ -195,7 +196,7 @@ export default function PerformanceSummary() {
       const results = await Promise.all(
         teamTrainees.map(async (trainee) => {
           try {
-            const response = await fetch(`/api/activity/all?trainee_slug=${trainee.slug}`);
+            const response = await fetch(`/api/activity/all?trainee_slug=${trainee.slug}`, { cache: "no-store" });
             const data = await response.json();
             const records = data.records || [];
 
@@ -252,11 +253,14 @@ export default function PerformanceSummary() {
 
       setWeekData(results);
       setIsLoading(false);
+      setLastRefreshed(new Date());
     };
 
     fetchAllData();
+    const interval = setInterval(fetchAllData, 5 * 60 * 1000); // refresh every 5 min
+    return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentWeek]);
+  }, [currentWeek, lastRefreshed]);
 
   if (isLoading) {
     return (
@@ -331,9 +335,21 @@ export default function PerformanceSummary() {
               </div>
               <p className="text-sm text-gray-400 mt-1">{weekDateRanges[currentWeek]}</p>
             </div>
-            <Link href="/roadmap" className="text-sm text-[#E6017D] hover:underline">
-              View Standards →
-            </Link>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setLastRefreshed(new Date())}
+                className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                title="Refresh data"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Refresh
+              </button>
+              <Link href="/roadmap" className="text-sm text-[#E6017D] hover:underline">
+                View Standards →
+              </Link>
+            </div>
           </div>
         </div>
 
