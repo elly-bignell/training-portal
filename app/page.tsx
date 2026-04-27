@@ -8,6 +8,20 @@ import { trainees } from "@/data/trainees";
 import { trainingProgram, getTotalChecklistItems } from "@/data/trainingProgram";
 import PasswordGate from "@/components/PasswordGate";
 import PerformanceSummary from "@/components/PerformanceSummary";
+import { getTraineeWeek } from "@/hooks/useActivityTracking";
+
+// Home-page week-on-board label, derived from each trainee's startDate
+// (1-indexed: their first calendar week on the job = Week 1).
+// Display caps at Week 6 ("The Standard") — anyone past 6 weeks shows the
+// green graduation badge.
+function getHomeWeekLabel(slug: string): { label: string; color: string; bg: string } | null {
+  const wk = getTraineeWeek(slug);
+  if (wk === null || wk < 1) return null;
+  const display = Math.min(wk, 6);
+  if (display === 1) return { label: "Week 1 · Training", color: "#7c3aed", bg: "#ede9fe" };
+  if (display === 6) return { label: "Week 6", color: "#16a34a", bg: "#dcfce7" };
+  return { label: `Week ${display}`, color: "#2563eb", bg: "#dbeafe" };
+}
 
 interface TraineeProgressData {
   trainee_slug: string;
@@ -71,13 +85,6 @@ function HomeContent() {
   
   const totalItems = getTotalChecklistItems();
   const totalModules = trainingProgram.length;
-
-  const weekLabels: Record<string, { label: string; color: string; bg: string }> = {
-    "krishna-patel":              { label: "Week 6",            color: "#16a34a", bg: "#dcfce7" },
-    "cindy-rose-rondez-manrique": { label: "Week 6",            color: "#16a34a", bg: "#dcfce7" },
-    "riley-kerrison":             { label: "Week 0 · Training", color: "#7c3aed", bg: "#ede9fe" },
-    "sydney-arnold":              { label: "Week 1",            color: "#2563eb", bg: "#dbeafe" },
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -255,12 +262,16 @@ function HomeContent() {
                   </div>
                   <div className="flex items-center gap-2 flex-wrap">
                     <h3 className="font-semibold text-gray-800">{trainee.name}</h3>
-                    {weekLabels[trainee.slug] && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold"
-                        style={{ color: weekLabels[trainee.slug].color, background: weekLabels[trainee.slug].bg }}>
-                        {weekLabels[trainee.slug].label}
-                      </span>
-                    )}
+                    {(() => {
+                      const lbl = getHomeWeekLabel(trainee.slug);
+                      if (!lbl) return null;
+                      return (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold"
+                          style={{ color: lbl.color, background: lbl.bg }}>
+                          {lbl.label}
+                        </span>
+                      );
+                    })()}
                   </div>
                 </div>
                 
@@ -465,12 +476,16 @@ function HomeContent() {
                               🎧 Customer Service
                             </span>
                           )}
-                          {weekLabels[trainee.slug] && (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold"
-                              style={{ color: weekLabels[trainee.slug].color, background: weekLabels[trainee.slug].bg }}>
-                              {weekLabels[trainee.slug].label}
-                            </span>
-                          )}
+                          {(() => {
+                            const lbl = getHomeWeekLabel(trainee.slug);
+                            if (!lbl) return null;
+                            return (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold"
+                                style={{ color: lbl.color, background: lbl.bg }}>
+                                {lbl.label}
+                              </span>
+                            );
+                          })()}
                         </div>
                         <div className="text-sm text-gray-500 space-y-0.5">
                           {hasStarted ? (

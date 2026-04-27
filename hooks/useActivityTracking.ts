@@ -1,6 +1,7 @@
 // hooks/useActivityTracking.ts
 
 import { useState, useEffect, useCallback } from "react";
+import { trainees } from "@/data/trainees";
 
 interface DailyActivity {
   calls_made: number;
@@ -33,11 +34,56 @@ export const weeklyStandards: Record<number, DailyActivity> = {
   8: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
 };
 
-// Per-trainee week number overrides (slug → effective week for standards/display)
-export const TRAINEE_WEEK_OVERRIDES: Record<string, number> = {
-  "sydney-arnold": 1, // Sydney is in Week 1
-  "riley-kerrison": 0,  // Riley is in Week 0 (Training Week)
-};
+// Lead-gen trainees that participate in the ramp-up flow (badges + week
+// overrides). Other trainees (buddies, senior staff) default to the current
+// program week and don't get a ramp badge.
+export const RAMP_UP_TRAINEE_SLUGS = [
+  "cindy-rose-rondez-manrique",
+  "krishna-patel",
+  "riley-kerrison",
+  "sydney-arnold",
+];
+
+// Compute a personal training week from a startDate ISO string.
+// Convention: Week 1 = the Monday on or after the start date. (1-indexed —
+// the trainee's first calendar week on the job is "Week 1".)
+// Returns -1 if the start date is in the future.
+export function getTraineeWeekForStartDate(startDateISO: string): number {
+  const start = new Date(startDateISO + "T00:00:00Z");
+  // Use Adelaide-local "today" so the rollover happens at the right local midnight.
+  const todayISO = new Date().toLocaleDateString("en-CA", { timeZone: "Australia/Adelaide" });
+  const today = new Date(todayISO + "T00:00:00Z");
+
+  const startDow = start.getUTCDay(); // Sun=0, Mon=1, ..., Sat=6
+  const daysUntilMonday = startDow === 1 ? 0 : (8 - startDow) % 7;
+  const week1Monday = new Date(start);
+  week1Monday.setUTCDate(week1Monday.getUTCDate() + daysUntilMonday);
+
+  const msPerDay = 24 * 60 * 60 * 1000;
+  const diffDays = Math.floor((today.getTime() - week1Monday.getTime()) / msPerDay);
+  if (diffDays < 0) return -1;
+  return Math.floor(diffDays / 7) + 1;
+}
+
+// Look up a trainee's personal training week by slug (1-indexed, where their
+// start week = Week 1). Returns null if the trainee isn't in the ramp-up flow
+// or doesn't have a startDate on file. Display callers should clamp at 6
+// ("The Standard") if they want a ramp-style badge.
+export function getTraineeWeek(slug: string): number | null {
+  if (!RAMP_UP_TRAINEE_SLUGS.includes(slug)) return null;
+  const t = trainees.find((tr) => tr.slug === slug);
+  if (!t || !t.startDate) return null;
+  const wk = getTraineeWeekForStartDate(t.startDate);
+  return wk < 0 ? null : wk;
+}
+
+// Per-trainee week number overrides for personal scorecard standards.
+// Intentionally empty: dashboard booking targets stay flat at 7/day for all
+// lead-gen trainees (via TRAINEES_WITH_TARGET in PerformanceSummary). Personal
+// scorecard standards default to weeklyStandards[currentWeek] || weeklyStandards[6].
+// (The Wk 0 daily-ramp logic in WEEK0_RAMP / WEEK0_TRAINEE_BOOKING_TARGETS is
+// retained in code but no longer triggered, since no trainee maps to override===0.)
+export const TRAINEE_WEEK_OVERRIDES: Record<string, number> = {};
 
 // Sydney Week 0 ramp-up targets by day (0 = Mon, 1 = Tue, 2 = Wed, 3 = Thu, 4 = Fri)
 export const WEEK0_RAMP: Record<number, DailyActivity> = {

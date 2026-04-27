@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { trainees } from "@/data/trainees";
-import { weeklyStandards, getCurrentWeekNumber, getWeekBoundaries, getDayOfWeek, TRAINEE_WEEK_OVERRIDES } from "@/hooks/useActivityTracking";
+import { weeklyStandards, getCurrentWeekNumber, getWeekBoundaries, getDayOfWeek, TRAINEE_WEEK_OVERRIDES, getTraineeWeek } from "@/hooks/useActivityTracking";
 
 interface DailyData {
   date: string;
@@ -50,13 +50,16 @@ const teams = [
   },
 ];
 
-// Trainees who carry the 7/day individual booking target
-// Buddies (Lucas, Felipe, Dylan) have no individual target — they pick up the slack
+// Trainees who carry the 7/day individual booking target.
+// Buddies (Lucas, Felipe, Dylan) have no individual target — they pick up the
+// slack. Lead-gen trainees in Wk 0 use the special WEEK0_TRAINEE_BOOKING_TARGETS
+// ramp instead of 7/day, but once they graduate Wk 0 they fall back to this set.
 const TRAINEES_WITH_TARGET = new Set([
   "cindy-rose-rondez-manrique",
   "sydney-arnold",
   "krishna-patel",
   "thomas-rennie",
+  "riley-kerrison",
 ]);
 
 // Booking targets
@@ -67,13 +70,19 @@ const TEAM_BOOKINGS_TARGET_EOW = 35; // 7/day × 5 days
 // Days of the week
 const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
-// Week-on-board badges per lead gen trainee
-const WEEK_BADGES: Record<string, { label: string; color: string; bg: string }> = {
-  "cindy-rose-rondez-manrique": { label: "Wk 6", color: "#16a34a", bg: "#dcfce7" },
-  "krishna-patel":              { label: "Wk 6", color: "#16a34a", bg: "#dcfce7" },
-  "riley-kerrison":             { label: "Wk 0", color: "#7c3aed", bg: "#ede9fe" },
-  "sydney-arnold":              { label: "Wk 1", color: "#2563eb", bg: "#dbeafe" },
-};
+// Week-on-board badge for a lead-gen trainee, derived from their startDate
+// (1-indexed: their first calendar week on the job = Week 1).
+// Returns null for trainees who aren't in the ramp-up flow (buddies, seniors).
+// Display caps at Wk 6 ("The Standard") — anyone past 6 weeks shows the green
+// graduation badge.
+function getWeekBadge(slug: string): { label: string; color: string; bg: string } | null {
+  const wk = getTraineeWeek(slug);
+  if (wk === null || wk < 1) return null;
+  const display = Math.min(wk, 6);
+  if (display === 1) return { label: "Wk 1", color: "#7c3aed", bg: "#ede9fe" };
+  if (display === 6) return { label: "Wk 6", color: "#16a34a", bg: "#dcfce7" };
+  return { label: `Wk ${display}`, color: "#2563eb", bg: "#dbeafe" };
+}
 
 // Week 0's Monday — every other week's dates are derived from this so the
 // dashboard auto-rolls forward each week (no manual config needed).
@@ -406,14 +415,18 @@ export default function PerformanceSummary() {
                             >
                               {td.name}
                             </Link>
-                            {WEEK_BADGES[td.slug] && (
-                              <span
-                                className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold"
-                                style={{ color: WEEK_BADGES[td.slug].color, background: WEEK_BADGES[td.slug].bg }}
-                              >
-                                {WEEK_BADGES[td.slug].label}
-                              </span>
-                            )}
+                            {(() => {
+                              const badge = getWeekBadge(td.slug);
+                              if (!badge) return null;
+                              return (
+                                <span
+                                  className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold"
+                                  style={{ color: badge.color, background: badge.bg }}
+                                >
+                                  {badge.label}
+                                </span>
+                              );
+                            })()}
                           </td>
                           <td className="px-1 py-1.5 text-center">
                             <span className="text-[10px] text-gray-400 uppercase font-semibold">Book</span>
