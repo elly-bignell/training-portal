@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { trainees } from "@/data/trainees";
-import { weeklyStandards, getCurrentWeekNumber, getWeekBoundaries, getDayOfWeek, TRAINEE_WEEK_OVERRIDES, getTraineeWeek } from "@/hooks/useActivityTracking";
+import { weeklyStandards, getCurrentWeekNumber, getWeekBoundaries, getDayOfWeek, TRAINEE_WEEK_OVERRIDES, getTraineeWeek, getYearWeekLabel } from "@/hooks/useActivityTracking";
 
 interface DailyData {
   date: string;
@@ -73,15 +73,15 @@ const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 // Week-on-board badge for a lead-gen trainee, derived from their startDate
 // (1-indexed: their first calendar week on the job = Week 1).
 // Returns null for trainees who aren't in the ramp-up flow (buddies, seniors).
-// Display caps at Wk 6 ("The Standard") — anyone past 6 weeks shows the green
-// graduation badge.
+// Wk 1 = purple (training/first week), Wk 2–5 = blue (ramp), Wk 6+ = green
+// ("The Standard"). The number is shown as-is — e.g. a 10-week veteran reads
+// "Wk 10" in the green chip.
 function getWeekBadge(slug: string): { label: string; color: string; bg: string } | null {
   const wk = getTraineeWeek(slug);
   if (wk === null || wk < 1) return null;
-  const display = Math.min(wk, 6);
-  if (display === 1) return { label: "Wk 1", color: "#7c3aed", bg: "#ede9fe" };
-  if (display === 6) return { label: "Wk 6", color: "#16a34a", bg: "#dcfce7" };
-  return { label: `Wk ${display}`, color: "#2563eb", bg: "#dbeafe" };
+  if (wk === 1) return { label: "Wk 1", color: "#7c3aed", bg: "#ede9fe" };
+  if (wk >= 6) return { label: `Wk ${wk}`, color: "#16a34a", bg: "#dcfce7" };
+  return { label: `Wk ${wk}`, color: "#2563eb", bg: "#dbeafe" };
 }
 
 // Week 0's Monday — every other week's dates are derived from this so the
@@ -337,7 +337,7 @@ export default function PerformanceSummary() {
                 <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${phaseTag.color}`}>
                   {phaseTag.label}
                 </span>
-                <span className="text-sm text-gray-600">{getWeekLabel(currentWeek)}</span>
+                <span className="text-sm text-gray-600">{getYearWeekLabel()}</span>
               </div>
               <p className="text-sm text-gray-400 mt-1">{getWeekDateRange(currentWeek)}</p>
             </div>

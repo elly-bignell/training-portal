@@ -43,13 +43,13 @@ export const trainees: Trainee[] = [
     id: "cindy-rose-rondez-manrique",
     name: "Cindy Rose Rondez Manrique",
     slug: "cindy-rose-rondez-manrique",
-    startDate: "2024-01-15",
+    startDate: "2026-02-23",
   },
   {
     id: "krishna-patel",
     name: "Krishna Patel",
     slug: "krishna-patel",
-    startDate: "2024-01-15",
+    startDate: "2026-02-23",
   },
   {
     id: "jeremy-valiente",

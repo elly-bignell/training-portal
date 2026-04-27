@@ -115,6 +115,32 @@ const weekStartDates: Record<number, string> = {
   16: "2026-06-07", // Week 16: Mon 8 Jun
 };
 
+// Header label of the form "Week 18 (32% of year used, 68% remaining)".
+// Uses the ISO week number (Mon-anchored, Thursday-of-the-week rule) and the
+// fraction of the calendar year elapsed at Adelaide local midnight today.
+export function getYearWeekLabel(): string {
+  const adelaideISO = new Date().toLocaleDateString("en-CA", { timeZone: "Australia/Adelaide" });
+  const today = new Date(adelaideISO + "T00:00:00Z");
+
+  // ISO week: shift to the Thursday of this week, then count weeks from Jan 1 of that year.
+  const thursday = new Date(today);
+  thursday.setUTCDate(thursday.getUTCDate() + 4 - (thursday.getUTCDay() || 7));
+  const isoYear = thursday.getUTCFullYear();
+  const yearStart = new Date(Date.UTC(isoYear, 0, 1));
+  const isoWeek = Math.ceil(((thursday.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+
+  // Year progress: day-of-year over total days in the year.
+  const calendarYear = today.getUTCFullYear();
+  const isLeap = (calendarYear % 4 === 0 && calendarYear % 100 !== 0) || calendarYear % 400 === 0;
+  const totalDays = isLeap ? 366 : 365;
+  const calendarYearStart = new Date(Date.UTC(calendarYear, 0, 1));
+  const dayOfYear = Math.floor((today.getTime() - calendarYearStart.getTime()) / 86400000) + 1;
+  const usedPct = Math.round((dayOfYear / totalDays) * 100);
+  const remainingPct = 100 - usedPct;
+
+  return `Week ${isoWeek} (${usedPct}% of year used, ${remainingPct}% remaining)`;
+}
+
 // Get current week number based on Adelaide time
 export function getCurrentWeekNumber(): number {
   const now = new Date();

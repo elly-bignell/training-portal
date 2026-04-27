@@ -12,15 +12,14 @@ import { getTraineeWeek } from "@/hooks/useActivityTracking";
 
 // Home-page week-on-board label, derived from each trainee's startDate
 // (1-indexed: their first calendar week on the job = Week 1).
-// Display caps at Week 6 ("The Standard") — anyone past 6 weeks shows the
-// green graduation badge.
+// Wk 1 = purple (training/first week), Wk 2–5 = blue (ramp), Wk 6+ = green
+// ("The Standard"). The number is shown as-is, no cap.
 function getHomeWeekLabel(slug: string): { label: string; color: string; bg: string } | null {
   const wk = getTraineeWeek(slug);
   if (wk === null || wk < 1) return null;
-  const display = Math.min(wk, 6);
-  if (display === 1) return { label: "Week 1 · Training", color: "#7c3aed", bg: "#ede9fe" };
-  if (display === 6) return { label: "Week 6", color: "#16a34a", bg: "#dcfce7" };
-  return { label: `Week ${display}`, color: "#2563eb", bg: "#dbeafe" };
+  if (wk === 1) return { label: "Week 1 · Training", color: "#7c3aed", bg: "#ede9fe" };
+  if (wk >= 6) return { label: `Week ${wk}`, color: "#16a34a", bg: "#dcfce7" };
+  return { label: `Week ${wk}`, color: "#2563eb", bg: "#dbeafe" };
 }
 
 interface TraineeProgressData {
