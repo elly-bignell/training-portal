@@ -75,26 +75,27 @@ const WEEK_BADGES: Record<string, { label: string; color: string; bg: string }> 
   "sydney-arnold":              { label: "Wk 1", color: "#2563eb", bg: "#dbeafe" },
 };
 
-// Week date ranges for display
-const weekDateRanges: Record<number, string> = {
-  0: "Mon 16 Feb – Fri 20 Feb",
-  1: "Mon 23 Feb – Fri 27 Feb",
-  2: "Mon 2 Mar – Fri 6 Mar",
-  3: "Mon 9 Mar – Fri 13 Mar",
-  4: "Mon 16 Mar – Fri 20 Mar",
-  5: "Mon 23 Mar – Fri 27 Mar",
-  6: "Mon 30 Mar – Fri 3 Apr",
-  7: "Mon 6 Apr – Fri 10 Apr",
-  8: "Mon 13 Apr – Fri 17 Apr",
-  9: "Mon 20 Apr – Fri 24 Apr",
-  10: "Mon 27 Apr – Fri 1 May",
-  11: "Mon 4 May – Fri 8 May",
-  12: "Mon 11 May – Fri 15 May",
-  13: "Mon 18 May – Fri 22 May",
-  14: "Mon 25 May – Fri 29 May",
-  15: "Mon 1 Jun – Fri 5 Jun",
-  16: "Mon 8 Jun – Fri 12 Jun",
-};
+// Week 0's Monday — every other week's dates are derived from this so the
+// dashboard auto-rolls forward each week (no manual config needed).
+const WEEK_0_MONDAY_ISO = "2026-02-16";
+
+// Returns the Monday (as a UTC Date) for a given training week number.
+function getWeekMonday(weekNum: number): Date {
+  const [year, month, day] = WEEK_0_MONDAY_ISO.split("-").map(Number);
+  return new Date(Date.UTC(year, month - 1, day + weekNum * 7));
+}
+
+const MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+// Build a "Mon 27 Apr – Fri 1 May" style label for the given week.
+function getWeekDateRange(weekNum: number): string {
+  const monday = getWeekMonday(weekNum);
+  const friday = new Date(monday);
+  friday.setUTCDate(friday.getUTCDate() + 4);
+  const fmt = (d: Date, prefix: string) =>
+    `${prefix} ${d.getUTCDate()} ${MONTH_SHORT[d.getUTCMonth()]}`;
+  return `${fmt(monday, "Mon")} – ${fmt(friday, "Fri")}`;
+}
 
 // Week 0 ramp booking targets (Mon=0 … Fri=4) — applies to any Week 0 trainee
 const WEEK0_TRAINEE_BOOKING_TARGETS = [3, 4, 5, 6, 7];
@@ -161,24 +162,13 @@ function getWeekPhaseTag(currentWeek: number) {
   return { label: "Ramp", color: "bg-slate-100 text-slate-600" };
 }
 
-// Generate the 5 weekday dates for a given week
+// Generate the 5 weekday ISO dates (Mon–Fri) for a given week
 function getWeekDates(weekNum: number): string[] {
-  const weekConfigs: Record<number, string> = {
-    0: "2026-02-16",
-    1: "2026-02-23",
-    2: "2026-03-02",
-    3: "2026-03-09",
-    4: "2026-03-16",
-    5: "2026-03-23",
-    6: "2026-03-30",
-    7: "2026-04-06",
-    8: "2026-04-13",
-  };
-  const startStr = weekConfigs[weekNum] || weekConfigs[0];
-  const [year, month, day] = startStr.split("-").map(Number);
+  const monday = getWeekMonday(weekNum);
   const dates: string[] = [];
   for (let i = 0; i < 5; i++) {
-    const d = new Date(Date.UTC(year, month - 1, day + i));
+    const d = new Date(monday);
+    d.setUTCDate(d.getUTCDate() + i);
     dates.push(d.toISOString().split("T")[0]);
   }
   return dates;
@@ -340,7 +330,7 @@ export default function PerformanceSummary() {
                 </span>
                 <span className="text-sm text-gray-600">{getWeekLabel(currentWeek)}</span>
               </div>
-              <p className="text-sm text-gray-400 mt-1">{weekDateRanges[currentWeek]}</p>
+              <p className="text-sm text-gray-400 mt-1">{getWeekDateRange(currentWeek)}</p>
             </div>
             <div className="flex items-center gap-3">
               <button
@@ -660,7 +650,7 @@ export default function PerformanceSummary() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="p-4 border-b border-gray-100">
           <h3 className="text-lg font-bold text-gray-800">📈 Meetings, Units & Revenue</h3>
-          <p className="text-sm text-gray-400 mt-1">{weekDateRanges[currentWeek]}</p>
+          <p className="text-sm text-gray-400 mt-1">{getWeekDateRange(currentWeek)}</p>
         </div>
 
         <div className="overflow-x-auto">
