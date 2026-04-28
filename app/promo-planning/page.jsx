@@ -67,10 +67,10 @@ const DEFAULTS = {
 // Source: DailyActivity export. dialled = calls_made, connected = calls (the CSV's 'calls'
 // column is connected calls, not total dials).
 const REPS_APRIL = [
-  { name: 'Cindy',   dialled: 1950, connected: 745, bookings: 91, attended: 15, deals: 1.5 },
-  { name: 'Krishna', dialled: 1666, connected: 685, bookings: 88, attended: 14, deals: 2.5 },
-  { name: 'Sydney',  dialled: 1531, connected: 671, bookings: 69, attended: 6,  deals: 1.0 },
-  { name: 'Riley',   dialled: 1546, connected: 775, bookings: 93, attended: 21, deals: 0.5 },
+  { name: 'Cindy',   days: 17, dialled: 1950, connected: 745, bookings: 91, attended: 15, deals: 1.5 },
+  { name: 'Krishna', days: 15, dialled: 1666, connected: 685, bookings: 88, attended: 14, deals: 2.5 },
+  { name: 'Sydney',  days: 17, dialled: 1531, connected: 671, bookings: 69, attended: 6,  deals: 1.0 },
+  { name: 'Riley',   days: 18, dialled: 1546, connected: 775, bookings: 93, attended: 21, deals: 0.5 },
 ];
 
 // ============================================================
@@ -392,13 +392,24 @@ export default function PromoPlanning() {
                         </td>
                         {REPS_APRIL.map((r) => {
                           const actual = r[row.key];
-                          const ok = actual >= row.required * 0.9;
+                          // Pro-rate partial-month actual to full-month equivalent for fair comparison
+                          const projected = (r.days && r.days > 0) ? actual * (DAYS_MO / r.days) : actual;
+                          const ok = projected >= row.required * 0.9;
+                          const gapPct = (!ok && projected > 0)
+                            ? Math.round((row.required - projected) / projected * 100)
+                            : null;
                           return (
                             <td key={r.name} style={{
                               padding: '8px 4px', textAlign: 'right',
                               color: ok ? C.greenDark : C.text, fontWeight: ok ? 700 : 400,
                             }}>
-                              {fmt(actual, row.dec)}{ok ? ' ✓' : ''}
+                              {fmt(actual, row.dec)}
+                              {ok && <span style={{ marginLeft: 4 }}>✓</span>}
+                              {!ok && gapPct !== null && (
+                                <span style={{ color: C.red, fontSize: 11, fontWeight: 600, marginLeft: 4 }}>
+                                  +{gapPct}%
+                                </span>
+                              )}
                             </td>
                           );
                         })}
@@ -407,7 +418,7 @@ export default function PromoPlanning() {
                   </tbody>
                 </table>
                 <div style={{ marginTop: 14, padding: '10px 12px', background: C.orangeSoft, borderLeft: `3px solid ${C.orange}`, borderRadius: 4, fontSize: 11.5 }}>
-                  <b>How to read:</b> green ticks = the rep is already producing at or near the required level. Red gaps highlight the actual blockers — typically the bottom of the funnel.
+                  <b>How to read:</b> the green &#10003; and red <span style={{color: C.red, fontWeight: 600}}>+X%</span> badges compare each rep&rsquo;s <i>full-month projected pace</i> (current actual × {DAYS_MO} / days worked) against the full-month requirement. <span style={{color: C.red, fontWeight: 600}}>+X%</span> = how much each rep needs to lift their daily rate to hit target. Red gaps highlight the actual blockers — typically the bottom of the funnel.
                 </div>
               </Card>
             </div>
