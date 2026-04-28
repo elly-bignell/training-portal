@@ -60,12 +60,14 @@ const DEFAULTS = {
   callToConn: 52,
 };
 
-// Current 4 reps&rsquo; April 2026 actuals — for reality-check column
+// Current 4 reps' April 2026 actuals — partial month data (1–28 Apr, 15–18 working days each)
+// Source: DailyActivity export. dialled = calls_made, connected = calls (the CSV's 'calls'
+// column is connected calls, not total dials).
 const REPS_APRIL = [
-  { name: 'Cindy',   calls: 745, bookings: 91, attended: 19, deals: 3 },
-  { name: 'Krishna', calls: 685, bookings: 88, attended: 14, deals: 2 },
-  { name: 'Sydney',  calls: 671, bookings: 69, attended: 6,  deals: 1 },
-  { name: 'Riley',   calls: 775, bookings: 93, attended: 21, deals: 0.5 },
+  { name: 'Cindy',   dialled: 1950, connected: 745, bookings: 91, attended: 15, deals: 1.5 },
+  { name: 'Krishna', dialled: 1666, connected: 685, bookings: 88, attended: 14, deals: 2.5 },
+  { name: 'Sydney',  dialled: 1531, connected: 671, bookings: 69, attended: 6,  deals: 1.0 },
+  { name: 'Riley',   dialled: 1546, connected: 775, bookings: 93, attended: 21, deals: 0.5 },
 ];
 
 // ============================================================
@@ -339,7 +341,7 @@ export default function PromoPlanning() {
             <div style={{ marginTop: 20 }}>
               <Card title="Reality Check vs Current Best Months">
                 <p style={{ color: C.grey, fontSize: 14, fontStyle: 'italic', margin: '0 0 14px' }}>
-                  Current 4 reps&rsquo; April 2026 performance · green = within 10% of required
+                  Current 4 reps&rsquo; April 2026 actuals (partial month, 15–18 days each) · green = within 10% of full-month requirement
                 </p>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5 }}>
                   <thead>
@@ -353,10 +355,11 @@ export default function PromoPlanning() {
                   </thead>
                   <tbody>
                     {[
-                      { metric: 'Calls / month',    required: m.calls, key: 'calls',    dec: 0 },
-                      { metric: 'Bookings / month', required: m.book,  key: 'bookings', dec: 0 },
-                      { metric: 'Attended / month', required: m.att,   key: 'attended', dec: 1 },
-                      { metric: 'Deals / month',    required: m.deals, key: 'deals',    dec: 1 },
+                      { metric: 'Calls / month',           required: m.calls, key: 'dialled',   dec: 0 },
+                      { metric: 'Connected calls / month', required: m.conn,  key: 'connected', dec: 0 },
+                      { metric: 'Bookings / month',        required: m.book,  key: 'bookings',  dec: 0 },
+                      { metric: 'Attended / month',        required: m.att,   key: 'attended',  dec: 1 },
+                      { metric: 'Deals / month',           required: m.deals, key: 'deals',     dec: 1 },
                     ].map((row, i) => (
                       <tr key={row.key} style={{ borderBottom: '1px solid #ECF0F4', background: i % 2 === 1 ? C.bg : 'transparent' }}>
                         <td style={{ padding: '8px 4px', fontWeight: 600 }}>{row.metric}</td>
