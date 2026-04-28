@@ -58,6 +58,9 @@ const DEFAULTS = {
   bookToAtt: 40,
   connToBook: 12,
   callToConn: 52,
+  // Team projection inputs (generic — not tied to any specific promo)
+  numStaff: 4,
+  dialledPerDay: 100,
 };
 
 // Current 4 reps' April 2026 actuals — partial month data (1–28 Apr, 15–18 working days each)
@@ -139,6 +142,27 @@ export default function PromoPlanning() {
   m.book  = m.att   / (s.bookToAtt  / 100);
   m.conn  = m.book  / (s.connToBook / 100);
   m.calls = m.conn  / (s.callToConn / 100);
+
+  // ============ Forward projection (per rep + team total) ============
+  const numStaff = Number(s.numStaff) || 0;
+  const dialledPerDay = Number(s.dialledPerDay) || 0;
+  const perRep = {};
+  perRep.dialled   = dialledPerDay * DAYS_MO;
+  perRep.connected = perRep.dialled   * (s.callToConn / 100);
+  perRep.bookings  = perRep.connected * (s.connToBook / 100);
+  perRep.attended  = perRep.bookings  * (s.bookToAtt  / 100);
+  perRep.proposals = perRep.attended  * (s.attToProp  / 100);
+  perRep.deals     = perRep.proposals * (s.propToDeal / 100);
+  perRep.revenue   = perRep.deals * dealVal;
+  const team = {
+    dialled:   perRep.dialled   * numStaff,
+    connected: perRep.connected * numStaff,
+    bookings:  perRep.bookings  * numStaff,
+    attended:  perRep.attended  * numStaff,
+    deals:     perRep.deals     * numStaff,
+    revenue:   perRep.revenue   * numStaff,
+  };
+  const proj = { perRep, team };
 
   const day = (val) => val / DAYS_MO;
   const wk  = (val) => (val / DAYS_MO) * DAYS_WK;
@@ -384,6 +408,111 @@ export default function PromoPlanning() {
                 </table>
                 <div style={{ marginTop: 14, padding: '10px 12px', background: C.orangeSoft, borderLeft: `3px solid ${C.orange}`, borderRadius: 4, fontSize: 11.5 }}>
                   <b>How to read:</b> green ticks = the rep is already producing at or near the required level. Red gaps highlight the actual blockers — typically the bottom of the funnel.
+                </div>
+              </Card>
+            </div>
+
+            {/* Team Projection — forward view */}
+            <div style={{ marginTop: 20 }}>
+              <Card title="Team Projection — Forward View">
+                <p style={{ color: C.grey, fontSize: 14, fontStyle: 'italic', margin: '0 0 14px' }}>
+                  Project end-of-month output and revenue from staff count and per-rep dial volume, using the current funnel cut-throughs above. Generic — works for any promo.
+                </p>
+
+                {/* Inputs */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 11, color: C.grey, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 700, marginBottom: 4 }}>
+                      Staff count
+                    </label>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+                      <input
+                        type="number" value={s.numStaff} min={1} step={1}
+                        onFocus={(e) => e.target.select()}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          if (v === '') { set({ numStaff: '' }); return; }
+                          const n = parseFloat(v);
+                          if (!isNaN(n)) set({ numStaff: n });
+                        }}
+                        style={{ width: '100%', fontSize: 30, fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
+                      />
+                      <span style={{ color: C.grey, fontSize: 13, marginLeft: 4 }}>reps</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 11, color: C.grey, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 700, marginBottom: 4 }}>
+                      Dialled calls / rep / day
+                    </label>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+                      <input
+                        type="number" value={s.dialledPerDay} min={0} step={5}
+                        onFocus={(e) => e.target.select()}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          if (v === '') { set({ dialledPerDay: '' }); return; }
+                          const n = parseFloat(v);
+                          if (!isNaN(n)) set({ dialledPerDay: n });
+                        }}
+                        style={{ width: '100%', fontSize: 30, fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
+                      />
+                      <span style={{ color: C.grey, fontSize: 13, marginLeft: 4 }}>dials/day</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Headline projected revenue box */}
+                <div style={{ background: C.navy, color: 'white', borderRadius: 8, padding: '14px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                  <div>
+                    <div style={{ fontSize: 11, color: '#98C9B5', textTransform: 'uppercase', letterSpacing: 2, fontWeight: 700 }}>
+                      Projected team WRR added by EOM
+                    </div>
+                    <div style={{ fontSize: 11, color: '#98C9B5', marginTop: 2 }}>
+                      at current cut-throughs · {DAYS_MO} working days
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <span style={{ fontSize: 28, fontWeight: 700, color: C.green }}>${fmt(proj.team.revenue, 0)}</span>
+                    <span style={{ color: '#98C9B5', fontSize: 13, marginLeft: 4 }}>/wk WRR</span>
+                  </div>
+                </div>
+
+                {/* Per-rep + team breakdown */}
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5 }}>
+                  <thead>
+                    <tr style={{ borderBottom: `2px solid ${C.navy}` }}>
+                      <th style={{ textAlign: 'left',  padding: '6px 4px', color: C.navy, fontSize: 10.5, letterSpacing: 1 }}>METRIC</th>
+                      <th style={{ textAlign: 'right', padding: '6px 4px', color: C.navy, fontSize: 10.5, letterSpacing: 1 }}>PER REP / MO</th>
+                      <th style={{ textAlign: 'right', padding: '6px 4px', color: C.navy, fontSize: 10.5, letterSpacing: 1 }}>TEAM / MO</th>
+                      <th style={{ textAlign: 'right', padding: '6px 4px', color: C.navy, fontSize: 10.5, letterSpacing: 1 }}>VS REQ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { label: 'Calls (dialled)', per: proj.perRep.dialled,   team: proj.team.dialled,   req: m.calls, dec: 0 },
+                      { label: 'Connected calls', per: proj.perRep.connected, team: proj.team.connected, req: m.conn,  dec: 0 },
+                      { label: 'Bookings',         per: proj.perRep.bookings,  team: proj.team.bookings,  req: m.book,  dec: 1 },
+                      { label: 'Attended',         per: proj.perRep.attended,  team: proj.team.attended,  req: m.att,   dec: 1 },
+                      { label: 'Deals',            per: proj.perRep.deals,     team: proj.team.deals,     req: m.deals, dec: 2 },
+                    ].map((r, i) => {
+                      const pct = r.req > 0 ? (r.team / r.req) * 100 : 0;
+                      const onTrack = pct >= 90;
+                      return (
+                        <tr key={r.label} style={{ borderBottom: '1px solid #ECF0F4', background: i % 2 === 1 ? C.bg : 'transparent' }}>
+                          <td style={{ padding: '8px 4px', fontWeight: 600 }}>{r.label}</td>
+                          <td style={{ padding: '8px 4px', textAlign: 'right' }}>{fmt(r.per, r.dec)}</td>
+                          <td style={{ padding: '8px 4px', textAlign: 'right', fontWeight: 700 }}>{fmt(r.team, r.dec)}</td>
+                          <td style={{ padding: '8px 4px', textAlign: 'right', color: onTrack ? C.greenDark : C.red, fontWeight: 600 }}>
+                            {fmt(pct, 0)}%{onTrack ? ' ✓' : ''}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+
+                <div style={{ marginTop: 14, padding: '10px 12px', background: C.greenSoft, borderLeft: `3px solid ${C.green}`, borderRadius: 4, fontSize: 11.5 }}>
+                  <b>How to read:</b> change staff count or dial volume above, or move the funnel sliders, to see how projected EOM revenue shifts. The VS REQ column compares team output to the goal-driven requirement from &ldquo;The Goal&rdquo; — green &#10003; means the team is projected to land within 10% of target.
                 </div>
               </Card>
             </div>
