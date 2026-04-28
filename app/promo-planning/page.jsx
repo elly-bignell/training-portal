@@ -47,7 +47,7 @@ const BANDS = {
   attToProp:  { target: 72, high: 92, commit: 80,  min: 60, max: 100, step: 0.5 },
   bookToAtt:  { target: 31, high: 63, commit: 40,  min: 20, max: 70,  step: 0.5 },
   connToBook: { target: 10.5, high: 19, commit: 12, min: 5,  max: 25,  step: 0.1 },
-  callToConn: { target: 50, high: 58, commit: 52, min: 40,  max: 70,  step: 0.5 },
+  callToConn: { target: 50, high: 55, commit: 52, min: 40,  max: 70,  step: 0.5 },
 };
 
 const DEFAULTS = {
@@ -281,6 +281,7 @@ export default function PromoPlanning() {
                     <input
                       type="number" value={s.target} min={100} step={50}
                       onFocus={(e) => e.target.select()}
+                      onMouseUp={(e) => e.preventDefault()}
                       onChange={(e) => {
                         const v = e.target.value;
                         if (v === '') { set({ target: '' }); return; }
@@ -301,6 +302,7 @@ export default function PromoPlanning() {
                     <input
                       type="number" value={s.dealValue} min={20} step={10}
                       onFocus={(e) => e.target.select()}
+                      onMouseUp={(e) => e.preventDefault()}
                       onChange={(e) => {
                         const v = e.target.value;
                         if (v === '') { set({ dealValue: '' }); return; }
@@ -440,6 +442,7 @@ export default function PromoPlanning() {
                       <input
                         type="number" value={s.numStaff} min={1} step={1}
                         onFocus={(e) => e.target.select()}
+                        onMouseUp={(e) => e.preventDefault()}
                         onChange={(e) => {
                           const v = e.target.value;
                           if (v === '') { set({ numStaff: '' }); return; }
@@ -459,6 +462,7 @@ export default function PromoPlanning() {
                       <input
                         type="number" value={s.dialledPerDay} min={0} step={5}
                         onFocus={(e) => e.target.select()}
+                        onMouseUp={(e) => e.preventDefault()}
                         onChange={(e) => {
                           const v = e.target.value;
                           if (v === '') { set({ dialledPerDay: '' }); return; }
