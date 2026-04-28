@@ -60,7 +60,7 @@ const DEFAULTS = {
   callToConn: 52,
 };
 
-// Current 4 reps' April 2026 actuals — for reality-check column
+// Current 4 reps&rsquo; April 2026 actuals — for reality-check column
 const REPS_APRIL = [
   { name: 'Cindy',   calls: 745, bookings: 91, attended: 19, deals: 3 },
   { name: 'Krishna', calls: 685, bookings: 88, attended: 14, deals: 2 },
@@ -327,7 +327,7 @@ export default function PromoPlanning() {
             <div style={{ marginTop: 20 }}>
               <Card title="Reality Check vs Current Best Months">
                 <p style={{ color: C.grey, fontSize: 14, fontStyle: 'italic', margin: '0 0 14px' }}>
-                  Current 4 reps' April 2026 performance · green = within 10% of required
+                  Current 4 reps&rsquo; April 2026 performance · green = within 10% of required
                 </p>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5 }}>
                   <thead>
