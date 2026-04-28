@@ -91,14 +91,6 @@ function classifyBand(stage, value) {
   return { label: 'BELOW', fg: C.red, bg: C.redSoft };
 }
 
-const SCENARIOS = [
-  { label: '$1,250/wk WRR · $100 deal · commit',         desc: 'Baseline at your stated commit cut-throughs',     overrides: { target: 1250, dealValue: 100, propToDeal: 100, attToProp: 80, bookToAtt: 40, connToBook: 12, callToConn: 52 } },
-  { label: '$1,250/wk WRR · realistic 17% close',        desc: 'What activity actually requires at current close', overrides: { target: 1250, dealValue: 100, propToDeal: 17, attToProp: 80, bookToAtt: 40, connToBook: 12, callToConn: 52 }, highlight: true },
-  { label: '$1,250/wk WRR · $200 deal value',            desc: 'Higher deal value halves required activity',       overrides: { target: 1250, dealValue: 200, propToDeal: 100, attToProp: 80, bookToAtt: 40, connToBook: 12, callToConn: 52 } },
-  { label: '$1,250/wk WRR · Book→Attend at HIGH 63%',    desc: 'Quality lift effect — fewer calls needed',         overrides: { target: 1250, dealValue: 100, propToDeal: 100, attToProp: 80, bookToAtt: 63, connToBook: 12, callToConn: 52 } },
-  { label: '$750/wk WRR · realistic starter goal',       desc: 'Closer to current capability while team builds',   overrides: { target: 750,  dealValue: 100, propToDeal: 100, attToProp: 80, bookToAtt: 40, connToBook: 12, callToConn: 52 } },
-];
-
 // ============================================================
 // COMPONENT
 // ============================================================
@@ -128,7 +120,6 @@ export default function PromoPlanning() {
 
   const set = useCallback((patch) => setS((prev) => ({ ...prev, ...patch })), []);
   const reset = () => setS(DEFAULTS);
-  const applyScenario = (sc) => setS((prev) => ({ ...prev, ...sc.overrides }));
 
   // ============ Calculations (working backwards from monthly goal) ============
   const target = Number(s.target) || 0;
@@ -369,7 +360,7 @@ export default function PromoPlanning() {
             </div>
           </div>
 
-          {/* RIGHT — Summary, Reality Check, Scenarios */}
+          {/* RIGHT — Summary, Reality Check, Team Projection */}
           <div>
             <Card title="Daily Activity Required">
               <p style={{ color: C.grey, fontSize: 14, fontStyle: 'italic', margin: '0 0 16px' }}>
@@ -552,31 +543,6 @@ export default function PromoPlanning() {
               </Card>
             </div>
 
-            {/* Scenarios */}
-            <div style={{ marginTop: 20 }}>
-              <Card title="What If…">
-                <p style={{ color: C.grey, fontSize: 14, fontStyle: 'italic', margin: '0 0 14px' }}>
-                  Click any scenario to apply it instantly.
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {SCENARIOS.map((sc, i) => (
-                    <button
-                      key={i}
-                      onClick={() => applyScenario(sc)}
-                      style={{
-                        textAlign: 'left', padding: '12px 14px',
-                        background: sc.highlight ? C.orangeSoft : C.bg,
-                        border: `1px solid ${sc.highlight ? C.orange : C.greyLight}`,
-                        borderRadius: 6, cursor: 'pointer', fontFamily: 'inherit', fontSize: 12,
-                      }}
-                    >
-                      <b style={{ color: C.navy }}>{sc.label}</b><br />
-                      <span style={{ color: C.grey }}>{sc.desc}</span>
-                    </button>
-                  ))}
-                </div>
-              </Card>
-            </div>
           </div>
         </div>
 
