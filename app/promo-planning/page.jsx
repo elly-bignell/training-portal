@@ -254,7 +254,13 @@ export default function PromoPlanning() {
                     <span style={{ color: C.grey, fontSize: 22, fontWeight: 600 }}>$</span>
                     <input
                       type="number" value={s.target} min={100} step={50}
-                      onChange={(e) => set({ target: parseFloat(e.target.value) || 0 })}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        if (v === '') { set({ target: '' }); return; }
+                        const n = parseFloat(v);
+                        if (!isNaN(n)) set({ target: n });
+                      }}
                       style={{ width: '100%', fontSize: 30, fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
                     />
                     <span style={{ color: C.grey, fontSize: 13, marginLeft: 4 }}>/wk by EOM</span>
@@ -268,7 +274,13 @@ export default function PromoPlanning() {
                     <span style={{ color: C.grey, fontSize: 22, fontWeight: 600 }}>$</span>
                     <input
                       type="number" value={s.dealValue} min={20} step={10}
-                      onChange={(e) => set({ dealValue: parseFloat(e.target.value) || 1 })}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        if (v === '') { set({ dealValue: '' }); return; }
+                        const n = parseFloat(v);
+                        if (!isNaN(n)) set({ dealValue: n });
+                      }}
                       style={{ width: '100%', fontSize: 30, fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
                     />
                     <span style={{ color: C.grey, fontSize: 13, marginLeft: 4 }}>/wk per deal</span>
