@@ -43,7 +43,7 @@ const C = {
 
 // Empirical bands per funnel stage (target = floor, high = best ever, commit = your stated commit)
 const BANDS = {
-  propToDeal: { target: 51, high: 85, commit: 100, min: 10, max: 100, step: 1 },
+  propToDeal: { target: 51, high: 85, commit: 51, min: 10, max: 100, step: 1 },
   attToProp:  { target: 72, high: 92, commit: 80,  min: 60, max: 100, step: 0.5 },
   bookToAtt:  { target: 31, high: 63, commit: 40,  min: 20, max: 70,  step: 0.5 },
   connToBook: { target: 10.5, high: 19, commit: 12, min: 5,  max: 25,  step: 0.1 },
