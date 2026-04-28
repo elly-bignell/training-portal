@@ -252,13 +252,33 @@ export default function PromoPlanning() {
   // ============ Render ============
   return (
     <div style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif', background: C.bg, color: C.text, minHeight: '100vh' }}>
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '28px 32px 64px' }}>
+      <style>{`
+        .pp-page { max-width: 1400px; margin: 0 auto; padding: 28px 32px 64px; }
+        .pp-h1 { font-size: 28px; }
+        .pp-grid-main { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px; margin-top: 24px; }
+        .pp-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .pp-grid-2-tight { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .pp-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+        .pp-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -4px; }
+        .pp-input-big { font-size: 30px; }
+        @media (max-width: 768px) {
+          .pp-page { padding: 16px 14px 48px; }
+          .pp-h1 { font-size: 22px; line-height: 1.25; }
+          .pp-grid-main { grid-template-columns: 1fr; gap: 16px; margin-top: 16px; }
+          .pp-grid-2 { grid-template-columns: 1fr; gap: 14px; }
+          .pp-grid-2-tight { grid-template-columns: 1fr 1fr; gap: 8px; }
+          .pp-grid-5 { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+          .pp-input-big { font-size: 24px; }
+          .pp-table-wrap table { min-width: 560px; }
+        }
+      `}</style>
+      <div className="pp-page">
         {/* Header */}
         <header style={{ marginBottom: 24 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: 3, textTransform: 'uppercase', marginBottom: 6 }}>
             PROMO CONFIGURATOR · 1 PERSON · MONTHLY CYCLE
           </div>
-          <h1 style={{ fontSize: 28, color: C.navy, margin: '0 0 6px', fontWeight: 700 }}>
+          <h1 className="pp-h1" style={{ color: C.navy, margin: '0 0 6px', fontWeight: 700 }}>
             What activity is required to add this much WRR by month-end?
           </h1>
           <p style={{ color: C.grey, fontSize: 14, fontStyle: 'italic', margin: 0 }}>
@@ -267,11 +287,11 @@ export default function PromoPlanning() {
         </header>
 
         {/* Two-column grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 1fr)', gap: 24, marginTop: 24 }}>
+        <div className="pp-grid-main">
           {/* LEFT — Goal + Funnel */}
           <div>
             <Card title="The Goal">
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+              <div className="pp-grid-2" style={{ marginBottom: 16 }}>
                 <div>
                   <label style={{ display: 'block', fontSize: 11, color: C.grey, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 700, marginBottom: 4 }}>
                     Monthly WRR target (cumulative)
@@ -288,7 +308,7 @@ export default function PromoPlanning() {
                         const n = parseFloat(v);
                         if (!isNaN(n)) set({ target: n });
                       }}
-                      style={{ width: '100%', fontSize: 30, fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
+                      className="pp-input-big" style={{ width: '100%', fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
                     />
                     <span style={{ color: C.grey, fontSize: 13, marginLeft: 4 }}>/wk by EOM</span>
                   </div>
@@ -309,7 +329,7 @@ export default function PromoPlanning() {
                         const n = parseFloat(v);
                         if (!isNaN(n)) set({ dealValue: n });
                       }}
-                      style={{ width: '100%', fontSize: 30, fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
+                      className="pp-input-big" style={{ width: '100%', fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
                     />
                     <span style={{ color: C.grey, fontSize: 13, marginLeft: 4 }}>/wk per deal</span>
                   </div>
@@ -355,7 +375,7 @@ export default function PromoPlanning() {
               <p style={{ color: C.grey, fontSize: 14, fontStyle: 'italic', margin: '0 0 16px' }}>
                 The volume the rep must hit every working day.
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div className="pp-grid-2-tight">
                 <StatTile label="CALLS / DAY"     value={fmt(day(m.calls), 0)} sub="raw dials" />
                 <StatTile label="CONNECTED / DAY" value={fmt(day(m.conn), 0)}  sub="live conversations" />
                 <StatTile label="BOOKINGS / DAY"  value={fmt(day(m.book), 1)}  sub="scheduled" color={C.orange} />
@@ -369,7 +389,7 @@ export default function PromoPlanning() {
                 <p style={{ color: C.grey, fontSize: 14, fontStyle: 'italic', margin: '0 0 14px' }}>
                   Current 4 reps&rsquo; April 2026 actuals (partial month, 15–18 days each) · green = within 10% of full-month requirement
                 </p>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5 }}>
+                <div className="pp-table-wrap"><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5 }}>
                   <thead>
                     <tr style={{ borderBottom: `2px solid ${C.navy}` }}>
                       <th style={{ textAlign: 'left', padding: '6px 4px', color: C.navy, fontSize: 10.5, letterSpacing: 1 }}>METRIC</th>
@@ -418,7 +438,7 @@ export default function PromoPlanning() {
                       </tr>
                     ))}
                   </tbody>
-                </table>
+                </table></div>
                 <div style={{ marginTop: 14, padding: '10px 12px', background: C.orangeSoft, borderLeft: `3px solid ${C.orange}`, borderRadius: 4, fontSize: 11.5 }}>
                   <b>How to read:</b> the green &#10003; and red <span style={{color: C.red, fontWeight: 600}}>+X%</span> badges compare each rep&rsquo;s <i>full-month projected pace</i> (current actual × {DAYS_MO} / days worked) against the full-month requirement. <span style={{color: C.red, fontWeight: 600}}>+X%</span> = how much each rep needs to lift their daily rate to hit target. Red gaps highlight the actual blockers — typically the bottom of the funnel.
                 </div>
@@ -433,7 +453,7 @@ export default function PromoPlanning() {
                 </p>
 
                 {/* Inputs */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                <div className="pp-grid-2" style={{ marginBottom: 16 }}>
                   <div>
                     <label style={{ display: 'block', fontSize: 11, color: C.grey, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 700, marginBottom: 4 }}>
                       Staff count
@@ -449,7 +469,7 @@ export default function PromoPlanning() {
                           const n = parseFloat(v);
                           if (!isNaN(n)) set({ numStaff: n });
                         }}
-                        style={{ width: '100%', fontSize: 30, fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
+                        className="pp-input-big" style={{ width: '100%', fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
                       />
                       <span style={{ color: C.grey, fontSize: 13, marginLeft: 4 }}>reps</span>
                     </div>
@@ -469,7 +489,7 @@ export default function PromoPlanning() {
                           const n = parseFloat(v);
                           if (!isNaN(n)) set({ dialledPerDay: n });
                         }}
-                        style={{ width: '100%', fontSize: 30, fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
+                        className="pp-input-big" style={{ width: '100%', fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
                       />
                       <span style={{ color: C.grey, fontSize: 13, marginLeft: 4 }}>dials/day</span>
                     </div>
@@ -493,7 +513,7 @@ export default function PromoPlanning() {
                 </div>
 
                 {/* Per-rep + team breakdown */}
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5 }}>
+                <div className="pp-table-wrap"><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5 }}>
                   <thead>
                     <tr style={{ borderBottom: `2px solid ${C.navy}` }}>
                       <th style={{ textAlign: 'left',  padding: '6px 4px', color: C.navy, fontSize: 10.5, letterSpacing: 1 }}>METRIC</th>
@@ -524,7 +544,7 @@ export default function PromoPlanning() {
                       );
                     })}
                   </tbody>
-                </table>
+                </table></div>
 
                 <div style={{ marginTop: 14, padding: '10px 12px', background: C.greenSoft, borderLeft: `3px solid ${C.green}`, borderRadius: 4, fontSize: 11.5 }}>
                   <b>How to read:</b> change staff count or dial volume above, or move the funnel sliders, to see how projected EOM revenue shifts. The VS REQ column compares team output to the goal-driven requirement from &ldquo;The Goal&rdquo; — green &#10003; means the team is projected to land within 10% of target.
@@ -568,7 +588,7 @@ export default function PromoPlanning() {
           <h2 style={{ margin: '0 0 18px', fontSize: 22, color: 'white', fontWeight: 700 }}>
             ${target.toLocaleString()}/wk WRR added by EOM → {fmt(day(m.calls), 0)} calls/day cascading to {fmt(m.deals, 1)} deals across the month
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 12 }}>
+          <div className="pp-grid-5">
             {[
               { lbl: 'CALLS',     d: day(m.calls), w: wk(m.calls), mo: m.calls, dec: 0 },
               { lbl: 'CONNECTED', d: day(m.conn),  w: wk(m.conn),  mo: m.conn,  dec: 0 },
