@@ -458,8 +458,41 @@ function CreateBookingTab({ onCreated, saving, setSaving }: {
 // TAB 2: Validation Queue (GROUPED BY BUDDY, SPLIT BY DATE)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-// Buddy sort order — Lucas (Cindy's buddy) first, Felipe (Connie's buddy) second, Dylan (Krishna's buddy) third
+// Buddy sort order — Lucas (Cindy's buddy) first, Felipe (Sydney's buddy) second, Dylan (Riley's buddy) third
 const BUDDY_SORT_ORDER = ["Lucas Tirri", "Felipe Garcia", "Dylan Munro"];
+
+// Count business days (Mon–Fri) strictly between two ISO dates, treating
+// `from` as exclusive and `to` as inclusive. Friday → Monday returns 1.
+function businessDaysBetween(fromISO: string, toISO: string): number {
+  const from = new Date(fromISO + "T00:00:00Z");
+  const to = new Date(toISO + "T00:00:00Z");
+  if (from >= to) return 0;
+  let count = 0;
+  const cur = new Date(from);
+  cur.setUTCDate(cur.getUTCDate() + 1);
+  while (cur <= to) {
+    const day = cur.getUTCDay();
+    if (day !== 0 && day !== 6) count++;
+    cur.setUTCDate(cur.getUTCDate() + 1);
+  }
+  return count;
+}
+
+// A pending booking is OVERDUE when:
+//   • not yet acted on (na_count = 0) AND > 1 business day since it was booked, OR
+//   • marked NA × 1 AND ≥ 3 business days since it was entered into the system.
+function isOverdue(b: Booking, today: string): boolean {
+  if (b.status !== "pending") return false;
+  const naCount = (b as Booking & { na_count?: number }).na_count || 0;
+  if (naCount === 0) {
+    return businessDaysBetween(b.booking_date, today) > 1;
+  }
+  if (naCount === 1) {
+    const createdDate = (b.created_at || "").split("T")[0] || b.booking_date;
+    return businessDaysBetween(createdDate, today) >= 3;
+  }
+  return false;
+}
 
 const REJECTION_REASONS = [
   "Not interested",
@@ -481,18 +514,26 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
   const [rejectionReasons, setRejectionReasons] = useState<Record<string, string[]>>({});
   const [showFuture, setShowFuture] = useState(false);
 
-  const pendingBookings = bookings.filter((b) => b.status === "pending" && ((b as any).na_count || 0) < 2);
+  const pendingBookings = bookings.filter((b) => b.status === "pending" && ((b as Booking & { na_count?: number }).na_count || 0) < 2);
   const today = toISODate(new Date());
 
-  // Split pending bookings: yesterday & older vs today
+  // Three buckets, in order of presentation:
+  //   1. OVERDUE — past their grace period (see isOverdue)
+  //   2. Yesterday & earlier non-overdue — to be validated today
+  //   3. Today — validated tomorrow (collapsed by default)
+  const overdueBookings = pendingBookings
+    .filter((b) => isOverdue(b, today))
+    .sort((a, b) => a.booking_date.localeCompare(b.booking_date));
   const yesterdayBookings = pendingBookings
-    .filter((b) => b.booking_date < today)
-    .sort((a, b) => a.booking_date.localeCompare(b.booking_date)); // oldest first
+    .filter((b) => b.booking_date < today && !isOverdue(b, today))
+    .sort((a, b) => a.booking_date.localeCompare(b.booking_date));
   const todayBookings = pendingBookings
     .filter((b) => b.booking_date >= today)
     .sort((a, b) => a.booking_date.localeCompare(b.booking_date));
 
-  // Helper: group bookings by buddy and sort by buddy order
+  // Helper: group bookings by buddy and sort by buddy order. Within each
+  // buddy: pending-without-NA at the top, NA × 1 at the bottom (regardless of
+  // when the NA mark was set). Within each tier, oldest booking first.
   const groupByBuddy = (bks: Booking[]) => {
     const grouped: Record<string, Booking[]> = {};
     bks.forEach((b) => {
@@ -511,15 +552,15 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
     return sortedKeys.map((key) => ({
       buddyName: key,
       bookings: grouped[key].sort((a, b) => {
-        // N/A'd today → bottom of list
-        const aNa = (a as any).na_date === today ? 1 : 0;
-        const bNa = (b as any).na_date === today ? 1 : 0;
+        const aNa = ((a as Booking & { na_count?: number }).na_count || 0) > 0 ? 1 : 0;
+        const bNa = ((b as Booking & { na_count?: number }).na_count || 0) > 0 ? 1 : 0;
         if (aNa !== bNa) return aNa - bNa;
         return a.booking_date.localeCompare(b.booking_date);
       }),
     }));
   };
 
+  const overdueGroups = groupByBuddy(overdueBookings);
   const yesterdayGroups = groupByBuddy(yesterdayBookings);
   const todayGroups = groupByBuddy(todayBookings);
 
@@ -801,6 +842,25 @@ function ValidationQueueTab({ bookings, onUpdate, allBookings }: {
         </div>
       ) : (
         <div className="space-y-10">
+          {/* ── Section 0: Overdue ── */}
+          {overdueBookings.length > 0 && (
+            <div className="bg-red-50/40 border border-red-200 rounded-2xl p-5">
+              <div className="mb-4 pb-2 border-b-2 border-red-500">
+                <h3 className="text-base font-bold text-red-700 flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span>
+                  ⚠️ OVERDUE
+                  <span className="text-sm font-normal text-red-600">— {overdueBookings.length} booking{overdueBookings.length !== 1 ? "s" : ""} need{overdueBookings.length === 1 ? "s" : ""} attention</span>
+                </h3>
+                <p className="text-xs text-red-500 mt-1">
+                  Pending &gt; 1 business day with no call made, or marked N/A × 1 for 3+ business days. Resolve these first.
+                </p>
+              </div>
+              <div className="space-y-6">
+                {renderBuddyGroups(overdueGroups)}
+              </div>
+            </div>
+          )}
+
           {/* ── Section 1: Yesterday's Bookings (validate today) ── */}
           {yesterdayBookings.length > 0 && (
             <div>
