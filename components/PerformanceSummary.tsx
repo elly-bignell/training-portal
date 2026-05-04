@@ -34,11 +34,11 @@ interface TraineeWeekData {
 const teams = [
   {
     name: "Team 1",
-    members: ["lucas-tirri", "cindy-rose-rondez-manrique", "shian-roux"],
+    members: ["lucas-tirri", "cindy-rose-rondez-manrique"],
   },
   {
     name: "Team 2",
-    members: ["felipe-garcia", "sydney-arnold"],
+    members: ["felipe-garcia", "sydney-arnold", "shian-roux"],
   },
   {
     name: "Team 3",

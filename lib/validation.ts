@@ -27,9 +27,9 @@ export interface Booking {
 export const BUDDY_PAIRS: Record<string, string> = {
   // Active
   "Cindy Manrique": "Lucas Tirri",
-  "Shian Roux": "Lucas Tirri",
   "Riley Kerrison": "Dylan Munro",
   "Sydney Arnold": "Felipe Garcia",
+  "Shian Roux": "Felipe Garcia",
   // Archived — kept so historical bookings still display a buddy in the UI.
   // Krishna's existing bookings stay under Dylan, Tom's stay under Felipe.
   "Krishna Patel": "Dylan Munro",
