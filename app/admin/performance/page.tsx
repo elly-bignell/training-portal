@@ -49,27 +49,32 @@ const metrics: { key: Metric; label: string; shortLabel: string; format: (v: num
   { key: "revenue", label: "Revenue", shortLabel: "Rev", format: (v) => v > 0 ? `$${v.toLocaleString()}` : "$0" },
 ];
 
-// ─── Week configs ───
-const weekConfig: Record<number, { start: string; label: string; shortLabel: string }> = {
-  0: { start: "2026-02-16", label: "Training Week", shortLabel: "TW" },
-  1: { start: "2026-02-23", label: "Week 1 — Ramp Up", shortLabel: "W1" },
-  2: { start: "2026-03-02", label: "Week 2 — Ramp Up", shortLabel: "W2" },
-  3: { start: "2026-03-09", label: "Week 3 — Ramp Up", shortLabel: "W3" },
-  4: { start: "2026-03-16", label: "Week 4 — Ramp Up", shortLabel: "W4" },
-  5: { start: "2026-03-23", label: "Week 5 — Ramp Up", shortLabel: "W5" },
-  6: { start: "2026-03-30", label: "Week 6 — The Standard", shortLabel: "W6" },
-  7: { start: "2026-04-06", label: "Week 7 — Maintaining", shortLabel: "W7" },
-  8: { start: "2026-04-13", label: "Week 8 — Maintaining", shortLabel: "W8" },
-};
+// ─── Week helpers ───
+// Week 0 = Mon 16 Feb 2026 (program kickoff). Every other week's dates are
+// derived programmatically so the page auto-rolls forward each Monday.
+// Trainees have different start dates so we no longer label weeks "Ramp Up"
+// vs "Maintaining" — the date range tells the full story.
+const WEEK_0_MONDAY_ISO = "2026-02-16";
+
+const DAY_NAMES_LONG = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const MONTH_NAMES_LONG = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+function getWeekMonday(weekNum: number): Date {
+  const [y, m, d] = WEEK_0_MONDAY_ISO.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1, d + weekNum * 7));
+}
 
 const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
 function getWeekDates(weekNum: number): string[] {
-  const startStr = weekConfig[weekNum]?.start || "2026-02-16";
-  const [y, m, d] = startStr.split("-").map(Number);
+  const monday = getWeekMonday(weekNum);
   return Array.from({ length: 5 }, (_, i) => {
-    const dt = new Date(Date.UTC(y, m - 1, d + i));
-    return dt.toISOString().split("T")[0];
+    const d = new Date(monday);
+    d.setUTCDate(d.getUTCDate() + i);
+    return d.toISOString().split("T")[0];
   });
 }
 
@@ -78,13 +83,23 @@ function formatDateShort(dateStr: string): string {
   return d.toLocaleDateString("en-AU", { day: "numeric", month: "short", timeZone: "UTC" });
 }
 
+// "Monday 2 March – Friday 6 March" style label for a week's heading.
+function getWeekDateRangeLong(weekNum: number): string {
+  const monday = getWeekMonday(weekNum);
+  const friday = new Date(monday);
+  friday.setUTCDate(friday.getUTCDate() + 4);
+  const fmt = (d: Date) =>
+    `${DAY_NAMES_LONG[d.getUTCDay()]} ${d.getUTCDate()} ${MONTH_NAMES_LONG[d.getUTCMonth()]}`;
+  return `${fmt(monday)} – ${fmt(friday)}`;
+}
+
 function getCurrentWeek(): number {
-  const now = new Date();
-  for (let i = 8; i >= 0; i--) {
-    const start = new Date(weekConfig[i].start);
-    if (now >= start) return i;
-  }
-  return 0;
+  const todayISO = new Date().toLocaleDateString("en-CA", { timeZone: "Australia/Adelaide" });
+  const today = new Date(todayISO + "T00:00:00Z");
+  const week0 = getWeekMonday(0);
+  const diffDays = Math.floor((today.getTime() - week0.getTime()) / 86400000);
+  if (diffDays < 0) return 0;
+  return Math.floor(diffDays / 7);
 }
 
 function getCellBg(actual: number, target: number): string {
@@ -315,7 +330,7 @@ function PerformanceDashboardContent() {
               <tbody>
                 {weeksToShow.map((weekNum) => {
                   const dates = getWeekDates(weekNum);
-                  const wc = weekConfig[weekNum];
+                  const weekRangeLabel = getWeekDateRangeLong(weekNum);
                   const isCollapsed = collapsedWeeks.has(weekNum);
                   const isCurrentWeek = weekNum === currentWeek;
                   const totalCols = 2 + totalDataCols;
@@ -338,7 +353,7 @@ function PerformanceDashboardContent() {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
                             <span className={isCurrentWeek ? "text-[#E6017D]" : "text-slate-800"}>
-                              {wc.label}
+                              {weekRangeLabel}
                             </span>
                             {isCurrentWeek && (
                               <span className="text-[9px] bg-[#E6017D] text-white px-1.5 py-0.5 rounded-full font-semibold">
@@ -432,7 +447,7 @@ function PerformanceDashboardContent() {
                                     rowSpan={metrics.length}
                                     className="sticky left-0 z-10 bg-slate-100 px-2 py-1 font-bold text-slate-700 uppercase text-[10px] border-r border-gray-200 tracking-wide align-top whitespace-nowrap"
                                   >
-                                    {wc.shortLabel} Total
+                                    Week Total
                                   </td>
                                 )}
                                 <td className="sticky left-[100px] z-10 bg-slate-100 px-1 py-1 border-r border-gray-200 whitespace-nowrap">
