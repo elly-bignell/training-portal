@@ -43,7 +43,15 @@ function ValidationContent({ role }: { role: UserRole }) {
       setLoading(true);
       const res = await fetch("/api/validation");
       const data = await res.json();
-      setBookings(data.bookings || []);
+      // Re-route each booking's buddy through the live BUDDY_PAIRS mapping so
+      // reassignments (e.g. Riley → Dylan) take effect immediately on existing
+      // records without needing an Airtable migration. Records whose staff
+      // member isn't in BUDDY_PAIRS keep their stored buddy as a fallback.
+      const remapped: Booking[] = (data.bookings || []).map((b: Booking) => {
+        const liveBuddy = getBuddy(b.staff_member);
+        return liveBuddy && liveBuddy !== "Unknown" ? { ...b, buddy: liveBuddy } : b;
+      });
+      setBookings(remapped);
     } catch (err) {
       console.error("Failed to fetch bookings:", err);
     } finally {
