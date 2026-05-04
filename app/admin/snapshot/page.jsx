@@ -554,19 +554,8 @@ export default function SnapshotPage() {
 
           {loading && !data && <div style={{ textAlign: "center", padding: "80px 0", color: C.muted }}>Loading live data...</div>}
 
-          {/* Upcoming Trainees */}
-          <div style={{ fontSize: 11, fontWeight: 600, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
-            Upcoming Trainees
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 28 }}>
-            <UpcomingTraineeCard
-              name="Emma"
-              fullName="Emma Ward"
-              startDateISO="2026-04-27"
-              team="Team 3"
-              buddy="Dylan & Krishna"
-            />
-          </div>
+          {/* Upcoming Trainees — none currently. Add <UpcomingTraineeCard ... />
+              entries inside this grid when new hires are scheduled. */}
 
           {/* Overview cards */}
           {trainees.length > 0 && (
