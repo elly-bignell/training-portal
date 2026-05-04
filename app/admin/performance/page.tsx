@@ -143,7 +143,18 @@ function fmtTarget(v: number): string {
 function PerformanceDashboardContent() {
   const [allData, setAllData] = useState<Map<string, DailyRecord[]>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
-  const [collapsedWeeks, setCollapsedWeeks] = useState<Set<number>>(new Set());
+
+  // Persist which weeks are collapsed across page reloads. First-time visitors
+  // see only the current week expanded — every past week starts collapsed —
+  // matching the "clean by default" view. After that, any change persists.
+  const initialCollapsedDefault = (() => {
+    const cw = getCurrentWeek();
+    return Array.from({ length: cw }, (_, i) => i);
+  })();
+  const [collapsedWeeks, setCollapsedWeeks] = usePersistedState<number[]>(
+    "perf-collapsedWeeks",
+    initialCollapsedDefault
+  );
 
   // ─── Pull from same persisted state as projections page ───
   const [phoneHours] = usePersistedState("proj-phoneHours", DEFAULT_HOURS);
@@ -196,12 +207,11 @@ function PerformanceDashboardContent() {
   }, []);
 
   const toggleWeek = (weekNum: number) => {
-    setCollapsedWeeks((prev) => {
-      const next = new Set(prev);
-      if (next.has(weekNum)) next.delete(weekNum);
-      else next.add(weekNum);
-      return next;
-    });
+    setCollapsedWeeks((prev) =>
+      prev.includes(weekNum)
+        ? prev.filter((w) => w !== weekNum)
+        : [...prev, weekNum]
+    );
   };
 
   const getValue = (slug: string, date: string, metric: Metric): number => {
@@ -331,7 +341,7 @@ function PerformanceDashboardContent() {
                 {weeksToShow.map((weekNum) => {
                   const dates = getWeekDates(weekNum);
                   const weekRangeLabel = getWeekDateRangeLong(weekNum);
-                  const isCollapsed = collapsedWeeks.has(weekNum);
+                  const isCollapsed = collapsedWeeks.includes(weekNum);
                   const isCurrentWeek = weekNum === currentWeek;
                   const totalCols = 2 + totalDataCols;
 
