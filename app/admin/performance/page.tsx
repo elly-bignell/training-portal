@@ -31,11 +31,10 @@ const DEFAULT_HOURS = 3.5;
 const DEFAULT_DEAL_VALUE = 400;
 
 // ─── Buddy pairs ───
-const buddyPairs = [
-  { label: "Lucas, Cindy & Riley", members: ["lucas-tirri", "cindy-rose-rondez-manrique", "riley-kerrison"] },
-  { label: "Dylan & Krishna", members: ["dylan-munro", "krishna-patel"] },
-  { label: "Felipe & Sydney", sublabel: "Week 0 — Training Week", members: ["felipe-garcia", "sydney-arnold"] },
-  { label: "Tom", members: ["thomas-rennie"] },
+const buddyPairs: { label: string; sublabel?: string; members: string[] }[] = [
+  { label: "Lucas & Cindy", members: ["lucas-tirri", "cindy-rose-rondez-manrique"] },
+  { label: "Felipe & Sydney", members: ["felipe-garcia", "sydney-arnold"] },
+  { label: "Dylan & Riley", members: ["dylan-munro", "riley-kerrison"] },
 ];
 
 const allSlugs = buddyPairs.flatMap((p) => p.members);

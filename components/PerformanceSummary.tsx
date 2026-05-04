@@ -34,7 +34,7 @@ interface TraineeWeekData {
 const teams = [
   {
     name: "Team 1",
-    members: ["lucas-tirri", "cindy-rose-rondez-manrique", "riley-kerrison"],
+    members: ["lucas-tirri", "cindy-rose-rondez-manrique"],
   },
   {
     name: "Team 2",
@@ -42,11 +42,7 @@ const teams = [
   },
   {
     name: "Team 3",
-    members: ["dylan-munro", "krishna-patel"],
-  },
-  {
-    name: "Team 4",
-    members: ["thomas-rennie"],
+    members: ["dylan-munro", "riley-kerrison"],
   },
 ];
 
@@ -57,8 +53,6 @@ const teams = [
 const TRAINEES_WITH_TARGET = new Set([
   "cindy-rose-rondez-manrique",
   "sydney-arnold",
-  "krishna-patel",
-  "thomas-rennie",
   "riley-kerrison",
 ]);
 

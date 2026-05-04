@@ -238,7 +238,7 @@ function HomeContent() {
           {/* Trainees */}
           <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">Trainees</h3>
           <div className="space-y-4 mb-6">
-            {trainees.filter((t) => ["riley-kerrison", "sydney-arnold", "krishna-patel", "cindy-rose-rondez-manrique", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "kateryna-bakumenko", "shahmir-saajad"].includes(t.slug)).map((trainee) => {
+            {trainees.filter((t) => ["riley-kerrison", "sydney-arnold", "cindy-rose-rondez-manrique", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "kateryna-bakumenko", "shahmir-saajad"].includes(t.slug)).map((trainee) => {
               const module1Attempts = getTraineeExamAttempts(trainee.slug, "exam-module-1");
               const module1Passed = module1Attempts.some((a) => a.passed);
               const module1BestScore = module1Attempts.length > 0
@@ -343,7 +343,7 @@ function HomeContent() {
           {/* Senior Team Quick Access */}
           <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3 mt-6">Senior Team Quick Access</h3>
           <div className="space-y-4">
-            {["lucas-tirri", "felipe-garcia", "dylan-munro", "thomas-rennie"].map(s => trainees.find(t => t.slug === s)!).filter(Boolean).map((trainee) => {
+            {["lucas-tirri", "felipe-garcia", "dylan-munro"].map(s => trainees.find(t => t.slug === s)!).filter(Boolean).map((trainee) => {
               return (
               <div key={trainee.slug} className="border border-gray-200 rounded-lg p-4">
                 <div className="flex items-center gap-3 mb-3">
@@ -443,7 +443,7 @@ function HomeContent() {
           {(() => {
             const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold", "riley-kerrison", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "kateryna-bakumenko", "shahmir-saajad"];
             const CS_SLUGS = ["jeremy-valiente", "dasha-axenova", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith"];
-            const ARCHIVED_SLUGS = ["connie-matthews", "reegan-james", "rachel-astachnowicz", "aston-marsh", "shani-thomas"];
+            const ARCHIVED_SLUGS = ["connie-matthews", "reegan-james", "rachel-astachnowicz", "aston-marsh", "shani-thomas", "krishna-patel", "thomas-rennie"];
 
             return trainees.filter((t) => !ARCHIVED_SLUGS.includes(t.slug)).map((trainee) => {
               const progress = getTraineeProgress(trainee.slug);
