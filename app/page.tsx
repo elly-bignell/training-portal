@@ -235,8 +235,8 @@ function HomeContent() {
             📋 Trainee Quick Access
           </h2>
 
-          {/* Trainees */}
-          <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">Trainees</h3>
+          {/* Sales Team Quick Access */}
+          <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">Sales Team Quick Access</h3>
           <div className="space-y-4 mb-6">
             {trainees.filter((t) => ["riley-kerrison", "sydney-arnold", "cindy-rose-rondez-manrique"].includes(t.slug)).map((trainee) => {
               const module1Attempts = getTraineeExamAttempts(trainee.slug, "exam-module-1");
@@ -413,26 +413,6 @@ function HomeContent() {
             })()}
           </div>
 
-          {/* Sales Training Dashboard Access */}
-          <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3 mt-6">Sales Training — Dashboard Access</h3>
-          <div className="space-y-4">
-            {[].map(s => trainees.find(t => t.slug === s)!).filter(Boolean).map((trainee) => (
-              <div key={trainee.slug} className="border border-gray-200 rounded-lg p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-[#E6017D] flex items-center justify-center text-white font-bold text-sm">
-                    {trainee.name.split(" ").map((n: string) => n[0]).join("").slice(0, 2)}
-                  </div>
-                  <h3 className="font-semibold text-gray-800">{trainee.name}</h3>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                    <span className="text-gray-600">Training Dashboard</span>
-                    <Link href={`/trainees/${trainee.slug}`} className="text-blue-600 hover:underline">Open →</Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* Trainee Cards */}
@@ -441,11 +421,23 @@ function HomeContent() {
             Select Your Dashboard
           </h2>
           {(() => {
-            const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold", "riley-kerrison", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "kateryna-bakumenko", "shahmir-saajad"];
-            const CS_SLUGS = ["jeremy-valiente", "dasha-axenova", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith"];
+            const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold", "riley-kerrison", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "shahmir-saajad"];
+            const CS_SLUGS = ["jeremy-valiente", "dasha-axenova", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith", "kateryna-bakumenko"];
             const ARCHIVED_SLUGS = ["connie-matthews", "reegan-james", "rachel-astachnowicz", "aston-marsh", "shani-thomas", "krishna-patel", "thomas-rennie", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "shahmir-saajad", "khushi-patel", "kristy-lee-busk", "ella-smith"];
 
-            return trainees.filter((t) => !ARCHIVED_SLUGS.includes(t.slug)).map((trainee) => {
+            // Group order: Sales first, then Customer Service. Within each
+            // group, preserve the order from data/trainees.ts.
+            const groupRank = (slug: string) =>
+              SALES_SLUGS.includes(slug) ? 0 : CS_SLUGS.includes(slug) ? 1 : 2;
+
+            return trainees
+              .filter((t) => !ARCHIVED_SLUGS.includes(t.slug))
+              .map((t, i) => ({ t, i }))
+              .sort((a, b) => {
+                const r = groupRank(a.t.slug) - groupRank(b.t.slug);
+                return r !== 0 ? r : a.i - b.i;
+              })
+              .map(({ t: trainee }) => {
               const progress = getTraineeProgress(trainee.slug);
               const hasStarted = progress && progress.overall_progress > 0;
               const isSalesTag = SALES_SLUGS.includes(trainee.slug);
