@@ -41,6 +41,7 @@ export const RAMP_UP_TRAINEE_SLUGS = [
   "cindy-rose-rondez-manrique",
   "riley-kerrison",
   "sydney-arnold",
+  "shian-roux",
 ];
 
 // Compute a personal training week from a startDate ISO string.

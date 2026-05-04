@@ -34,7 +34,7 @@ interface TraineeWeekData {
 const teams = [
   {
     name: "Team 1",
-    members: ["lucas-tirri", "cindy-rose-rondez-manrique"],
+    members: ["lucas-tirri", "cindy-rose-rondez-manrique", "shian-roux"],
   },
   {
     name: "Team 2",
@@ -54,6 +54,7 @@ const TRAINEES_WITH_TARGET = new Set([
   "cindy-rose-rondez-manrique",
   "sydney-arnold",
   "riley-kerrison",
+  "shian-roux",
 ]);
 
 // Booking targets
@@ -111,6 +112,17 @@ const WEEK0_BUDDIES: Record<string, string> = {
   "riley-kerrison": "lucas-tirri",
 };
 
+// True if today (Adelaide) is on/after the trainee's startDate. Used to gate
+// daily/EOW booking targets so trainees who haven't joined yet don't show a
+// /7 target (which would otherwise drag their team into red before they
+// arrive). Trainees without a startDate on file are treated as already started.
+function hasTraineeStarted(slug: string): boolean {
+  const t = trainees.find((tr) => tr.slug === slug);
+  if (!t || !t.startDate) return true;
+  const todayISO = new Date().toLocaleDateString("en-CA", { timeZone: "Australia/Adelaide" });
+  return t.startDate <= todayISO;
+}
+
 function getIndividualDayTarget(slug: string, dayIdx: number): number {
   // Is this slug a Week 0 trainee?
   if (TRAINEE_WEEK_OVERRIDES[slug] === 0) {
@@ -121,7 +133,9 @@ function getIndividualDayTarget(slug: string, dayIdx: number): number {
     (t) => WEEK0_BUDDIES[t] === slug && TRAINEE_WEEK_OVERRIDES[t] === 0
   );
   if (week0Trainee) return WEEK0_BUDDY_BOOKING_TARGETS[dayIdx] ?? 0;
-  return TRAINEES_WITH_TARGET.has(slug) ? TRAINEE_BOOKINGS_TARGET_DAILY : 0;
+  if (!TRAINEES_WITH_TARGET.has(slug)) return 0;
+  if (!hasTraineeStarted(slug)) return 0;
+  return TRAINEE_BOOKINGS_TARGET_DAILY;
 }
 
 function getIndividualEowTarget(slug: string): number {
@@ -130,7 +144,9 @@ function getIndividualEowTarget(slug: string): number {
     (t) => WEEK0_BUDDIES[t] === slug && TRAINEE_WEEK_OVERRIDES[t] === 0
   );
   if (week0Trainee) return WEEK0_BUDDY_EOW;
-  return TRAINEES_WITH_TARGET.has(slug) ? TEAM_BOOKINGS_TARGET_EOW : 0;
+  if (!TRAINEES_WITH_TARGET.has(slug)) return 0;
+  if (!hasTraineeStarted(slug)) return 0;
+  return TEAM_BOOKINGS_TARGET_EOW;
 }
 
 // Per-team daily and EOW booking targets — summed from each member's individual

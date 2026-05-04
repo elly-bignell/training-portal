@@ -238,7 +238,7 @@ function HomeContent() {
           {/* Sales Team Quick Access */}
           <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">Sales Team Quick Access</h3>
           <div className="space-y-4 mb-6">
-            {trainees.filter((t) => ["riley-kerrison", "sydney-arnold", "cindy-rose-rondez-manrique"].includes(t.slug)).map((trainee) => {
+            {trainees.filter((t) => ["riley-kerrison", "sydney-arnold", "cindy-rose-rondez-manrique", "shian-roux"].includes(t.slug)).map((trainee) => {
               const module1Attempts = getTraineeExamAttempts(trainee.slug, "exam-module-1");
               const module1Passed = module1Attempts.some((a) => a.passed);
               const module1BestScore = module1Attempts.length > 0
@@ -421,7 +421,7 @@ function HomeContent() {
             Select Your Dashboard
           </h2>
           {(() => {
-            const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold", "riley-kerrison", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "shahmir-saajad"];
+            const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold", "riley-kerrison", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "shahmir-saajad", "shian-roux"];
             const CS_SLUGS = ["jeremy-valiente", "dasha-axenova", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith", "kateryna-bakumenko"];
             const ARCHIVED_SLUGS = ["connie-matthews", "reegan-james", "rachel-astachnowicz", "aston-marsh", "shani-thomas", "krishna-patel", "thomas-rennie", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "shahmir-saajad", "khushi-patel", "kristy-lee-busk", "ella-smith"];
 
