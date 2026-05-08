@@ -238,9 +238,25 @@ function PodcastCard({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [rate, setRate] = useState(1);
   const lastPersistedSec = useRef(0);
+  const driveId = driveFileId(asset.url);
+
+  // Apply resume position once the audio element is ready. Runs unconditionally
+  // (rules-of-hooks); the body bails out early when there is no audio element
+  // to operate on, e.g. when we render the Drive iframe instead.
+  useEffect(() => {
+    const el = audioRef.current;
+    if (!el) return;
+    const resume = progress?.resumePositions?.podcast;
+    const onLoaded = () => {
+      if (resume && resume > 0 && resume < (el.duration || Infinity)) {
+        el.currentTime = resume;
+      }
+    };
+    el.addEventListener("loadedmetadata", onLoaded);
+    return () => el.removeEventListener("loadedmetadata", onLoaded);
+  }, [progress]);
 
   // Drive-hosted: render iframe (no native controls available).
-  const driveId = driveFileId(asset.url);
   if (driveId) {
     return (
       <div>
@@ -258,20 +274,6 @@ function PodcastCard({
       </div>
     );
   }
-
-  // Apply resume position once the audio element is ready.
-  useEffect(() => {
-    const el = audioRef.current;
-    if (!el) return;
-    const resume = progress?.resumePositions?.podcast;
-    const onLoaded = () => {
-      if (resume && resume > 0 && resume < (el.duration || Infinity)) {
-        el.currentTime = resume;
-      }
-    };
-    el.addEventListener("loadedmetadata", onLoaded);
-    return () => el.removeEventListener("loadedmetadata", onLoaded);
-  }, [progress]);
 
   const handleTimeUpdate = () => {
     const el = audioRef.current;
@@ -346,9 +348,24 @@ function PresentationCard({
 }: CommonProps & { asset: PresentationAsset }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const lastPersistedSec = useRef(0);
+  const driveId = driveFileId(asset.url);
+
+  // Apply resume position once the video element is ready. Always called
+  // (rules-of-hooks); body bails out early when there's no video element.
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el || asset.mode !== "video") return;
+    const resume = progress?.resumePositions?.presentation;
+    const onLoaded = () => {
+      if (resume && resume > 0 && resume < (el.duration || Infinity)) {
+        el.currentTime = resume;
+      }
+    };
+    el.addEventListener("loadedmetadata", onLoaded);
+    return () => el.removeEventListener("loadedmetadata", onLoaded);
+  }, [progress, asset.mode]);
 
   // Drive-hosted: render iframe.
-  const driveId = driveFileId(asset.url);
   if (driveId) {
     return (
       <div>
@@ -366,19 +383,6 @@ function PresentationCard({
       </div>
     );
   }
-
-  useEffect(() => {
-    const el = videoRef.current;
-    if (!el || asset.mode !== "video") return;
-    const resume = progress?.resumePositions?.presentation;
-    const onLoaded = () => {
-      if (resume && resume > 0 && resume < (el.duration || Infinity)) {
-        el.currentTime = resume;
-      }
-    };
-    el.addEventListener("loadedmetadata", onLoaded);
-    return () => el.removeEventListener("loadedmetadata", onLoaded);
-  }, [progress, asset.mode]);
 
   const handleTimeUpdate = () => {
     const el = videoRef.current;
