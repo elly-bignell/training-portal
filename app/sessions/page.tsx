@@ -126,7 +126,7 @@ function SessionsHomeInner() {
             Welcome back, {repName.split(" ")[0]}.
           </h1>
           <p className="text-slate-600 mt-1">
-            You've completed {completedCount} of {sessions.length} sessions.
+            You&apos;ve completed {completedCount} of {sessions.length} sessions.
           </p>
           <div className="mt-3 h-2 bg-slate-200 rounded-full overflow-hidden max-w-md">
             <div
