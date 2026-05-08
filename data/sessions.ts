@@ -36,6 +36,11 @@ export const sessions: Session[] = [
         url: "/sample-content/session-02-big-energy/debrief.pdf",
       },
       {
+        kind: "toolkit",
+        estimate: "5 min reference",
+        url: "/sample-content/session-02-big-energy/toolkit.pdf",
+      },
+      {
         kind: "podcast",
         estimate: "~30 min listen",
         url: `${MEDIA_BASE}/session-02-big-energy/podcast.m4a`,
@@ -237,6 +242,11 @@ export const sessions: Session[] = [
         kind: "debrief",
         estimate: "12 min read",
         url: "/sample-content/session-01-pitch-high/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "5 min reference",
+        url: "/sample-content/session-01-pitch-high/toolkit.pdf",
       },
       {
         kind: "podcast",

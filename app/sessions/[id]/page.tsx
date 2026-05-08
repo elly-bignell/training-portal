@@ -186,7 +186,7 @@ function SessionDetailInner() {
 
         {/* Asset cards */}
         <div>
-          {session.assets.map((asset) => {
+          {session.assets.map((asset, idx) => {
             const state =
               asset.kind === "quiz"
                 ? progress?.quizAttempts.some((a) => a.passed)
@@ -202,6 +202,7 @@ function SessionDetailInner() {
                 asset={asset}
                 progress={progress}
                 state={state}
+                position={idx + 1}
                 onSetState={(kind, s) => setAssetState(session.id, kind, s)}
                 onResume={(kind, sec) => setResumePosition(session.id, kind, sec)}
               />

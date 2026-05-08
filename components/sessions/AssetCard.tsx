@@ -33,16 +33,18 @@ interface CommonProps {
   asset: Asset;
   progress: SessionProgress | undefined;
   state: AssetState;
+  /** 1-based position of this asset in the session's asset list. */
+  position: number;
   onSetState: (kind: AssetKind, state: AssetState) => void;
   onResume: (kind: AssetKind, seconds: number) => void;
 }
 
 const KIND_LABEL: Record<AssetKind, string> = {
-  debrief: "ASSET 1 — THE DEBRIEF (PDF)",
-  toolkit: "ASSET 2 — THE TOOLKIT (PDF)",
-  podcast: "ASSET 3 — THE PODCAST",
-  presentation: "ASSET 4 — THE PRESENTATION",
-  quiz: "ASSET 5 — THE QUIZ",
+  debrief: "THE DEBRIEF (PDF)",
+  toolkit: "THE TOOLKIT (PDF)",
+  podcast: "THE PODCAST",
+  presentation: "THE PRESENTATION",
+  quiz: "THE QUIZ",
 };
 
 function StatePill({ state }: { state: AssetState }) {
@@ -62,10 +64,12 @@ function StatePill({ state }: { state: AssetState }) {
 function AssetShell({
   kind,
   state,
+  position,
   children,
 }: {
   kind: AssetKind;
   state: AssetState;
+  position: number;
   children: React.ReactNode;
 }) {
   return (
@@ -75,7 +79,7 @@ function AssetShell({
     >
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-xs font-bold tracking-wider text-slate-500">
-          {KIND_LABEL[kind]}
+          ASSET {position} — {KIND_LABEL[kind]}
         </h3>
         <StatePill state={state} />
       </div>
@@ -369,7 +373,7 @@ function QuizCard({
 // ─── Public dispatcher ──────────────────────────────────────────────────────
 
 export default function AssetCard(props: CommonProps) {
-  const { asset, state } = props;
+  const { asset, state, position } = props;
 
   let inner: React.ReactNode;
   switch (asset.kind) {
@@ -389,7 +393,7 @@ export default function AssetCard(props: CommonProps) {
   }
 
   return (
-    <AssetShell kind={asset.kind} state={state}>
+    <AssetShell kind={asset.kind} state={state} position={position}>
       {inner}
     </AssetShell>
   );
