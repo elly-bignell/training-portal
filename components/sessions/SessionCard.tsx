@@ -102,8 +102,11 @@ export default function SessionCard({ session, progress, status }: Props) {
           </svg>
           {session.totalTime}
         </span>
-        <span className="flex items-center gap-1" aria-label={`${viewed} of 5 assets viewed`}>
-          {[0, 1, 2, 3, 4].map((i) => (
+        <span
+          className="flex items-center gap-1"
+          aria-label={`${viewed} of ${session.assets.length} assets viewed`}
+        >
+          {Array.from({ length: session.assets.length }).map((_, i) => (
             <span
               key={i}
               className="w-2 h-2 rounded-full"

@@ -20,13 +20,15 @@ import {
 } from "@/hooks/useSessionsProgress";
 import { AssetKind } from "@/types/sessions";
 
-const PATH_STEPS: { kind: AssetKind; label: string; numeral: string }[] = [
-  { kind: "debrief", label: "Read", numeral: "①" },
-  { kind: "toolkit", label: "Reference", numeral: "②" },
-  { kind: "podcast", label: "Listen", numeral: "③" },
-  { kind: "presentation", label: "Watch", numeral: "④" },
-  { kind: "quiz", label: "Test", numeral: "⑤" },
-];
+const ASSET_LABELS: Record<AssetKind, string> = {
+  debrief: "Read",
+  toolkit: "Reference",
+  podcast: "Listen",
+  presentation: "Watch",
+  quiz: "Test",
+};
+
+const NUMERALS = ["①", "②", "③", "④", "⑤"];
 
 function SessionDetailInner() {
   const params = useParams<{ id: string }>();
@@ -113,14 +115,16 @@ function SessionDetailInner() {
               {session.totalTime} total
             </span>
             <span className="flex items-center gap-1">
-              {[0, 1, 2, 3, 4].map((i) => (
+              {Array.from({ length: session.assets.length }).map((_, i) => (
                 <span
                   key={i}
                   className="w-2.5 h-2.5 rounded-full"
                   style={{ backgroundColor: i < viewed ? "#1F3A5F" : "#E5E5E5" }}
                 />
               ))}
-              <span className="ml-1">{viewed} of 5 assets viewed</span>
+              <span className="ml-1">
+                {viewed} of {session.assets.length} assets viewed
+              </span>
             </span>
             {best !== null && (
               <span className="text-slate-700">
@@ -141,19 +145,20 @@ function SessionDetailInner() {
             SUGGESTED LEARNING PATH
           </div>
           <ol className="flex items-center gap-1 sm:gap-2 overflow-x-auto pb-2">
-            {PATH_STEPS.map((step, i) => {
-              const stepProgress = progress?.assetStates[step.kind];
-              const passed = step.kind === "quiz"
-                ? progress?.quizAttempts.some((a) => a.passed)
-                : stepProgress === "viewed";
+            {session.assets.map((asset, i) => {
+              const stepProgress = progress?.assetStates[asset.kind];
+              const passed =
+                asset.kind === "quiz"
+                  ? progress?.quizAttempts.some((a) => a.passed)
+                  : stepProgress === "viewed";
               const inProg = stepProgress === "in-progress";
               return (
-                <li key={step.kind} className="flex items-center gap-1 sm:gap-2">
+                <li key={asset.kind} className="flex items-center gap-1 sm:gap-2">
                   <a
                     href={
-                      step.kind === "quiz"
+                      asset.kind === "quiz"
                         ? `/sessions/${session.id}/quiz`
-                        : `#asset-${step.kind}`
+                        : `#asset-${asset.kind}`
                     }
                     className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium border transition-colors whitespace-nowrap ${
                       passed
@@ -163,10 +168,12 @@ function SessionDetailInner() {
                         : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
                     }`}
                   >
-                    <span aria-hidden>{passed ? "✓" : step.numeral}</span>
-                    {step.label}
+                    <span aria-hidden>
+                      {passed ? "✓" : NUMERALS[i] ?? `${i + 1}.`}
+                    </span>
+                    {ASSET_LABELS[asset.kind]}
                   </a>
-                  {i < PATH_STEPS.length - 1 && (
+                  {i < session.assets.length - 1 && (
                     <span className="text-slate-300" aria-hidden>
                       ›
                     </span>
