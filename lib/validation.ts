@@ -21,16 +21,29 @@ export interface Booking {
   created_at: string;
 }
 
+// Staff → buddy mapping. Includes archived staff (Krishna, Tom) so historical
+// bookings still resolve to a buddy via getBuddy(); the dropdown for new
+// submissions uses ACTIVE_STAFF_MEMBERS below, which excludes archived staff.
 export const BUDDY_PAIRS: Record<string, string> = {
+  // Active
   "Cindy Manrique": "Lucas Tirri",
-  "Riley Kerrison": "Lucas Tirri",
+  "Riley Kerrison": "Dylan Munro",
+  "Sydney Arnold": "Felipe Garcia",
+  "Shian Roux": "Felipe Garcia",
+  // Archived — kept so historical bookings still display a buddy in the UI.
+  // Krishna's existing bookings stay under Dylan, Tom's stay under Felipe.
   "Krishna Patel": "Dylan Munro",
   "Tom Rennie": "Felipe Garcia",
-  "Sydney Arnold": "Felipe Garcia",
 };
 
-export const STAFF_MEMBERS = Object.keys(BUDDY_PAIRS);
-export const BUDDIES = Object.values(BUDDY_PAIRS);
+// Staff that appear in the New Booking dropdown (currently active only).
+export const ACTIVE_STAFF_MEMBERS = ["Cindy Manrique", "Shian Roux", "Riley Kerrison", "Sydney Arnold"];
+
+// STAFF_MEMBERS is the dropdown source for forms / filters across the app.
+// Aliased to ACTIVE_STAFF_MEMBERS so archived staff don't reappear in pickers.
+export const STAFF_MEMBERS = ACTIVE_STAFF_MEMBERS;
+
+export const BUDDIES = Array.from(new Set(Object.values(BUDDY_PAIRS)));
 
 export function getBuddy(staffMember: string): string {
   return BUDDY_PAIRS[staffMember] || "Unknown";

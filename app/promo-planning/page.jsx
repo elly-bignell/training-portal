@@ -43,11 +43,11 @@ const C = {
 
 // Empirical bands per funnel stage (target = floor, high = best ever, commit = your stated commit)
 const BANDS = {
-  propToDeal: { target: 51, high: 85, commit: 100, min: 10, max: 100, step: 1 },
+  propToDeal: { target: 51, high: 85, commit: 51, min: 10, max: 100, step: 1 },
   attToProp:  { target: 72, high: 92, commit: 80,  min: 60, max: 100, step: 0.5 },
   bookToAtt:  { target: 31, high: 63, commit: 40,  min: 20, max: 70,  step: 0.5 },
   connToBook: { target: 10.5, high: 19, commit: 12, min: 5,  max: 25,  step: 0.1 },
-  callToConn: { target: 50, high: 58, commit: 52, min: 40,  max: 70,  step: 0.5 },
+  callToConn: { target: 50, high: 55, commit: 52, min: 40,  max: 70,  step: 0.5 },
 };
 
 const DEFAULTS = {
@@ -58,14 +58,19 @@ const DEFAULTS = {
   bookToAtt: 40,
   connToBook: 12,
   callToConn: 52,
+  // Team projection inputs (generic — not tied to any specific promo)
+  numStaff: 4,
+  dialledPerDay: 100,
 };
 
-// Current 4 reps' April 2026 actuals — for reality-check column
+// Current 4 reps' April 2026 actuals — partial month data (1–28 Apr, 15–18 working days each)
+// Source: DailyActivity export. dialled = calls_made, connected = calls (the CSV's 'calls'
+// column is connected calls, not total dials).
 const REPS_APRIL = [
-  { name: 'Cindy',   calls: 745, bookings: 91, attended: 19, deals: 3 },
-  { name: 'Krishna', calls: 685, bookings: 88, attended: 14, deals: 2 },
-  { name: 'Sydney',  calls: 671, bookings: 69, attended: 6,  deals: 1 },
-  { name: 'Riley',   calls: 775, bookings: 93, attended: 21, deals: 0.5 },
+  { name: 'Cindy',   days: 17, dialled: 1950, connected: 745, bookings: 91, attended: 15, deals: 1.5 },
+  { name: 'Krishna', days: 15, dialled: 1666, connected: 685, bookings: 88, attended: 14, deals: 2.5 },
+  { name: 'Sydney',  days: 17, dialled: 1531, connected: 671, bookings: 69, attended: 6,  deals: 1.0 },
+  { name: 'Riley',   days: 18, dialled: 1546, connected: 775, bookings: 93, attended: 21, deals: 0.5 },
 ];
 
 // ============================================================
@@ -85,14 +90,6 @@ function classifyBand(stage, value) {
   if (value >= b.target) return { label: 'TARGET', fg: '#B57418', bg: C.orangeSoft };
   return { label: 'BELOW', fg: C.red, bg: C.redSoft };
 }
-
-const SCENARIOS = [
-  { label: '$1,250/wk WRR · $100 deal · commit',         desc: 'Baseline at your stated commit cut-throughs',     overrides: { target: 1250, dealValue: 100, propToDeal: 100, attToProp: 80, bookToAtt: 40, connToBook: 12, callToConn: 52 } },
-  { label: '$1,250/wk WRR · realistic 17% close',        desc: 'What activity actually requires at current close', overrides: { target: 1250, dealValue: 100, propToDeal: 17, attToProp: 80, bookToAtt: 40, connToBook: 12, callToConn: 52 }, highlight: true },
-  { label: '$1,250/wk WRR · $200 deal value',            desc: 'Higher deal value halves required activity',       overrides: { target: 1250, dealValue: 200, propToDeal: 100, attToProp: 80, bookToAtt: 40, connToBook: 12, callToConn: 52 } },
-  { label: '$1,250/wk WRR · Book→Attend at HIGH 63%',    desc: 'Quality lift effect — fewer calls needed',         overrides: { target: 1250, dealValue: 100, propToDeal: 100, attToProp: 80, bookToAtt: 63, connToBook: 12, callToConn: 52 } },
-  { label: '$750/wk WRR · realistic starter goal',       desc: 'Closer to current capability while team builds',   overrides: { target: 750,  dealValue: 100, propToDeal: 100, attToProp: 80, bookToAtt: 40, connToBook: 12, callToConn: 52 } },
-];
 
 // ============================================================
 // COMPONENT
@@ -123,7 +120,6 @@ export default function PromoPlanning() {
 
   const set = useCallback((patch) => setS((prev) => ({ ...prev, ...patch })), []);
   const reset = () => setS(DEFAULTS);
-  const applyScenario = (sc) => setS((prev) => ({ ...prev, ...sc.overrides }));
 
   // ============ Calculations (working backwards from monthly goal) ============
   const target = Number(s.target) || 0;
@@ -137,6 +133,27 @@ export default function PromoPlanning() {
   m.book  = m.att   / (s.bookToAtt  / 100);
   m.conn  = m.book  / (s.connToBook / 100);
   m.calls = m.conn  / (s.callToConn / 100);
+
+  // ============ Forward projection (per rep + team total) ============
+  const numStaff = Number(s.numStaff) || 0;
+  const dialledPerDay = Number(s.dialledPerDay) || 0;
+  const perRep = {};
+  perRep.dialled   = dialledPerDay * DAYS_MO;
+  perRep.connected = perRep.dialled   * (s.callToConn / 100);
+  perRep.bookings  = perRep.connected * (s.connToBook / 100);
+  perRep.attended  = perRep.bookings  * (s.bookToAtt  / 100);
+  perRep.proposals = perRep.attended  * (s.attToProp  / 100);
+  perRep.deals     = perRep.proposals * (s.propToDeal / 100);
+  perRep.revenue   = perRep.deals * dealVal;
+  const team = {
+    dialled:   perRep.dialled   * numStaff,
+    connected: perRep.connected * numStaff,
+    bookings:  perRep.bookings  * numStaff,
+    attended:  perRep.attended  * numStaff,
+    deals:     perRep.deals     * numStaff,
+    revenue:   perRep.revenue   * numStaff,
+  };
+  const proj = { perRep, team };
 
   const day = (val) => val / DAYS_MO;
   const wk  = (val) => (val / DAYS_MO) * DAYS_WK;
@@ -226,13 +243,33 @@ export default function PromoPlanning() {
   // ============ Render ============
   return (
     <div style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif', background: C.bg, color: C.text, minHeight: '100vh' }}>
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '28px 32px 64px' }}>
+      <style>{`
+        .pp-page { max-width: 1400px; margin: 0 auto; padding: 28px 32px 64px; }
+        .pp-h1 { font-size: 28px; }
+        .pp-grid-main { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px; margin-top: 24px; }
+        .pp-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .pp-grid-2-tight { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .pp-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+        .pp-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -4px; }
+        .pp-input-big { font-size: 30px; }
+        @media (max-width: 768px) {
+          .pp-page { padding: 16px 14px 48px; }
+          .pp-h1 { font-size: 22px; line-height: 1.25; }
+          .pp-grid-main { grid-template-columns: 1fr; gap: 16px; margin-top: 16px; }
+          .pp-grid-2 { grid-template-columns: 1fr; gap: 14px; }
+          .pp-grid-2-tight { grid-template-columns: 1fr 1fr; gap: 8px; }
+          .pp-grid-5 { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+          .pp-input-big { font-size: 24px; }
+          .pp-table-wrap table { min-width: 560px; }
+        }
+      `}</style>
+      <div className="pp-page">
         {/* Header */}
         <header style={{ marginBottom: 24 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: 3, textTransform: 'uppercase', marginBottom: 6 }}>
             PROMO CONFIGURATOR · 1 PERSON · MONTHLY CYCLE
           </div>
-          <h1 style={{ fontSize: 28, color: C.navy, margin: '0 0 6px', fontWeight: 700 }}>
+          <h1 className="pp-h1" style={{ color: C.navy, margin: '0 0 6px', fontWeight: 700 }}>
             What activity is required to add this much WRR by month-end?
           </h1>
           <p style={{ color: C.grey, fontSize: 14, fontStyle: 'italic', margin: 0 }}>
@@ -241,11 +278,11 @@ export default function PromoPlanning() {
         </header>
 
         {/* Two-column grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 1fr)', gap: 24, marginTop: 24 }}>
+        <div className="pp-grid-main">
           {/* LEFT — Goal + Funnel */}
           <div>
             <Card title="The Goal">
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+              <div className="pp-grid-2" style={{ marginBottom: 16 }}>
                 <div>
                   <label style={{ display: 'block', fontSize: 11, color: C.grey, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 700, marginBottom: 4 }}>
                     Monthly WRR target (cumulative)
@@ -254,8 +291,15 @@ export default function PromoPlanning() {
                     <span style={{ color: C.grey, fontSize: 22, fontWeight: 600 }}>$</span>
                     <input
                       type="number" value={s.target} min={100} step={50}
-                      onChange={(e) => set({ target: parseFloat(e.target.value) || 0 })}
-                      style={{ width: '100%', fontSize: 30, fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
+                      onFocus={(e) => e.target.select()}
+                      onMouseUp={(e) => e.preventDefault()}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        if (v === '') { set({ target: '' }); return; }
+                        const n = parseFloat(v);
+                        if (!isNaN(n)) set({ target: n });
+                      }}
+                      className="pp-input-big" style={{ width: '100%', fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
                     />
                     <span style={{ color: C.grey, fontSize: 13, marginLeft: 4 }}>/wk by EOM</span>
                   </div>
@@ -268,8 +312,15 @@ export default function PromoPlanning() {
                     <span style={{ color: C.grey, fontSize: 22, fontWeight: 600 }}>$</span>
                     <input
                       type="number" value={s.dealValue} min={20} step={10}
-                      onChange={(e) => set({ dealValue: parseFloat(e.target.value) || 1 })}
-                      style={{ width: '100%', fontSize: 30, fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
+                      onFocus={(e) => e.target.select()}
+                      onMouseUp={(e) => e.preventDefault()}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        if (v === '') { set({ dealValue: '' }); return; }
+                        const n = parseFloat(v);
+                        if (!isNaN(n)) set({ dealValue: n });
+                      }}
+                      className="pp-input-big" style={{ width: '100%', fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
                     />
                     <span style={{ color: C.grey, fontSize: 13, marginLeft: 4 }}>/wk per deal</span>
                   </div>
@@ -309,13 +360,13 @@ export default function PromoPlanning() {
             </div>
           </div>
 
-          {/* RIGHT — Summary, Reality Check, Scenarios */}
+          {/* RIGHT — Summary, Reality Check, Team Projection */}
           <div>
             <Card title="Daily Activity Required">
               <p style={{ color: C.grey, fontSize: 14, fontStyle: 'italic', margin: '0 0 16px' }}>
                 The volume the rep must hit every working day.
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div className="pp-grid-2-tight">
                 <StatTile label="CALLS / DAY"     value={fmt(day(m.calls), 0)} sub="raw dials" />
                 <StatTile label="CONNECTED / DAY" value={fmt(day(m.conn), 0)}  sub="live conversations" />
                 <StatTile label="BOOKINGS / DAY"  value={fmt(day(m.book), 1)}  sub="scheduled" color={C.orange} />
@@ -327,9 +378,9 @@ export default function PromoPlanning() {
             <div style={{ marginTop: 20 }}>
               <Card title="Reality Check vs Current Best Months">
                 <p style={{ color: C.grey, fontSize: 14, fontStyle: 'italic', margin: '0 0 14px' }}>
-                  Current 4 reps&apos; April 2026 performance · green = within 10% of required
+                  Current 4 reps&rsquo; April 2026 actuals (partial month, 15–18 days each) · green = within 10% of full-month requirement
                 </p>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5 }}>
+                <div className="pp-table-wrap"><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5 }}>
                   <thead>
                     <tr style={{ borderBottom: `2px solid ${C.navy}` }}>
                       <th style={{ textAlign: 'left', padding: '6px 4px', color: C.navy, fontSize: 10.5, letterSpacing: 1 }}>METRIC</th>
@@ -341,10 +392,11 @@ export default function PromoPlanning() {
                   </thead>
                   <tbody>
                     {[
-                      { metric: 'Calls / month',    required: m.calls, key: 'calls',    dec: 0 },
-                      { metric: 'Bookings / month', required: m.book,  key: 'bookings', dec: 0 },
-                      { metric: 'Attended / month', required: m.att,   key: 'attended', dec: 1 },
-                      { metric: 'Deals / month',    required: m.deals, key: 'deals',    dec: 1 },
+                      { metric: 'Calls / month',           required: m.calls, key: 'dialled',   dec: 0 },
+                      { metric: 'Connected calls / month', required: m.conn,  key: 'connected', dec: 0 },
+                      { metric: 'Bookings / month',        required: m.book,  key: 'bookings',  dec: 0 },
+                      { metric: 'Attended / month',        required: m.att,   key: 'attended',  dec: 1 },
+                      { metric: 'Deals / month',           required: m.deals, key: 'deals',     dec: 1 },
                     ].map((row, i) => (
                       <tr key={row.key} style={{ borderBottom: '1px solid #ECF0F4', background: i % 2 === 1 ? C.bg : 'transparent' }}>
                         <td style={{ padding: '8px 4px', fontWeight: 600 }}>{row.metric}</td>
@@ -353,51 +405,144 @@ export default function PromoPlanning() {
                         </td>
                         {REPS_APRIL.map((r) => {
                           const actual = r[row.key];
-                          const ok = actual >= row.required * 0.9;
+                          // Pro-rate partial-month actual to full-month equivalent for fair comparison
+                          const projected = (r.days && r.days > 0) ? actual * (DAYS_MO / r.days) : actual;
+                          const ok = projected >= row.required * 0.9;
+                          const gapPct = (!ok && projected > 0)
+                            ? Math.round((row.required - projected) / projected * 100)
+                            : null;
                           return (
                             <td key={r.name} style={{
                               padding: '8px 4px', textAlign: 'right',
                               color: ok ? C.greenDark : C.text, fontWeight: ok ? 700 : 400,
                             }}>
-                              {fmt(actual, row.dec)}{ok ? ' ✓' : ''}
+                              {fmt(actual, row.dec)}
+                              {ok && <span style={{ marginLeft: 4 }}>✓</span>}
+                              {!ok && gapPct !== null && (
+                                <span style={{ color: C.red, fontSize: 11, fontWeight: 600, marginLeft: 4 }}>
+                                  +{gapPct}%
+                                </span>
+                              )}
                             </td>
                           );
                         })}
                       </tr>
                     ))}
                   </tbody>
-                </table>
+                </table></div>
                 <div style={{ marginTop: 14, padding: '10px 12px', background: C.orangeSoft, borderLeft: `3px solid ${C.orange}`, borderRadius: 4, fontSize: 11.5 }}>
-                  <b>How to read:</b> green ticks = the rep is already producing at or near the required level. Red gaps highlight the actual blockers — typically the bottom of the funnel.
+                  <b>How to read:</b> the green &#10003; and red <span style={{color: C.red, fontWeight: 600}}>+X%</span> badges compare each rep&rsquo;s <i>full-month projected pace</i> (current actual × {DAYS_MO} / days worked) against the full-month requirement. <span style={{color: C.red, fontWeight: 600}}>+X%</span> = how much each rep needs to lift their daily rate to hit target. Red gaps highlight the actual blockers — typically the bottom of the funnel.
                 </div>
               </Card>
             </div>
 
-            {/* Scenarios */}
+            {/* Team Projection — forward view */}
             <div style={{ marginTop: 20 }}>
-              <Card title="What If…">
+              <Card title="Team Projection — Forward View">
                 <p style={{ color: C.grey, fontSize: 14, fontStyle: 'italic', margin: '0 0 14px' }}>
-                  Click any scenario to apply it instantly.
+                  Project end-of-month output and revenue from staff count and per-rep dial volume, using the current funnel cut-throughs above. Generic — works for any promo.
                 </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {SCENARIOS.map((sc, i) => (
-                    <button
-                      key={i}
-                      onClick={() => applyScenario(sc)}
-                      style={{
-                        textAlign: 'left', padding: '12px 14px',
-                        background: sc.highlight ? C.orangeSoft : C.bg,
-                        border: `1px solid ${sc.highlight ? C.orange : C.greyLight}`,
-                        borderRadius: 6, cursor: 'pointer', fontFamily: 'inherit', fontSize: 12,
-                      }}
-                    >
-                      <b style={{ color: C.navy }}>{sc.label}</b><br />
-                      <span style={{ color: C.grey }}>{sc.desc}</span>
-                    </button>
-                  ))}
+
+                {/* Inputs */}
+                <div className="pp-grid-2" style={{ marginBottom: 16 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 11, color: C.grey, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 700, marginBottom: 4 }}>
+                      Staff count
+                    </label>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+                      <input
+                        type="number" value={s.numStaff} min={1} step={1}
+                        onFocus={(e) => e.target.select()}
+                        onMouseUp={(e) => e.preventDefault()}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          if (v === '') { set({ numStaff: '' }); return; }
+                          const n = parseFloat(v);
+                          if (!isNaN(n)) set({ numStaff: n });
+                        }}
+                        className="pp-input-big" style={{ width: '100%', fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
+                      />
+                      <span style={{ color: C.grey, fontSize: 13, marginLeft: 4 }}>reps</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 11, color: C.grey, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 700, marginBottom: 4 }}>
+                      Dialled calls / rep / day
+                    </label>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+                      <input
+                        type="number" value={s.dialledPerDay} min={0} step={5}
+                        onFocus={(e) => e.target.select()}
+                        onMouseUp={(e) => e.preventDefault()}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          if (v === '') { set({ dialledPerDay: '' }); return; }
+                          const n = parseFloat(v);
+                          if (!isNaN(n)) set({ dialledPerDay: n });
+                        }}
+                        className="pp-input-big" style={{ width: '100%', fontWeight: 700, color: C.navy, border: 'none', borderBottom: `2px solid ${C.greyLight}`, background: 'transparent', padding: '4px 0', outline: 'none', fontFamily: 'inherit' }}
+                      />
+                      <span style={{ color: C.grey, fontSize: 13, marginLeft: 4 }}>dials/day</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Headline projected revenue box */}
+                <div style={{ background: C.navy, color: 'white', borderRadius: 8, padding: '14px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                  <div>
+                    <div style={{ fontSize: 11, color: '#98C9B5', textTransform: 'uppercase', letterSpacing: 2, fontWeight: 700 }}>
+                      Projected team WRR added by EOM
+                    </div>
+                    <div style={{ fontSize: 11, color: '#98C9B5', marginTop: 2 }}>
+                      at current cut-throughs · {DAYS_MO} working days
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <span style={{ fontSize: 28, fontWeight: 700, color: C.green }}>${fmt(proj.team.revenue, 0)}</span>
+                    <span style={{ color: '#98C9B5', fontSize: 13, marginLeft: 4 }}>/wk WRR</span>
+                  </div>
+                </div>
+
+                {/* Per-rep + team breakdown */}
+                <div className="pp-table-wrap"><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5 }}>
+                  <thead>
+                    <tr style={{ borderBottom: `2px solid ${C.navy}` }}>
+                      <th style={{ textAlign: 'left',  padding: '6px 4px', color: C.navy, fontSize: 10.5, letterSpacing: 1 }}>METRIC</th>
+                      <th style={{ textAlign: 'right', padding: '6px 4px', color: C.navy, fontSize: 10.5, letterSpacing: 1 }}>PER REP / MO</th>
+                      <th style={{ textAlign: 'right', padding: '6px 4px', color: C.navy, fontSize: 10.5, letterSpacing: 1 }}>TEAM / MO</th>
+                      <th style={{ textAlign: 'right', padding: '6px 4px', color: C.navy, fontSize: 10.5, letterSpacing: 1 }}>VS REQ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { label: 'Calls (dialled)', per: proj.perRep.dialled,   team: proj.team.dialled,   req: m.calls, dec: 0 },
+                      { label: 'Connected calls', per: proj.perRep.connected, team: proj.team.connected, req: m.conn,  dec: 0 },
+                      { label: 'Bookings',         per: proj.perRep.bookings,  team: proj.team.bookings,  req: m.book,  dec: 1 },
+                      { label: 'Attended',         per: proj.perRep.attended,  team: proj.team.attended,  req: m.att,   dec: 1 },
+                      { label: 'Deals',            per: proj.perRep.deals,     team: proj.team.deals,     req: m.deals, dec: 2 },
+                    ].map((r, i) => {
+                      const pct = r.req > 0 ? (r.team / r.req) * 100 : 0;
+                      const onTrack = pct >= 90;
+                      return (
+                        <tr key={r.label} style={{ borderBottom: '1px solid #ECF0F4', background: i % 2 === 1 ? C.bg : 'transparent' }}>
+                          <td style={{ padding: '8px 4px', fontWeight: 600 }}>{r.label}</td>
+                          <td style={{ padding: '8px 4px', textAlign: 'right' }}>{fmt(r.per, r.dec)}</td>
+                          <td style={{ padding: '8px 4px', textAlign: 'right', fontWeight: 700 }}>{fmt(r.team, r.dec)}</td>
+                          <td style={{ padding: '8px 4px', textAlign: 'right', color: onTrack ? C.greenDark : C.red, fontWeight: 600 }}>
+                            {fmt(pct, 0)}%{onTrack ? ' ✓' : ''}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table></div>
+
+                <div style={{ marginTop: 14, padding: '10px 12px', background: C.greenSoft, borderLeft: `3px solid ${C.green}`, borderRadius: 4, fontSize: 11.5 }}>
+                  <b>How to read:</b> change staff count or dial volume above, or move the funnel sliders, to see how projected EOM revenue shifts. The VS REQ column compares team output to the goal-driven requirement from &ldquo;The Goal&rdquo; — green &#10003; means the team is projected to land within 10% of target.
                 </div>
               </Card>
             </div>
+
           </div>
         </div>
 
@@ -409,7 +554,7 @@ export default function PromoPlanning() {
           <h2 style={{ margin: '0 0 18px', fontSize: 22, color: 'white', fontWeight: 700 }}>
             ${target.toLocaleString()}/wk WRR added by EOM → {fmt(day(m.calls), 0)} calls/day cascading to {fmt(m.deals, 1)} deals across the month
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 12 }}>
+          <div className="pp-grid-5">
             {[
               { lbl: 'CALLS',     d: day(m.calls), w: wk(m.calls), mo: m.calls, dec: 0 },
               { lbl: 'CONNECTED', d: day(m.conn),  w: wk(m.conn),  mo: m.conn,  dec: 0 },

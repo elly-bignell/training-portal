@@ -39,9 +39,9 @@ export const weeklyStandards: Record<number, DailyActivity> = {
 // program week and don't get a ramp badge.
 export const RAMP_UP_TRAINEE_SLUGS = [
   "cindy-rose-rondez-manrique",
-  "krishna-patel",
   "riley-kerrison",
   "sydney-arnold",
+  "shian-roux",
 ];
 
 // Compute a personal training week from a startDate ISO string.

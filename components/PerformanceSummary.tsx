@@ -34,19 +34,15 @@ interface TraineeWeekData {
 const teams = [
   {
     name: "Team 1",
-    members: ["lucas-tirri", "cindy-rose-rondez-manrique", "riley-kerrison"],
+    members: ["lucas-tirri", "cindy-rose-rondez-manrique"],
   },
   {
     name: "Team 2",
-    members: ["felipe-garcia", "sydney-arnold"],
+    members: ["felipe-garcia", "sydney-arnold", "shian-roux"],
   },
   {
     name: "Team 3",
-    members: ["dylan-munro", "krishna-patel"],
-  },
-  {
-    name: "Team 4",
-    members: ["thomas-rennie"],
+    members: ["dylan-munro", "riley-kerrison"],
   },
 ];
 
@@ -57,9 +53,8 @@ const teams = [
 const TRAINEES_WITH_TARGET = new Set([
   "cindy-rose-rondez-manrique",
   "sydney-arnold",
-  "krishna-patel",
-  "thomas-rennie",
   "riley-kerrison",
+  "shian-roux",
 ]);
 
 // Booking targets
@@ -117,6 +112,17 @@ const WEEK0_BUDDIES: Record<string, string> = {
   "riley-kerrison": "lucas-tirri",
 };
 
+// True if today (Adelaide) is on/after the trainee's startDate. Used to gate
+// daily/EOW booking targets so trainees who haven't joined yet don't show a
+// /7 target (which would otherwise drag their team into red before they
+// arrive). Trainees without a startDate on file are treated as already started.
+function hasTraineeStarted(slug: string): boolean {
+  const t = trainees.find((tr) => tr.slug === slug);
+  if (!t || !t.startDate) return true;
+  const todayISO = new Date().toLocaleDateString("en-CA", { timeZone: "Australia/Adelaide" });
+  return t.startDate <= todayISO;
+}
+
 function getIndividualDayTarget(slug: string, dayIdx: number): number {
   // Is this slug a Week 0 trainee?
   if (TRAINEE_WEEK_OVERRIDES[slug] === 0) {
@@ -127,7 +133,9 @@ function getIndividualDayTarget(slug: string, dayIdx: number): number {
     (t) => WEEK0_BUDDIES[t] === slug && TRAINEE_WEEK_OVERRIDES[t] === 0
   );
   if (week0Trainee) return WEEK0_BUDDY_BOOKING_TARGETS[dayIdx] ?? 0;
-  return TRAINEES_WITH_TARGET.has(slug) ? TRAINEE_BOOKINGS_TARGET_DAILY : 0;
+  if (!TRAINEES_WITH_TARGET.has(slug)) return 0;
+  if (!hasTraineeStarted(slug)) return 0;
+  return TRAINEE_BOOKINGS_TARGET_DAILY;
 }
 
 function getIndividualEowTarget(slug: string): number {
@@ -136,7 +144,9 @@ function getIndividualEowTarget(slug: string): number {
     (t) => WEEK0_BUDDIES[t] === slug && TRAINEE_WEEK_OVERRIDES[t] === 0
   );
   if (week0Trainee) return WEEK0_BUDDY_EOW;
-  return TRAINEES_WITH_TARGET.has(slug) ? TEAM_BOOKINGS_TARGET_EOW : 0;
+  if (!TRAINEES_WITH_TARGET.has(slug)) return 0;
+  if (!hasTraineeStarted(slug)) return 0;
+  return TEAM_BOOKINGS_TARGET_EOW;
 }
 
 // Per-team daily and EOW booking targets — summed from each member's individual
@@ -571,110 +581,6 @@ export default function PerformanceSummary() {
           </div>
         </div>
       </div>
-
-      {/* ── Efficiency Spotlight ── */}
-      {(() => {
-        // Find the best conversion rate across all individuals
-        const allMemberData = teams.flatMap((t) => t.members).map((s) => dataMap.get(s)).filter(Boolean) as TraineeWeekData[];
-        let liveBestRate = 0;
-        let liveBestName = "";
-        allMemberData.forEach((td) => {
-          if (td.totals.calls > 0) {
-            const rate = td.totals.bookings / td.totals.calls;
-            if (rate > liveBestRate) {
-              liveBestRate = rate;
-              liveBestName = td.name.split(" ")[0];
-            }
-          }
-        });
-
-        // Persist the highest rate seen — survives week resets
-        let bestRate = liveBestRate;
-        let bestName = liveBestName;
-        try {
-          const stored = JSON.parse(localStorage.getItem("spotlight_best") || "{}");
-          if (stored.rate && stored.rate > liveBestRate) {
-            // Stored rate is higher (e.g. new week, data reset) — keep it
-            bestRate = stored.rate;
-            bestName = stored.name || "—";
-          }
-          // Save if current is higher or equal (keeps it fresh)
-          if (liveBestRate >= (stored.rate || 0)) {
-            localStorage.setItem("spotlight_best", JSON.stringify({ rate: liveBestRate, name: liveBestName }));
-          }
-        } catch {
-          // localStorage unavailable — just use live data
-        }
-
-        const bestPct = Math.round(bestRate * 100);
-        if (bestPct === 0) return null;
-
-        const targets = [
-          { bookings: 6, label: "6 bookings", color: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-200", icon: "🔥" },
-          { bookings: 5, label: "5 bookings", color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-200", icon: "⚡" },
-          { bookings: 4, label: "4 bookings", color: "text-slate-600", bg: "bg-slate-50", border: "border-slate-200", icon: "📞" },
-        ];
-
-        return (
-          <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-5 text-white">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-sm font-bold uppercase tracking-wide text-slate-300">📐 Efficiency Spotlight</h3>
-                <p className="text-xs text-slate-400 mt-1">
-                  Best call-to-booking rate this week: <span className="text-white font-bold text-sm">{bestPct}%</span> <span className="text-slate-400">({bestName})</span>
-                </p>
-              </div>
-              <div className="text-right">
-                <div className="text-[10px] text-slate-400 uppercase">At this rate, to hit daily targets you need:</div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-4">
-              {targets.map((t) => {
-                const callsNeeded = Math.ceil(t.bookings / bestRate);
-                return (
-                  <div key={t.bookings} className="bg-white/10 backdrop-blur rounded-lg p-4 text-center">
-                    <div className="text-2xl mb-2">{t.icon}</div>
-                    <div className="text-2xl font-bold text-white">{t.bookings} bookings</div>
-                    <div className="flex items-center justify-center gap-2 mt-2">
-                      <span className="text-slate-500">=</span>
-                      <span className="text-lg font-bold text-slate-300">{callsNeeded} calls</span>
-                    </div>
-                    <div className="text-[10px] text-slate-500 mt-1">at {bestPct}% conversion</div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="border-t border-white/10 mt-5 pt-4">
-              <p className="text-[10px] text-slate-300 uppercase tracking-wide mb-3">At 20% cut through from call:booking</p>
-              <div className="grid grid-cols-3 gap-4">
-                {[
-                  { bookings: 6, icon: "🔥" },
-                  { bookings: 5, icon: "⚡" },
-                  { bookings: 4, icon: "📞" },
-                ].map((t) => {
-                  const callsNeeded = Math.ceil(t.bookings / 0.2);
-                  return (
-                    <div key={t.bookings} className="bg-white/20 rounded-lg p-3 text-center">
-                      <div className="text-lg font-bold text-white">{t.bookings} bookings</div>
-                      <div className="flex items-center justify-center gap-2 mt-1">
-                        <span className="text-slate-400">=</span>
-                        <span className="text-sm font-bold text-slate-200">{callsNeeded} calls</span>
-                      </div>
-                      <div className="text-[10px] text-slate-400 mt-0.5">at 20% conversion</div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <p className="text-[11px] text-slate-500 mt-3 text-center">
-              As your conversion improves, fewer calls = same bookings. That&apos;s the goal.
-            </p>
-          </div>
-        );
-      })()}
 
       {/* ── Meetings, Units & Revenue Table ── */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
