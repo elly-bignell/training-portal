@@ -12,10 +12,15 @@
 
 import { Session } from "@/types/sessions";
 
-// Set this to the URL where the audio/video are eventually hosted.
-// While unset (empty string), the players will 404 — that's fine for a UI
-// preview but obviously the real ones need to be plugged in.
-const MEDIA_BASE = ""; // e.g. "https://cdn.marketingsweet.com.au/sales-training"
+// Drive file IDs for podcast and presentation media. We render these as
+// iframe embeds via https://drive.google.com/file/d/<id>/preview. Reps
+// access them with their existing Marketing Sweet Google Workspace login.
+//
+// Trade-off vs self-hosting: we lose custom speed controls, resume position,
+// and auto-mark-as-viewed at 75% played. Drive's own player is used. To get
+// those features back, move the files to Vercel Blob and swap the URLs.
+const drivePreview = (id: string) =>
+  `https://drive.google.com/file/d/${id}/preview`;
 
 export const sessions: Session[] = [
   {
@@ -43,13 +48,13 @@ export const sessions: Session[] = [
       {
         kind: "podcast",
         estimate: "~30 min listen",
-        url: `${MEDIA_BASE}/session-02-big-energy/podcast.m4a`,
+        url: drivePreview("1Dd5UtC_Q_qsdqYO3Yz54TrIJdYhajMM-"),
         durationSeconds: 1800,
       },
       {
         kind: "presentation",
         estimate: "~15 min watch",
-        url: `${MEDIA_BASE}/session-02-big-energy/presentation.mp4`,
+        url: drivePreview("1CVqRD0VdH0fm2nq89LX9jsx6ARxgh2_5"),
         mode: "video",
       },
       {
@@ -251,13 +256,13 @@ export const sessions: Session[] = [
       {
         kind: "podcast",
         estimate: "~30 min listen",
-        url: `${MEDIA_BASE}/session-01-pitch-high/podcast.m4a`,
+        url: drivePreview("1WGf7FpIo4I27_J8E_xwfeNqWmjZSL4ZR"),
         durationSeconds: 1800,
       },
       {
         kind: "presentation",
         estimate: "~15 min watch",
-        url: `${MEDIA_BASE}/session-01-pitch-high/presentation.mp4`,
+        url: drivePreview("1uhY5qV1ZZ2oiKsXcPMNbWU3HiNY4TZAL"),
         mode: "video",
       },
       {

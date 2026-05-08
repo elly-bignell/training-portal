@@ -47,6 +47,67 @@ const KIND_LABEL: Record<AssetKind, string> = {
   quiz: "THE QUIZ",
 };
 
+// Returns the Drive file ID if `url` is a Google Drive link, else null.
+function driveFileId(url: string): string | null {
+  if (!url || !url.includes("drive.google.com")) return null;
+  const m = url.match(/\/file\/d\/([^/?#]+)/);
+  return m ? m[1] : null;
+}
+
+/** Drive iframe embed used for both podcast (audio) and presentation (video). */
+function DriveEmbed({
+  fileId,
+  kind,
+  state,
+  onSetState,
+}: {
+  fileId: string;
+  kind: AssetKind;
+  state: AssetState;
+  onSetState: (kind: AssetKind, state: AssetState) => void;
+}) {
+  const isAudio = kind === "podcast";
+  return (
+    <div>
+      <iframe
+        src={`https://drive.google.com/file/d/${fileId}/preview`}
+        title={`${kind} embed`}
+        className={
+          isAudio
+            ? "w-full rounded-lg border border-slate-200 h-[120px] bg-slate-50"
+            : "w-full aspect-video rounded-lg border border-slate-200 bg-black"
+        }
+        allow="autoplay; encrypted-media"
+        allowFullScreen
+        onLoad={() =>
+          state === "not-viewed" && onSetState(kind, "in-progress")
+        }
+      />
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <a
+          href={`https://drive.google.com/file/d/${fileId}/view`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-3 py-1.5 text-xs font-semibold border border-slate-300 text-slate-700 rounded-md hover:border-slate-400 transition-colors"
+        >
+          Open in Drive
+        </a>
+        {state !== "viewed" && (
+          <button
+            onClick={() => onSetState(kind, "viewed")}
+            className="px-3 py-1.5 text-xs font-medium text-slate-500 hover:text-slate-700"
+          >
+            Mark viewed
+          </button>
+        )}
+        <span className="ml-auto text-xs text-slate-400">
+          Drive player · sign in with your Marketing Sweet account
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function StatePill({ state }: { state: AssetState }) {
   if (state === "viewed") {
     return (
@@ -178,6 +239,26 @@ function PodcastCard({
   const [rate, setRate] = useState(1);
   const lastPersistedSec = useRef(0);
 
+  // Drive-hosted: render iframe (no native controls available).
+  const driveId = driveFileId(asset.url);
+  if (driveId) {
+    return (
+      <div>
+        <p className="text-sm text-slate-700 mb-2">
+          Listen on the way to a call. Speed and resume are controlled in
+          Drive&apos;s own player.
+        </p>
+        <div className="text-xs text-slate-500 mb-4">⏱ {asset.estimate}</div>
+        <DriveEmbed
+          fileId={driveId}
+          kind="podcast"
+          state={state}
+          onSetState={onSetState}
+        />
+      </div>
+    );
+  }
+
   // Apply resume position once the audio element is ready.
   useEffect(() => {
     const el = audioRef.current;
@@ -265,6 +346,26 @@ function PresentationCard({
 }: CommonProps & { asset: PresentationAsset }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const lastPersistedSec = useRef(0);
+
+  // Drive-hosted: render iframe.
+  const driveId = driveFileId(asset.url);
+  if (driveId) {
+    return (
+      <div>
+        <p className="text-sm text-slate-700 mb-2">
+          Watch the recorded session. Drive&apos;s player handles playback,
+          captions, and full-screen.
+        </p>
+        <div className="text-xs text-slate-500 mb-4">⏱ {asset.estimate}</div>
+        <DriveEmbed
+          fileId={driveId}
+          kind="presentation"
+          state={state}
+          onSetState={onSetState}
+        />
+      </div>
+    );
+  }
 
   useEffect(() => {
     const el = videoRef.current;
