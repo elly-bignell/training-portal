@@ -9,7 +9,7 @@
 
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import RepPicker from "@/components/sessions/RepPicker";
@@ -220,6 +220,15 @@ function formatTime(s: number) {
 
 // RepPicker now handles per-rep authentication via /api/auth/validate —
 // no outer PasswordGate is needed (it would just add a redundant prompt).
+//
+// Suspense wrapper is required because SessionsHomeInner calls
+// useSearchParams() — without PasswordGate's client-only wrapper around
+// it, Next 14 needs an explicit Suspense boundary so the page can
+// prerender as a shell and hydrate the searchParams on the client.
 export default function SessionsHomePage() {
-  return <SessionsHomeInner />;
+  return (
+    <Suspense fallback={null}>
+      <SessionsHomeInner />
+    </Suspense>
+  );
 }
