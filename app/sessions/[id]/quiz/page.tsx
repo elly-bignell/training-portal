@@ -18,7 +18,6 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import PasswordGate from "@/components/PasswordGate";
 import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import { getSessionById, getQuiz } from "@/data/sessions";
@@ -46,21 +45,27 @@ function gradeAttempt(
   questions: QuizQuestion[],
   answers: Record<string, number | string>
 ) {
-  let correctCount = 0;
+  // Pass-mark is calculated on MC questions ONLY. Short-answer responses are
+  // recorded and reviewed manually by the trainer — they don't influence
+  // pass/fail. We still mark them "correct" for the keyword-hit indicator
+  // shown on the review screen, but the score below ignores them.
+  let mcCorrect = 0;
+  let mcTotal = 0;
   const perQuestion: { id: string; correct: boolean }[] = [];
   for (const q of questions) {
     const a = answers[q.id];
     let correct = false;
     if (q.type === "multiple-choice" && typeof a === "number") {
       correct = isMCCorrect(q, a);
+      mcTotal++;
+      if (correct) mcCorrect++;
     } else if (q.type === "short-answer" && typeof a === "string") {
       correct = isShortAnswerCorrect(q, a);
     }
-    if (correct) correctCount++;
     perQuestion.push({ id: q.id, correct });
   }
-  const score = Math.round((correctCount / questions.length) * 100);
-  return { score, correctCount, perQuestion };
+  const score = mcTotal === 0 ? 0 : Math.round((mcCorrect / mcTotal) * 100);
+  return { score, correctCount: mcCorrect, perQuestion };
 }
 
 // ─── Component ──────────────────────────────────────────────────────────────
@@ -152,6 +157,30 @@ function QuizInner() {
       };
       recordQuizAttempt(session.id, attempt);
       setSubmittedAttempt(attempt);
+
+      // Mirror to Airtable so trainers can see attempts. We don't block
+      // the UI on this — if the request fails the localStorage record is
+      // still authoritative for the rep's pass/fail experience.
+      const attemptNumber = (progress?.quizAttempts.length ?? 0) + 1;
+      fetch("/api/sessions/quiz/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          repSlug,
+          repName,
+          sessionId: session.id,
+          sessionNumber: session.number,
+          sessionTitle: session.title,
+          score,
+          passed: attempt.passed,
+          attemptNumber,
+          submittedAt: attempt.attemptedAt,
+          answers: nextAnswers,
+        }),
+      }).catch((err) => {
+        // Network errors silently logged — see /api logs for server errors.
+        console.error("Quiz submission failed", err);
+      });
     } else {
       setCurrentIdx((i) => i + 1);
     }
@@ -494,10 +523,8 @@ function ResultScreen({
   );
 }
 
+// Per-rep auth is enforced by RepPicker (validates password against the
+// picked slug). No outer PasswordGate needed.
 export default function QuizPage() {
-  return (
-    <PasswordGate>
-      <QuizInner />
-    </PasswordGate>
-  );
+  return <QuizInner />;
 }

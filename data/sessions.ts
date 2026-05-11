@@ -1,24 +1,22 @@
 // data/sessions.ts
 //
 // Real session content for Marketing Sweet's Sales Training Portal.
+//   • Session 03 — Obsession is the Multiplier, Balance is the Scam
+//                  (Monday 11 May 2026)
 //   • Session 02 — Big Energy, Better Research, Stop Hunting Excuses
 //                  (Friday 8 May 2026)
 //   • Session 01 — Pitch High, Show the Stack, Let the Customer Choose
 //                  (Thursday 7 May 2026)
 //
-// PDF debriefs are committed to /public/sample-content/. Audio/video assets
-// are hosted externally (placeholder URLs below — replace with real CDN /
-// Vercel Blob / Drive embed URLs when those are set up).
+// Quiz answer positions are intentionally spread across A/B/C/D so reps
+// can't guess from pattern. Pass mark is calculated on MC questions only
+// — short-answer responses are stored and reviewed by trainers, not graded.
 
 import { Session } from "@/types/sessions";
 
 // Drive file IDs for podcast and presentation media. We render these as
 // iframe embeds via https://drive.google.com/file/d/<id>/preview. Reps
 // access them with their existing Marketing Sweet Google Workspace login.
-//
-// Trade-off vs self-hosting: we lose custom speed controls, resume position,
-// and auto-mark-as-viewed at 75% played. Drive's own player is used. To get
-// those features back, move the files to Vercel Blob and swap the URLs.
 const drivePreview = (id: string) =>
   `https://drive.google.com/file/d/${id}/preview`;
 
@@ -59,7 +57,7 @@ export const sessions: Session[] = [
       },
       {
         kind: "quiz",
-        estimate: "9 questions · ~10 min",
+        estimate: "8 questions · ~10 min",
         passMark: 80,
         questions: [
           {
@@ -71,10 +69,10 @@ export const sessions: Session[] = [
             options: [
               "Obsession is something a sales coach can train into you over time",
               "Obsession is a personality trait — you either have it or you don't",
-              "Obsession is a choice you've already made elsewhere in your life — the only question is where you choose to spend it",
               "Obsession is unhealthy and reps should be discouraged from it",
+              "Obsession is a choice you've already made elsewhere in your life — the only question is where you choose to spend it",
             ],
-            correctAnswer: 2,
+            correctAnswer: 3,
             rationale:
               "Every rep has already demonstrated obsessive effort in some area of their life — university, sport, dating, or a personal goal. The question isn't CAN you be obsessed; it's where you're choosing to spend it. The career is often last on the list.",
           },
@@ -85,12 +83,12 @@ export const sessions: Session[] = [
               "How should a rep approach the notes from a previous training session before the next one?",
             topic: "Continuity rule",
             options: [
-              "Skim them only if there's time after other priorities",
-              "Trust their memory — they were in the room",
               "Treat training as cumulative — review notes before every session like a judo student drilling a technique before the next lesson",
+              "Trust their memory — they were in the room",
+              "Skim them only if there's time after other priorities",
               "Wait until the topic is reviewed in a future session",
             ],
-            correctAnswer: 2,
+            correctAnswer: 0,
             rationale:
               "Each session builds on the last. Showing up without having reviewed previous notes forces the trainer to re-cover ground and forces you to re-learn material you should already own. Treat every session like a judo lesson — drill the material in between, or it's wasted time for everyone.",
           },
@@ -102,10 +100,10 @@ export const sessions: Session[] = [
             options: [
               "Hours worked",
               "Time spent at desk",
-              "Effort visible to managers",
               "Results — deals closed, quotas hit, behaviours adopted",
+              "Effort visible to managers",
             ],
-            correctAnswer: 3,
+            correctAnswer: 2,
             rationale:
               "\"I'm not interested in how hard you work. I'm just interested in whether you're achieving the results.\" Hours worked is a comforting metric that gives you a story to tell when outcomes aren't there. Outcomes are the only thing the business runs on.",
           },
@@ -116,12 +114,12 @@ export const sessions: Session[] = [
               "When estimating turnover for a TRADE business (one with vehicles, materials, sub-contractors) with 20 staff, the right number to use is roughly:",
             topic: "Estimating turnover",
             options: [
-              "$2M ($100k × 20)",
               "$6M ($100k × 20 × 3)",
+              "$2M ($100k × 20)",
               "$500k (conservative estimate)",
               "Whatever the prospect tells you",
             ],
-            correctAnswer: 1,
+            correctAnswer: 0,
             rationale:
               "The Session 2 service-business rule was $100k per staff. Trade businesses pass through materials, vehicles, sub-contractors — so multiply by ~3x. 20 staff × $100k × 3 = $6M. Going in at $2M means you've under-pitched by 70% before the meeting even starts.",
           },
@@ -133,11 +131,11 @@ export const sessions: Session[] = [
             topic: "Dangerous mindsets",
             options: [
               "\"I don't know.\"",
-              "\"I need to think about it.\"",
               "\"I'm already set up.\"",
+              "\"I need to think about it.\"",
               "\"It's not my fault.\"",
             ],
-            correctAnswer: 2,
+            correctAnswer: 1,
             rationale:
               "The danger is that the statement might be technically true today — you ARE doing okay relative to where you started. But the moment you accept the frame, you stop running the magnets. In 5–10 years the people who never accepted the frame have lapped you, and there's no catching back up.",
           },
@@ -149,11 +147,11 @@ export const sessions: Session[] = [
             topic: "Balance is a scam",
             options: [
               "Hustle culture",
-              "Balance",
               "Networking",
+              "Balance",
               "Personal branding",
             ],
-            correctAnswer: 1,
+            correctAnswer: 2,
             rationale:
               "\"Balance is the biggest scam. You don't win Judo championships across the globe by being un-obsessed.\" The cultural idea of balance is a comforting story average people tell themselves to justify not getting outlier outcomes. If you want the average outcome, run an average schedule. If you want the outlier outcome, accept an outlier schedule.",
           },
@@ -165,39 +163,16 @@ export const sessions: Session[] = [
             topic: "Income trajectories",
             options: [
               "Both grow at roughly the same rate",
-              "Employee ~5%/year (linear, bounded); owner/operator compounds and is unbounded",
-              "Owner/operator grows ~10%, employee ~7%",
               "Employee compensation is unlimited if you're a top performer",
+              "Owner/operator grows ~10%, employee ~7%",
+              "Employee ~5%/year (linear, bounded); owner/operator compounds and is unbounded",
             ],
-            correctAnswer: 1,
+            correctAnswer: 3,
             rationale:
               "Employment compensation is bounded by what an employer can justify paying — usually ~5%/year, rarely more than 10%. Ownership/operator compensation comes from equity, commission, compounding skill, reputation, and network. After 10 years: employee ~60% more than starting; owner/operator 5–10x more.",
           },
           {
             id: "s3-q8",
-            type: "short-answer",
-            prompt:
-              "You missed preparing notes for the next training session and want to be honest about it. Compare a \"coward's sentence\" with the honest version, and explain why the honest one matters. (2–3 sentences)",
-            topic: "Honesty about effort",
-            modelAnswer:
-              "A coward's sentence externalises the blame: \"I was busy with family / I didn't have time / I had a lot going on.\" The honest sentence is: \"I should have prioritised it.\" It's harder to say because it forces you to own the choice, but it's the only sentence that leads to a different decision next time. Hiding behind external commitments protects ego — and ego protection is what keeps people stuck.",
-            keywords: [
-              "coward",
-              "blame",
-              "busy",
-              "honest",
-              "prioritised",
-              "own",
-              "ego",
-              "stuck",
-            ],
-            keywordsRequired: 3,
-            softMinChars: 150,
-            rationale:
-              "Externalised blame protects ego at the cost of growth. \"I should have prioritised it\" is the only sentence that opens the door to a different decision next time. It's harder to say because it removes the comfort blanket — that's why it works.",
-          },
-          {
-            id: "s3-q9",
             type: "short-answer",
             prompt:
               "Describe in your own words who the \"invisible competition\" is and why they pose a bigger threat to your career than the rep at the next desk. (2–3 sentences)",
@@ -271,11 +246,11 @@ export const sessions: Session[] = [
             topic: "Solutions vs excuses",
             options: [
               "Why the prospect was a bad fit",
-              "What you will do differently next time",
               "Whether the market is bad right now",
+              "What you will do differently next time",
               "Whether the price was wrong",
             ],
-            correctAnswer: 1,
+            correctAnswer: 2,
             rationale:
               "Your brain auto-generates reasons (\"excuses\") to protect your ego. Override it. The only allowed thought is one specific behaviour you will change — about your own actions, not the prospect, the market, or the price.",
           },
@@ -286,12 +261,12 @@ export const sessions: Session[] = [
               "In the energy-magnet metaphor, the two magnets you must keep running every day are:",
             topic: "Energy management",
             options: [
-              "Pull customers in / push competitors away",
               "Pull success in / push failure away",
+              "Pull customers in / push competitors away",
               "Pull money in / push debt away",
               "Pull leads in / push admin away",
             ],
-            correctAnswer: 1,
+            correctAnswer: 0,
             rationale:
               "Pull the right people, energy, information and beliefs toward you. Push reasons, doubt, and toxic influences away. Both magnets, every day. Without curation, you end up with \"a mixture of everything\" — exhausting, and it shows in your close rate.",
           },
@@ -303,10 +278,10 @@ export const sessions: Session[] = [
             options: [
               "Pitch, Price, Product, Process, People",
               "Plan, Prepare, Practice, Pitch, Persist",
-              "Prior Preparation Prevents Poor Performance",
               "Probe, Pitch, Pause, Pivot, Push",
+              "Prior Preparation Prevents Poor Performance",
             ],
-            correctAnswer: 2,
+            correctAnswer: 3,
             rationale:
               "Prior Preparation Prevents Poor Performance. If you can't recite the prospect's turnover, staff count, average job value, and main competitor — postpone the meeting. Don't wing it.",
           },
@@ -318,11 +293,11 @@ export const sessions: Session[] = [
             topic: "Estimating prospect numbers",
             options: [
               "Trust the number they give you",
-              "Subtract 20% to be conservative",
               "Multiply by approximately 2x",
+              "Subtract 20% to be conservative",
               "Ignore turnover, focus only on jobs per day",
             ],
-            correctAnswer: 2,
+            correctAnswer: 1,
             rationale:
               "Reps under-state their numbers to salespeople. Multiply by ~2x as a baseline. And on every estimate where you don't have hard data — default to the TOP of the plausible range. There is no upside to going in low.",
           },
@@ -332,12 +307,12 @@ export const sessions: Session[] = [
             prompt: "The pre-meeting confirmation call should be:",
             topic: "Pre-meeting confirmation call",
             options: [
-              "Five minutes, comprehensive review of the whole pitch",
               "60 seconds, three quick questions, you hang up first",
+              "Five minutes, comprehensive review of the whole pitch",
               "However long the prospect needs",
               "Replaced with an email instead",
             ],
-            correctAnswer: 1,
+            correctAnswer: 0,
             rationale:
               "High energy. Three questions max. You hang up first — if they say \"I've got to go\" before you wrap, you've overstayed. The whole point is to set Friday's tone and gather the last data points you need.",
           },
@@ -347,8 +322,8 @@ export const sessions: Session[] = [
             prompt:
               "Which of these is a \"7/10 word\" Corie wants you to replace with a stronger power word?",
             topic: "Power words",
-            options: ["Perfect", "Excellent", "Amazing", "Superb"],
-            correctAnswer: 1,
+            options: ["Perfect", "Superb", "Amazing", "Excellent"],
+            correctAnswer: 3,
             rationale:
               "\"Excellent\" is polite but carries no force — Corie called it a 7/10 word. Replace with \"perfect,\" \"amazing,\" \"incredible,\" or \"superb opportunity.\" Words that land.",
           },
@@ -359,11 +334,11 @@ export const sessions: Session[] = [
             topic: "Price recovery",
             options: [
               "Customers warm to quirky salespeople",
-              "When you panic-drop the price you confirm the original was inflated; when you re-engineer the package you confirm the original was real",
               "It's the fastest way to negotiate",
+              "When you panic-drop the price you confirm the original was inflated; when you re-engineer the package you confirm the original was real",
               "It's legally required to discount this way",
             ],
-            correctAnswer: 1,
+            correctAnswer: 2,
             rationale:
               "Same final price, completely different relationship. Re-engineering arrives at a lower number with you as the expert solving their problem cleverly. Panic-dropping arrives at the same number with you as a tentative seller. Authority preserved either way? Only one way.",
           },
@@ -375,11 +350,11 @@ export const sessions: Session[] = [
             topic: "Handling third-party objections",
             options: [
               "Argue that business coaches are biased against this kind of decision",
-              "Drop the price significantly to undercut the coach's recommendation",
               "Plant a seed of doubt about the coach, predict the timeline, concede gracefully",
+              "Drop the price significantly to undercut the coach's recommendation",
               "Email the coach directly to make your case",
             ],
-            correctAnswer: 2,
+            correctAnswer: 1,
             rationale:
               "Lose the battle today, win the war in 6 months. Plant the seed (\"coaches don't love this kind of thing — focused on getting fees out of you\"), predict the timeline (\"three to six months in you'll be back\"), then concede gracefully and don't pursue. The seed does the work.",
           },
@@ -478,12 +453,12 @@ export const sessions: Session[] = [
             prompt: "When pricing a website rebuild, which approach does Corie recommend?",
             topic: "Pitching the stack",
             options: [
-              "Start with the lowest tier so you don't scare them off",
-              "Match what you think their budget is",
               "Pitch the highest tier first and let the customer work down",
+              "Match what you think their budget is",
+              "Start with the lowest tier so you don't scare them off",
               "Avoid talking price entirely until they ask",
             ],
-            correctAnswer: 2,
+            correctAnswer: 0,
             rationale:
               "Buyers always negotiate down — nobody walks a price up. Your starting number sets the ceiling. Pitching medium gets you low; pitching high gets you medium.",
           },
@@ -496,10 +471,10 @@ export const sessions: Session[] = [
             options: [
               "\"What's your budget?\"",
               "\"Can you afford the top tier?\"",
-              "\"Which one do you like the look of best?\"",
               "\"Which one fits your needs?\"",
+              "\"Which one do you like the look of best?\"",
             ],
-            correctAnswer: 2,
+            correctAnswer: 3,
             rationale:
               "Asking visual preference reveals price tolerance without ever asking budget. Corie called \"what's your budget?\" offensive and lazy. The customer's pick is their real spend tolerance — they self-qualify.",
           },
@@ -511,11 +486,11 @@ export const sessions: Session[] = [
             topic: "Handling \"I need to think\"",
             options: [
               "Price",
-              "Trust",
-              "Spouse / partner approval",
               "They genuinely need more product detail",
+              "Spouse / partner approval",
+              "Trust",
             ],
-            correctAnswer: 3,
+            correctAnswer: 1,
             rationale:
               "\"I need to think\" is almost never about thinking. It's price (most common — recoverable), trust (you said something off — usually unrecoverable in the call), or spouse approval (genuine — easy to handle).",
           },
@@ -527,11 +502,11 @@ export const sessions: Session[] = [
             topic: "Closing on odd numbers",
             options: [
               "Round numbers feel more honest to customers",
-              "The extra $25 covers admin costs",
               "Odd numbers signal \"best I could do\"; round numbers signal you had room",
+              "The extra $25 covers admin costs",
               "Customers psychologically prefer odd-numbered prices",
             ],
-            correctAnswer: 2,
+            correctAnswer: 1,
             rationale:
               "Round prices say \"I had more wiggle room.\" Odd prices say \"I genuinely squeezed every drop.\" The slight regret tone — \"sorry I couldn't quite get there\" — does the closing work.",
           },
@@ -558,12 +533,12 @@ export const sessions: Session[] = [
               "In the Charlotte Tilbury vs $12.50 foundation example, what does cheap pricing trigger in the customer's brain?",
             topic: "Price psychology",
             options: [
-              "Excitement at finding a bargain",
               "Distrust, suspicion, and questions about ingredients",
+              "Excitement at finding a bargain",
               "Loyalty to the cheaper brand",
               "Increased likelihood of trying the product",
             ],
-            correctAnswer: 1,
+            correctAnswer: 0,
             rationale:
               "Cheap = unsafe = suspicious. The customer interrogates ingredients, longevity, and outcomes. High price reads as quality and safety — like the $370 collagen. When you walk in with a $3,000 website quote, the prospect hears \"cheap and risky.\"",
           },
@@ -576,10 +551,10 @@ export const sessions: Session[] = [
             options: [
               "Triumphant — celebrate the close",
               "Relieved — the negotiation is finally done",
-              "Slightly disappointed — like you've let them down a little",
               "Casual and matter-of-fact",
+              "Slightly disappointed — like you've let them down a little",
             ],
-            correctAnswer: 2,
+            correctAnswer: 3,
             rationale:
               "Triumph signals you had the room all along. Slight regret sells the squeeze — the customer feels like they pulled the maximum out of you, not the other way around.",
           },

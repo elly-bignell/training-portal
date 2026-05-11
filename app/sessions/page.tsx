@@ -12,7 +12,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import PasswordGate from "@/components/PasswordGate";
 import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import SessionCard from "@/components/sessions/SessionCard";
@@ -219,10 +218,8 @@ function formatTime(s: number) {
   return `${mm}:${ss}`;
 }
 
+// RepPicker now handles per-rep authentication via /api/auth/validate —
+// no outer PasswordGate is needed (it would just add a redundant prompt).
 export default function SessionsHomePage() {
-  return (
-    <PasswordGate>
-      <SessionsHomeInner />
-    </PasswordGate>
-  );
+  return <SessionsHomeInner />;
 }

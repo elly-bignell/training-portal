@@ -47,6 +47,30 @@ const KIND_LABEL: Record<AssetKind, string> = {
   quiz: "THE QUIZ",
 };
 
+// Per-asset instructions shown above the controls. Tells the rep what
+// "complete" looks like for this asset so they know when to mark it viewed.
+const KIND_INSTRUCTIONS: Record<AssetKind, string> = {
+  debrief:
+    "Read the debrief end-to-end, then hit Mark Viewed below to record that you've completed it.",
+  toolkit:
+    "Skim the toolkit so you know what's on it — pin it on the wall if you'd like. Hit Mark Viewed once you've reviewed it.",
+  podcast:
+    "Listen all the way through (on the way to a call works fine). Hit Mark Viewed once it's done.",
+  presentation:
+    "Watch the recorded session in full. Hit Mark Viewed once you've finished watching.",
+  quiz:
+    "Once all four assets above are marked viewed, take the quiz. You need to pass before the session is marked complete.",
+};
+
+// Non-quiz assets that gate the quiz. The quiz can only be opened once all
+// four of these are in the "viewed" state.
+const QUIZ_PREREQUISITES: AssetKind[] = [
+  "debrief",
+  "toolkit",
+  "podcast",
+  "presentation",
+];
+
 // Returns the Drive file ID if `url` is a Google Drive link, else null.
 function driveFileId(url: string): string | null {
   if (!url || !url.includes("drive.google.com")) return null;
@@ -95,9 +119,9 @@ function DriveEmbed({
         {state !== "viewed" && (
           <button
             onClick={() => onSetState(kind, "viewed")}
-            className="px-3 py-1.5 text-xs font-medium text-slate-500 hover:text-slate-700"
+            className="px-4 py-2 text-sm font-bold bg-[#3C8055] text-white rounded-md hover:bg-[#2d6342] transition-colors shadow-sm"
           >
-            Mark viewed
+            ✓ Mark viewed
           </button>
         )}
         <span className="ml-auto text-xs text-slate-400">
@@ -177,6 +201,10 @@ function PdfCard({
           ? "Structured summary of every concept covered in this session."
           : "Print-ready toolkit — pin it on the wall, open it before calls."}
       </p>
+      <div className="mb-3 px-3 py-2 bg-[#1F3A5F]/5 border-l-2 border-[#1F3A5F] rounded text-xs text-slate-700">
+        <span className="font-semibold">How to complete: </span>
+        {KIND_INSTRUCTIONS[asset.kind]}
+      </div>
       <div className="text-xs text-slate-500 mb-4">⏱ {asset.estimate}</div>
 
       {open && (
@@ -216,9 +244,9 @@ function PdfCard({
         {state !== "viewed" && (
           <button
             onClick={() => onSetState(asset.kind, "viewed")}
-            className="px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-700"
+            className="px-4 py-2 text-sm font-bold bg-[#3C8055] text-white rounded-lg hover:bg-[#2d6342] transition-colors shadow-sm"
           >
-            Mark viewed
+            ✓ Mark viewed
           </button>
         )}
       </div>
@@ -429,9 +457,9 @@ function PresentationCard({
       {state !== "viewed" && (
         <button
           onClick={() => onSetState(asset.kind, "viewed")}
-          className="mt-3 px-3 py-1.5 text-sm font-medium text-slate-500 hover:text-slate-700"
+          className="mt-3 px-4 py-2 text-sm font-bold bg-[#3C8055] text-white rounded-lg hover:bg-[#2d6342] transition-colors shadow-sm"
         >
-          Mark viewed
+          ✓ Mark viewed
         </button>
       )}
     </div>
@@ -451,26 +479,66 @@ function QuizCard({
     ? Math.max(...progress!.quizAttempts.map((a) => a.score))
     : null;
 
+  // Quiz lockout: must have all four prerequisite assets in "viewed" state.
+  // We still allow passed-quiz reviews to bypass (they've already done it).
+  const missingPrereqs = QUIZ_PREREQUISITES.filter(
+    (k) => progress?.assetStates[k] !== "viewed"
+  );
+  const unlocked = missingPrereqs.length === 0;
+  const showLocked = !unlocked && !passed;
+
   return (
     <div>
       <p className="text-sm text-slate-700 mb-1">
         {asset.questions.length} questions · ~10 min · {asset.passMark}% to
         pass · Unlimited retries
       </p>
+      <div className="mb-3 px-3 py-2 bg-[#1F3A5F]/5 border-l-2 border-[#1F3A5F] rounded text-xs text-slate-700">
+        <span className="font-semibold">How to complete: </span>
+        {KIND_INSTRUCTIONS.quiz}
+      </div>
       <p className="text-xs text-slate-500 italic mb-4">
-        Recommended: complete the four assets above first.
+        Pass mark is calculated on the multiple-choice questions only. Short
+        answers are recorded for trainer review.
       </p>
       {passed && (
         <div className="mb-3 px-3 py-2 bg-[#3C8055]/10 border border-[#3C8055]/30 rounded-lg text-sm text-[#3C8055] font-medium">
           ✓ Passed with {bestScore}% on attempt {attempts}
         </div>
       )}
-      <Link
-        href={`/sessions/${sessionId}/quiz`}
-        className="inline-block px-5 py-2.5 text-sm font-bold bg-[#D49A30] text-white rounded-lg hover:bg-[#bb8527] transition-colors"
-      >
-        {passed ? "Review quiz →" : attempts > 0 ? "Try again →" : "Take quiz →"}
-      </Link>
+      {showLocked && (
+        <div className="mb-3 px-4 py-3 bg-[#D49A30]/10 border border-[#D49A30]/40 rounded-lg text-sm text-slate-700">
+          <div className="font-bold text-[#a87520] mb-1">
+            🔒 Quiz locked
+          </div>
+          Mark all four assets above as viewed first. Still to do:{" "}
+          <span className="font-semibold">
+            {missingPrereqs
+              .map((k) => KIND_LABEL[k].replace(/\s*\(PDF\)/, ""))
+              .join(", ")}
+          </span>
+          .
+        </div>
+      )}
+      {showLocked ? (
+        <button
+          disabled
+          className="inline-block px-5 py-2.5 text-sm font-bold bg-slate-300 text-slate-500 rounded-lg cursor-not-allowed"
+        >
+          🔒 Take quiz
+        </button>
+      ) : (
+        <Link
+          href={`/sessions/${sessionId}/quiz`}
+          className="inline-block px-5 py-2.5 text-sm font-bold bg-[#D49A30] text-white rounded-lg hover:bg-[#bb8527] transition-colors"
+        >
+          {passed
+            ? "Review quiz →"
+            : attempts > 0
+            ? "Try again →"
+            : "Take quiz →"}
+        </Link>
+      )}
     </div>
   );
 }

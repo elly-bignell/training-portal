@@ -7,7 +7,6 @@
 import { useState } from "react";
 import { useParams, notFound } from "next/navigation";
 import Link from "next/link";
-import PasswordGate from "@/components/PasswordGate";
 import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import AssetCard from "@/components/sessions/AssetCard";
@@ -56,6 +55,9 @@ function SessionDetailInner() {
   const status = getSessionStatus(session, progress);
   const viewed = assetsViewedCount(progress);
   const best = bestQuizScore(progress);
+  const quizAsset = session.assets.find((a) => a.kind === "quiz");
+  const passMark =
+    quizAsset && quizAsset.kind === "quiz" ? quizAsset.passMark : 80;
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -139,6 +141,41 @@ function SessionDetailInner() {
           </div>
         </div>
 
+        {/* How this session works — module instructions */}
+        <div className="mb-8 bg-white border border-slate-200 rounded-2xl p-5">
+          <div className="text-xs font-bold tracking-wider text-[#1F3A5F] mb-3">
+            HOW THIS SESSION WORKS
+          </div>
+          <ol className="space-y-2 text-sm text-slate-700 list-decimal list-inside marker:text-[#1F3A5F] marker:font-bold">
+            <li>
+              Work through the four assets below in order — Debrief, Toolkit,
+              Podcast, then Presentation.
+            </li>
+            <li>
+              After you&apos;ve read / watched / listened to each asset, hit
+              the green{" "}
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#3C8055] text-white rounded text-xs font-bold">
+                ✓ Mark viewed
+              </span>{" "}
+              button to record that you&apos;ve completed it.
+            </li>
+            <li>
+              The quiz at the bottom stays locked until all four assets are
+              marked viewed — mandatory review of every asset.
+            </li>
+            <li>
+              Once unlocked, take the quiz. You need{" "}
+              <span className="font-semibold">{passMark}%</span> on the
+              multiple-choice questions to pass. Unlimited retries.
+            </li>
+          </ol>
+          <p className="text-xs text-slate-500 mt-3 italic">
+            Your progress is saved automatically and recorded for the trainers.
+            Don&apos;t share your password — every rep&apos;s answers are
+            tracked individually.
+          </p>
+        </div>
+
         {/* Suggested learning path */}
         <div className="mb-8">
           <div className="text-xs font-bold tracking-wider text-slate-500 mb-3">
@@ -214,10 +251,8 @@ function SessionDetailInner() {
   );
 }
 
+// Per-rep auth is enforced by RepPicker (validates password against the
+// picked slug via /api/auth/validate). No outer PasswordGate needed.
 export default function SessionDetailPage() {
-  return (
-    <PasswordGate>
-      <SessionDetailInner />
-    </PasswordGate>
-  );
+  return <SessionDetailInner />;
 }
