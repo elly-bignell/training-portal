@@ -14,6 +14,15 @@ import {
   setSelectedRepSlug,
 } from "@/hooks/useSessionsProgress";
 
+// Sales-team allowlist: only these reps can access the Sessions area.
+// Anyone else who lands on a /sessions URL won't see themselves in the
+// dropdown and can't pick a name → can't proceed past the picker.
+const SESSIONS_ALLOWED_SLUGS = [
+  "lucas-tirri",
+  "dylan-munro",
+  "felipe-garcia",
+];
+
 interface Props {
   onSelected: (slug: string, name: string) => void;
   /** When true, render even if a rep is already chosen (used by Switch User). */
@@ -28,7 +37,11 @@ export default function RepPicker({ onSelected, forceShow = false }: Props) {
   useEffect(() => {
     const stored = getSelectedRepSlug();
     if (stored && !forceShow) {
-      const t = trainees.find((tr) => tr.slug === stored);
+      // Honour the stored selection only if it's still in the allowlist —
+      // protects against a previously-selected rep losing access.
+      const t = trainees.find(
+        (tr) => tr.slug === stored && SESSIONS_ALLOWED_SLUGS.includes(tr.slug)
+      );
       if (t) {
         onSelected(t.slug, t.name);
         setShouldShow(false);
@@ -84,11 +97,13 @@ export default function RepPicker({ onSelected, forceShow = false }: Props) {
           className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#1F3A5F] focus:border-[#1F3A5F] outline-none mb-4"
         >
           <option value="">— Select your name —</option>
-          {trainees.map((t) => (
-            <option key={t.slug} value={t.slug}>
-              {t.name}
-            </option>
-          ))}
+          {trainees
+            .filter((t) => SESSIONS_ALLOWED_SLUGS.includes(t.slug))
+            .map((t) => (
+              <option key={t.slug} value={t.slug}>
+                {t.name}
+              </option>
+            ))}
         </select>
         <button
           onClick={handleConfirm}

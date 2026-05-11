@@ -24,6 +24,208 @@ const drivePreview = (id: string) =>
 
 export const sessions: Session[] = [
   {
+    id: "session-03-obsession",
+    number: "03",
+    date: "2026-05-11",
+    title: "Obsession is the Multiplier, Balance is the Scam",
+    summary:
+      "Obsession is a choice you've already made elsewhere — university, sport, dating. The only question is why you're not making it about the thing that pays your bills.",
+    keyTakeaway:
+      "Nothing you've been taught matters unless you bring obsessive-level effort to applying it. Obsession is the multiplier on everything — and you've already proven, in other parts of your life, that you know how to be obsessed. Today is about redirecting that capability.",
+    director: "Corie Dawson",
+    totalTime: "~50 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "12 min read",
+        url: "/sample-content/session-03-obsession/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "5 min reference",
+        url: "/sample-content/session-03-obsession/toolkit.pdf",
+      },
+      {
+        kind: "podcast",
+        estimate: "~30 min listen",
+        url: drivePreview("1xNo90x4N7azYyc5CuYGPmTuRM49uHz2k"),
+        durationSeconds: 1800,
+      },
+      {
+        kind: "presentation",
+        estimate: "~15 min watch",
+        url: drivePreview("1skvQKfSgNH6BYLqPbDlOpwebnxIUE18l"),
+        mode: "video",
+      },
+      {
+        kind: "quiz",
+        estimate: "9 questions · ~10 min",
+        passMark: 80,
+        questions: [
+          {
+            id: "s3-q1",
+            type: "multiple-choice",
+            prompt:
+              "According to Corie, the relationship between effort and obsession is best described as:",
+            topic: "Obsession",
+            options: [
+              "Obsession is something a sales coach can train into you over time",
+              "Obsession is a personality trait — you either have it or you don't",
+              "Obsession is a choice you've already made elsewhere in your life — the only question is where you choose to spend it",
+              "Obsession is unhealthy and reps should be discouraged from it",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Every rep has already demonstrated obsessive effort in some area of their life — university, sport, dating, or a personal goal. The question isn't CAN you be obsessed; it's where you're choosing to spend it. The career is often last on the list.",
+          },
+          {
+            id: "s3-q2",
+            type: "multiple-choice",
+            prompt:
+              "How should a rep approach the notes from a previous training session before the next one?",
+            topic: "Continuity rule",
+            options: [
+              "Skim them only if there's time after other priorities",
+              "Trust their memory — they were in the room",
+              "Treat training as cumulative — review notes before every session like a judo student drilling a technique before the next lesson",
+              "Wait until the topic is reviewed in a future session",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Each session builds on the last. Showing up without having reviewed previous notes forces the trainer to re-cover ground and forces you to re-learn material you should already own. Treat every session like a judo lesson — drill the material in between, or it's wasted time for everyone.",
+          },
+          {
+            id: "s3-q3",
+            type: "multiple-choice",
+            prompt: "The only metric Corie cares about is:",
+            topic: "Effort vs results",
+            options: [
+              "Hours worked",
+              "Time spent at desk",
+              "Effort visible to managers",
+              "Results — deals closed, quotas hit, behaviours adopted",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "\"I'm not interested in how hard you work. I'm just interested in whether you're achieving the results.\" Hours worked is a comforting metric that gives you a story to tell when outcomes aren't there. Outcomes are the only thing the business runs on.",
+          },
+          {
+            id: "s3-q4",
+            type: "multiple-choice",
+            prompt:
+              "When estimating turnover for a TRADE business (one with vehicles, materials, sub-contractors) with 20 staff, the right number to use is roughly:",
+            topic: "Estimating turnover",
+            options: [
+              "$2M ($100k × 20)",
+              "$6M ($100k × 20 × 3)",
+              "$500k (conservative estimate)",
+              "Whatever the prospect tells you",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The Session 2 service-business rule was $100k per staff. Trade businesses pass through materials, vehicles, sub-contractors — so multiply by ~3x. 20 staff × $100k × 3 = $6M. Going in at $2M means you've under-pitched by 70% before the meeting even starts.",
+          },
+          {
+            id: "s3-q5",
+            type: "multiple-choice",
+            prompt:
+              "Which sentence did Corie call the most dangerous a rep can carry?",
+            topic: "Dangerous mindsets",
+            options: [
+              "\"I don't know.\"",
+              "\"I need to think about it.\"",
+              "\"I'm already set up.\"",
+              "\"It's not my fault.\"",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The danger is that the statement might be technically true today — you ARE doing okay relative to where you started. But the moment you accept the frame, you stop running the magnets. In 5–10 years the people who never accepted the frame have lapped you, and there's no catching back up.",
+          },
+          {
+            id: "s3-q6",
+            type: "multiple-choice",
+            prompt:
+              "What does Corie call \"the biggest scam\" in how people talk about work and life?",
+            topic: "Balance is a scam",
+            options: [
+              "Hustle culture",
+              "Balance",
+              "Networking",
+              "Personal branding",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "\"Balance is the biggest scam. You don't win Judo championships across the globe by being un-obsessed.\" The cultural idea of balance is a comforting story average people tell themselves to justify not getting outlier outcomes. If you want the average outcome, run an average schedule. If you want the outlier outcome, accept an outlier schedule.",
+          },
+          {
+            id: "s3-q7",
+            type: "multiple-choice",
+            prompt:
+              "Approximate annual income growth on an employee pay grade vs. an owner/operator track:",
+            topic: "Income trajectories",
+            options: [
+              "Both grow at roughly the same rate",
+              "Employee ~5%/year (linear, bounded); owner/operator compounds and is unbounded",
+              "Owner/operator grows ~10%, employee ~7%",
+              "Employee compensation is unlimited if you're a top performer",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Employment compensation is bounded by what an employer can justify paying — usually ~5%/year, rarely more than 10%. Ownership/operator compensation comes from equity, commission, compounding skill, reputation, and network. After 10 years: employee ~60% more than starting; owner/operator 5–10x more.",
+          },
+          {
+            id: "s3-q8",
+            type: "short-answer",
+            prompt:
+              "You missed preparing notes for the next training session and want to be honest about it. Compare a \"coward's sentence\" with the honest version, and explain why the honest one matters. (2–3 sentences)",
+            topic: "Honesty about effort",
+            modelAnswer:
+              "A coward's sentence externalises the blame: \"I was busy with family / I didn't have time / I had a lot going on.\" The honest sentence is: \"I should have prioritised it.\" It's harder to say because it forces you to own the choice, but it's the only sentence that leads to a different decision next time. Hiding behind external commitments protects ego — and ego protection is what keeps people stuck.",
+            keywords: [
+              "coward",
+              "blame",
+              "busy",
+              "honest",
+              "prioritised",
+              "own",
+              "ego",
+              "stuck",
+            ],
+            keywordsRequired: 3,
+            softMinChars: 150,
+            rationale:
+              "Externalised blame protects ego at the cost of growth. \"I should have prioritised it\" is the only sentence that opens the door to a different decision next time. It's harder to say because it removes the comfort blanket — that's why it works.",
+          },
+          {
+            id: "s3-q9",
+            type: "short-answer",
+            prompt:
+              "Describe in your own words who the \"invisible competition\" is and why they pose a bigger threat to your career than the rep at the next desk. (2–3 sentences)",
+            topic: "The invisible competition",
+            modelAnswer:
+              "The invisible competition is the person you've never met who is obsessed by necessity — for example, a tradesman apprentice working a full day on a site then driving Uber until midnight to send money to family overseas. They have no plan B, so obsession isn't a personality choice for them, it's survival. In 10 years they'll own multiple properties and a small business; the complacent local rep with a degree and a roof will still be in the same job. The difference isn't intelligence or opportunity — it's obsession, and the market doesn't care which side you're on.",
+            keywords: [
+              "invisible",
+              "competition",
+              "obsessed",
+              "necessity",
+              "no plan b",
+              "tradesman",
+              "uber",
+              "obsession",
+              "10 years",
+            ],
+            keywordsRequired: 3,
+            softMinChars: 150,
+            rationale:
+              "The threat isn't the rep next to you — it's the person you'll never meet, obsessed by necessity, building a parallel career while you sleep. The difference at the 10-year mark is enormous and entirely driven by who put in obsessive effort during the years that mattered most.",
+          },
+        ],
+      },
+    ],
+  },
+
+  {
     id: "session-02-big-energy",
     number: "02",
     date: "2026-05-08",
