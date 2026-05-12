@@ -22,6 +22,186 @@ const drivePreview = (id: string) =>
 
 export const sessions: Session[] = [
   {
+    id: "session-04-rock-solid",
+    number: "04",
+    date: "2026-05-12",
+    title: "Rock Solid is the Energy, Say It Then Deliver It",
+    summary:
+      "Energy is not flamboyance — it is certainty. Certainty is built one promise at a time, until your word becomes the most trusted thing about you.",
+    keyTakeaway:
+      "Energy is not flamboyance. It is certainty. Certainty is built from one specific habit — saying something and then delivering exactly that, every time, until your word becomes the most trusted thing about you. Rock solid is the difference between a deal closing and a deal walking.",
+    director: "Corie Dawson",
+    totalTime: "~50 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "14 min read",
+        url: "/sample-content/session-04-rock-solid/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "5 min reference",
+        url: "/sample-content/session-04-rock-solid/toolkit.pdf",
+      },
+      {
+        kind: "podcast",
+        estimate: "~30 min listen",
+        url: drivePreview("16Gai_uhcIm7sPS2HHhdPpagjds31LF-p"),
+        durationSeconds: 1800,
+      },
+      {
+        kind: "presentation",
+        estimate: "~15 min watch",
+        url: drivePreview("1m90OZx4WMkBoc-gnfKt3dvaT2GUCoVSe"),
+        mode: "video",
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~10 min",
+        passMark: 80,
+        questions: [
+          {
+            id: "s4-q1",
+            type: "multiple-choice",
+            prompt:
+              "Two reps deliver the same closing script, word for word, to similar prospects. One closes the deal. The other doesn't. According to Corie, the variable most likely deciding the outcome is:",
+            topic: "Rock solid track record",
+            options: [
+              "Whether the rep has previously delivered on small promises made",
+              "The tone of voice and pacing during the delivery itself",
+              "The order in which the clauses of the script are spoken",
+              "The rep's natural confidence level and personality fit",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "Rock solid is not the script and not the personality — it's the track record. The customer can feel whether the rep has, over previous interactions, said things and delivered them. That accumulated trust is what closes the deal — not the words. Two reps with identical scripts will get different results because one has a track record behind their voice and the other doesn't.",
+          },
+          {
+            id: "s4-q2",
+            type: "multiple-choice",
+            prompt:
+              "A prospect, burned by two previous agencies, says they'll sign for six months but no longer. You know 12 months is needed for the SEO work to compound. The strongest play is to:",
+            topic: "The 6 + 12 structure",
+            options: [
+              "Drop to a 6-month contract and use the time to prove value, then upsell",
+              "Sign 6 months first that rolls into a fresh 12-month contract at month six",
+              "Hold firm at 12 months and walk away if they refuse to budge on length",
+              "Take it back to your manager and let them decide what discount to offer",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "A is a flat 6-month deal — no follow-on commitment, so we lose the duration we need and signal we fold under pressure. C is too rigid and loses an otherwise good deal. D ferries the decision to someone else without a verbal commit and breaks rock-solid energy. B is the 6+12 structure: a 6-month initial agreement, with a fresh 12-month contract signed at the 6-month mark if both sides want to continue. If results land, total commitment becomes 18 months (6 + 12). If they don't, the prospect walks at month six. Both sides win.",
+          },
+          {
+            id: "s4-q3",
+            type: "multiple-choice",
+            prompt:
+              "A prospect asks for a discount. You think it might be possible. Before going back to your manager to ask, the single most important thing to confirm with the prospect is:",
+            topic: "Verbal commit before discount",
+            options: [
+              "That the prospect has read the full proposal documents",
+              "That the prospect has authority to sign on their company's behalf",
+              "That the prospect will sign today at the discounted price",
+              "That the prospect understands the value of the standard package",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "A and D are useful but secondary — they should already be settled. B matters but doesn't prevent the most common failure (a yes from your manager that produces another \"let me think about it\"). C is the verbal commit — without it, the discount discussion is meaningless and you're just training the prospect to negotiate against the office.",
+          },
+          {
+            id: "s4-q4",
+            type: "multiple-choice",
+            prompt:
+              "In the four-step diagnostic, after the prospect says \"I'm not signing today\" and you've responded \"Perfect — I wouldn't expect you to sign today,\" what is the very next thing to say?",
+            topic: "Four-step diagnostic",
+            options: [
+              "\"Can I ask — what would change your mind right now?\"",
+              "\"Just out of interest — out of 10, where are you sitting?\"",
+              "\"What's stopping you from being able to sign today?\"",
+              "\"Would it help if I lowered the price slightly to land it?\"",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "A and C are reasonable but vague — the prospect will give you smoke (\"I just need to think it over\"). D panic-drops the price before you've diagnosed the real objection. B is the specific Step 2: it forces a number. A 9 means almost. A 7 means there's a real, recoverable objection underneath — and you've created the wedge you need to surface it.",
+          },
+          {
+            id: "s4-q5",
+            type: "multiple-choice",
+            prompt:
+              "A strong meeting ends with the prospect saying \"Looks great — I just need to do my due diligence and I'll get back to you.\" Based on this session, the rock-solid response is to:",
+            topic: "Isolation question",
+            options: [
+              "Schedule a follow-up call for two weeks to check on progress",
+              "Thank them for their time and let them lead the next contact",
+              "Send a follow-up email with case studies to support research",
+              "Ask one isolation question to surface the real objection now",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "\"Due diligence\" is almost always a translation for \"I have a price objection.\" A and C are what weak reps do — they let the smoke stand and the deal drifts. B is the \"drop the rope\" move which only applies after a trust failure, not here. D runs the isolation play immediately (\"all things aside, let's focus on price — if I can get you to $X...\") and either closes the deal or surfaces the real reason it won't close.",
+          },
+          {
+            id: "s4-q6",
+            type: "multiple-choice",
+            prompt:
+              "You agreed a price contingent on closing Friday. The prospect didn't answer on Friday. On Monday, the strongest play is to:",
+            topic: "Holding deadlines",
+            options: [
+              "Send one professional close-out message and move on without follow-up",
+              "Lower the price further and offer a fresh deadline to revive momentum",
+              "Call again Monday with the same price and try to rebuild urgency",
+              "Send the prospect to a competitor as a goodwill gesture and walk",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "B is a panic-drop — it trains the prospect that your prices and deadlines aren't real. C keeps the same price but breaks the deadline, which destroys your rock-solid energy with this prospect (and every one after them). D is just weird. A is the play: send one professional message (\"Friday was the deadline, $650 is off the table, wish you well\"), then move on. Real prospects come back. Time-wasters don't. Either way, you win.",
+          },
+          {
+            id: "s4-q7",
+            type: "multiple-choice",
+            prompt:
+              "A rep takes 30 calls a week but consistently loses on objection handling. Based on the session, the most leveraged way to improve is to:",
+            topic: "Drilling vs sparring",
+            options: [
+              "Read books on negotiation psychology to deepen theoretical knowledge",
+              "Shadow a top performer on their calls to see what they do",
+              "Drill specific objection scripts with a colleague until reflexive",
+              "Take more calls per week to gain wider exposure to patterns",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "D is the most common (and least effective) instinct — taking more calls is more sparring, not more drilling. A is theory without reflex. B helps (shadowing builds awareness) but doesn't build your own muscle memory. C is the answer: rep-and-rep role play with a colleague until the script lands automatically. That's how 10,000-hour operators are built. Almost every rep on the team is sparring-heavy and drilling-light — that's the gap.",
+          },
+          {
+            id: "s4-q8",
+            type: "short-answer",
+            prompt:
+              "Corie talks about \"burning the boats\" — borrowing from Sun Tzu, who ordered his troops to destroy their boats on landing so retreat became impossible. Translate this principle into one concrete habit you will apply to your sales work this week. (2–3 sentences)",
+            topic: "Burning the boats",
+            modelAnswer:
+              "Example: I will announce my weekly closing target to the team out loud at Monday morning standup, before the work is done. By making the commitment public, I remove the easy exit — I can't quietly miss it without anyone noticing. The same principle applies to follow-up times: if I tell a prospect I'll call Friday at 11am, I treat that as a hard contract with myself. The compounding effect is rock-solid reputation: every promise delivered makes the next promise more believable.",
+            keywords: [
+              "announce",
+              "public",
+              "commit",
+              "promise",
+              "deadline",
+              "deliver",
+              "exit",
+              "no retreat",
+              "rock solid",
+            ],
+            keywordsRequired: 3,
+            softMinChars: 150,
+            rationale:
+              "Burning the boats means removing the easy exit so you have to deliver. The practical translation is making private intentions into public commitments — a target announced at standup, a callback time given to a prospect, a deadline written in front of the team. Once it's public, missing it has a cost. That cost is what builds rock-solid reputation over time.",
+          },
+        ],
+      },
+    ],
+  },
+
+  {
     id: "session-03-obsession",
     number: "03",
     date: "2026-05-11",
@@ -58,7 +238,7 @@ export const sessions: Session[] = [
       {
         kind: "quiz",
         estimate: "8 questions · ~10 min",
-        passMark: 80,
+        passMark: 100,
         questions: [
           {
             id: "s3-q1",
@@ -237,7 +417,7 @@ export const sessions: Session[] = [
       {
         kind: "quiz",
         estimate: "10 questions · ~10 min",
-        passMark: 80,
+        passMark: 100,
         questions: [
           {
             id: "s2-q1",
@@ -445,7 +625,7 @@ export const sessions: Session[] = [
       {
         kind: "quiz",
         estimate: "9 questions · ~10 min",
-        passMark: 80,
+        passMark: 100,
         questions: [
           {
             id: "s1-q1",
