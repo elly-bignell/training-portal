@@ -182,42 +182,78 @@ function SessionDetailInner() {
             SUGGESTED LEARNING PATH
           </div>
           <ol className="flex items-center gap-1 sm:gap-2 overflow-x-auto pb-2">
-            {session.assets.map((asset, i) => {
-              const stepProgress = progress?.assetStates[asset.kind];
-              const passed =
-                asset.kind === "quiz"
-                  ? progress?.quizAttempts.some((a) => a.passed)
-                  : stepProgress === "viewed";
-              const inProg = stepProgress === "in-progress";
-              return (
-                <li key={asset.kind} className="flex items-center gap-1 sm:gap-2">
-                  <a
-                    href={
-                      asset.kind === "quiz"
-                        ? `/sessions/${session.id}/quiz`
-                        : `#asset-${asset.kind}`
-                    }
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium border transition-colors whitespace-nowrap ${
-                      passed
-                        ? "bg-[#3C8055]/10 text-[#3C8055] border-[#3C8055]/30"
-                        : inProg
-                        ? "bg-[#1F3A5F]/5 text-[#1F3A5F] border-[#1F3A5F]/30 animate-pulse"
-                        : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
-                    }`}
-                  >
-                    <span aria-hidden>
-                      {passed ? "✓" : NUMERALS[i] ?? `${i + 1}.`}
-                    </span>
-                    {ASSET_LABELS[asset.kind]}
-                  </a>
-                  {i < session.assets.length - 1 && (
-                    <span className="text-slate-300" aria-hidden>
-                      ›
-                    </span>
-                  )}
-                </li>
+            {(() => {
+              // Quiz step is locked from the path strip until every non-quiz
+              // asset is in the "viewed" state. Bypass the lock if the quiz
+              // was already passed — reps can re-visit a passed quiz freely.
+              const nonQuizAssets = session.assets.filter(
+                (a) => a.kind !== "quiz"
               );
-            })}
+              const allAssetsViewed = nonQuizAssets.every(
+                (a) => progress?.assetStates[a.kind] === "viewed"
+              );
+              const quizPassed =
+                progress?.quizAttempts.some((a) => a.passed) ?? false;
+              const quizUnlocked = allAssetsViewed || quizPassed;
+
+              return session.assets.map((asset, i) => {
+                const stepProgress = progress?.assetStates[asset.kind];
+                const passed =
+                  asset.kind === "quiz"
+                    ? quizPassed
+                    : stepProgress === "viewed";
+                const inProg = stepProgress === "in-progress";
+                const isLockedQuiz =
+                  asset.kind === "quiz" && !quizUnlocked;
+
+                const commonClasses =
+                  "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium border transition-colors whitespace-nowrap";
+                const stateClasses = isLockedQuiz
+                  ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed"
+                  : passed
+                  ? "bg-[#3C8055]/10 text-[#3C8055] border-[#3C8055]/30"
+                  : inProg
+                  ? "bg-[#1F3A5F]/5 text-[#1F3A5F] border-[#1F3A5F]/30 animate-pulse"
+                  : "bg-white text-slate-600 border-slate-200 hover:border-slate-300";
+
+                return (
+                  <li
+                    key={asset.kind}
+                    className="flex items-center gap-1 sm:gap-2"
+                  >
+                    {isLockedQuiz ? (
+                      <span
+                        className={`${commonClasses} ${stateClasses}`}
+                        title="Mark every asset above as viewed first"
+                        aria-disabled
+                      >
+                        <span aria-hidden>🔒</span>
+                        {ASSET_LABELS[asset.kind]}
+                      </span>
+                    ) : (
+                      <a
+                        href={
+                          asset.kind === "quiz"
+                            ? `/sessions/${session.id}/quiz`
+                            : `#asset-${asset.kind}`
+                        }
+                        className={`${commonClasses} ${stateClasses}`}
+                      >
+                        <span aria-hidden>
+                          {passed ? "✓" : NUMERALS[i] ?? `${i + 1}.`}
+                        </span>
+                        {ASSET_LABELS[asset.kind]}
+                      </a>
+                    )}
+                    {i < session.assets.length - 1 && (
+                      <span className="text-slate-300" aria-hidden>
+                        ›
+                      </span>
+                    )}
+                  </li>
+                );
+              });
+            })()}
           </ol>
         </div>
 
