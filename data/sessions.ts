@@ -22,6 +22,174 @@ const drivePreview = (id: string) =>
 
 export const sessions: Session[] = [
   {
+    id: "session-05-discipline",
+    number: "05",
+    date: "2026-05-13",
+    title: "Discipline is the Multiplier, You're the Operator Now",
+    summary:
+      "The team is stronger than ever — but results are down. The variable that changed isn't the people, it's the habits. Discipline drove the peak; discipline drifted; results followed. Also a leadership handover: senior reps step up as operators.",
+    keyTakeaway:
+      "The team is better than it has ever been. Results are down. The variable that changed is not the people — it is the habits. Discipline drove the peak, discipline drifted away, results followed. This session is also a leadership handover: Corie steps back into an investor role, and the senior reps step forward as the operators of the business.",
+    director: "Corie Dawson",
+    totalTime: "~30 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "13 min read",
+        url: "/sample-content/session-05-discipline/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "5 min reference",
+        url: "/sample-content/session-05-discipline/toolkit.pdf",
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~10 min",
+        passMark: 80,
+        questions: [
+          {
+            id: "s5-q1",
+            type: "multiple-choice",
+            prompt:
+              "Your team's closing numbers have dropped over the last three months. The current team has the strongest raw talent the company has ever had. The most leveraged first question to ask is:",
+            topic: "Habits over people",
+            options: [
+              "Which reps are dragging the team average down on closes",
+              "What's changed in the market that we should adapt to",
+              "Which daily habits were running at our last peak that aren't now",
+              "Should we lower our standard pricing to lift volume back up",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "A makes a person-level assumption — but the team is stronger than ever, so it's the wrong frame. B externalises the cause to something you can't control. D treats a habits problem as a pricing problem. C is the right diagnostic: when results drop with a strong team, the variable that changed is almost always the daily routine, not the people or the market.",
+          },
+          {
+            id: "s5-q2",
+            type: "multiple-choice",
+            prompt:
+              "Corie has repositioned himself as an investor and the senior reps as operators. The clearest behavioural test of whether a rep has made the shift is:",
+            topic: "Investor/operator reframe",
+            options: [
+              "They pitch ideas to Corie before being asked, and ask him to back them",
+              "They check in with Corie before making any significant decision",
+              "They report their results to Corie at the same cadence as before",
+              "They take on extra responsibilities while keeping the same routine",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "B and C are the old dynamic — waiting for direction and just reporting upwards. D adds work without changing how decisions get made. A is the shift: operators identify problems, design solutions, and pitch them upward — they don't wait. The clearest sign of the reframe is unprompted ideas being brought to Corie like he's an investor, not a manager.",
+          },
+          {
+            id: "s5-q3",
+            type: "multiple-choice",
+            prompt:
+              "A rep's closing rate has dropped sharply over six weeks. Based on the unsung-hero principle, the first place to investigate is:",
+            topic: "Unsung-hero principle",
+            options: [
+              "The rep's tone of voice and confidence on recent calls",
+              "Whether the rep's product knowledge has gaps",
+              "Whether the rep's commission structure is still motivating",
+              "The quality and volume of leads being fed into the rep's funnel",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "A, B, and C all look at the front-line rep, which is the visible layer but rarely the actual source. The unsung-hero principle says the front-line performance is downstream of what's feeding it — the lead-gen quality and the daily drilling routine. Most leverage lives upstream. Investigate the inputs before adjusting the operator.",
+          },
+          {
+            id: "s5-q4",
+            type: "multiple-choice",
+            prompt:
+              "You catch yourself thinking \"this routine feels really good right now — I should do more of it.\" According to the session, the right next move is to:",
+            topic: "Feel-good inversion",
+            options: [
+              "Trust the feeling — if it feels right, it's probably working",
+              "Pause and check whether it's actually profitable or just comfortable",
+              "Add it to the team's daily routine without further analysis",
+              "Run it for two more weeks to confirm the feeling holds up",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "A and C take the feel-good signal at face value — exactly the trap. D treats the feeling itself as evidence, just over a longer window. B applies the inversion rule: when a habit feels good in the moment, that's a flag to consciously check whether it's building your future or just keeping you comfortable. Discipline is the trained ability to override the feel-good signal.",
+          },
+          {
+            id: "s5-q5",
+            type: "multiple-choice",
+            prompt:
+              "In the punch-card model, what makes an unprofitable decision more costly than a \"neutral\" one?",
+            topic: "Punch-card model",
+            options: [
+              "It punches a permanent hole in your reputation",
+              "It costs you commission on that specific deal",
+              "It forces a profitable decision later just to break even",
+              "It signals to your manager that you need more coaching",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "A overstates the reputation impact of a single decision. B is just the dollar cost — the punch-card model is about something broader. D treats it as a visibility problem. C is the actual mechanic: bad decisions don't just sit there. Each one forces you to spend a future profitable decision on recovery, so the net cost of two bad decisions is roughly three good ones you could have made instead.",
+          },
+          {
+            id: "s5-q6",
+            type: "multiple-choice",
+            prompt:
+              "Three senior reps. One naturally strong on discipline. One naturally strong on people. One naturally strong on knowledge. The right play is for each to:",
+            topic: "Specialisation in leadership",
+            options: [
+              "Double down on their lane and trust the other two to cover the rest",
+              "Cross-train to become equally strong across all three lanes",
+              "Rotate weekly so everyone develops every skill set over time",
+              "Defer leadership to whichever lane is most needed each week",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "B is the trap — assuming you should be all three. Nobody is. C dilutes specialisation and slows everyone down. D creates leadership ambiguity and means each rep is most of the time outside their natural strength. A is the play: specialise, lean in hard, and trust the peers covering the other two. Cross-coach from your strengths; don't try to be a copy of your peers.",
+          },
+          {
+            id: "s5-q7",
+            type: "multiple-choice",
+            prompt:
+              "A prospect ended the meeting ambiguously and you can't tell if they're a real buyer or politely fading away. The strongest follow-up move is to:",
+            topic: "Ambiguous prospects",
+            options: [
+              "Send them more case studies and circle back next week",
+              "Ask one direct question that gives them permission to opt out cleanly",
+              "Wait two weeks for them to surface before reaching out again",
+              "Offer a small discount to test whether they're serious about buying",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "A wastes a week and trains the prospect that you'll keep chasing. C is \"drop the rope\" applied wrongly — that's for trust failures, not unread signals. D panic-discounts a prospect who may not have a price objection at all. B is the rock-solid play: an unapologetic, direct line (\"you're welcome to tell me now if it's not for you — or I can call in three days, or a week, which would you prefer?\") that gives them permission to be honest and forces a real next step.",
+          },
+          {
+            id: "s5-q8",
+            type: "short-answer",
+            prompt:
+              "Corie said: \"If a habit feels good in the moment, double-check whether it's actually serving you. If it feels bad in the moment, double-check whether it's actually the thing you should be doing more of.\" Translate this principle into ONE specific habit you will deliberately keep doing this week (even though it feels bad in the moment) and explain why. (3–4 sentences)",
+            topic: "Feel-good inversion",
+            modelAnswer:
+              "Example: I will run a 25-minute objection-drilling session with a colleague every weekday morning, before the first client call. It feels bad in the moment — it's repetitive, slightly embarrassing, and the immediate payoff is invisible. But every other behaviour in this session points to the same conclusion: the things that feel bad now are usually the things building my future. I will judge it on the outcome after six weeks (closes, not how the drilling sessions felt), not on the day-to-day discomfort. If I miss a session because \"I didn't feel like it,\" I will treat that as a signal that the feel-good inversion is operating — not as a legitimate reason.",
+            keywords: [
+              "drilling",
+              "repetitive",
+              "uncomfortable",
+              "discipline",
+              "outcome",
+              "six weeks",
+              "future",
+              "feel",
+              "habit",
+            ],
+            keywordsRequired: 3,
+            softMinChars: 200,
+            rationale:
+              "Things that feel bad in the moment — drilling, cold calls, post-mortems — are typically the things building real skill. The discipline is to keep doing them even when the immediate signal is unpleasant, and to judge them on the outcome six weeks out, not on how the session felt today.",
+          },
+        ],
+      },
+    ],
+  },
+
+  {
     id: "session-04-rock-solid",
     number: "04",
     date: "2026-05-12",
