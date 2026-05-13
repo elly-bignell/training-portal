@@ -5,6 +5,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { trainees } from "@/data/trainees";
+import { LEAD_GEN_SLUGS } from "@/data/leadGen";
 import { weeklyStandards, getCurrentWeekNumber, getWeekBoundaries, getDayOfWeek, TRAINEE_WEEK_OVERRIDES, getTraineeWeek, getYearWeekLabel } from "@/hooks/useActivityTracking";
 
 interface DailyData {
@@ -46,16 +47,13 @@ const teams = [
   },
 ];
 
-// Trainees who carry the 7/day individual booking target.
-// Buddies (Lucas, Felipe, Dylan) have no individual target — they pick up the
-// slack. Lead-gen trainees in Wk 0 use the special WEEK0_TRAINEE_BOOKING_TARGETS
-// ramp instead of 7/day, but once they graduate Wk 0 they fall back to this set.
-const TRAINEES_WITH_TARGET = new Set([
-  "cindy-rose-rondez-manrique",
-  "sydney-arnold",
-  "riley-kerrison",
-  "shian-roux",
-]);
+// Trainees who carry the 7/day individual booking target. Sourced from
+// data/leadGen.ts so this widget and the Daily Checklist tab list stay in
+// sync. Buddies (Lucas, Felipe, Dylan) have no individual target — they
+// pick up the slack. Lead-gen trainees in Wk 0 use the special
+// WEEK0_TRAINEE_BOOKING_TARGETS ramp instead of 7/day, but once they
+// graduate Wk 0 they fall back to this set.
+const TRAINEES_WITH_TARGET = new Set<string>(LEAD_GEN_SLUGS);
 
 // Booking targets
 const TRAINEE_BOOKINGS_TARGET_DAILY = 7;

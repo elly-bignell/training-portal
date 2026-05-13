@@ -1,10 +1,13 @@
 // data/checklistTemplate.ts
 //
-// Shared checklist template used by every Lead Genner.
+// Shared checklist template used by every active lead-gen trainee.
 // The structure mirrors the Google Sheets layout:
 //   - Three time sections: 9:00AM, 12:30PM, 5:00PM
 //   - Within each section, optional sub-headings (e.g. "Before Starting Cold Calling")
 //   - Two standalone "divider" rows that are visual-only (no checkboxes)
+
+import { trainees } from "@/data/trainees";
+import { LEAD_GEN_SLUGS } from "@/data/leadGen";
 
 export type ChecklistRow =
   | {
@@ -30,12 +33,36 @@ export interface ChecklistSection {
   rows: ChecklistRow[];
 }
 
-export const BOOKERS: { slug: string; name: string; shortName: string }[] = [
-  { slug: "krishna-patel",               name: "Krishna Patel",    shortName: "Krishna" },
-  { slug: "cindy-rose-rondez-manrique",  name: "Cindy Manrique",   shortName: "Cindy"   },
-  { slug: "sydney-arnold",               name: "Sydney Arnold",    shortName: "Sydney"  },
-  { slug: "riley-kerrison",              name: "Riley Kerrison",   shortName: "Riley"   },
-];
+// BOOKERS is derived automatically from LEAD_GEN_SLUGS in data/leadGen.ts.
+// To add a new person's checklist: add their slug to LEAD_GEN_SLUGS (they
+// also need to exist in data/trainees.ts). No edits to this file required.
+//
+// `shortName` defaults to the first word of the trainee's name; override
+// in SHORT_NAME_OVERRIDES if a different label is wanted on the tab strip.
+const SHORT_NAME_OVERRIDES: Record<string, string> = {
+  "cindy-rose-rondez-manrique": "Cindy",
+};
+
+const DISPLAY_NAME_OVERRIDES: Record<string, string> = {
+  "cindy-rose-rondez-manrique": "Cindy Manrique",
+};
+
+export const BOOKERS: { slug: string; name: string; shortName: string }[] =
+  LEAD_GEN_SLUGS.map((slug) => {
+    const trainee = trainees.find((t) => t.slug === slug);
+    if (!trainee) {
+      // Loud failure at module load — easier to spot than a silently
+      // missing checklist tab.
+      throw new Error(
+        `LEAD_GEN_SLUGS contains "${slug}" but no matching entry in data/trainees.ts`
+      );
+    }
+    return {
+      slug,
+      name: DISPLAY_NAME_OVERRIDES[slug] ?? trainee.name,
+      shortName: SHORT_NAME_OVERRIDES[slug] ?? trainee.name.split(" ")[0],
+    };
+  });
 
 export const CHECKLIST_SECTIONS: ChecklistSection[] = [
   {

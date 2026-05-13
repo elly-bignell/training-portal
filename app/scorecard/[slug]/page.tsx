@@ -83,7 +83,9 @@ function ScorecardPageContent() {
         {/* Existing Scorecard — untouched */}
         <Scorecard traineeSlug={slug} traineeName={trainee.name} />
 
-        {/* Daily Checklist — Lead Genners only */}
+        {/* Daily Checklist — shown automatically for every trainee in BOOKERS
+            (which is derived from data/trainees.ts, so new scorecards
+            inherit this link without any extra setup). */}
         {BOOKERS.some((b) => b.slug === slug) && (
           <Link
             href={`/checklist?booker=${slug}`}
