@@ -121,8 +121,73 @@ export function useSessionsProgress(slug: string | null) {
       setHydrated(true);
       return;
     }
-    setData(loadFromStorage(slug));
+
+    // 1. Hydrate from localStorage immediately for instant UI.
+    const local = loadFromStorage(slug);
+    setData(local);
     setHydrated(true);
+
+    // 2. Fetch authoritative quiz attempts from Airtable in the background
+    //    and merge them in. This makes pass/fail/score consistent across
+    //    devices and browsers — localStorage alone isn't a source of truth
+    //    because every browser has its own. Asset-viewed states + resume
+    //    positions stay local since they aren't mirrored to Airtable.
+    let aborted = false;
+    fetch(`/api/sessions/quiz/results?rep_slug=${encodeURIComponent(slug)}`, {
+      cache: "no-store",
+    })
+      .then((r) => (r.ok ? r.json() : { submissions: [] }))
+      .then((payload: { submissions?: any[] }) => {
+        if (aborted) return;
+        const submissions = payload.submissions || [];
+        if (submissions.length === 0) return;
+
+        // Group server attempts by sessionId, then build a fresh sessions map.
+        const serverBySession: Record<string, QuizAttempt[]> = {};
+        for (const s of submissions) {
+          if (!serverBySession[s.sessionId]) serverBySession[s.sessionId] = [];
+          serverBySession[s.sessionId].push({
+            attemptedAt: s.submittedAt,
+            score: s.score,
+            passed: s.passed === true,
+            answers: s.answers || {},
+          });
+        }
+
+        setData((prev) => {
+          const nextSessions = { ...prev.sessions };
+          for (const sid of Object.keys(serverBySession)) {
+            const existing = nextSessions[sid] ?? emptySessionProgress();
+            // Server is source of truth for quizAttempts. We replace rather
+            // than merge so duplicates from earlier local-only attempts (e.g.
+            // pre-Airtable submissions) don't survive forever.
+            nextSessions[sid] = {
+              ...existing,
+              quizAttempts: serverBySession[sid].sort((a, b) =>
+                a.attemptedAt.localeCompare(b.attemptedAt)
+              ),
+              lastViewedAt:
+                existing.lastViewedAt ??
+                serverBySession[sid][serverBySession[sid].length - 1]
+                  ?.attemptedAt,
+            };
+          }
+          const merged: RepSessionsProgress = { ...prev, sessions: nextSessions };
+          // Cache the merged state so the next page load is instant.
+          if (typeof window !== "undefined") {
+            localStorage.setItem(progressKey(slug), JSON.stringify(merged));
+          }
+          return merged;
+        });
+      })
+      .catch((err) => {
+        // Silent fallback — localStorage is still rendering, so the UI works.
+        console.warn("[useSessionsProgress] result fetch failed", err);
+      });
+
+    return () => {
+      aborted = true;
+    };
   }, [slug]);
 
   const persist = useCallback(
