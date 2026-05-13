@@ -58,7 +58,7 @@ export const sessions: Session[] = [
       {
         kind: "quiz",
         estimate: "8 questions · ~10 min",
-        passMark: 80,
+        passMark: 100,
         questions: [
           {
             id: "s5-q1",
@@ -238,7 +238,7 @@ export const sessions: Session[] = [
       {
         kind: "quiz",
         estimate: "8 questions · ~10 min",
-        passMark: 80,
+        passMark: 100,
         questions: [
           {
             id: "s4-q1",
