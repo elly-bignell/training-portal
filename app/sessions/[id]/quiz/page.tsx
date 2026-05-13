@@ -162,6 +162,20 @@ function QuizInner() {
       // the UI on this — if the request fails the localStorage record is
       // still authoritative for the rep's pass/fail experience.
       const attemptNumber = (progress?.quizAttempts.length ?? 0) + 1;
+
+      // Format short answers as a readable text block. This populates the
+      // dedicated `short_answers` Airtable column so trainers can read
+      // responses at a glance without expanding the answers_json blob.
+      const shortAnswersText = questions
+        .filter((q) => q.type === "short-answer")
+        .map((q, i) => {
+          const ans = nextAnswers[q.id];
+          return `Q${i + 1} — ${q.prompt}\n\n${
+            typeof ans === "string" ? ans : "(no answer)"
+          }`;
+        })
+        .join("\n\n———\n\n");
+
       fetch("/api/sessions/quiz/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -176,6 +190,7 @@ function QuizInner() {
           attemptNumber,
           submittedAt: attempt.attemptedAt,
           answers: nextAnswers,
+          shortAnswers: shortAnswersText,
         }),
       }).catch((err) => {
         // Network errors silently logged — see /api logs for server errors.

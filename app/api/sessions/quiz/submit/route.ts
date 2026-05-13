@@ -27,6 +27,8 @@ interface SubmitBody {
   attemptNumber?: number;
   submittedAt?: string;
   answers?: Record<string, number | string>;
+  /** Pre-formatted human-readable short-answer text, one block per SA question. */
+  shortAnswers?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -43,6 +45,7 @@ export async function POST(request: NextRequest) {
       attemptNumber,
       submittedAt,
       answers,
+      shortAnswers,
     } = body;
 
     if (!repSlug || !sessionId || score === undefined) {
@@ -72,6 +75,7 @@ export async function POST(request: NextRequest) {
               attempt_number: attemptNumber ?? 1,
               submitted_at: submittedAt ?? new Date().toISOString(),
               answers_json: JSON.stringify(answers ?? {}),
+              short_answers: shortAnswers ?? "",
             },
           },
         ],
