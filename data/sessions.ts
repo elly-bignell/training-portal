@@ -31,7 +31,7 @@ export const sessions: Session[] = [
     keyTakeaway:
       "The team is better than it has ever been. Results are down. The variable that changed is not the people — it is the habits. Discipline drove the peak, discipline drifted away, results followed. This session is also a leadership handover: Corie steps back into an investor role, and the senior reps step forward as the operators of the business.",
     director: "Corie Dawson",
-    totalTime: "~30 min",
+    totalTime: "~50 min",
     assets: [
       {
         kind: "debrief",
@@ -42,6 +42,18 @@ export const sessions: Session[] = [
         kind: "toolkit",
         estimate: "5 min reference",
         url: "/sample-content/session-05-discipline/toolkit.pdf",
+      },
+      {
+        kind: "podcast",
+        estimate: "~30 min listen",
+        url: drivePreview("1uUqGzh30ALyargvwCRDiKuoChlQUqJoh"),
+        durationSeconds: 1800,
+      },
+      {
+        kind: "presentation",
+        estimate: "~15 min watch",
+        url: drivePreview("12mHfkko70A8CF3O8DVRM12nUEYZQ4lC0"),
+        mode: "video",
       },
       {
         kind: "quiz",
