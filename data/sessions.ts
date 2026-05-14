@@ -22,6 +22,174 @@ const drivePreview = (id: string) =>
 
 export const sessions: Session[] = [
   {
+    id: "session-06-checklist",
+    number: "06",
+    date: "2026-05-14",
+    title: "Use the Checklist, Connection Beats Technique",
+    summary:
+      "Every pitch is the same pitch — affordability first, product second, price last. The reps who close run the checklist on every call and treat the conversation as connection, not extraction.",
+    keyTakeaway:
+      "Every pitch is the same pitch. Affordability first, product second, price last. The reps who close are the ones who run the checklist on every call — and who treat the conversation as connection, not extraction. Connection is the master skill, because it lets you survive your own mistakes.",
+    director: "Corie Dawson",
+    totalTime: "~30 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-06-checklist/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-06-checklist/toolkit.pdf",
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~10 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s6-q1",
+            type: "multiple-choice",
+            prompt:
+              "A prospect is a sole-trader tradesman doing physical installation work, with no employees and roughly $640k in annual revenue. Applying the affordability formula, the right baseline number to anchor your pitch around is:",
+            topic: "Affordability formula (trade)",
+            options: [
+              "$640k — use the prospect's self-reported revenue as the base figure",
+              "$100k — service business formula: one staff member at $100k each",
+              "$1.92M — applying a margin multiplier on the reported revenue",
+              "$300k — trade business formula: one staff member at $100k × 3",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "A takes the prospect's number at face value, which Corie warned against — clients under-report. B applies the service formula to a trade business (it would for an accountant, not a tradesman installing materials). C is a fabricated number with no grounding. D is the correct trade formula: 1 staff × $100k × 3 = $300k. That puts you in the right affordability ballpark and gives you a defensible weekly value to anchor the pitch around.",
+          },
+          {
+            id: "s6-q2",
+            type: "multiple-choice",
+            prompt:
+              "You're pitching a prospect whose business is already booked solid for 12 months. Based on the abalone principle, the strongest opening move is:",
+            topic: "Abalone principle",
+            options: [
+              "Wait to hear their objection, then handle it once they raise it",
+              "Name the likely objection yourself before they take a position on it",
+              "Pitch your highest-value package to anchor them at a premium price",
+              "Ask what they're currently doing for marketing to gather information",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "A is what the session called the trap — once a prospect verbally takes a position, they sucker down on it like an abalone on a rock, and no amount of skill will pry them off. C anchors on price before you've built any affordability picture. D is fine generally, but it doesn't address the predictable objection (the booked-solid prospect will say \"I don't want more leads\"). B is the abalone play: name \"I know you don't want a thousand leads — this isn't about that\" BEFORE they do. You've chosen the framing on your terms.",
+          },
+          {
+            id: "s6-q3",
+            type: "multiple-choice",
+            prompt:
+              "A prospect tells you \"I want to keep the business the same size — I don't want to grow.\" The right response that mirrors their language back through your product is:",
+            topic: "Mirror, don't extract",
+            options: [
+              "\"Perfect — this is a maintenance package that protects what you've built, not a growth lever\"",
+              "\"That's fine, but most clients who say that change their mind once they see results\"",
+              "\"You should consider growth — every business that stays still eventually shrinks\"",
+              "\"Okay, in that case let me know if you change your mind down the track\"",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "B contradicts the prospect — that's extraction, not mirroring. C overrides their stated position entirely; it's the opposite of meeting them where they are. D is \"drop the rope\" applied wrongly — they haven't signalled trust failure, they've told you what they want. A takes their exact frame (\"keep it the same size\") and repackages it inside your product wording (\"maintenance package, protect what you've built\"). They feel heard. The product feels custom-fit. You've done very little original sales work.",
+          },
+          {
+            id: "s6-q4",
+            type: "multiple-choice",
+            prompt:
+              "According to the 90/10/1 rule, in a 60-minute closing call, how much time should you spend talking about your product?",
+            topic: "90/10/1 rule",
+            options: [
+              "About 30 minutes — half the call should be product-focused",
+              "About 20 minutes — enough to fully cover features and pricing",
+              "About 6 minutes — tailored from the customer's own language",
+              "About 1 minute — only when the customer explicitly asks for it",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "A and B both massively overweight the product. If you spend 30 minutes on product, the prospect has spoken for the other 30 — and at no point did you build the connection that turns \"let me think about it\" into a real conversation. D under-weights it — the product still needs to be described, just in their language. C is the 90/10/1 ratio: 90% about the prospect, 10% about the product (~6 min of 60), 1% about the price (~36 seconds). If you finish a call and you did most of the talking, you lost that call.",
+          },
+          {
+            id: "s6-q5",
+            type: "multiple-choice",
+            prompt:
+              "Why does the session argue that connection matters more than technique?",
+            topic: "Connection beats technique",
+            options: [
+              "Because customers fundamentally buy people, not products or services",
+              "Because connection lets you survive your own mistakes during a pitch",
+              "Because building rapport is faster than learning every objection script",
+              "Because connected prospects pay a higher price for the same package",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "A is partly true but vague — it doesn't explain why connection beats technique specifically. C is wrong: connection isn't a shortcut to skip technique, it's the foundation under technique. D conflates connection with discounting psychology — the session never said connected prospects pay more. B is the real argument: with connection, you can say something slightly clumsy and still close — they like you enough to forgive the misstep. Without it, every flaw is fatal. Connection is your insurance policy against your own mistakes.",
+          },
+          {
+            id: "s6-q6",
+            type: "multiple-choice",
+            prompt:
+              "After delivering your pitch and a price the prospect didn't flinch at, the strongest next move is to:",
+            topic: "Assumption close",
+            options: [
+              "\"I'll send you the link. All I need is a deposit — what day works for your kick-off call?\"",
+              "\"Would you like to proceed, or do you need some time to think about it first?\"",
+              "\"Any questions before we move forward — anything you're still unsure about?\"",
+              "\"Let me know when you're ready to lock it in and I'll send the paperwork through\"",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "B re-opens the closed question and invites a \"let me think.\" C invites doubts that may not exist — never solicit objections you haven't earned. D leaves the next step entirely with the prospect, who will drift. A is the assumption close: skip \"would you like to proceed?\" entirely and go straight to logistics (deposit, kick-off scheduling). The default of the conversation is yes. Customers who want the product also want the meeting to end — help them get there.",
+          },
+          {
+            id: "s6-q7",
+            type: "multiple-choice",
+            prompt:
+              "A walk-in prospect responds to your greeting with \"I'm just looking.\" The strongest pattern-interrupt is to:",
+            topic: "Pattern interrupt",
+            options: [
+              "Back off and let them browse without further engagement",
+              "Ask what specific category of product they came in looking for",
+              "Disrupt the script with something unexpected, then offer to leave them to it",
+              "Direct them to a self-service price list and the FAQ display",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "A accepts the salesperson frame they walked in with and shuts down any connection. B is fine but still inside the salesperson script — you're extracting information. D abandons the interaction. C is the move: say something the prospect didn't expect (\"funny way to feel\"), give context (you said hello because the boss expects it), then explicitly release the pressure (\"I'll leave you to it\"). This positions you as human, not as quota — and the conversation now runs on different rails.",
+          },
+          {
+            id: "s6-q8",
+            type: "short-answer",
+            prompt:
+              "Pick a prospect you're currently pitching (or a recent one). Write down the ONE objection they are most likely to raise based on their business situation. Then write the line you would use to pre-empt that objection — naming it first, on your terms, before they raise it. (3–4 sentences)",
+            topic: "Pre-empt the objection",
+            modelAnswer:
+              "Example: I'm pitching a tradesman who is booked solid for 18 months. The most likely objection is \"I don't want more leads, I'm already too busy.\" My pre-empt line would be: \"Look, I can see you're already booked out, so I want to be clear — this isn't about flooding your phone with more enquiries. Your website looks weak, and in an uncertain economy a single cancelled job costs you more than a year of this service. Treat it as insurance protecting the work you already have, not a growth lever.\" This dismantles the objection before they verbalise it, and frames the entire pitch on my terms — protection, not growth.",
+            keywords: [
+              "objection",
+              "pre-empt",
+              "name",
+              "first",
+              "terms",
+              "frame",
+              "insurance",
+              "protection",
+              "abalone",
+            ],
+            keywordsRequired: 3,
+            softMinChars: 200,
+            rationale:
+              "The whole point of the abalone principle is that once the prospect takes a verbal position, you can't move them off it. The only way to win the framing battle is to take it yourself, first, before they can. Practising the pre-empt line out loud — on real prospects — turns this from theory into reflex.",
+          },
+        ],
+      },
+    ],
+  },
+
+  {
     id: "session-05-discipline",
     number: "05",
     date: "2026-05-13",
@@ -35,23 +203,23 @@ export const sessions: Session[] = [
     assets: [
       {
         kind: "debrief",
-        estimate: "13 min read",
+        estimate: "10 min read",
         url: "/sample-content/session-05-discipline/debrief.pdf",
       },
       {
         kind: "toolkit",
-        estimate: "5 min reference",
+        estimate: "10 min reference",
         url: "/sample-content/session-05-discipline/toolkit.pdf",
       },
       {
         kind: "podcast",
-        estimate: "~30 min listen",
+        estimate: "10 min listen",
         url: drivePreview("1uUqGzh30ALyargvwCRDiKuoChlQUqJoh"),
         durationSeconds: 1800,
       },
       {
         kind: "presentation",
-        estimate: "~15 min watch",
+        estimate: "10 min watch",
         url: drivePreview("12mHfkko70A8CF3O8DVRM12nUEYZQ4lC0"),
         mode: "video",
       },
@@ -215,23 +383,23 @@ export const sessions: Session[] = [
     assets: [
       {
         kind: "debrief",
-        estimate: "14 min read",
+        estimate: "10 min read",
         url: "/sample-content/session-04-rock-solid/debrief.pdf",
       },
       {
         kind: "toolkit",
-        estimate: "5 min reference",
+        estimate: "10 min reference",
         url: "/sample-content/session-04-rock-solid/toolkit.pdf",
       },
       {
         kind: "podcast",
-        estimate: "~30 min listen",
+        estimate: "10 min listen",
         url: drivePreview("16Gai_uhcIm7sPS2HHhdPpagjds31LF-p"),
         durationSeconds: 1800,
       },
       {
         kind: "presentation",
-        estimate: "~15 min watch",
+        estimate: "10 min watch",
         url: drivePreview("1m90OZx4WMkBoc-gnfKt3dvaT2GUCoVSe"),
         mode: "video",
       },
@@ -395,23 +563,23 @@ export const sessions: Session[] = [
     assets: [
       {
         kind: "debrief",
-        estimate: "12 min read",
+        estimate: "10 min read",
         url: "/sample-content/session-03-obsession/debrief.pdf",
       },
       {
         kind: "toolkit",
-        estimate: "5 min reference",
+        estimate: "10 min reference",
         url: "/sample-content/session-03-obsession/toolkit.pdf",
       },
       {
         kind: "podcast",
-        estimate: "~30 min listen",
+        estimate: "10 min listen",
         url: drivePreview("1xNo90x4N7azYyc5CuYGPmTuRM49uHz2k"),
         durationSeconds: 1800,
       },
       {
         kind: "presentation",
-        estimate: "~15 min watch",
+        estimate: "10 min watch",
         url: drivePreview("1skvQKfSgNH6BYLqPbDlOpwebnxIUE18l"),
         mode: "video",
       },
@@ -574,23 +742,23 @@ export const sessions: Session[] = [
     assets: [
       {
         kind: "debrief",
-        estimate: "12 min read",
+        estimate: "10 min read",
         url: "/sample-content/session-02-big-energy/debrief.pdf",
       },
       {
         kind: "toolkit",
-        estimate: "5 min reference",
+        estimate: "10 min reference",
         url: "/sample-content/session-02-big-energy/toolkit.pdf",
       },
       {
         kind: "podcast",
-        estimate: "~30 min listen",
+        estimate: "10 min listen",
         url: drivePreview("1Dd5UtC_Q_qsdqYO3Yz54TrIJdYhajMM-"),
         durationSeconds: 1800,
       },
       {
         kind: "presentation",
-        estimate: "~15 min watch",
+        estimate: "10 min watch",
         url: drivePreview("1CVqRD0VdH0fm2nq89LX9jsx6ARxgh2_5"),
         mode: "video",
       },
@@ -782,23 +950,23 @@ export const sessions: Session[] = [
     assets: [
       {
         kind: "debrief",
-        estimate: "12 min read",
+        estimate: "10 min read",
         url: "/sample-content/session-01-pitch-high/debrief.pdf",
       },
       {
         kind: "toolkit",
-        estimate: "5 min reference",
+        estimate: "10 min reference",
         url: "/sample-content/session-01-pitch-high/toolkit.pdf",
       },
       {
         kind: "podcast",
-        estimate: "~30 min listen",
+        estimate: "10 min listen",
         url: drivePreview("1WGf7FpIo4I27_J8E_xwfeNqWmjZSL4ZR"),
         durationSeconds: 1800,
       },
       {
         kind: "presentation",
-        estimate: "~15 min watch",
+        estimate: "10 min watch",
         url: drivePreview("1uhY5qV1ZZ2oiKsXcPMNbWU3HiNY4TZAL"),
         mode: "video",
       },
