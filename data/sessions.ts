@@ -31,7 +31,7 @@ export const sessions: Session[] = [
     keyTakeaway:
       "Every pitch is the same pitch. Affordability first, product second, price last. The reps who close are the ones who run the checklist on every call — and who treat the conversation as connection, not extraction. Connection is the master skill, because it lets you survive your own mistakes.",
     director: "Corie Dawson",
-    totalTime: "~30 min",
+    totalTime: "~50 min",
     assets: [
       {
         kind: "debrief",
@@ -42,6 +42,18 @@ export const sessions: Session[] = [
         kind: "toolkit",
         estimate: "10 min reference",
         url: "/sample-content/session-06-checklist/toolkit.pdf",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1h3pWjzQ-fNHDiVAhGvlhT4Hv5ua4JFFM"),
+        durationSeconds: 1800,
+      },
+      {
+        kind: "presentation",
+        estimate: "10 min watch",
+        url: drivePreview("1-89iJFfTDLn6sCTcHIWcizy8tzBrm9WK"),
+        mode: "video",
       },
       {
         kind: "quiz",
