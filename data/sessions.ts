@@ -46,13 +46,13 @@ export const sessions: Session[] = [
       {
         kind: "podcast",
         estimate: "10 min listen",
-        url: drivePreview("1h3pWjzQ-fNHDiVAhGvlhT4Hv5ua4JFFM"),
+        url: drivePreview("1-89iJFfTDLn6sCTcHIWcizy8tzBrm9WK"),
         durationSeconds: 1800,
       },
       {
         kind: "presentation",
         estimate: "10 min watch",
-        url: drivePreview("1-89iJFfTDLn6sCTcHIWcizy8tzBrm9WK"),
+        url: drivePreview("1h3pWjzQ-fNHDiVAhGvlhT4Hv5ua4JFFM"),
         mode: "video",
       },
       {
