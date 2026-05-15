@@ -22,6 +22,188 @@ const drivePreview = (id: string) =>
 
 export const sessions: Session[] = [
   {
+    id: "session-07-likability",
+    number: "07",
+    date: "2026-05-15",
+    title: "80% Likable. 20% Technical. Always.",
+    summary:
+      "Likability is the lever that controls every other lever in a sale. An 80% likable, 20% technical pitch builds enough connection that the prospect forgives small mistakes, takes your call, and looks for reasons to say yes.",
+    keyTakeaway:
+      "Likability is the lever that controls every other lever in a sale. A 100% technical pitch leaves zero room for error — one slip and the deal walks. An 80% likable, 20% technical pitch builds enough connection that the prospect forgives small mistakes, takes your call, and looks for reasons to say yes instead of reasons to say no. Likability is your insurance policy.",
+    director: "Corie Dawson",
+    totalTime: "~50 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-07-likability/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-07-likability/toolkit.pdf",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1-XcZmOpHIjjA4pdER0d5s7mCC5Z2qCRk"),
+        durationSeconds: 1800,
+      },
+      {
+        kind: "presentation",
+        estimate: "10 min watch",
+        url: drivePreview("189CZbEShqCT8TVyyyaq67RAF2xMBjn5v"),
+        mode: "video",
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~10 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s7-q1",
+            type: "multiple-choice",
+            prompt:
+              "Two reps pitch the same prospect with identical product knowledge. Rep A goes 100% technical. Rep B goes 80% likable and 20% technical. According to the session, the reason Rep B usually wins is:",
+            topic: "Likability as insurance",
+            options: [
+              "Likability makes Rep B faster at handling objections during the pitch",
+              "Customers prefer warm reps to cold reps and will pay more as a result",
+              "Rep B has built enough goodwill to absorb the small mistakes every pitch contains",
+              "Rep A spends so long on features that the prospect loses interest entirely",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "A is plausible but secondary — likability isn't about speed of response. B is too simple and conflates likability with warmth-as-marketing. D blames the wrong variable (length, not approach). C is the real answer: every pitch contains small mistakes (wrong number, awkward pause, ill-judged comment). At 100% technical, every mistake is fatal because there's no goodwill to absorb it. At 80% likable, the prospect is invested in YOU as a person, so the same mistakes are forgiven. Likability is your insurance policy.",
+          },
+          {
+            id: "s7-q2",
+            type: "multiple-choice",
+            prompt:
+              "You're pitching a brand-new prospect you've never spoken to before. Based on the \"pasta recipe\" model, the ingredient you cannot use is:",
+            topic: "Relationship recipe — time",
+            options: [
+              "Time — you have none of it yet",
+              "Care — there's no basis for genuine care in a first meeting",
+              "Sharing ideas — you don't know enough about them yet",
+              "Giving — without a deal, there's nothing to give them",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "B is wrong — care can (and should) be offered from the first second; it doesn't require history. C is wrong — sharing ideas IS how you learn about them; you don't need a backlog to start. D is wrong — giving doesn't require a contract; it means attention, research, thoughtfulness, useful information. A is the real one: time is the only ingredient you literally cannot have at the start. The whole point of the model is that you compensate by deliberately overloading the other four ingredients — care, experiences, sharing, giving — until time builds up over the relationship.",
+          },
+          {
+            id: "s7-q3",
+            type: "multiple-choice",
+            prompt:
+              "A prospect tells you mid-meeting: \"Honestly, I'm thinking about winding the business down — maybe two more years.\" The strongest play is:",
+            topic: "Intent vs growth",
+            options: [
+              "Push harder on growth — they need to maximise revenue before they exit",
+              "Reposition the pitch as preparing the business to sell, or step back gracefully",
+              "Drop the price by 30% to make it easy to say yes before they wind down",
+              "Recommend a smaller package and book a follow-up call in six months",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "A overrides their stated intent — exactly the move the session warned against. C is panic-discounting; it treats an intent problem as a price problem. D is OK but misses the bigger opportunity. B is correct: someone winding down has a different buyer profile, and the website (or whatever you sell) becomes a sale asset, not a growth lever. Reframe the pitch entirely — or, if that doesn't fit, step back warmly. Either way you stop pitching the wrong package.",
+          },
+          {
+            id: "s7-q4",
+            type: "multiple-choice",
+            prompt:
+              "You meet a prospect for the first time and want to build rapport quickly. Which conversation starter is the most asymmetric (lowest downside, highest upside)?",
+            topic: "Asymmetric bets",
+            options: [
+              "\"I love what the government did with the new budget — should be good for your industry\"",
+              "\"What's your view on the recent interest rate changes — they've hit a lot of businesses hard\"",
+              "\"It's a beautiful office — I've always thought this part of town suits this kind of business\"",
+              "\"That must be a hard job — how do you keep all the moving pieces straight?\"",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "A steps on a political landmine — half the people you ask will disagree, often strongly. B opens an economic-policy minefield with similar risk. C is polite filler — neutral, but doesn't build connection (no upside). D is the model asymmetric bet: if they agree, they unload challenges (connection through empathy); if they disagree, they tell you what they love about it (connection through enthusiasm). Either answer builds rapport. No downside.",
+          },
+          {
+            id: "s7-q5",
+            type: "multiple-choice",
+            prompt:
+              "A prospect ends a strong meeting with: \"You're a really nice guy — you remind me of my nephew. We're taking a cruise next month, but definitely give me a call next year, I really think we should do this.\" The right response is:",
+            topic: "Reading the speech",
+            options: [
+              "Drop the price by 20% to lock the deal in before the cruise",
+              "Graciously close out, bank the likability, and move on — don't fight it",
+              "Push for a smaller commitment they can make before the cruise leaves",
+              "Schedule a hard follow-up call for the week they get back from the cruise",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "A is panic-discounting a deal that wasn't closeable for a price reason — it won't help. C tries to force a smaller deal but the issue isn't deal size, it's that lock 1 or lock 2 is shut. D is wasted calendar time chasing a polite no. B is the right read: this is \"the speech\" — they like you (lock 3 opened) but can't actually buy (lock 1 or 2 is shut). Don't fight it. Don't lower the price. The likability you built is banked for the future — pursue it again in 6–12 months when conditions might shift.",
+          },
+          {
+            id: "s7-q6",
+            type: "multiple-choice",
+            prompt:
+              "The session described a customer who bought TWO vehicles from a country dealer 200 km away, even though a closer city dealer offered better prices. The underlying principle is:",
+            topic: "Buyer ransom",
+            options: [
+              "Likability creates buyer-side ransom — the customer wants to defend the relationship, not the deal",
+              "Country dealers consistently provide better customer service than city dealers do",
+              "Distance and inconvenience signal exclusivity, which makes customers value the purchase more",
+              "Once a customer has bought once from a salesperson, repeat business is the default",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "B is a stereotype — the story wasn't about geography but about behaviour. C is a backwards interpretation — distance was a friction the customer overcame, not a feature. D is too generic; many one-time buyers never return. A is the principle: when a salesperson is likable enough, the customer feels they HAVE to buy from them. They will defend the buying decision against cheaper, closer, or more convenient alternatives — because they don't want to lose YOU, the person. That's ransom, and it compounds over years.",
+          },
+          {
+            id: "s7-q7",
+            type: "multiple-choice",
+            prompt:
+              "You've worked with a client for two years. According to the session, the failure mode you're most at risk of right now is:",
+            topic: "Complacency",
+            options: [
+              "Over-investing in the relationship and missing other opportunities",
+              "Getting too familiar and accidentally crossing professional boundaries",
+              "Letting complacency creep in and offsetting effort against accumulated time",
+              "Becoming so dependent on the client that you can't negotiate fairly with them",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "A is the opposite of the real risk — you'll likely under-invest, not over-invest. B and D both describe real risks in some relationships, but neither was the focus of the session. C is the principle: human nature is to use accumulated time as a substitute for the other ingredients (care, experiences, sharing, giving). The longer you've worked with someone, the more your brain subconsciously decides you can coast. High performers reverse this — they refresh care with long-term clients, not less.",
+          },
+          {
+            id: "s7-q8",
+            type: "short-answer",
+            prompt:
+              "Think of your three longest-tenured clients. For each, write down ONE specific act of care you will deliver this week that you wouldn't normally — something a stranger doing your job wouldn't do for them. Then explain why this matters for client retention. (3–4 sentences)",
+            topic: "Refreshing care with long-term clients",
+            modelAnswer:
+              "Example: For Client A, I will hand-write a card thanking them for two years of partnership and reference a specific result we delivered together. For Client B, I will send an article relevant to their industry that I came across — with a one-line note about why I thought of them. For Client C, I will call them just to check in, with no agenda item to push. This matters because the natural human pattern is to coast on accumulated time and treat long-term clients with less care than new prospects — but that's exactly when they start looking elsewhere. Refreshing the care reverses the decay and signals that the relationship still matters to me, not just the revenue.",
+            keywords: [
+              "hand-write",
+              "card",
+              "article",
+              "call",
+              "check in",
+              "no agenda",
+              "care",
+              "coast",
+              "decay",
+              "refresh",
+              "long-term",
+            ],
+            keywordsRequired: 3,
+            softMinChars: 200,
+            rationale:
+              "Refreshing care for long-term clients reverses the natural human pattern of coasting on accumulated time. The specific acts matter less than the deliberate decision to invest more in the relationships you can least afford to lose. Reps who refresh care with long-term clients keep them. Reps who don't, lose them — usually to someone running the new-prospect playbook against them.",
+          },
+        ],
+      },
+    ],
+  },
+
+  {
     id: "session-06-checklist",
     number: "06",
     date: "2026-05-14",
