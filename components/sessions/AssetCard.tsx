@@ -21,6 +21,7 @@ import {
   Asset,
   AssetKind,
   AssetState,
+  IntroAsset,
   PdfAsset,
   PodcastAsset,
   PresentationAsset,
@@ -42,6 +43,7 @@ interface CommonProps {
 const KIND_LABEL: Record<AssetKind, string> = {
   debrief: "THE DEBRIEF (PDF)",
   toolkit: "THE TOOLKIT (PDF)",
+  intro: "INTRODUCTORY VIDEO",
   podcast: "THE PODCAST",
   presentation: "THE PRESENTATION",
   quiz: "THE QUIZ",
@@ -54,19 +56,22 @@ const KIND_INSTRUCTIONS: Record<AssetKind, string> = {
     "Read the debrief end-to-end, then hit Mark Viewed below to record that you've completed it.",
   toolkit:
     "Skim the toolkit so you know what's on it — pin it on the wall if you'd like. Hit Mark Viewed once you've reviewed it.",
+  intro:
+    "Watch the short introductory video to orient yourself for this session, then hit Mark Viewed.",
   podcast:
     "Listen all the way through (on the way to a call works fine). Hit Mark Viewed once it's done.",
   presentation:
     "Watch the recorded session in full. Hit Mark Viewed once you've finished watching.",
   quiz:
-    "Once all four assets above are marked viewed, take the quiz. You need to pass before the session is marked complete.",
+    "Once every asset above is marked viewed, take the quiz. You need to pass before the session is marked complete.",
 };
 
-// Non-quiz assets that gate the quiz. The quiz can only be opened once all
-// four of these are in the "viewed" state.
+// Non-quiz assets that gate the quiz. The quiz can only be opened once
+// every one of these is in the "viewed" state.
 const QUIZ_PREREQUISITES: AssetKind[] = [
   "debrief",
   "toolkit",
+  "intro",
   "podcast",
   "presentation",
 ];
@@ -511,7 +516,7 @@ function QuizCard({
           <div className="font-bold text-[#a87520] mb-1">
             🔒 Quiz locked
           </div>
-          Mark all four assets above as viewed first. Still to do:{" "}
+          Mark every asset above as viewed first. Still to do:{" "}
           <span className="font-semibold">
             {missingPrereqs
               .map((k) => KIND_LABEL[k].replace(/\s*\(PDF\)/, ""))
@@ -543,6 +548,37 @@ function QuizCard({
   );
 }
 
+// ─── Intro video ────────────────────────────────────────────────────────────
+
+function IntroCard({
+  asset,
+  state,
+  onSetState,
+}: CommonProps & { asset: IntroAsset }) {
+  const driveId = driveFileId(asset.url);
+  return (
+    <div>
+      <p className="text-sm text-slate-700 mb-2">
+        A short orientation video — watch this before the podcast and
+        presentation to get the most out of the session.
+      </p>
+      <div className="text-xs text-slate-500 mb-4">⏱ {asset.estimate}</div>
+      {driveId ? (
+        <DriveEmbed
+          fileId={driveId}
+          kind="intro"
+          state={state}
+          onSetState={onSetState}
+        />
+      ) : (
+        <div className="text-sm text-slate-500 italic">
+          Intro video not available — please contact your admin.
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Public dispatcher ──────────────────────────────────────────────────────
 
 export default function AssetCard(props: CommonProps) {
@@ -553,6 +589,9 @@ export default function AssetCard(props: CommonProps) {
     case "debrief":
     case "toolkit":
       inner = <PdfCard {...props} asset={asset} />;
+      break;
+    case "intro":
+      inner = <IntroCard {...props} asset={asset} />;
       break;
     case "podcast":
       inner = <PodcastCard {...props} asset={asset} />;

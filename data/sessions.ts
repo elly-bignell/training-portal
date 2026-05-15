@@ -44,6 +44,11 @@ export const sessions: Session[] = [
         url: "/sample-content/session-07-likability/toolkit.pdf",
       },
       {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("1REJ2-km36JTNhvH_JS6uE8WqV3QCBaL9"),
+      },
+      {
         kind: "podcast",
         estimate: "10 min listen",
         url: drivePreview("1-XcZmOpHIjjA4pdER0d5s7mCC5Z2qCRk"),
@@ -226,6 +231,11 @@ export const sessions: Session[] = [
         url: "/sample-content/session-06-checklist/toolkit.pdf",
       },
       {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("1Eum7klBejnYrjQG66krWk0ePliVMieKo"),
+      },
+      {
         kind: "podcast",
         estimate: "10 min listen",
         url: drivePreview("1-89iJFfTDLn6sCTcHIWcizy8tzBrm9WK"),
@@ -404,6 +414,11 @@ export const sessions: Session[] = [
         kind: "toolkit",
         estimate: "10 min reference",
         url: "/sample-content/session-05-discipline/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("1SXsFdFmeYoZjhJlNjL8H4YHNJkmmifri"),
       },
       {
         kind: "podcast",
@@ -586,6 +601,11 @@ export const sessions: Session[] = [
         url: "/sample-content/session-04-rock-solid/toolkit.pdf",
       },
       {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("1aJSUvBCJr9Pr8lWgRDjwq89nm-PQz8B6"),
+      },
+      {
         kind: "podcast",
         estimate: "10 min listen",
         url: drivePreview("16Gai_uhcIm7sPS2HHhdPpagjds31LF-p"),
@@ -766,6 +786,11 @@ export const sessions: Session[] = [
         url: "/sample-content/session-03-obsession/toolkit.pdf",
       },
       {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("1oEcWTqRZLmXVUGtKqrBkZeVtySvBVxDN"),
+      },
+      {
         kind: "podcast",
         estimate: "10 min listen",
         url: drivePreview("1xNo90x4N7azYyc5CuYGPmTuRM49uHz2k"),
@@ -943,6 +968,11 @@ export const sessions: Session[] = [
         kind: "toolkit",
         estimate: "10 min reference",
         url: "/sample-content/session-02-big-energy/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("1E0c9gngXjoAv2N6PpwdTQtLjNAwVA8Lb"),
       },
       {
         kind: "podcast",
@@ -1151,6 +1181,11 @@ export const sessions: Session[] = [
         kind: "toolkit",
         estimate: "10 min reference",
         url: "/sample-content/session-01-pitch-high/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("16r1YO7th679DYWunKxpuYiVCcyGTliGu"),
       },
       {
         kind: "podcast",

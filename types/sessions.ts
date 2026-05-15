@@ -7,6 +7,7 @@
 export type AssetKind =
   | "debrief"
   | "toolkit"
+  | "intro"
   | "podcast"
   | "presentation"
   | "quiz";
@@ -40,6 +41,12 @@ export interface PresentationAsset extends BaseAsset {
   mode: "video" | "slides";
 }
 
+export interface IntroAsset extends BaseAsset {
+  kind: "intro";
+  /** Drive embed URL — short orientation video shown before the podcast. */
+  url: string;
+}
+
 export interface QuizAsset extends BaseAsset {
   kind: "quiz";
   questions: QuizQuestion[];
@@ -47,7 +54,12 @@ export interface QuizAsset extends BaseAsset {
   passMark: number;
 }
 
-export type Asset = PdfAsset | PodcastAsset | PresentationAsset | QuizAsset;
+export type Asset =
+  | PdfAsset
+  | PodcastAsset
+  | PresentationAsset
+  | IntroAsset
+  | QuizAsset;
 
 export type QuizQuestionType = "multiple-choice" | "short-answer";
 

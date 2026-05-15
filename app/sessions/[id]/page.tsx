@@ -22,12 +22,13 @@ import { AssetKind } from "@/types/sessions";
 const ASSET_LABELS: Record<AssetKind, string> = {
   debrief: "Read",
   toolkit: "Reference",
+  intro: "Intro",
   podcast: "Listen",
   presentation: "Watch",
   quiz: "Test",
 };
 
-const NUMERALS = ["①", "②", "③", "④", "⑤"];
+const NUMERALS = ["①", "②", "③", "④", "⑤", "⑥"];
 
 function SessionDetailInner() {
   const params = useParams<{ id: string }>();
