@@ -233,7 +233,7 @@ export const sessions: Session[] = [
       {
         kind: "intro",
         estimate: "~5 min watch",
-        url: drivePreview("1Eum7klBejnYrjQG66krWk0ePliVMieKo"),
+        url: drivePreview("1Uc4TjeI--UQt2IGEwHaTSP3gM-X-YuBu"),
       },
       {
         kind: "podcast",
@@ -788,7 +788,7 @@ export const sessions: Session[] = [
       {
         kind: "intro",
         estimate: "~5 min watch",
-        url: drivePreview("1oEcWTqRZLmXVUGtKqrBkZeVtySvBVxDN"),
+        url: drivePreview("1hZSfQtzKZMQ9gm9lc8FsFXIUOe5KQ9bN"),
       },
       {
         kind: "podcast",
