@@ -99,11 +99,28 @@ export function bestQuizScore(progress: SessionProgress | undefined): number | n
   return Math.max(...progress.quizAttempts.map((a) => a.score));
 }
 
-/** Number of asset slots viewed. Quiz counts as viewed once passed. The non-quiz
- *  kinds checked here are every kind we currently render — extend this list if
- *  a new asset type lands. */
-export function assetsViewedCount(progress: SessionProgress | undefined): number {
+/** Number of asset slots viewed. Quiz counts as viewed once passed.
+ *
+ *  Special case: if the quiz has been passed AND a totalAssetsInSession is
+ *  supplied, every asset in the session is treated as viewed. The quiz lock
+ *  guaranteed the rep marked each prerequisite asset viewed before the quiz
+ *  could even be opened, so a passed quiz is proof that the assets were
+ *  consumed. This stops the UI showing "1 of 6 viewed" for a session that
+ *  is clearly complete just because the asset-view click events weren't
+ *  mirrored to the server at the time the rep made them.
+ *
+ *  The Airtable audit trail (asset_view rows) remains the source of truth
+ *  for *when* and *which* clicks happened — this helper only governs the
+ *  UI count.
+ */
+export function assetsViewedCount(
+  progress: SessionProgress | undefined,
+  totalAssetsInSession?: number
+): number {
   if (!progress) return 0;
+  const quizPassed = progress.quizAttempts.some((a) => a.passed);
+  if (quizPassed && totalAssetsInSession) return totalAssetsInSession;
+
   const NON_QUIZ_KINDS: AssetKind[] = [
     "debrief",
     "toolkit",
@@ -115,7 +132,7 @@ export function assetsViewedCount(progress: SessionProgress | undefined): number
   for (const kind of NON_QUIZ_KINDS) {
     if (progress.assetStates[kind] === "viewed") count++;
   }
-  if (progress.quizAttempts.some((a) => a.passed)) count++;
+  if (quizPassed) count++;
   return count;
 }
 

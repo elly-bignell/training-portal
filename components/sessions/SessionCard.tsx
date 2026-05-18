@@ -50,7 +50,7 @@ function formatDate(iso: string) {
 export default function SessionCard({ session, progress, status }: Props) {
   const isNew = isNewForRep(session, progress);
   const pill = isNew ? STATUS_PILL.new : STATUS_PILL[status];
-  const viewed = assetsViewedCount(progress);
+  const viewed = assetsViewedCount(progress, session.assets.length);
   const score = bestQuizScore(progress);
 
   const cta =

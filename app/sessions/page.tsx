@@ -90,7 +90,7 @@ function SessionsHomeInner() {
   // Portal-wide progress: viewed assets / 5 across every session.
   const totalAssets = sessions.length * 5;
   const totalViewed = sessions.reduce(
-    (sum, s) => sum + assetsViewedCount(data.sessions[s.id]),
+    (sum, s) => sum + assetsViewedCount(data.sessions[s.id], s.assets.length),
     0
   );
   const completedCount = sessions.filter(

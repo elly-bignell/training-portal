@@ -54,7 +54,7 @@ function SessionDetailInner() {
 
   const progress = data.sessions[session.id];
   const status = getSessionStatus(session, progress);
-  const viewed = assetsViewedCount(progress);
+  const viewed = assetsViewedCount(progress, session.assets.length);
   const best = bestQuizScore(progress);
   const quizAsset = session.assets.find((a) => a.kind === "quiz");
   const passMark =
