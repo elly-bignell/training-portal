@@ -18,7 +18,8 @@ import {
   SessionProgress,
   SessionStatus,
 } from "@/types/sessions";
-import { sessions } from "@/data/sessions";
+import { sessions, getSessionById } from "@/data/sessions";
+import { trainees } from "@/data/trainees";
 
 const REP_SLUG_KEY = "sessions-rep-slug";
 
@@ -98,11 +99,20 @@ export function bestQuizScore(progress: SessionProgress | undefined): number | n
   return Math.max(...progress.quizAttempts.map((a) => a.score));
 }
 
-/** Number of asset slots viewed (out of 5). Quiz counts as viewed once passed. */
+/** Number of asset slots viewed. Quiz counts as viewed once passed. The non-quiz
+ *  kinds checked here are every kind we currently render — extend this list if
+ *  a new asset type lands. */
 export function assetsViewedCount(progress: SessionProgress | undefined): number {
   if (!progress) return 0;
+  const NON_QUIZ_KINDS: AssetKind[] = [
+    "debrief",
+    "toolkit",
+    "intro",
+    "podcast",
+    "presentation",
+  ];
   let count = 0;
-  for (const kind of ["debrief", "toolkit", "podcast", "presentation"] as AssetKind[]) {
+  for (const kind of NON_QUIZ_KINDS) {
     if (progress.assetStates[kind] === "viewed") count++;
   }
   if (progress.quizAttempts.some((a) => a.passed)) count++;
@@ -127,62 +137,111 @@ export function useSessionsProgress(slug: string | null) {
     setData(local);
     setHydrated(true);
 
-    // 2. Fetch authoritative quiz attempts from Airtable in the background
-    //    and merge them in. This makes pass/fail/score consistent across
-    //    devices and browsers — localStorage alone isn't a source of truth
-    //    because every browser has its own. Asset-viewed states + resume
-    //    positions stay local since they aren't mirrored to Airtable.
+    // 2. Fetch authoritative quiz attempts AND asset-view events from Airtable
+    //    in parallel and merge them in. Server wins for both. This makes
+    //    pass/fail/score AND asset-viewed states consistent across devices and
+    //    browsers — localStorage alone isn't a source of truth because every
+    //    browser has its own. Resume positions stay local-only (low value to
+    //    sync, high overhead).
     let aborted = false;
-    fetch(`/api/sessions/quiz/results?rep_slug=${encodeURIComponent(slug)}`, {
-      cache: "no-store",
-    })
-      .then((r) => (r.ok ? r.json() : { submissions: [] }))
-      .then((payload: { submissions?: any[] }) => {
-        if (aborted) return;
-        const submissions = payload.submissions || [];
-        if (submissions.length === 0) return;
+    Promise.all([
+      fetch(`/api/sessions/quiz/results?rep_slug=${encodeURIComponent(slug)}`, {
+        cache: "no-store",
+      }).then((r) => (r.ok ? r.json() : { submissions: [] })),
+      fetch(
+        `/api/sessions/asset-view/results?rep_slug=${encodeURIComponent(slug)}`,
+        { cache: "no-store" }
+      ).then((r) => (r.ok ? r.json() : { views: [] })),
+    ])
+      .then(
+        ([quizPayload, viewPayload]: [
+          { submissions?: any[] },
+          { views?: any[] }
+        ]) => {
+          if (aborted) return;
+          const submissions = quizPayload.submissions || [];
+          const views = viewPayload.views || [];
 
-        // Group server attempts by sessionId, then build a fresh sessions map.
-        const serverBySession: Record<string, QuizAttempt[]> = {};
-        for (const s of submissions) {
-          if (!serverBySession[s.sessionId]) serverBySession[s.sessionId] = [];
-          serverBySession[s.sessionId].push({
-            attemptedAt: s.submittedAt,
-            score: s.score,
-            passed: s.passed === true,
-            answers: s.answers || {},
+          // Group server quiz attempts by sessionId.
+          const quizBySession: Record<string, QuizAttempt[]> = {};
+          for (const s of submissions) {
+            if (!quizBySession[s.sessionId]) quizBySession[s.sessionId] = [];
+            quizBySession[s.sessionId].push({
+              attemptedAt: s.submittedAt,
+              score: s.score,
+              passed: s.passed === true,
+              answers: s.answers || {},
+            });
+          }
+
+          // Group server asset views by sessionId → list of viewed kinds.
+          const viewedBySession: Record<string, AssetKind[]> = {};
+          for (const v of views) {
+            if (!v.sessionId || !v.assetKind) continue;
+            if (!viewedBySession[v.sessionId])
+              viewedBySession[v.sessionId] = [];
+            const kind = v.assetKind as AssetKind;
+            if (!viewedBySession[v.sessionId].includes(kind)) {
+              viewedBySession[v.sessionId].push(kind);
+            }
+          }
+
+          setData((prev) => {
+            const nextSessions = { ...prev.sessions };
+            const allSessionIds: string[] = [];
+            const seen = new Set<string>();
+            for (const sid of Object.keys(quizBySession)
+              .concat(Object.keys(viewedBySession))
+              .concat(Object.keys(prev.sessions))) {
+              if (!seen.has(sid)) {
+                seen.add(sid);
+                allSessionIds.push(sid);
+              }
+            }
+            for (const sid of allSessionIds) {
+              const existing = nextSessions[sid] ?? emptySessionProgress();
+              // Quiz attempts — server wins.
+              const quizAttempts = quizBySession[sid]
+                ? quizBySession[sid].sort((a, b) =>
+                    a.attemptedAt.localeCompare(b.attemptedAt)
+                  )
+                : existing.quizAttempts;
+              // Asset states — merge server views in (server says viewed →
+              // mark viewed). Don't downgrade anything that's already
+              // viewed locally.
+              const assetStates: Partial<Record<AssetKind, AssetState>> = {
+                ...existing.assetStates,
+              };
+              const serverViewed = viewedBySession[sid];
+              if (serverViewed) {
+                serverViewed.forEach((kind) => {
+                  assetStates[kind] = "viewed";
+                });
+              }
+              nextSessions[sid] = {
+                ...existing,
+                quizAttempts,
+                assetStates,
+                lastViewedAt:
+                  existing.lastViewedAt ??
+                  quizAttempts[quizAttempts.length - 1]?.attemptedAt,
+              };
+            }
+            const merged: RepSessionsProgress = {
+              ...prev,
+              sessions: nextSessions,
+            };
+            // Cache the merged state so the next page load is instant.
+            if (typeof window !== "undefined") {
+              localStorage.setItem(progressKey(slug), JSON.stringify(merged));
+            }
+            return merged;
           });
         }
-
-        setData((prev) => {
-          const nextSessions = { ...prev.sessions };
-          for (const sid of Object.keys(serverBySession)) {
-            const existing = nextSessions[sid] ?? emptySessionProgress();
-            // Server is source of truth for quizAttempts. We replace rather
-            // than merge so duplicates from earlier local-only attempts (e.g.
-            // pre-Airtable submissions) don't survive forever.
-            nextSessions[sid] = {
-              ...existing,
-              quizAttempts: serverBySession[sid].sort((a, b) =>
-                a.attemptedAt.localeCompare(b.attemptedAt)
-              ),
-              lastViewedAt:
-                existing.lastViewedAt ??
-                serverBySession[sid][serverBySession[sid].length - 1]
-                  ?.attemptedAt,
-            };
-          }
-          const merged: RepSessionsProgress = { ...prev, sessions: nextSessions };
-          // Cache the merged state so the next page load is instant.
-          if (typeof window !== "undefined") {
-            localStorage.setItem(progressKey(slug), JSON.stringify(merged));
-          }
-          return merged;
-        });
-      })
+      )
       .catch((err) => {
         // Silent fallback — localStorage is still rendering, so the UI works.
-        console.warn("[useSessionsProgress] result fetch failed", err);
+        console.warn("[useSessionsProgress] mount fetch failed", err);
       });
 
     return () => {
@@ -220,8 +279,34 @@ export function useSessionsProgress(slug: string | null) {
         },
       };
       persist(next);
+
+      // Mirror "viewed" transitions to Airtable so trainers can verify the
+      // rep has actually consumed each asset. Fire-and-forget — failures
+      // don't affect the rep's UI experience (localStorage is authoritative
+      // for what they see).
+      if (state === "viewed" && slug) {
+        const session = getSessionById(sessionId);
+        const trainee = trainees.find((t) => t.slug === slug);
+        if (session) {
+          fetch("/api/sessions/asset-view/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              repSlug: slug,
+              repName: trainee?.name ?? "",
+              sessionId,
+              sessionNumber: session.number,
+              sessionTitle: session.title,
+              assetKind: kind,
+              viewedAt: new Date().toISOString(),
+            }),
+          }).catch((err) => {
+            console.warn("[asset-view/submit] failed", err);
+          });
+        }
+      }
     },
-    [data, ensureSession, persist]
+    [data, ensureSession, persist, slug]
   );
 
   const setResumePosition = useCallback(

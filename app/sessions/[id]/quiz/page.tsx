@@ -350,17 +350,6 @@ function ResultScreen({
   const passed = attempt.passed;
   const score = attempt.score;
 
-  const missedTopics = perQuestion
-    .filter((p) => !p.correct)
-    .map((p) => quiz.questions.find((q) => q.id === p.id)!.topic);
-  const missedTopicCounts = missedTopics.reduce<Record<string, number>>(
-    (acc, t) => {
-      acc[t] = (acc[t] || 0) + 1;
-      return acc;
-    },
-    {}
-  );
-
   return (
     <main className="min-h-screen bg-slate-50">
       <SessionsHeader
@@ -388,7 +377,7 @@ function ResultScreen({
           <p className="text-white/90">
             {passed
               ? `You scored ${score}% on this attempt. Session ${session.number} is now marked complete.`
-              : `You need ${quiz.passMark}% to pass. Review the topics below, then take it again — unlimited retries.`}
+              : `You need ${quiz.passMark}% to pass. Re-review the debrief, toolkit, podcast, and presentation before reattempting — unlimited retries.`}
           </p>
         </div>
 
@@ -502,34 +491,25 @@ function ResultScreen({
           </div>
         ) : (
           <div className="bg-white rounded-2xl border border-slate-200 p-6">
-            <h2 className="font-bold text-slate-900 mb-4">Where to focus</h2>
-            {Object.keys(missedTopicCounts).length === 0 ? (
-              <p className="text-slate-600">
-                You answered every question correctly that you attempted — give
-                it another go.
-              </p>
-            ) : (
-              <ul className="space-y-2">
-                {Object.entries(missedTopicCounts)
-                  .sort((a, b) => b[1] - a[1])
-                  .map(([topic, count]) => (
-                    <li
-                      key={topic}
-                      className="flex items-center justify-between text-sm border-b border-slate-100 last:border-0 py-2"
-                    >
-                      <span className="font-medium text-slate-800">
-                        {topic}
-                      </span>
-                      <span className="text-slate-500">
-                        {count} miss{count > 1 ? "es" : ""}
-                      </span>
-                    </li>
-                  ))}
-              </ul>
-            )}
-            <div className="mt-5 px-4 py-3 bg-[#D49A30]/10 border border-[#D49A30]/30 rounded-lg text-sm text-slate-700">
-              Tip: revisit the toolkit and debrief on the topics above before
-              retrying. The cheapest gains come from re-reading, not re-guessing.
+            <h2 className="font-bold text-slate-900 mb-3">
+              Not yet — re-review and try again
+            </h2>
+            <p className="text-slate-700 mb-4 leading-relaxed">
+              You scored <span className="font-semibold">{score}%</span>. Pass
+              mark for Marketing Sweet quizzes is{" "}
+              <span className="font-semibold">{quiz.passMark}%</span> on the
+              multiple-choice questions.
+            </p>
+            <p className="text-slate-700 mb-4 leading-relaxed">
+              Before reattempting, go back through this session&apos;s assets:
+              the debrief, the toolkit, the introductory video, the podcast,
+              and the presentation. The cheapest gains come from re-reading
+              and re-listening, not re-guessing.
+            </p>
+            <div className="px-4 py-3 bg-[#D49A30]/10 border border-[#D49A30]/30 rounded-lg text-sm text-slate-700">
+              Specific question feedback isn&apos;t shown to keep retries
+              honest. Your trainer can see your answers and will follow up if
+              there&apos;s a pattern worth coaching on.
             </div>
           </div>
         )}
