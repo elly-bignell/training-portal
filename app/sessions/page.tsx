@@ -87,8 +87,12 @@ function SessionsHomeInner() {
     [ranked, filter, data]
   );
 
-  // Portal-wide progress: viewed assets / 5 across every session.
-  const totalAssets = sessions.length * 5;
+  // Portal-wide progress: viewed assets / total assets across every session.
+  // Denominator MUST derive from session.assets.length per session (not a
+  // hardcoded 5) — sessions can have different asset counts (intro was added
+  // after the original 5; future sessions may shed/add). With a hardcoded
+  // 5, completed sessions overflow past 100%.
+  const totalAssets = sessions.reduce((sum, s) => sum + s.assets.length, 0);
   const totalViewed = sessions.reduce(
     (sum, s) => sum + assetsViewedCount(data.sessions[s.id], s.assets.length),
     0
