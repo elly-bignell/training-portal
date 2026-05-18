@@ -31,7 +31,7 @@ export const sessions: Session[] = [
     keyTakeaway:
       "Two failures showed up in the same pitch this session: the rep didn't know the price points cold, and the rep sold the website (product) instead of the build experience (process). Either failure on its own kills a deal. Both together — guaranteed. Conviction comes from owning your numbers and your process so deeply you can be questioned for an hour without flinching. That depth is the only thing that produces real fuck-you energy.",
     director: "Corie Dawson",
-    totalTime: "~30 min",
+    totalTime: "~50 min",
     assets: [
       {
         kind: "debrief",
@@ -42,6 +42,23 @@ export const sessions: Session[] = [
         kind: "toolkit",
         estimate: "10 min reference",
         url: "/sample-content/session-08-numbers/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("11BZ6gRTawY1xD5kKC7ZdOFp7GUawLYSj"),
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1JT42gD_GDrSEXMZl9Bs1p_FXQhGj_ueV"),
+        durationSeconds: 1800,
+      },
+      {
+        kind: "presentation",
+        estimate: "10 min watch",
+        url: drivePreview("1tDGslpgbkt54_9rS0gLq8_T1nhHz8KBv"),
+        mode: "video",
       },
       {
         kind: "quiz",
