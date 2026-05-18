@@ -29,7 +29,7 @@ export const sessions: Session[] = [
     summary:
       "Two failures often killed the same pitch — the rep didn't know the pricing cold, and they sold the product (the website) instead of the process (the build experience). Conviction lives in owning both.",
     keyTakeaway:
-      "Two failures showed up in the same pitch this session: the rep didn't know the price points cold, and the rep sold the website (product) instead of the build experience (process). Either failure on its own kills a deal. Both together — guaranteed. Conviction comes from owning your numbers and your process so deeply you can be questioned for an hour without flinching. That depth is the only thing that produces real fuck-you energy.",
+      "Two failures showed up in the same pitch this session: the rep didn't know the price points cold, and the rep sold the website (product) instead of the build experience (process). Either failure on its own kills a deal. Both together — guaranteed. Conviction comes from owning your numbers and your process so deeply you can be questioned for an hour without flinching. That depth is the only thing that produces real, unshakeable conviction.",
     director: "Corie Dawson",
     totalTime: "~50 min",
     assets: [
