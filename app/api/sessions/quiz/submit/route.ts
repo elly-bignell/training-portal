@@ -65,6 +65,7 @@ export async function POST(request: NextRequest) {
         records: [
           {
             fields: {
+              event_type: "quiz_attempt",
               rep_slug: repSlug,
               rep_name: repName ?? "",
               session_id: sessionId,

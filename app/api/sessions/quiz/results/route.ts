@@ -35,18 +35,20 @@ export async function GET(request: NextRequest) {
   const sessionId = searchParams.get("session_id");
 
   try {
-    const filters: string[] = [];
+    // Treat blank `event_type` as quiz_attempt (backward-compat with rows
+    // written before the field existed). Excludes asset_view rows.
+    const filters: string[] = [
+      `OR({event_type} = "quiz_attempt", {event_type} = "")`,
+    ];
     if (repSlug) filters.push(`{rep_slug} = "${repSlug}"`);
     if (sessionId) filters.push(`{session_id} = "${sessionId}"`);
 
-    const filterFormula = filters.length
-      ? `filterByFormula=${encodeURIComponent(
-          filters.length === 1 ? filters[0] : `AND(${filters.join(", ")})`
-        )}`
-      : "";
+    const filterFormula = `filterByFormula=${encodeURIComponent(
+      filters.length === 1 ? filters[0] : `AND(${filters.join(", ")})`
+    )}`;
     const sortParams =
       "sort%5B0%5D%5Bfield%5D=submitted_at&sort%5B0%5D%5Bdirection%5D=asc";
-    const qs = [filterFormula, sortParams].filter(Boolean).join("&");
+    const qs = [filterFormula, sortParams].join("&");
 
     const response = await fetch(`${AIRTABLE_URL}?${qs}`, {
       headers: {

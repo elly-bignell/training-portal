@@ -12,7 +12,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY!;
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID!;
-const AIRTABLE_TABLE_NAME = "Asset Views";
+// Single combined table — same one used by /api/sessions/quiz/submit. Rows
+// are differentiated by the `event_type` field ("quiz_attempt" / "asset_view").
+const AIRTABLE_TABLE_NAME = "Quiz Submissions";
 
 const AIRTABLE_URL = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(
   AIRTABLE_TABLE_NAME
@@ -58,13 +60,16 @@ export async function POST(request: NextRequest) {
         records: [
           {
             fields: {
+              event_type: "asset_view",
               rep_slug: repSlug,
               rep_name: repName ?? "",
               session_id: sessionId,
               session_number: sessionNumber ?? "",
               session_title: sessionTitle ?? "",
               asset_kind: assetKind,
-              viewed_at: viewedAt ?? new Date().toISOString(),
+              // We reuse the existing `submitted_at` column rather than adding
+              // a new `viewed_at` — keeps the schema tidy.
+              submitted_at: viewedAt ?? new Date().toISOString(),
             },
           },
         ],

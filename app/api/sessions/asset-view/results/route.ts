@@ -9,7 +9,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY!;
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID!;
-const AIRTABLE_TABLE_NAME = "Asset Views";
+// Single combined table — see /api/sessions/asset-view/submit for context.
+const AIRTABLE_TABLE_NAME = "Quiz Submissions";
 
 const AIRTABLE_URL = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(
   AIRTABLE_TABLE_NAME
@@ -28,15 +29,15 @@ export async function GET(request: NextRequest) {
   const repSlug = searchParams.get("rep_slug");
 
   try {
-    const filters: string[] = [];
+    // Filter to only asset_view rows (skip quiz_attempt rows in same table).
+    const filters: string[] = [`{event_type} = "asset_view"`];
     if (repSlug) filters.push(`{rep_slug} = "${repSlug}"`);
-
-    const filterFormula = filters.length
-      ? `filterByFormula=${encodeURIComponent(filters[0])}`
-      : "";
+    const filterFormula = `filterByFormula=${encodeURIComponent(
+      filters.length === 1 ? filters[0] : `AND(${filters.join(", ")})`
+    )}`;
     const sortParams =
-      "sort%5B0%5D%5Bfield%5D=viewed_at&sort%5B0%5D%5Bdirection%5D=asc";
-    const qs = [filterFormula, sortParams].filter(Boolean).join("&");
+      "sort%5B0%5D%5Bfield%5D=submitted_at&sort%5B0%5D%5Bdirection%5D=asc";
+    const qs = [filterFormula, sortParams].join("&");
 
     const response = await fetch(`${AIRTABLE_URL}?${qs}`, {
       headers: {
@@ -65,7 +66,7 @@ export async function GET(request: NextRequest) {
         repSlug: r.fields.rep_slug,
         sessionId: r.fields.session_id,
         assetKind: r.fields.asset_kind,
-        viewedAt: r.fields.viewed_at ?? "",
+        viewedAt: r.fields.submitted_at ?? "",
       }));
 
     return NextResponse.json({ views });
