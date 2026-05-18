@@ -22,6 +22,173 @@ const drivePreview = (id: string) =>
 
 export const sessions: Session[] = [
   {
+    id: "session-08-numbers",
+    number: "08",
+    date: "2026-05-18",
+    title: "Know Your Numbers. Sell the Process, Not the Product.",
+    summary:
+      "Two failures often killed the same pitch — the rep didn't know the pricing cold, and they sold the product (the website) instead of the process (the build experience). Conviction lives in owning both.",
+    keyTakeaway:
+      "Two failures showed up in the same pitch this session: the rep didn't know the price points cold, and the rep sold the website (product) instead of the build experience (process). Either failure on its own kills a deal. Both together — guaranteed. Conviction comes from owning your numbers and your process so deeply you can be questioned for an hour without flinching. That depth is the only thing that produces real fuck-you energy.",
+    director: "Corie Dawson",
+    totalTime: "~30 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-08-numbers/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-08-numbers/toolkit.pdf",
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~10 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s8-q1",
+            type: "multiple-choice",
+            prompt:
+              "A rep starts a pitch and is asked the price of a specific package. They hesitate, reach for their notes, and quote a number that's slightly off. According to the session, the most significant cost of this moment is:",
+            topic: "Know your numbers cold",
+            options: [
+              "The prospect has been given a wrong number that may need correcting later",
+              "The rep's authority is gone, and every subsequent claim sounds less believable",
+              "The rep takes 30 seconds longer than they should to recover the pitch",
+              "The prospect learns the rep relies on notes rather than memory",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "A is a minor admin problem, easily fixed. C overstates speed; speed isn't the issue. D is partially true but doesn't capture the deeper cost. B is the real damage: the prospect uses the hesitation as a signal about everything else the rep says. If you don't know your own price, why would the prospect believe your claims about quality, process, or results? Authority is the load-bearing thing in a pitch — and it collapses the moment uncertainty shows.",
+          },
+          {
+            id: "s8-q2",
+            type: "multiple-choice",
+            prompt:
+              "A prospect compares your offer to a Squarespace website built by their mate for $2,000. The pitch the session recommends is to:",
+            topic: "Sell the process, not the tool",
+            options: [
+              "Argue that Squarespace produces lower-quality output than industry-standard WordPress",
+              "Drop your price to be within $500 of the competitor to keep the deal alive",
+              "Show case studies proving your websites get better SEO results than DIY platforms",
+              "Agree the DIY platform is fine, then shift the question from tool to their available time",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "A defends FEATURES — exactly what the cheap platform also has. You can't win the feature comparison. B is panic-discounting; you've trained the prospect that your price isn't real. C is OK but still on the wrong battlefield (output quality). D is the right move: agree with the truth (DIY platforms ARE fine), then shift the conversation from \"tool vs tool\" to \"your time vs ours.\" The work doesn't vanish on a cheap platform — it moves to the customer. That's a question they can't answer favourably for the cheap option.",
+          },
+          {
+            id: "s8-q3",
+            type: "multiple-choice",
+            prompt:
+              "A prospect says: \"Your website looks better, and I get that — but my mate's Squarespace one was fine, and it was $2,000.\" Based on the double-whammy framework, the right structure for your response is:",
+            topic: "Double-whammy framework",
+            options: [
+              "Agree with the surface points, dismiss their importance, then elevate to the real problem",
+              "Disagree with the surface points, defend your quality, then justify your price",
+              "Avoid commenting on the competitor and pivot to discussing your unique guarantee",
+              "Acknowledge the price difference and offer a smaller package at a closer price point",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "B picks a fight with their observations — you lose trust. C ignores the competitor reference entirely, which feels evasive and lets the comparison stand. D is panic-discounting. A is the three-step double-whammy: AGREE (yes, ours looks better; yes, his was fine) → UNDERCUT (but honestly, neither is your real problem) → ELEVATE (the real problem is the process, and that's what you're actually buying). You appear fair, the competitor comparison dies, and the conversation moves to your ground.",
+          },
+          {
+            id: "s8-q4",
+            type: "multiple-choice",
+            prompt:
+              "A prospect is doing $1.2M turnover, booked solid for nine months, and tells you they're happy at their current size. According to the session, the right tier to lead with is:",
+            topic: "Reading the room on tier choice",
+            options: [
+              "The premium tier — always pitch high, regardless of stated intent",
+              "The cheapest tier — they're not in growth mode, save them the money",
+              "A middle tier framed as maintenance and protection, with two adjacent options",
+              "A custom tier built specifically for their stated turnover band",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "A applies \"pitch high\" as a rigid script, not as a rule of thumb — and gets rejected fast when the room says \"maintenance.\" B underestimates them and signals you're a low-value provider. D is over-engineering; we have five tiers, not bespoke quotes. C is the read-the-room move: their signals all point to stability, not growth, so frame the pitch as protection/maintenance and use the cotton-wool play (two adjacent tiers, soft opinion, room to move either way). Match the tier to the situation — not to the template.",
+          },
+          {
+            id: "s8-q5",
+            type: "multiple-choice",
+            prompt:
+              "A prospect is wobbling but engaged. You decide to deploy the \"where do I need to be?\" line. The critical phrase to include — without which the line loses its power — is:",
+            topic: "\"Where do I need to be?\" line",
+            options: [
+              "\"I can only say no if it's outlandish, and that'll be the end of it\"",
+              "\"We're really wanting to work with you, so let's find a way to make it happen\"",
+              "\"Just give me a number you're comfortable with and I'll see what I can do\"",
+              "\"Our pricing is fair, but I'm happy to discuss flexibility if needed\"",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "B is begging language — undoes the entire frame. C invites a fantasy number and removes your right to walk. D is corporate hedging; the prospect feels no urgency. A is the asymmetric piece: it gives you the explicit right to walk away from an outlandish number, which is what transfers control of the conversation. Without it, you're just asking for a discount. With it, the prospect knows they're qualifying themselves in or out — and either response is useful to you.",
+          },
+          {
+            id: "s8-q6",
+            type: "multiple-choice",
+            prompt:
+              "After a prospect raises a price objection, the rep keeps describing them as \"the absolute best,\" \"the strongest applicant we've seen,\" \"genuinely amazing,\" and similar maximum-strength superlatives. Based on the session, the cost of this habit is:",
+            topic: "Teryitis (superlative inflation)",
+            options: [
+              "The prospect feels uncomfortable being praised so directly during a sales pitch",
+              "The rep's superlatives stop carrying weight, so genuine \"10/10\" moments don't land",
+              "The rep loses time over-explaining when shorter language would close faster",
+              "The prospect interprets the praise as flattery and discounts everything said afterward",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "A is plausible but minor. C confuses verbosity with the actual issue. D names a side-effect but not the core problem. B is the principle Corie named \"teryitis\": when you over-state routinely, your average is already at maximum. There's nowhere to go when something is actually exceptional. Hedge slightly when you're uncertain (\"I think you'll like this\"), and the genuine top-of-scale calls land hard. Track-record matters; superlatives are a currency that loses value with overuse.",
+          },
+          {
+            id: "s8-q7",
+            type: "multiple-choice",
+            prompt:
+              "A prospect says \"I'll think about it\" at the end of a strong meeting. Rather than ask for permission to follow up, you decide to use the assumption close. The strongest version is:",
+            topic: "Assumption close",
+            options: [
+              "\"Would it be okay if I called you next week to see where you've landed?\"",
+              "\"I'll wait for you to be in touch — take whatever time you need, no pressure\"",
+              "\"I'm sending the proposal now — sign the DocuSign and pay deposit when ready\"",
+              "\"Let me know if you have questions and I'll be happy to send more details over\"",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "A asks permission — you've put yourself back at the prospect's mercy. B is \"drop the rope\" but applied too softly; this isn't a trust failure. D is open-ended drift; nothing forces a next step. C is the assumption close: you haven't asked if they want to proceed — you've assumed they do and given them a specific next action. If they don't respond, you have a genuine reason to follow up (\"noticed you haven't signed — anything you needed to talk through?\"). The default of the conversation is yes.",
+          },
+          {
+            id: "s8-q8",
+            type: "short-answer",
+            prompt:
+              "Pick a prospect you're currently pitching (or a recent one). Write down the ONE objection they raised — or are most likely to raise — about a cheaper competitor. Then write the three lines of YOUR double-whammy response: AGREE, UNDERCUT, ELEVATE. (4–5 sentences total)",
+            topic: "Double-whammy framework",
+            modelAnswer:
+              "Example: A plumbing prospect said \"my cousin can build me a Squarespace site for $1,800.\" AGREE: \"You're right — Squarespace can produce a perfectly fine-looking website, and $1,800 is genuinely cheaper than what we charge.\" UNDERCUT: \"But neither of those is your real problem. The platform is irrelevant once you're booked out six months ahead and don't have time to write the content, set up the SEO, or manage the hosting yourself.\" ELEVATE: \"What you're really buying from us is the process — we do the work, you give the brief, you launch in 12 weeks without lifting a finger. That's what the price reflects, and it's the part the $1,800 option doesn't include.\"",
+            keywords: [
+              "agree",
+              "undercut",
+              "elevate",
+              "process",
+              "time",
+              "real problem",
+              "platform",
+              "tool",
+            ],
+            keywordsRequired: 3,
+            softMinChars: 250,
+            rationale:
+              "The double-whammy works because it never picks a fight with the prospect's observation. It validates, then redirects the battlefield to ground where the cheap option can't win. Reps who can run this on the spot — not after the meeting, ON the call — hold their price and close at full rate consistently.",
+          },
+        ],
+      },
+    ],
+  },
+
+  {
     id: "session-07-likability",
     number: "07",
     date: "2026-05-15",

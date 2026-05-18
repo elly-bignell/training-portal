@@ -484,7 +484,7 @@ function QuizCard({
     ? Math.max(...progress!.quizAttempts.map((a) => a.score))
     : null;
 
-  // Quiz lockout: must have all four prerequisite assets in "viewed" state.
+  // Quiz lockout: every prerequisite asset must be in "viewed" state.
   // We still allow passed-quiz reviews to bypass (they've already done it).
   const missingPrereqs = QUIZ_PREREQUISITES.filter(
     (k) => progress?.assetStates[k] !== "viewed"

@@ -149,8 +149,8 @@ function SessionDetailInner() {
           </div>
           <ol className="space-y-2 text-sm text-slate-700 list-decimal list-inside marker:text-[#1F3A5F] marker:font-bold">
             <li>
-              Work through the four assets below in order — Debrief, Toolkit,
-              Podcast, then Presentation.
+              Work through the five assets below in order — Debrief, Toolkit,
+              Introductory Video, Podcast, then Presentation.
             </li>
             <li>
               After you&apos;ve read / watched / listened to each asset, hit
@@ -161,7 +161,7 @@ function SessionDetailInner() {
               button to record that you&apos;ve completed it.
             </li>
             <li>
-              The quiz at the bottom stays locked until all four assets are
+              The quiz at the bottom stays locked until all five assets are
               marked viewed — mandatory review of every asset.
             </li>
             <li>
