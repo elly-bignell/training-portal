@@ -143,39 +143,72 @@ function SessionDetailInner() {
         </div>
 
         {/* How this session works — module instructions */}
-        <div className="mb-8 bg-white border border-slate-200 rounded-2xl p-5">
-          <div className="text-xs font-bold tracking-wider text-[#1F3A5F] mb-3">
-            HOW THIS SESSION WORKS
-          </div>
-          <ol className="space-y-2 text-sm text-slate-700 list-decimal list-inside marker:text-[#1F3A5F] marker:font-bold">
-            <li>
-              Work through the five assets below in order — Debrief, Toolkit,
-              Introductory Video, Podcast, then Presentation.
-            </li>
-            <li>
-              After you&apos;ve read / watched / listened to each asset, hit
-              the green{" "}
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#3C8055] text-white rounded text-xs font-bold">
-                ✓ Mark viewed
-              </span>{" "}
-              button to record that you&apos;ve completed it.
-            </li>
-            <li>
-              The quiz at the bottom stays locked until all five assets are
-              marked viewed — mandatory review of every asset.
-            </li>
-            <li>
-              Once unlocked, take the quiz. You need{" "}
-              <span className="font-semibold">{passMark}%</span> on the
-              multiple-choice questions to pass. Unlimited retries.
-            </li>
-          </ol>
+        {(() => {
+          // Friendly labels for each asset kind, in the order they should
+          // appear on the page. Derive copy from the session's actual
+          // non-quiz assets so sessions with missing assets (e.g. no
+          // presentation) read accurately and don't mention things that
+          // aren't there.
+          const PROSE_LABEL: Partial<Record<AssetKind, string>> = {
+            debrief: "Debrief",
+            toolkit: "Toolkit",
+            intro: "Introductory Video",
+            podcast: "Podcast",
+            presentation: "Presentation",
+          };
+          const prereqLabels = session.assets
+            .filter((a) => a.kind !== "quiz")
+            .map((a) => PROSE_LABEL[a.kind] ?? a.kind);
+          const prereqCount = prereqLabels.length;
+          const wordCount =
+            ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight"][
+              prereqCount
+            ] ?? `${prereqCount}`;
+          // Join labels as "A, B, C, and D" / "A and B" etc.
+          let joinedLabels = "";
+          if (prereqLabels.length === 1) {
+            joinedLabels = prereqLabels[0];
+          } else if (prereqLabels.length === 2) {
+            joinedLabels = `${prereqLabels[0]} and ${prereqLabels[1]}`;
+          } else if (prereqLabels.length > 2) {
+            const last = prereqLabels[prereqLabels.length - 1];
+            joinedLabels = `${prereqLabels.slice(0, -1).join(", ")}, then ${last}`;
+          }
+          return (
+            <div className="mb-8 bg-white border border-slate-200 rounded-2xl p-5">
+              <div className="text-xs font-bold tracking-wider text-[#1F3A5F] mb-3">
+                HOW THIS SESSION WORKS
+              </div>
+              <ol className="space-y-2 text-sm text-slate-700 list-decimal list-inside marker:text-[#1F3A5F] marker:font-bold">
+                <li>
+                  Work through the {wordCount} assets below in order — {joinedLabels}.
+                </li>
+                <li>
+                  After you&apos;ve read / watched / listened to each asset, hit
+                  the green{" "}
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#3C8055] text-white rounded text-xs font-bold">
+                    ✓ Mark viewed
+                  </span>{" "}
+                  button to record that you&apos;ve completed it.
+                </li>
+                <li>
+                  The quiz at the bottom stays locked until all {wordCount} assets
+                  are marked viewed — mandatory review of every asset.
+                </li>
+                <li>
+                  Once unlocked, take the quiz. You need{" "}
+                  <span className="font-semibold">{passMark}%</span> on the
+                  multiple-choice questions to pass. Unlimited retries.
+                </li>
+              </ol>
           <p className="text-xs text-slate-500 mt-3 italic">
             Your progress is saved automatically and recorded for the trainers.
             Don&apos;t share your password — every rep&apos;s answers are
             tracked individually.
           </p>
         </div>
+            );
+          })()}
 
         {/* Suggested learning path */}
         <div className="mb-8">
@@ -260,28 +293,37 @@ function SessionDetailInner() {
 
         {/* Asset cards */}
         <div>
-          {session.assets.map((asset, idx) => {
-            const state =
-              asset.kind === "quiz"
-                ? progress?.quizAttempts.some((a) => a.passed)
-                  ? "viewed"
-                  : progress?.quizAttempts.length
-                  ? "in-progress"
-                  : "not-viewed"
-                : progress?.assetStates[asset.kind] ?? "not-viewed";
-            return (
-              <AssetCard
-                key={asset.kind}
-                sessionId={session.id}
-                asset={asset}
-                progress={progress}
-                state={state}
-                position={idx + 1}
-                onSetState={(kind, s) => setAssetState(session.id, kind, s)}
-                onResume={(kind, sec) => setResumePosition(session.id, kind, sec)}
-              />
-            );
-          })}
+          {(() => {
+            // Derive the list of asset kinds in this session once, then pass
+            // to each AssetCard so QuizCard knows the real prereqs (rather
+            // than relying on a hardcoded global list).
+            const sessionAssetKinds = session.assets.map((a) => a.kind);
+            return session.assets.map((asset, idx) => {
+              const state =
+                asset.kind === "quiz"
+                  ? progress?.quizAttempts.some((a) => a.passed)
+                    ? "viewed"
+                    : progress?.quizAttempts.length
+                    ? "in-progress"
+                    : "not-viewed"
+                  : progress?.assetStates[asset.kind] ?? "not-viewed";
+              return (
+                <AssetCard
+                  key={asset.kind}
+                  sessionId={session.id}
+                  asset={asset}
+                  progress={progress}
+                  state={state}
+                  position={idx + 1}
+                  sessionAssetKinds={sessionAssetKinds}
+                  onSetState={(kind, s) => setAssetState(session.id, kind, s)}
+                  onResume={(kind, sec) =>
+                    setResumePosition(session.id, kind, sec)
+                  }
+                />
+              );
+            });
+          })()}
         </div>
       </div>
     </main>

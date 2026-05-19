@@ -36,6 +36,11 @@ interface CommonProps {
   state: AssetState;
   /** 1-based position of this asset in the session's asset list. */
   position: number;
+  /** The non-quiz asset kinds present in THIS session — the quiz card uses
+   *  this to derive its prerequisites dynamically rather than relying on a
+   *  hardcoded global list (so sessions without e.g. a presentation don't
+   *  get locked forever waiting for one). */
+  sessionAssetKinds: AssetKind[];
   onSetState: (kind: AssetKind, state: AssetState) => void;
   onResume: (kind: AssetKind, seconds: number) => void;
 }
@@ -66,15 +71,9 @@ const KIND_INSTRUCTIONS: Record<AssetKind, string> = {
     "Once every asset above is marked viewed, take the quiz. You need to pass before the session is marked complete.",
 };
 
-// Non-quiz assets that gate the quiz. The quiz can only be opened once
-// every one of these is in the "viewed" state.
-const QUIZ_PREREQUISITES: AssetKind[] = [
-  "debrief",
-  "toolkit",
-  "intro",
-  "podcast",
-  "presentation",
-];
+// (Quiz prerequisites are derived per-session from the session's actual
+// non-quiz assets — see QuizCard. There used to be a hardcoded list here,
+// but it broke sessions that don't have every asset type.)
 
 // Returns the Drive file ID if `url` is a Google Drive link, else null.
 function driveFileId(url: string): string | null {
@@ -477,6 +476,7 @@ function QuizCard({
   sessionId,
   asset,
   progress,
+  sessionAssetKinds,
 }: CommonProps & { asset: QuizAsset }) {
   const passed = progress?.quizAttempts.some((a) => a.passed) ?? false;
   const attempts = progress?.quizAttempts.length ?? 0;
@@ -484,9 +484,13 @@ function QuizCard({
     ? Math.max(...progress!.quizAttempts.map((a) => a.score))
     : null;
 
-  // Quiz lockout: every prerequisite asset must be in "viewed" state.
-  // We still allow passed-quiz reviews to bypass (they've already done it).
-  const missingPrereqs = QUIZ_PREREQUISITES.filter(
+  // Quiz lockout: every prerequisite asset present in THIS session must be
+  // in "viewed" state. The list is derived from the session's actual
+  // assets (sessionAssetKinds, excluding quiz) — so a session with no
+  // presentation doesn't get gated on a presentation that doesn't exist.
+  // Passed-quiz reviews bypass (they've already done it).
+  const prereqs = sessionAssetKinds.filter((k) => k !== "quiz");
+  const missingPrereqs = prereqs.filter(
     (k) => progress?.assetStates[k] !== "viewed"
   );
   const unlocked = missingPrereqs.length === 0;
