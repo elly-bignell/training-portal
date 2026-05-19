@@ -223,12 +223,23 @@ export function useSessionsProgress(slug: string | null) {
                     a.attemptedAt.localeCompare(b.attemptedAt)
                   )
                 : existing.quizAttempts;
-              // Asset states — merge server views in (server says viewed →
-              // mark viewed). Don't downgrade anything that's already
-              // viewed locally.
-              const assetStates: Partial<Record<AssetKind, AssetState>> = {
-                ...existing.assetStates,
-              };
+              // Asset states — server wins. Whatever the server says about
+              // which assets are viewed REPLACES the local view, so that
+              // deletions in Airtable propagate to every browser on next
+              // mount. Preserve any local "in-progress" states (server only
+              // records "viewed" transitions, not partial progress like a
+              // half-played podcast).
+              const assetStates: Partial<Record<AssetKind, AssetState>> = {};
+              // 1. Carry over any in-progress states from local (server
+              //    doesn't track in-progress, so we'd lose them otherwise).
+              for (const [kind, state] of Object.entries(existing.assetStates)) {
+                if (state === "in-progress") {
+                  assetStates[kind as AssetKind] = "in-progress";
+                }
+              }
+              // 2. Apply server-truth "viewed" states (this can downgrade a
+              //    locally-viewed asset back to unset if the server doesn't
+              //    have a row for it).
               const serverViewed = viewedBySession[sid];
               if (serverViewed) {
                 serverViewed.forEach((kind) => {
