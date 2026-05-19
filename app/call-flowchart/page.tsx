@@ -823,6 +823,12 @@ export default function CallFlowchartPage() {
                   >
                     📅 Try Later
                   </a>
+                  <a
+                    href="#na-x2-call"
+                    className="px-3 py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-lg transition-colors"
+                  >
+                    📵 NA x 2
+                  </a>
                 </div>
                 <button
                   onClick={() => window.print()}
@@ -1910,8 +1916,172 @@ export default function CallFlowchartPage() {
             </div>
 
           </div>
+
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {/* NA x 2 SCRIPT SECTION                                           */}
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          <div id="na-x2-call" className="mt-8 pt-12 border-t-2 border-slate-200 scroll-mt-24">
+
+            <div className="mb-8 max-w-2xl">
+              <div className="inline-flex items-center gap-2 bg-teal-50 text-teal-700 px-3 py-1.5 rounded-full text-xs font-bold mb-4 tracking-wide uppercase">
+                📵 NA x 2 Call
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 leading-tight">NA x 2 Script</h2>
+              <p className="text-slate-500 mt-1.5 text-sm">For clients who were booked but didn&apos;t answer the confirmation call after 2 attempts</p>
+            </div>
+
+            {/* Pre-call prep banner */}
+            <div className="mb-8 bg-amber-50 border-l-4 border-amber-400 rounded-r-xl p-4 max-w-3xl">
+              <div className="flex items-start gap-3">
+                <div className="text-xl">⏰</div>
+                <div>
+                  <div className="text-[11px] font-bold tracking-widest uppercase text-amber-700 mb-1">When To Make This Call</div>
+                  <p className="text-slate-700 text-sm leading-relaxed">
+                    Completed by the <strong>Bookings Specialist / Lead Genner</strong> at <strong>9:00am</strong> on the morning of the scheduled meeting. This is the third attempt after two missed confirmation calls the day prior.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Introduction */}
+            <div className="bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 mb-4 max-w-3xl mx-auto">
+              <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-500 mb-3">SAY</div>
+              <h3 className="font-bold text-slate-900 text-base mb-3">Introduction</h3>
+              <p className="text-slate-700 text-sm italic leading-relaxed">
+                &ldquo;Hi [Name], it&apos;s [Your Name] here from Marketing Sweet &mdash; how are you?&rdquo;
+              </p>
+            </div>
+
+            <div className="flex justify-center my-3 text-slate-300 text-xl">↓</div>
+
+            {/* Positive response from client */}
+            <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-4 max-w-3xl mx-auto">
+              <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
+              <p className="text-blue-700 text-sm italic font-semibold leading-relaxed">
+                &ldquo;Yeah, really good thanks.&rdquo;
+              </p>
+            </div>
+
+            {/* Operator small talk reply */}
+            <div className="bg-white border border-slate-200 rounded-xl p-4 mb-4 max-w-3xl mx-auto">
+              <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-2">SAY</div>
+              <p className="text-slate-600 text-sm italic leading-relaxed">
+                &ldquo;That&apos;s good to hear &mdash; I&apos;m going really well, thank you.&rdquo;
+              </p>
+            </div>
+
+            <div className="flex justify-center my-3 text-slate-300 text-xl">↓</div>
+
+            {/* Reason for call */}
+            <div className="bg-slate-900 rounded-2xl p-6 mb-6 max-w-3xl mx-auto">
+              <div className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-3">SAY</div>
+              <h3 className="font-bold text-white text-base mb-3">Reason For The Call</h3>
+              <p className="text-slate-300 text-sm italic leading-relaxed">
+                &ldquo;We struggled to get hold of you yesterday, but I&apos;m just touching base to let you know that we&apos;ve completed all of the research into your business and competitors. We&apos;re looking forward to seeing you at [Time] this afternoon and will send the Zoom link through to your email.&rdquo;
+              </p>
+            </div>
+
+            <div className="flex justify-center my-3 text-slate-300 text-xl">↓</div>
+            <div className="text-center mb-5">
+              <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">How do they respond?</span>
+            </div>
+
+            {/* Three branches */}
+            <div className="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+
+              {/* A: Good to go */}
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 mb-2">✅ A &mdash; Good To Go</div>
+                <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-3">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
+                  <p className="text-blue-700 text-sm italic font-semibold leading-relaxed">
+                    &ldquo;Yep, all good &mdash; see you then.&rdquo;
+                  </p>
+                </div>
+                <div className="flex justify-center my-2 text-slate-300">↓</div>
+                <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-2">BOOK</div>
+                  <p className="text-slate-700 text-sm italic leading-relaxed">
+                    &ldquo;Brilliant &mdash; [Closer] will send the Zoom link through to your email just beforehand. Speak soon!&rdquo;
+                  </p>
+                </div>
+              </div>
+
+              {/* B: Cancel */}
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-red-500 mb-2">🚫 B &mdash; Needs To Cancel</div>
+                <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-3">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
+                  <p className="text-blue-700 text-sm italic font-semibold leading-relaxed">
+                    &ldquo;Actually, I need to cancel.&rdquo;
+                  </p>
+                </div>
+                <div className="flex justify-center my-2 text-slate-300">↓</div>
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-yellow-600 mb-2">FOLLOW UP</div>
+                  <p className="text-slate-700 text-sm italic leading-relaxed">
+                    &ldquo;No worries at all &mdash; we&apos;ll leave it with you for now and reach back out in 6 months to see if anything has changed.&rdquo;
+                  </p>
+                </div>
+              </div>
+
+              {/* C: Reschedule */}
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-amber-600 mb-2">📅 C &mdash; Needs To Reschedule</div>
+                <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-3">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-blue-500 mb-2">THEY SAY</div>
+                  <p className="text-blue-700 text-sm italic font-semibold leading-relaxed">
+                    &ldquo;Sorry, I can&apos;t make it &mdash; can we reschedule?&rdquo;
+                  </p>
+                </div>
+                <div className="flex justify-center my-2 text-slate-300">↓</div>
+                <div className="bg-white border border-slate-200 rounded-xl p-4 mb-3">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-2">SAY</div>
+                  <p className="text-slate-600 text-sm italic leading-relaxed">
+                    &ldquo;No stress at all &mdash; does [Time] on [Day] work to reschedule?&rdquo;
+                  </p>
+                </div>
+                <div className="flex justify-center my-2 text-slate-300">↓</div>
+                <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-2">BOOK</div>
+                  <p className="text-slate-700 text-sm italic leading-relaxed">
+                    &ldquo;Brilliant &mdash; I&apos;ll move a few things around in [Closer]&apos;s calendar and we&apos;ll see you then.&rdquo;
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Key Principles */}
+            <div className="mt-10 grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+              <div className="bg-white border border-slate-200 rounded-xl p-5">
+                <div className="text-2xl mb-2">⏰</div>
+                <h4 className="font-bold text-slate-900 text-sm mb-1">9am Sharp</h4>
+                <p className="text-slate-500 text-xs leading-relaxed">Make this call first thing on the morning of the meeting &mdash; it gives the client time to confirm or rearrange before the closer&apos;s diary fills up.</p>
+              </div>
+              <div className="bg-white border border-slate-200 rounded-xl p-5">
+                <div className="text-2xl mb-2">📝</div>
+                <h4 className="font-bold text-slate-900 text-sm mb-1">Lead With Research, Not Chasing</h4>
+                <p className="text-slate-500 text-xs leading-relaxed">Frame the call around the work you&apos;ve done for them &mdash; not the two missed calls. Position it as a courtesy heads-up, not a follow-up chase.</p>
+              </div>
+              <div className="bg-white border border-slate-200 rounded-xl p-5">
+                <div className="text-2xl mb-2">🔗</div>
+                <h4 className="font-bold text-slate-900 text-sm mb-1">Always Send The Zoom Link</h4>
+                <p className="text-slate-500 text-xs leading-relaxed">Confirm their email is current and let them know the link will land just before the meeting &mdash; this removes any &ldquo;I didn&apos;t see it&rdquo; excuses.</p>
+              </div>
+              <div className="bg-white border border-slate-200 rounded-xl p-5">
+                <div className="text-2xl mb-2">📅</div>
+                <h4 className="font-bold text-slate-900 text-sm mb-1">Never Walk Away Empty-Handed</h4>
+                <p className="text-slate-500 text-xs leading-relaxed">Whether confirmed, rescheduled, or pushed to a 6-month follow-up, always leave the call with a clear next step locked in.</p>
+              </div>
+            </div>
+
+            <div className="mt-8 text-center pb-8">
+              <p className="text-xs text-slate-400">NA x 2 Script &mdash; Day-Of Confirmation Call</p>
+            </div>
+
+          </div>
         </div>
-      
 
 
 
