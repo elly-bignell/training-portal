@@ -22,6 +22,184 @@ const drivePreview = (id: string) =>
 
 export const sessions: Session[] = [
   {
+    id: "session-09-integrity",
+    number: "09",
+    date: "2026-05-19",
+    title: "Integrity Holds Water. Give the 1%. Get the 200%.",
+    summary:
+      "Every script in this toolkit only works if the operator running it has integrity — when you say something, you do it. The gap between saying and doing is where the money lives.",
+    keyTakeaway:
+      "Wednesday's session was scripts. Today's session was integrity. Every script in this toolkit only works if the operator running it has integrity — meaning when you say something, you do it. The team's current pattern is to receive instructions, agree out loud, and then quietly not deliver. That gap is where the money lives. Close the gap.",
+    director: "Corie Dawson",
+    totalTime: "~45 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-09-integrity/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-09-integrity/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("1ssZuCF8G0RBsF3ssftRqSlZ1gLyOfVRG"),
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1ualgeuXkSqMpe-Fb2GT0ngwm0LNWLi5x"),
+        durationSeconds: 1800,
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~10 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s9-q1",
+            type: "multiple-choice",
+            prompt: "According to Corie's definition, integrity is best described as:",
+            topic: "Integrity defined",
+            options: [
+              "Doing the right thing even when nobody is watching the outcome",
+              "Cleanliness of conversation — when you say something, you do it",
+              "A reputation for being trustworthy, built over years with the team",
+              "The willingness to admit mistakes openly when they occur on a pitch",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "A is a more general moral definition — fine, but not the specific frame Corie used. C is \"reputation,\" which is a byproduct of integrity, not integrity itself. D is \"honesty,\" which is a separate pillar. B is the specific definition from the session: integrity is the cleanliness of the gap between saying and doing. The glass holds water — no leaks between what you commit to and what you actually deliver. Saying yes and not doing = low integrity, regardless of intention.",
+          },
+          {
+            id: "s9-q2",
+            type: "multiple-choice",
+            prompt:
+              "A rep tells the team three Mondays in a row that they'll have a deliverable done \"this week.\" Each Monday it's still pending. According to the glass-with-holes diagnostic, the right way to read this is:",
+            topic: "Glass-with-holes diagnostic",
+            options: [
+              "The rep is overcommitted and needs help reprioritising their workload",
+              "The rep doesn't understand the urgency and needs clearer communication",
+              "The rep is going through a temporary rough patch and will recover",
+              "The rep has three holes in their glass — each missed commitment leaks integrity",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "A might be true but explains away the pattern rather than naming it. B treats it as a communication failure — but the rep clearly heard the commitment, they made it themselves. C is rationalisation. D is the right read: every missed commitment is a hole in the glass. Three weeks running, the rep has punched three holes — and the water (trust, momentum, the team's willingness to depend on them) is leaking across the table. Compassion can come later. Diagnosis first.",
+          },
+          {
+            id: "s9-q3",
+            type: "multiple-choice",
+            prompt:
+              "In the A/B/C choice model, what does a rep operating in Mode B look like?",
+            topic: "A/B/C choice model",
+            options: [
+              "They listen, agree it's the right move, then load excuses for why it won't happen",
+              "They listen, register nothing, and have no memory of being told a week later",
+              "They argue with the instruction openly and try to negotiate a different approach",
+              "They listen and act immediately, even when the request is inconvenient",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "B describes Mode C (check out — total disengagement). C describes an open disagreement, which is actually healthier than Mode B because at least there's engagement. D describes Mode A (the target state). A is Mode B: the rep heard it, intellectually agreed, but has already started building the reason it won't happen for them specifically. Mode B is the most dangerous mode because it LOOKS like compliance from the outside while producing nothing. Mode C ends the career; Mode B plateaus it indefinitely.",
+          },
+          {
+            id: "s9-q4",
+            type: "multiple-choice",
+            prompt:
+              "A team's performance has been flat for six months — not regressing, just sideways. According to the session, why is this state worse than outright regression?",
+            topic: "Sideways is worse than regression",
+            options: [
+              "Because flat performance signals that the team has lost its ambition",
+              "Because the team's most ambitious members will leave to find growth elsewhere",
+              "Because sideways doesn't trigger urgency — it gets rationalised as \"stable\"",
+              "Because flat performance metrics make it harder to justify investment from leadership",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "A is moralising. B and D are real consequences but secondary. C is the central insight: regression triggers urgency — you see the line drop, you act. Sideways looks fine, so it gets explained away as \"stable,\" \"consolidating,\" \"maintaining.\" Time keeps passing but the position doesn't change. Meanwhile, everyone NOT sideways is pulling further ahead by compounding. Six months later you're still in the same place — and now structurally behind.",
+          },
+          {
+            id: "s9-q5",
+            type: "multiple-choice",
+            prompt: "According to the session, how should Sunday be spent — and why?",
+            topic: "Sunday reflection",
+            options: [
+              "2–3 hours of structured reflection with no screens; produces a structural Monday-clarity advantage",
+              "Recovery from the week — exercise, family time, deliberate disconnection from work entirely",
+              "A flexible day that depends on the week ahead — sometimes prep, sometimes rest",
+              "Light review of the week's emails so you don't walk into Monday cold",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "B is healthy but isn't the Sunday principle Corie taught — recovery doesn't produce Monday clarity. C is what most people do, and produces inconsistent results. D is a weak version (emails are not reflection). A is the principle: structured reflection time using three written questions (what worked, what didn't, what changes this week). The structural advantage isn't the activity itself — it's that you walk into Monday with clarity that everyone else on the floor won't have until Wednesday. Two days a week of head-start × 50 weeks = 100 days of structural advantage every year.",
+          },
+          {
+            id: "s9-q6",
+            type: "multiple-choice",
+            prompt:
+              "A senior colleague has been abnormally quiet this week — not depressed, just noticeably less engaged. According to the \"sniffing the baseline\" principle, the right move is to:",
+            topic: "Sniffing the baseline",
+            options: [
+              "Give them space and wait for them to surface the issue when they're ready",
+              "Escalate to leadership so the right person can handle the conversation",
+              "Open a door directly: \"Hey, you OK? You've been quieter — anything going on?\"",
+              "Avoid commenting and let the natural rhythm of the team correct it organically",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "A defers indefinitely — and the colleague has already shown the shift, which is the door opening. B escalates prematurely without first checking yourself. D treats baseline shifts as self-correcting, which they rarely are. C is the move: notice the shift, name it gently, open a door. You don't need to solve anything in the moment — just signal that you saw the change and care. If they don't open up, THEN you bring it to leadership. Better to over-care than miss something that surfaces visibly later.",
+          },
+          {
+            id: "s9-q7",
+            type: "multiple-choice",
+            prompt:
+              "According to the 1% / 200% trade, what does the \"1%\" typically refer to?",
+            topic: "1% / 200% trade",
+            options: [
+              "The 1% of the rep's time that's being wasted on low-value activities each day",
+              "The small attitude, habit, or pride that's holding back the entire upside",
+              "The 1% improvement in close rates needed to hit the next quarterly target",
+              "The 1% of clients who consume 99% of the rep's emotional bandwidth",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "A is a time-management read — not the principle Corie taught. C is a metrics interpretation that misses the framing. D is the 80/20 principle applied to client portfolios — also a real thing, but not THIS principle. B is correct: the 1% is the single behaviour, attitude, or commitment you're holding onto — the pride that won't let you admit you didn't read the book, the defensiveness when correction lands, the small concession that crowds out Sunday reflection, the inherited pattern you can see clearly but won't change. The 1% is small in isolation but is the WHOLE gap between where you are and where you could be.",
+          },
+          {
+            id: "s9-q8",
+            type: "short-answer",
+            prompt:
+              "Identify YOUR 1% — the specific behaviour, attitude, or commitment you suspect is the biggest single thing holding you back. Then write down (1) where you think this pattern came from, and (2) the smallest concrete change you will make this week to drop it. (4–5 sentences)",
+            topic: "1% / 200% trade",
+            modelAnswer:
+              "Example: My 1% is the defensive reaction I have when someone questions my approach on a call — I argue in the moment instead of taking notes and processing later. I think this came from years of being the youngest in my family, where being right meant being heard. The smallest change this week is: when someone questions me on a call, I will say \"let me think about that\" instead of jumping straight into defence. I'll review the question with a colleague within 24 hours and decide if they were right. The point isn't to never disagree — it's to stop the in-the-moment reflex that makes me look defensive and stops me hearing anything useful.",
+            keywords: [
+              "1%",
+              "behaviour",
+              "attitude",
+              "pattern",
+              "came from",
+              "this week",
+              "change",
+              "concrete",
+              "smallest",
+              "reflex",
+            ],
+            keywordsRequired: 4,
+            softMinChars: 250,
+            rationale:
+              "The 1% only collapses when you can name it specifically, trace its origin honestly, and replace it with a concrete behaviour change you can do THIS WEEK. Vague aspirations (\"be more open to feedback\") never land — the smallest, most specific habit change does.",
+          },
+        ],
+      },
+    ],
+  },
+
+  {
     id: "session-08-numbers",
     number: "08",
     date: "2026-05-18",
