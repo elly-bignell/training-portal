@@ -22,6 +22,191 @@ const drivePreview = (id: string) =>
 
 export const sessions: Session[] = [
   {
+    id: "session-10-six-week",
+    number: "10",
+    date: "2026-05-20",
+    title: "The 6-Week Challenge. Authority. Sniper Calls. Bulk Cash.",
+    summary:
+      "A 6-week, $60k campaign through the existing client base. The campaign isn't the test — the new centralised operating model behind it is, and it's what runs the business from here on.",
+    keyTakeaway:
+      "A major shift starts today. $60k of revenue across six weeks, $15k in bonuses on the table, two teams competing, an upsell campaign through the existing client base, and a complete overhaul of how the day runs — schedules, scripts, and oversight all centralised. The campaign isn't the test. The OPERATING MODEL behind the campaign is the test — and if you run it properly, this is the model that runs everything from here on.",
+    director: "Corie Dawson",
+    totalTime: "~50 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-10-six-week/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-10-six-week/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("1RK34ZHHNo22oH78a_It55hgCZIw2qVwR"),
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1grMDdsbjh1X-enWHDnnbj6-E42q-7U4G"),
+        durationSeconds: 1800,
+      },
+      {
+        kind: "presentation",
+        estimate: "10 min watch",
+        url: drivePreview("1C9RBKDJrS_cdjoQfKB6cM9mDayCFdbuN"),
+        mode: "video",
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~10 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s10-q1",
+            type: "multiple-choice",
+            prompt:
+              "You're making the first outbound call to a client you haven't proactively contacted in four months. According to the authority reframe, the move you should NOT make is:",
+            topic: "Authority reframe",
+            options: [
+              "Saying you're not their normal point of contact",
+              "Apologising for the months since you last contacted them",
+              "Calling out a senior title (head of customer service)",
+              "Framing your silence as strategic (\"came up on my radar\")",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "A, C, and D are all explicit moves in the authority reframe — establishing seniority, naming you're above the account, and framing the silence as deliberate. B is the rule the session specifically called out NOT to do. The minute you apologise for the silence, the client has you — you've handed them moral high ground. Instead, frame it: \"there was no point calling without a plan. Now we have a plan — that's why I'm calling.\"",
+          },
+          {
+            id: "s10-q2",
+            type: "multiple-choice",
+            prompt:
+              "When a prospect pushes back on the price of your recommended package, the framework says you should pivot the conversation to:",
+            topic: "Price → math reframe",
+            options: [
+              "The math: backlinks per month vs industry standard",
+              "The features and exclusive inclusions of the package",
+              "Case studies of similar businesses you've delivered for",
+              "The 4-month trial as a flexible, risk-reducing hedge",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "B defends features — exactly what cheap competitors also have. C is fine generally but doesn't directly counter a price objection. D panic-deploys the trial concession before exhausting the math conversation — that's saving your strongest move for last. A is the play: replace a PRICE conversation (\"why is it so expensive?\") with a MATH conversation (\"why are you under-resourced?\"). They can argue with price perception. They can't argue with the backlink math.",
+          },
+          {
+            id: "s10-q3",
+            type: "multiple-choice",
+            prompt:
+              "Under the 4-month trial override, when does the rep receive the SECOND half of their commission?",
+            topic: "Commission structure",
+            options: [
+              "At the end of the 4-month trial period regardless of conversion",
+              "Only if the client converts to the full 12-month follow-on term",
+              "At the 3-month decision call, when the conversation begins",
+              "Spread evenly across each remaining month after the trial",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "A treats the trial signing as the full event — but the structure deliberately ties payment to outcome. C jumps the gun: the 3-month CALL is when the conversation happens, not when the conversion is confirmed. D is a fabrication — there's no monthly drip. B is the rule: 50% on signup, 50% IF the client converts to the full 12-month term at month four. This structure means the rep is motivated to deliver real results in the trial window — not just close the trial and move on.",
+          },
+          {
+            id: "s10-q4",
+            type: "multiple-choice",
+            prompt:
+              "A campaign call is heading toward a lost client. According to the zero-fatalities rule, the right play is to:",
+            topic: "Zero-fatalities rule",
+            options: [
+              "Push harder to convert — losing a client costs double to make back",
+              "Drop to the lowest available package immediately to hold the relationship",
+              "Back off and book a future re-engagement before they decide to leave",
+              "Hand the client to a teammate to attempt a fresh re-pitch",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "A doubles down on losing momentum, which is exactly when prospects dig in. B panic-discounts to hold an account that wasn't closeable today, and trains the prospect that pressure produces price cuts. D hands the loss to a teammate without changing the underlying problem. C is the rule: every call has TWO acceptable outcomes — UPSOLD or HELD. If a call is heading toward \"I'm leaving,\" back off and book a future check-in. Lost clients double the workload to recover from. Held clients can be re-engaged in three months. The zero-fatalities rule is uncompromising.",
+          },
+          {
+            id: "s10-q5",
+            type: "multiple-choice",
+            prompt:
+              "Under the new central calendar model, what changes for the individual rep?",
+            topic: "Central calendar model",
+            options: [
+              "Daily appointments are assigned centrally; reps no longer pick clients",
+              "The rep picks 3–4 clients to call from the assigned daily list",
+              "Reps own their calendars but submit a daily plan to the director",
+              "The rep manages their own schedule with a hard Friday 2pm cut-off",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "B mis-describes the model — the assigned list IS the day, not a menu the rep picks from. C keeps rep autonomy with light oversight, but that's the old model with reporting bolted on. D is just the Friday rule applied to the existing model. A is the actual shift: the schedule is owned centrally and assigned day-by-day. The rep no longer picks who to call. The trade is real autonomy for compressed focus — and the Friday 2pm knock-off is the reward.",
+          },
+          {
+            id: "s10-q6",
+            type: "multiple-choice",
+            prompt:
+              "Why does the centralised calendar model produce more revenue work in LESS time?",
+            topic: "Parkinson's Law applied",
+            options: [
+              "Reducing the cognitive load on logistics so reps focus only on calls",
+              "Standardising the call mix so reps can benchmark each other's outcomes",
+              "Compressing the time available, which forces low-value work to drop out",
+              "Creating accountability through visibility into each rep's daily activity",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "A is real but secondary — logistics relief is a benefit, not the mechanism. B is a side-effect that may or may not happen. D is also real but is about management visibility, not productivity. C is the principle the session named explicitly: Parkinson's Law — \"work expands to fill the time available.\" When reps own their calendars, days fill with low-value work because the time exists to fill. Compress the time, the low-value work drops out by necessity. Same reps complete more revenue work in fewer hours.",
+          },
+          {
+            id: "s10-q7",
+            type: "multiple-choice",
+            prompt:
+              "The director tells you in morning catch-up: \"Pitch Client X the authority package today.\" Which response demonstrates A-mode communication?",
+            topic: "A-mode vs B-mode",
+            options: [
+              "\"I'll have a think about whether authority's right for them and let you know\"",
+              "\"Okay, I'll add them to my pipeline and get to them sometime this week\"",
+              "\"Yeah, will do, though I'd prefer to wait until I've reviewed last month's data\"",
+              "\"Got it — quick questions: are they on $300 or $550, any recent issues?\"",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "A is the textbook B-mode response — \"let me think about it\" is the going-off-to-process that freezes the campaign. B drifts the timeline (\"sometime this week\" = never). C delays under the cover of thoroughness — that's B-mode wearing the costume of A. D is the only A-mode response: heard the brief, asked clarifying questions IN the moment, set up to act. Note that genuine disagreement is also A-mode — but it has to happen IN the conversation, not later.",
+          },
+          {
+            id: "s10-q8",
+            type: "short-answer",
+            prompt:
+              "Pick a real client from the existing book you'll call in week one of the campaign. Write down the FOUR pre-prep numbers you need before that call: (1) current monthly spend, (2) current backlink count, (3) industry standard backlink count for their category, (4) the package you'll recommend. Then write your opening authority line, naming the client. (5–6 sentences)",
+            topic: "Pre-prep + authority opener",
+            modelAnswer:
+              "Example: Client is Acme Plumbing. (1) Current spend: $300/month on SEO support. (2) Current backlinks: 14/month. (3) Industry standard for plumbing/trades: ~63/month. (4) Package I'll recommend: Authority at $550/month (126 backlinks/month — 9x their current quota). Opening line: \"Hi Mark, [name] here, I'm the head of customer service at Marketing Sweet. I know I'm not your usual point of contact — your campaign came up on my radar when I was reviewing all our accounts. I've had a look at yours and I want to walk you through what I've seen and what we're going to do about it.\"",
+            keywords: [
+              "current",
+              "backlinks",
+              "industry standard",
+              "package",
+              "authority",
+              "radar",
+              "head of",
+              "9x",
+              "month",
+            ],
+            keywordsRequired: 4,
+            softMinChars: 300,
+            rationale:
+              "The four numbers are the spine of the call — without them, you're improvising and the math reframe collapses. The opening line establishes authority in the first 15 seconds (senior title + strategic-silence framing). Together they set the call up to close the upsell rather than negotiate it.",
+          },
+        ],
+      },
+    ],
+  },
+
+  {
     id: "session-09-integrity",
     number: "09",
     date: "2026-05-19",
