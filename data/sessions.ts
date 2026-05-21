@@ -22,6 +22,179 @@ const drivePreview = (id: string) =>
 
 export const sessions: Session[] = [
   {
+    id: "session-12-sell-the-system",
+    number: "12",
+    date: "2026-05-21",
+    title: "Sell the System. Don't Explain It.",
+    summary:
+      "The CD Notes commission scheme returns — with one critical reframe. Plus the ABC mindset, the Wallace test on visible belief, the four weekly questions for every direct report, and the 300% rule on earning vs. learning.",
+    keyTakeaway:
+      "Last time the $25 booking note went in the tray and the close commission was treated as a footnote. That's the error. Pitch the trophy, not the participation prize — the $25 is the safety rope, the $100 close is the climb. Put both notes in the tray together so reps see the 4x prize sitting next to the safety net.",
+    director: "Corie Dawson",
+    totalTime: "~45 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-12-sell-the-system/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-12-sell-the-system/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("1SHS3vJM5ALsA7PoFaWEfVE72ygg-fOOe"),
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1tagorCnjS6WbvEFnb_Bk3iwR4xd12LnU"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "presentation",
+        estimate: "10 min watch",
+        url: drivePreview("1lpiXk2_Jnb8OdS3Fc7DunnQuIUGjAu-I"),
+        mode: "video",
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~10 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s12-q1",
+            type: "multiple-choice",
+            prompt:
+              "What changed about how the CD Notes commission scheme should be presented this time?",
+            topic: "Both notes in the tray",
+            options: [
+              "Pay more for the booking and less for the close",
+              "Put both notes — booking and close — in the tray",
+              "Drop the booking commission and pay only on close",
+              "Add a third tier on top of the existing two",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Both notes in the tray together. The $25 booking note is the safety rope, the close note is the prize. Last time, only the booking note went in — and reps read it as a $25 game.",
+          },
+          {
+            id: "s12-q2",
+            type: "multiple-choice",
+            prompt:
+              "Which mindset is described as \"comfortable, drifting through, the most dangerous of the three\"?",
+            topic: "ABC mindset",
+            options: [
+              "Mindset A — Abundance",
+              "Mindset B — Lack",
+              "Mindset C — Drift",
+              "None of the above",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Mindset C is the comfortable drift. It's not actively negative like B, which is exactly what makes it dangerous — there's no alarm bell, just slow decline.",
+          },
+          {
+            id: "s12-q3",
+            type: "multiple-choice",
+            prompt:
+              "According to the maths of asking, what happens when you ask 0 people?",
+            topic: "Maths of asking",
+            options: [
+              "0 yeses — the only guaranteed outcome",
+              "Around 1 yes via word-of-mouth referrals",
+              "Around 2 yeses, the same as asking 10",
+              "Depends entirely on the market right now",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "Zero asks = zero yeses, guaranteed. Asking 10 people typically returns ~2. The ego costs deals when it protects itself from rejection by not asking.",
+          },
+          {
+            id: "s12-q4",
+            type: "multiple-choice",
+            prompt: "What does the Wallace test say about belief?",
+            topic: "Wallace test",
+            options: [
+              "Loud people are usually the most genuine believers",
+              "Silent belief carries more weight than visible belief",
+              "Quiet achievers should never speak up to a team",
+              "Visible belief is what actually moves people",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "Visible belief is what moves people. Silent belief reads as doubt to the team. You don't need to be loud — but you can't be silent either.",
+          },
+          {
+            id: "s12-q5",
+            type: "multiple-choice",
+            prompt:
+              "What's the first question to ask each direct report every week?",
+            topic: "Four weekly questions",
+            options: [
+              "\"How are you feeling about the role?\"",
+              "\"How much do you want to earn this week?\"",
+              "\"What are you working on today?\"",
+              "\"Are you happy with the commission scheme?\"",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Force a specific number. \"How much do you want to earn this week?\" is the question that anchors everything else — the prize, the deal count, the daily activity.",
+          },
+          {
+            id: "s12-q6",
+            type: "multiple-choice",
+            prompt:
+              "To earn 50% more, roughly how much effort change is required?",
+            topic: "Earning is learning",
+            options: [
+              "About 300% — new skills, new responsibilities",
+              "About 50% — work 50% more hours",
+              "About 100% — double your weekly output",
+              "About 30% — sharpen your attitude",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "Roughly 300% — and it's effort *change*, not effort hours. New skills, new responsibilities, more balls in the air. Earning is learning.",
+          },
+          {
+            id: "s12-q7",
+            type: "multiple-choice",
+            prompt:
+              "Why is \"standing still\" effectively the same as \"going backward\"?",
+            topic: "Complacency trap",
+            options: [
+              "Because the team next door is always faster",
+              "Because senior staff naturally get worse over time",
+              "Because inflation and competitors quietly erode the position",
+              "Because every business eventually shrinks",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Inflation strips real income; competitors don't pause; tax rules quietly erode the gain. Standing still is going backward — just slowly enough that you don't notice.",
+          },
+          {
+            id: "s12-q8",
+            type: "short-answer",
+            prompt:
+              "In your own words, write the opening you would use when re-pitching the CD Notes commission scheme to your team. Lead with the prize ($100 close), frame the $25 booking note as the safety rope, and show them the 4x maths. Three to five sentences.",
+            topic: "Pitch the prize",
+            rationale:
+              "Look for: (1) leads with the close commission, not the $25, (2) explicit 4x framing, (3) frames the $25 as a safety rope or lubrication, (4) ties it to a specific weekly number. Marks off for any version that opens with the $25.",
+            modelAnswer:
+              "Example: The big news is the close commission — $100 if you bring in a deal over $500 margin, $50 under. The $25 booking note is just the safety rope: even if the deal doesn't land, you still get paid for getting it in front of the closer. That's a 4x multiplier sitting in the tray waiting for you. Last time we ran this, we made the mistake of pitching the $25 — this time the prize is the close. How many deals are you closing this week?",
+            keywords: ["close", "100", "prize", "safety", "4x", "booking"],
+            keywordsRequired: 3,
+            softMinChars: 150,
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: "session-11-seo-pitch",
     number: "11",
     date: "2026-05-20",
