@@ -101,12 +101,23 @@ function SessionsHomeInner() {
     [effectiveSessions]
   );
 
+  // Featured sessions get hoisted out of the normal grid and rendered as
+  // banner cards above it. They're not filtered by the status chips —
+  // they're always visible because they're the team's "watch this now"
+  // attention magnets.
+  const featuredSessions = useMemo(
+    () => ranked.filter((s) => s.featured),
+    [ranked]
+  );
+
   const visibleSessions = useMemo(
     () =>
-      ranked.filter((s) => {
-        if (filter === "all") return true;
-        return getSessionStatus(s, data.sessions[s.id]) === filter;
-      }),
+      ranked
+        .filter((s) => !s.featured)
+        .filter((s) => {
+          if (filter === "all") return true;
+          return getSessionStatus(s, data.sessions[s.id]) === filter;
+        }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ranked, filter, data, isCS]
   );
@@ -194,6 +205,63 @@ function SessionsHomeInner() {
               </div>
             </div>
           </Link>
+        )}
+
+        {/* Featured sessions — full-width banner cards above the grid */}
+        {featuredSessions.length > 0 && (
+          <div className="mb-8 space-y-4">
+            {featuredSessions.map((s) => {
+              const status = getSessionStatus(s, data.sessions[s.id]);
+              const done = status === "completed";
+              return (
+                <Link
+                  key={s.id}
+                  href={`/sessions/${s.id}`}
+                  className="group block rounded-2xl overflow-hidden border border-[#D49A30]/40 shadow-sm hover:shadow-lg transition-all bg-gradient-to-br from-[#1F3A5F] via-[#1F3A5F] to-[#2a4a73] relative"
+                >
+                  {/* Gold accent stripe */}
+                  <div className="h-1.5 w-full bg-[#D49A30]" />
+                  <div className="p-6 sm:p-7 text-white">
+                    <div className="flex items-start gap-4 flex-wrap">
+                      <div className="flex-1 min-w-0">
+                        <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-[#D49A30] text-[#1F3A5F] rounded text-[10px] font-bold tracking-wider mb-3">
+                          ★ FEATURED · {s.bannerLabel ?? "WATCH THIS"}
+                        </div>
+                        <h2 className="text-2xl sm:text-3xl font-bold leading-tight mb-2">
+                          {s.title}
+                        </h2>
+                        <p className="text-white/85 text-sm sm:text-base mb-4 max-w-2xl">
+                          {s.summary}
+                        </p>
+                        <div className="flex items-center gap-4 text-xs text-white/70">
+                          <span className="inline-flex items-center gap-1">
+                            <svg
+                              className="w-3.5 h-3.5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle cx="12" cy="12" r="9" strokeWidth={2} />
+                              <path strokeLinecap="round" strokeWidth={2} d="M12 7v5l3 2" />
+                            </svg>
+                            {s.totalTime}
+                          </span>
+                          {done && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#3C8055] text-white rounded-full font-bold tracking-wider">
+                              ✓ WATCHED
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="text-[#D49A30] font-bold whitespace-nowrap text-base self-center">
+                        {done ? "Rewatch →" : "Watch the video →"}
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         )}
 
         {/* Filter chips */}

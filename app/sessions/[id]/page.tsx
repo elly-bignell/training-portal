@@ -69,6 +69,89 @@ function SessionDetailInner() {
   const passMark =
     quizAsset && quizAsset.kind === "quiz" ? quizAsset.passMark : 80;
 
+  // ─── Featured single-video render ────────────────────────────────────────
+  // For feature sessions (e.g. Session 14 "Client Growth Outreach") we
+  // skip the entire hero/learning-path/how-this-works scaffolding and
+  // render a banner + the single video. The asset is still tracked the
+  // normal way — DriveEmbed handles 75%-played auto-mark + the manual
+  // Mark Viewed button as a fallback.
+  if (session.featured && visibleAssets.length > 0) {
+    return (
+      <main className="min-h-screen bg-slate-50">
+        <SessionsHeader
+          repName={repName}
+          breadcrumb={`Session ${session.number}`}
+        />
+        <div className="max-w-4xl mx-auto px-6 py-8">
+          <Link
+            href="/sessions"
+            className="inline-block text-sm text-slate-500 hover:text-[#1F3A5F] mb-4"
+          >
+            ← All sessions
+          </Link>
+
+          {/* Featured banner */}
+          <div className="rounded-2xl overflow-hidden border border-[#D49A30]/40 shadow-sm mb-8 bg-gradient-to-br from-[#1F3A5F] via-[#1F3A5F] to-[#2a4a73]">
+            <div className="h-1.5 w-full bg-[#D49A30]" />
+            <div className="p-7 text-white">
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-[#D49A30] text-[#1F3A5F] rounded text-[10px] font-bold tracking-wider mb-3">
+                ★ FEATURED · {session.bannerLabel ?? "WATCH THIS"}
+              </div>
+              <h1 className="text-3xl sm:text-4xl font-bold leading-tight mb-3">
+                {session.title}
+              </h1>
+              <p className="text-white/85 text-base max-w-2xl mb-4">
+                {session.keyTakeaway}
+              </p>
+              <div className="flex items-center gap-4 text-sm text-white/70">
+                <span className="inline-flex items-center gap-1">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle cx="12" cy="12" r="9" strokeWidth={2} />
+                    <path strokeLinecap="round" strokeWidth={2} d="M12 7v5l3 2" />
+                  </svg>
+                  {session.totalTime}
+                </span>
+                {status === "completed" && (
+                  <span className="px-2 py-0.5 text-xs font-bold tracking-wider bg-[#3C8055] text-white rounded-full">
+                    ✓ WATCHED
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Single video — no Mark Viewed prompt copy, no PDFs, no quiz */}
+          <div>
+            {visibleAssets.map((asset, idx) => {
+              const state =
+                progress?.assetStates[asset.kind] ?? "not-viewed";
+              return (
+                <AssetCard
+                  key={asset.kind}
+                  sessionId={session.id}
+                  asset={asset}
+                  progress={progress}
+                  state={state}
+                  position={idx + 1}
+                  sessionAssetKinds={visibleAssets.map((a) => a.kind)}
+                  onSetState={(kind, s) => setAssetState(session.id, kind, s)}
+                  onResume={(kind, sec) =>
+                    setResumePosition(session.id, kind, sec)
+                  }
+                />
+              );
+            })}
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-slate-50">
       <SessionsHeader

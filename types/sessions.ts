@@ -108,6 +108,12 @@ export interface Session {
   /** Total time across all five assets, e.g. "~50 min". */
   totalTime: string;
   assets: Asset[];
+  /** Featured one-off sessions render as a full-width banner above the
+   *  normal grid on the home page and use a stripped-down detail layout
+   *  (banner + video only — no learning path, no how-this-works copy). */
+  featured?: boolean;
+  /** Label shown above the title in the feature banner (home + detail). */
+  bannerLabel?: string;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

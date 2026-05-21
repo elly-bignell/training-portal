@@ -21,6 +21,32 @@ const drivePreview = (id: string) =>
   `https://drive.google.com/file/d/${id}/preview`;
 
 export const sessions: Session[] = [
+  // ─── Featured: Client Growth Outreach ────────────────────────────────────
+  // One-off feature session. Single video, no PDF, no quiz, no learning
+  // path. Renders as a full-width banner above the normal grid on the home
+  // page and uses a stripped-down hero on the detail page.
+  {
+    id: "session-14-client-growth-outreach",
+    number: "14",
+    date: "2026-05-21",
+    title: "Client Growth Outreach",
+    summary:
+      "Watch the full video — the new direction for client outreach across the whole team.",
+    keyTakeaway:
+      "One video. Watch it end-to-end and understand it. This is the new direction for client growth outreach across the team.",
+    director: "Corie Dawson",
+    totalTime: "~10 min",
+    featured: true,
+    bannerLabel: "Client Growth Outreach",
+    assets: [
+      {
+        kind: "presentation",
+        estimate: "10 min watch",
+        url: drivePreview("1d8Z3Gip5XqaWwKLT0ZYwfVaYbCnOv3yr"),
+        mode: "video",
+      },
+    ],
+  },
   {
     id: "session-13-outreach-playbook",
     number: "13",
