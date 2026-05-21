@@ -88,24 +88,6 @@ function SessionsHomeInner() {
     [isCS]
   );
 
-  // For CS reps there is no quiz, so "completed" must come from all
-  // (visible) assets being viewed rather than from a passed quiz.
-  const effectiveStatus = (s: Session) => {
-    const prog = data.sessions[s.id];
-    if (!isCS) return getSessionStatus(s, prog);
-    if (!prog) return "not-started" as const;
-    const allViewed = s.assets.every(
-      (a) => prog.assetStates[a.kind] === "viewed"
-    );
-    if (allViewed && s.assets.length > 0) return "completed" as const;
-    const anyTouched = s.assets.some(
-      (a) =>
-        prog.assetStates[a.kind] === "viewed" ||
-        prog.assetStates[a.kind] === "in-progress"
-    );
-    return anyTouched ? ("in-progress" as const) : ("not-started" as const);
-  };
-
   // Rank sessions: newest first (latest date wins).
   const ranked = useMemo(
     () =>
@@ -123,7 +105,7 @@ function SessionsHomeInner() {
     () =>
       ranked.filter((s) => {
         if (filter === "all") return true;
-        return effectiveStatus(s) === filter;
+        return getSessionStatus(s, data.sessions[s.id]) === filter;
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ranked, filter, data, isCS]
@@ -141,7 +123,7 @@ function SessionsHomeInner() {
     0
   );
   const completedCount = effectiveSessions.filter(
-    (s) => effectiveStatus(s) === "completed"
+    (s) => getSessionStatus(s, data.sessions[s.id]) === "completed"
   ).length;
   const portalPct = totalAssets > 0
     ? Math.round((totalViewed / totalAssets) * 100)
@@ -249,7 +231,7 @@ function SessionsHomeInner() {
                 key={s.id}
                 session={s}
                 progress={data.sessions[s.id]}
-                status={effectiveStatus(s)}
+                status={getSessionStatus(s, data.sessions[s.id])}
               />
             ))}
           </div>

@@ -74,8 +74,25 @@ export function getSessionStatus(
   progress: SessionProgress | undefined
 ): SessionStatus {
   if (!progress) return "not-started";
+
+  // A passing quiz attempt completes any session that has a quiz. This is
+  // the canonical "I finished this" signal for the sales team.
   const passed = progress.quizAttempts.some((a) => a.passed);
   if (passed) return "completed";
+
+  // Sessions without a quiz (e.g. Session 13) complete the moment every
+  // non-quiz asset is marked viewed. Same rule applies to CS reps, who see
+  // a quiz-stripped projection of every session — once they've viewed all
+  // assets they're shown, the session is done.
+  const nonQuizAssets = session.assets.filter((a) => a.kind !== "quiz");
+  const hasQuiz = session.assets.length !== nonQuizAssets.length;
+  if (!hasQuiz && nonQuizAssets.length > 0) {
+    const allViewed = nonQuizAssets.every(
+      (a) => progress.assetStates[a.kind] === "viewed"
+    );
+    if (allViewed) return "completed";
+  }
+
   const anyViewed = Object.values(progress.assetStates).some(
     (s) => s === "viewed" || s === "in-progress"
   );

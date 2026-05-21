@@ -22,6 +22,47 @@ const drivePreview = (id: string) =>
 
 export const sessions: Session[] = [
   {
+    id: "session-13-outreach-playbook",
+    number: "13",
+    date: "2026-05-21",
+    title: "The Outreach Call Playbook",
+    summary:
+      "How to run the outreach call: build the schedule with one tab per rep, read the room before you read the script, anchor on the top tier and drop to the middle, replace every discount with a Trojan-horse backlink package.",
+    keyTakeaway:
+      "Stop saving clients. Start selling them. Two upsells offset one cancellation — but only if you hold the line, read the room, and replace discounts with backlinks. The corner is the moment the client pushes back on price; whoever brakes latest wins the corner.",
+    director: "Corie Dawson",
+    totalTime: "~35 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-13-outreach-playbook/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-13-outreach-playbook/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("1zJ5glspv6MOW-Eu7YrRDQ2mPvHolTgfw"),
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1D5TSIMZPCAsHiMvKj-8BRcXCctRpYVi9"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "presentation",
+        estimate: "10 min watch",
+        url: drivePreview("1dA9i6j7iyZKDt5fbzyC3dh3oKqp3nuLE"),
+        mode: "video",
+      },
+    ],
+  },
+  {
     id: "session-12-sell-the-system",
     number: "12",
     date: "2026-05-21",
