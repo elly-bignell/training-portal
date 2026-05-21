@@ -73,7 +73,14 @@ function SessionsHomeInner() {
 
   // Rank sessions: newest first (latest date wins).
   const ranked = useMemo(
-    () => [...sessions].sort((a, b) => (a.date < b.date ? 1 : -1)),
+    () =>
+      [...sessions].sort((a, b) => {
+        // Newest sessions first. Sort by date desc, then by session number
+        // desc as a tiebreaker (two sessions can share a date when more
+        // than one happens in a day).
+        if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+        return a.number < b.number ? 1 : -1;
+      }),
     []
   );
 
