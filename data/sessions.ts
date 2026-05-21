@@ -22,6 +22,172 @@ const drivePreview = (id: string) =>
 
 export const sessions: Session[] = [
   {
+    id: "session-11-seo-pitch",
+    number: "11",
+    date: "2026-05-20",
+    title: "SEO Sales Pitch Playbook",
+    summary:
+      "How to explain SEO to a client. The librarian metaphor, the four categories, the product map, the DA conversation, the close — every line you'll need.",
+    keyTakeaway:
+      "Customers don't know what SEO is. They know what a library is. Google is the librarian, your client's website is a book, and our job is to get the book shelved at eye-level. That metaphor — used in the first three minutes — does more for the pitch than any feature dump ever will.",
+    director: "Corie Dawson",
+    totalTime: "~25 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-11-seo-pitch/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-11-seo-pitch/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("1mXoaytw23U-1Nthl9TCbI75nnWk6u4SK"),
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~10 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s11-q1",
+            type: "multiple-choice",
+            prompt:
+              "In the librarian metaphor, what role does Google play?",
+            topic: "Librarian metaphor",
+            options: [
+              "The author of every book on the shelf",
+              "The librarian who decides shelf placement",
+              "The customer browsing through the shelves",
+              "The publisher who prints all the books",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Google is the librarian. Your website is the book. The whole pitch hangs off this one sentence — say it out loud, in the first three minutes, every call.",
+          },
+          {
+            id: "s11-q2",
+            type: "multiple-choice",
+            prompt:
+              "What are the four categories of SEO, in the order taught in the playbook?",
+            topic: "Four categories",
+            options: [
+              "On-page, off-page, technical, local",
+              "Technical, content, local, social",
+              "Keywords, backlinks, traffic, conversions",
+              "Strategy, execution, measurement, reporting",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "On-page, off-page, technical, local. Always in that order. If a rep can't name all four without thinking, they're not ready to quote SEO.",
+          },
+          {
+            id: "s11-q3",
+            type: "multiple-choice",
+            prompt:
+              "Backlinks and citations from other websites belong to which category?",
+            topic: "Off-page",
+            options: ["Off-page", "On-page", "Technical", "Local"],
+            correctAnswer: 0,
+            rationale:
+              "Off-page is what other authors say about you. Backlinks, citations, mentions. Frame it as \"other authors are now citing your book.\"",
+          },
+          {
+            id: "s11-q4",
+            type: "multiple-choice",
+            prompt:
+              "Site speed, mobile usability, and crawl errors belong to which category?",
+            topic: "Technical",
+            options: [
+              "Local SEO",
+              "On-page SEO",
+              "Technical SEO",
+              "Off-page SEO",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Technical SEO is the plumbing: speed, mobile, indexing, schema, crawl health. If the librarian can't open the book, none of the content matters.",
+          },
+          {
+            id: "s11-q5",
+            type: "multiple-choice",
+            prompt:
+              "How should you explain Domain Authority to a customer?",
+            topic: "Domain Authority",
+            options: [
+              "The total number of backlinks the site has earned",
+              "The author's reputation, scored out of 100",
+              "A ranking number Google publishes for every site",
+              "The website's overall monthly traffic value",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "DA is the author's measured reputation. Not a backlink count, not traffic, not something Google publishes. Reframe it that way every time.",
+          },
+          {
+            id: "s11-q6",
+            type: "multiple-choice",
+            prompt: "Which is the right way to use DA in a sales pitch?",
+            topic: "Domain Authority",
+            options: [
+              "Promise the customer a specific DA increase",
+              "Avoid mentioning DA — it confuses customers",
+              "Show the customer's DA next to three competitors",
+              "Lead the proposal with the DA score alone",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Always show DA in context — the customer's score against three competitors. Numbers beat opinions. Never promise a specific DA increase.",
+          },
+          {
+            id: "s11-q7",
+            type: "multiple-choice",
+            prompt: "Before you quote a product, you should be able to:",
+            topic: "Product → category map",
+            options: [
+              "Predict the customer's twelve-month ROI",
+              "Confirm the contract length and start date",
+              "Recite at least three relevant case studies",
+              "Name the category the product solves for",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "If you can't name the category a product solves for, the customer can't either — and the deal will stall on price. Diagnose first, then quote.",
+          },
+          {
+            id: "s11-q8",
+            type: "short-answer",
+            prompt:
+              "In your own words, write the opening you would use in the first three minutes of an SEO pitch. Use the librarian metaphor. Three to five sentences. Imagine you're sitting across from a customer who has never been pitched SEO before.",
+            topic: "Librarian metaphor — opening",
+            modelAnswer:
+              "Example: Think of Google as a librarian. There are millions of websites — millions of books on the shelf. When someone searches for what you sell, the librarian decides which books to put at eye-level and which to leave in the back room. SEO is the work we do to convince the librarian that your book belongs at eye-level. We do that across four categories: what your book says, what other authors say about you, whether your book actually opens cleanly, and whether you're the local expert on the topic. Make sense?",
+            keywords: [
+              "librarian",
+              "book",
+              "eye-level",
+              "shelf",
+              "on-page",
+              "off-page",
+              "technical",
+              "local",
+              "four categories",
+            ],
+            keywordsRequired: 4,
+            softMinChars: 200,
+            rationale:
+              "Look for: (1) Google framed as librarian, (2) website framed as book, (3) shelf/eye-level imagery, (4) all four categories mentioned by name. Plain English, no jargon.",
+          },
+        ],
+      },
+    ],
+  },
+
+  {
     id: "session-10-six-week",
     number: "10",
     date: "2026-05-20",
