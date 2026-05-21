@@ -183,8 +183,60 @@ export const trainees: Trainee[] = [
     slug: "dylanna-thach",
     startDate: "2026-05-11",
   },
+  // ─── Customer Service team (Sessions area, no quizzes) ────────────────────
+  // These reps see all session material but the quiz asset is hidden from
+  // their view. They're allowlisted to /sessions just like the sales boys.
+  {
+    id: "trent-spinelli",
+    name: "Trent Spinelli",
+    slug: "trent-spinelli",
+    startDate: "2026-05-21",
+  },
+  {
+    id: "logan-earl",
+    name: "Logan Earl",
+    slug: "logan-earl",
+    startDate: "2026-05-21",
+  },
+  {
+    id: "claire-wheaton",
+    name: "Claire Wheaton",
+    slug: "claire-wheaton",
+    startDate: "2026-05-21",
+  },
 ];
 
 export function getTraineeBySlug(slug: string): Trainee | undefined {
   return trainees.find((t) => t.slug === slug);
+}
+
+// ─── Sessions area access lists ──────────────────────────────────────────────
+//
+// Two teams have access to /sessions: the sales boys (full UX including quiz)
+// and the customer service team (same material, quiz hidden). Anyone whose
+// slug isn't in one of these lists won't see themselves in the RepPicker
+// dropdown and can't enter the area.
+
+export const SALES_TEAM_SLUGS: string[] = [
+  "lucas-tirri",
+  "dylan-munro",
+  "felipe-garcia",
+];
+
+export const CUSTOMER_SERVICE_SLUGS: string[] = [
+  "trent-spinelli",
+  "logan-earl",
+  "claire-wheaton",
+];
+
+/** Anyone allowed into the Sessions area (sales + customer service). */
+export const SESSIONS_ALLOWED_SLUGS: string[] = [
+  ...SALES_TEAM_SLUGS,
+  ...CUSTOMER_SERVICE_SLUGS,
+];
+
+/** True if this rep is on the Customer Service team — hides the quiz. */
+export function isCustomerService(slug: string | null | undefined): boolean {
+  if (!slug) return false;
+  return CUSTOMER_SERVICE_SLUGS.includes(slug);
 }

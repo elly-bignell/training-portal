@@ -68,7 +68,7 @@ const KIND_INSTRUCTIONS: Record<AssetKind, string> = {
   presentation:
     "Watch the recorded session in full. Hit Mark Viewed once you've finished watching.",
   quiz:
-    "Once every asset above is marked viewed, take the quiz. You need to pass before the session is marked complete.",
+    "Take the quiz whenever you're ready. You need 100% to pass — if you miss anything, you'll re-sit without seeing which questions you got wrong.",
 };
 
 // (Quiz prerequisites are derived per-session from the session's actual
@@ -476,7 +476,6 @@ function QuizCard({
   sessionId,
   asset,
   progress,
-  sessionAssetKinds,
 }: CommonProps & { asset: QuizAsset }) {
   const passed = progress?.quizAttempts.some((a) => a.passed) ?? false;
   const attempts = progress?.quizAttempts.length ?? 0;
@@ -484,17 +483,10 @@ function QuizCard({
     ? Math.max(...progress!.quizAttempts.map((a) => a.score))
     : null;
 
-  // Quiz lockout: every prerequisite asset present in THIS session must be
-  // in "viewed" state. The list is derived from the session's actual
-  // assets (sessionAssetKinds, excluding quiz) — so a session with no
-  // presentation doesn't get gated on a presentation that doesn't exist.
-  // Passed-quiz reviews bypass (they've already done it).
-  const prereqs = sessionAssetKinds.filter((k) => k !== "quiz");
-  const missingPrereqs = prereqs.filter(
-    (k) => progress?.assetStates[k] !== "viewed"
-  );
-  const unlocked = missingPrereqs.length === 0;
-  const showLocked = !unlocked && !passed;
+  // Quiz is always unlocked — reps can attempt it whenever. The previous
+  // prerequisite gate (every non-quiz asset must be marked viewed) has been
+  // removed. Fail UX still hides which questions were wrong; you must score
+  // 100% to pass, with unlimited retries.
 
   return (
     <div>
@@ -504,7 +496,11 @@ function QuizCard({
       </p>
       <div className="mb-3 px-3 py-2 bg-[#1F3A5F]/5 border-l-2 border-[#1F3A5F] rounded text-xs text-slate-700">
         <span className="font-semibold">How to complete: </span>
-        {KIND_INSTRUCTIONS.quiz}
+        Take the quiz whenever you&apos;re ready — no need to mark every
+        asset viewed first. You need {asset.passMark}% to pass. If you miss
+        anything, you&apos;ll need to re-sit; we won&apos;t tell you which
+        questions you got wrong, so go back through the material before
+        trying again.
       </div>
       <p className="text-xs text-slate-500 italic mb-4">
         Pass mark is calculated on the multiple-choice questions only. Short
@@ -515,39 +511,16 @@ function QuizCard({
           ✓ Passed with {bestScore}% on attempt {attempts}
         </div>
       )}
-      {showLocked && (
-        <div className="mb-3 px-4 py-3 bg-[#D49A30]/10 border border-[#D49A30]/40 rounded-lg text-sm text-slate-700">
-          <div className="font-bold text-[#a87520] mb-1">
-            🔒 Quiz locked
-          </div>
-          Mark every asset above as viewed first. Still to do:{" "}
-          <span className="font-semibold">
-            {missingPrereqs
-              .map((k) => KIND_LABEL[k].replace(/\s*\(PDF\)/, ""))
-              .join(", ")}
-          </span>
-          .
-        </div>
-      )}
-      {showLocked ? (
-        <button
-          disabled
-          className="inline-block px-5 py-2.5 text-sm font-bold bg-slate-300 text-slate-500 rounded-lg cursor-not-allowed"
-        >
-          🔒 Take quiz
-        </button>
-      ) : (
-        <Link
-          href={`/sessions/${sessionId}/quiz`}
-          className="inline-block px-5 py-2.5 text-sm font-bold bg-[#D49A30] text-white rounded-lg hover:bg-[#bb8527] transition-colors"
-        >
-          {passed
-            ? "Review quiz →"
-            : attempts > 0
-            ? "Try again →"
-            : "Take quiz →"}
-        </Link>
-      )}
+      <Link
+        href={`/sessions/${sessionId}/quiz`}
+        className="inline-block px-5 py-2.5 text-sm font-bold bg-[#D49A30] text-white rounded-lg hover:bg-[#bb8527] transition-colors"
+      >
+        {passed
+          ? "Review quiz →"
+          : attempts > 0
+          ? "Try again →"
+          : "Take quiz →"}
+      </Link>
     </div>
   );
 }

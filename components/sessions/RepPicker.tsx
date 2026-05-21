@@ -10,16 +10,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { trainees } from "@/data/trainees";
+import { trainees, SESSIONS_ALLOWED_SLUGS } from "@/data/trainees";
 import {
   getSelectedRepSlug,
   setSelectedRepSlug,
 } from "@/hooks/useSessionsProgress";
 
-// Sales-team allowlist: only these reps can access the Sessions area.
-// Anyone else who lands on a /sessions URL won't see themselves in the
-// dropdown and can't pick a name → can't proceed past the picker.
-const SESSIONS_ALLOWED_SLUGS = ["lucas-tirri", "dylan-munro", "felipe-garcia"];
+// SESSIONS_ALLOWED_SLUGS now lives in data/trainees.ts and combines the
+// sales team and customer service team. Anyone whose slug isn't in either
+// list won't see themselves in the dropdown and can't proceed.
 
 // Per-rep auth lives in localStorage so a rep doesn't re-enter the password
 // on every page hop within their browser. Expires after 12 hours so an

@@ -11,6 +11,7 @@ import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import AssetCard from "@/components/sessions/AssetCard";
 import { getSessionById } from "@/data/sessions";
+import { isCustomerService } from "@/data/trainees";
 import {
   assetsViewedCount,
   bestQuizScore,
@@ -52,9 +53,17 @@ function SessionDetailInner() {
     );
   }
 
+  // Customer Service team sees every asset EXCEPT the quiz. Filter once
+  // here and pass the trimmed list to every downstream component so the
+  // counts, dots, learning-path strip and cards all stay in sync.
+  const isCS = isCustomerService(repSlug);
+  const visibleAssets = isCS
+    ? session.assets.filter((a) => a.kind !== "quiz")
+    : session.assets;
+
   const progress = data.sessions[session.id];
   const status = getSessionStatus(session, progress);
-  const viewed = assetsViewedCount(progress, session.assets.length);
+  const viewed = assetsViewedCount(progress, visibleAssets.length);
   const best = bestQuizScore(progress);
   const quizAsset = session.assets.find((a) => a.kind === "quiz");
   const passMark =
@@ -118,7 +127,7 @@ function SessionDetailInner() {
               {session.totalTime} total
             </span>
             <span className="flex items-center gap-1">
-              {Array.from({ length: session.assets.length }).map((_, i) => (
+              {Array.from({ length: visibleAssets.length }).map((_, i) => (
                 <span
                   key={i}
                   className="w-2.5 h-2.5 rounded-full"
@@ -126,7 +135,7 @@ function SessionDetailInner() {
                 />
               ))}
               <span className="ml-1">
-                {viewed} of {session.assets.length} assets viewed
+                {viewed} of {visibleAssets.length} assets viewed
               </span>
             </span>
             {best !== null && (
@@ -146,9 +155,8 @@ function SessionDetailInner() {
         {(() => {
           // Friendly labels for each asset kind, in the order they should
           // appear on the page. Derive copy from the session's actual
-          // non-quiz assets so sessions with missing assets (e.g. no
-          // presentation) read accurately and don't mention things that
-          // aren't there.
+          // assets (excluding quiz, which is described separately) so
+          // sessions with missing assets read accurately.
           const PROSE_LABEL: Partial<Record<AssetKind, string>> = {
             debrief: "Debrief",
             toolkit: "Toolkit",
@@ -156,23 +164,23 @@ function SessionDetailInner() {
             podcast: "Podcast",
             presentation: "Presentation",
           };
-          const prereqLabels = session.assets
+          const nonQuizLabels = visibleAssets
             .filter((a) => a.kind !== "quiz")
             .map((a) => PROSE_LABEL[a.kind] ?? a.kind);
-          const prereqCount = prereqLabels.length;
+          const nonQuizCount = nonQuizLabels.length;
           const wordCount =
             ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight"][
-              prereqCount
-            ] ?? `${prereqCount}`;
+              nonQuizCount
+            ] ?? `${nonQuizCount}`;
           // Join labels as "A, B, C, and D" / "A and B" etc.
           let joinedLabels = "";
-          if (prereqLabels.length === 1) {
-            joinedLabels = prereqLabels[0];
-          } else if (prereqLabels.length === 2) {
-            joinedLabels = `${prereqLabels[0]} and ${prereqLabels[1]}`;
-          } else if (prereqLabels.length > 2) {
-            const last = prereqLabels[prereqLabels.length - 1];
-            joinedLabels = `${prereqLabels.slice(0, -1).join(", ")}, then ${last}`;
+          if (nonQuizLabels.length === 1) {
+            joinedLabels = nonQuizLabels[0];
+          } else if (nonQuizLabels.length === 2) {
+            joinedLabels = `${nonQuizLabels[0]} and ${nonQuizLabels[1]}`;
+          } else if (nonQuizLabels.length > 2) {
+            const last = nonQuizLabels[nonQuizLabels.length - 1];
+            joinedLabels = `${nonQuizLabels.slice(0, -1).join(", ")}, then ${last}`;
           }
           return (
             <div className="mb-8 bg-white border border-slate-200 rounded-2xl p-5">
@@ -181,7 +189,7 @@ function SessionDetailInner() {
               </div>
               <ol className="space-y-2 text-sm text-slate-700 list-decimal list-inside marker:text-[#1F3A5F] marker:font-bold">
                 <li>
-                  Work through the {wordCount} assets below in order — {joinedLabels}.
+                  Work through the {wordCount} assets below — {joinedLabels}.
                 </li>
                 <li>
                   After you&apos;ve read / watched / listened to each asset, hit
@@ -191,24 +199,30 @@ function SessionDetailInner() {
                   </span>{" "}
                   button to record that you&apos;ve completed it.
                 </li>
-                <li>
-                  The quiz at the bottom stays locked until all {wordCount} assets
-                  are marked viewed — mandatory review of every asset.
-                </li>
-                <li>
-                  Once unlocked, take the quiz. You need{" "}
-                  <span className="font-semibold">{passMark}%</span> on the
-                  multiple-choice questions to pass. Unlimited retries.
-                </li>
+                {!isCS && (
+                  <li>
+                    Take the quiz whenever you&apos;re ready — no need to mark
+                    every asset viewed first. You need{" "}
+                    <span className="font-semibold">{passMark}%</span> on the
+                    multiple-choice questions to pass. Unlimited retries.
+                  </li>
+                )}
+                {!isCS && (
+                  <li>
+                    If you don&apos;t get 100%, you&apos;ll need to re-sit.
+                    We won&apos;t tell you which questions you got wrong, so
+                    go back through the assets above before trying again.
+                  </li>
+                )}
               </ol>
-          <p className="text-xs text-slate-500 mt-3 italic">
-            Your progress is saved automatically and recorded for the trainers.
-            Don&apos;t share your password — every rep&apos;s answers are
-            tracked individually.
-          </p>
-        </div>
-            );
-          })()}
+              <p className="text-xs text-slate-500 mt-3 italic">
+                Your progress is saved automatically and recorded for the trainers.
+                Don&apos;t share your password — every rep&apos;s activity is
+                tracked individually.
+              </p>
+            </div>
+          );
+        })()}
 
         {/* Suggested learning path */}
         <div className="mb-8">
@@ -217,34 +231,23 @@ function SessionDetailInner() {
           </div>
           <ol className="flex items-center gap-1 sm:gap-2 overflow-x-auto pb-2">
             {(() => {
-              // Quiz step is locked from the path strip until every non-quiz
-              // asset is in the "viewed" state. Bypass the lock if the quiz
-              // was already passed — reps can re-visit a passed quiz freely.
-              const nonQuizAssets = session.assets.filter(
-                (a) => a.kind !== "quiz"
-              );
-              const allAssetsViewed = nonQuizAssets.every(
-                (a) => progress?.assetStates[a.kind] === "viewed"
-              );
+              // Quiz is never locked any more — sales reps can take it
+              // whenever they're ready, CS reps don't see it at all (the
+              // quiz is filtered out of visibleAssets upstream).
               const quizPassed =
                 progress?.quizAttempts.some((a) => a.passed) ?? false;
-              const quizUnlocked = allAssetsViewed || quizPassed;
 
-              return session.assets.map((asset, i) => {
+              return visibleAssets.map((asset, i) => {
                 const stepProgress = progress?.assetStates[asset.kind];
                 const passed =
                   asset.kind === "quiz"
                     ? quizPassed
                     : stepProgress === "viewed";
                 const inProg = stepProgress === "in-progress";
-                const isLockedQuiz =
-                  asset.kind === "quiz" && !quizUnlocked;
 
                 const commonClasses =
                   "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium border transition-colors whitespace-nowrap";
-                const stateClasses = isLockedQuiz
-                  ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed"
-                  : passed
+                const stateClasses = passed
                   ? "bg-[#3C8055]/10 text-[#3C8055] border-[#3C8055]/30"
                   : inProg
                   ? "bg-[#1F3A5F]/5 text-[#1F3A5F] border-[#1F3A5F]/30 animate-pulse"
@@ -255,31 +258,20 @@ function SessionDetailInner() {
                     key={asset.kind}
                     className="flex items-center gap-1 sm:gap-2"
                   >
-                    {isLockedQuiz ? (
-                      <span
-                        className={`${commonClasses} ${stateClasses}`}
-                        title="Mark every asset above as viewed first"
-                        aria-disabled
-                      >
-                        <span aria-hidden>🔒</span>
-                        {ASSET_LABELS[asset.kind]}
+                    <a
+                      href={
+                        asset.kind === "quiz"
+                          ? `/sessions/${session.id}/quiz`
+                          : `#asset-${asset.kind}`
+                      }
+                      className={`${commonClasses} ${stateClasses}`}
+                    >
+                      <span aria-hidden>
+                        {passed ? "✓" : NUMERALS[i] ?? `${i + 1}.`}
                       </span>
-                    ) : (
-                      <a
-                        href={
-                          asset.kind === "quiz"
-                            ? `/sessions/${session.id}/quiz`
-                            : `#asset-${asset.kind}`
-                        }
-                        className={`${commonClasses} ${stateClasses}`}
-                      >
-                        <span aria-hidden>
-                          {passed ? "✓" : NUMERALS[i] ?? `${i + 1}.`}
-                        </span>
-                        {ASSET_LABELS[asset.kind]}
-                      </a>
-                    )}
-                    {i < session.assets.length - 1 && (
+                      {ASSET_LABELS[asset.kind]}
+                    </a>
+                    {i < visibleAssets.length - 1 && (
                       <span className="text-slate-300" aria-hidden>
                         ›
                       </span>
@@ -295,10 +287,9 @@ function SessionDetailInner() {
         <div>
           {(() => {
             // Derive the list of asset kinds in this session once, then pass
-            // to each AssetCard so QuizCard knows the real prereqs (rather
-            // than relying on a hardcoded global list).
-            const sessionAssetKinds = session.assets.map((a) => a.kind);
-            return session.assets.map((asset, idx) => {
+            // to each AssetCard (used for misc downstream calculations).
+            const sessionAssetKinds = visibleAssets.map((a) => a.kind);
+            return visibleAssets.map((asset, idx) => {
               const state =
                 asset.kind === "quiz"
                   ? progress?.quizAttempts.some((a) => a.passed)

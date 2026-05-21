@@ -21,6 +21,7 @@ import Link from "next/link";
 import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import { getSessionById, getQuiz } from "@/data/sessions";
+import { isCustomerService } from "@/data/trainees";
 import { useSessionsProgress } from "@/hooks/useSessionsProgress";
 import {
   MultipleChoiceQuestion,
@@ -108,6 +109,31 @@ function QuizInner() {
           setRepName(name);
         }}
       />
+    );
+  }
+
+  // Customer Service team doesn't take quizzes. If one of them lands here
+  // via a stale link, send them back to the session detail page rather
+  // than letting them through.
+  if (isCustomerService(repSlug)) {
+    return (
+      <main className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+        <div className="text-center max-w-md">
+          <p className="text-slate-800 font-semibold mb-2">
+            No quiz for this team.
+          </p>
+          <p className="text-slate-600 text-sm mb-4">
+            Quizzes are part of the sales rep workflow — they&apos;re not
+            included in the customer service portal at this stage.
+          </p>
+          <Link
+            href={`/sessions/${session.id}`}
+            className="inline-block px-5 py-2.5 text-sm font-bold bg-[#1F3A5F] text-white rounded-lg hover:bg-[#172d4a] transition-colors"
+          >
+            ← Back to the session
+          </Link>
+        </div>
+      </main>
     );
   }
 

@@ -16,12 +16,13 @@ import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import SessionCard from "@/components/sessions/SessionCard";
 import { sessions } from "@/data/sessions";
+import { isCustomerService } from "@/data/trainees";
 import {
   assetsViewedCount,
   getSessionStatus,
   useSessionsProgress,
 } from "@/hooks/useSessionsProgress";
-import { SessionFilter } from "@/types/sessions";
+import { Session, SessionFilter } from "@/types/sessions";
 
 const FILTER_LABELS: Record<SessionFilter, string> = {
   all: "All",
@@ -71,41 +72,76 @@ function SessionsHomeInner() {
     router.replace(qs ? `${pathname}?${qs}` : pathname);
   };
 
+  // Customer Service reps see every session with the quiz asset removed.
+  // We project each Session into an "effective" version once and use that
+  // everywhere downstream — same id, same metadata, just trimmed assets.
+  // That way the dots, counts, denominators and status calcs all line up.
+  const isCS = isCustomerService(repSlug);
+  const effectiveSessions: Session[] = useMemo(
+    () =>
+      isCS
+        ? sessions.map((s) => ({
+            ...s,
+            assets: s.assets.filter((a) => a.kind !== "quiz"),
+          }))
+        : sessions,
+    [isCS]
+  );
+
+  // For CS reps there is no quiz, so "completed" must come from all
+  // (visible) assets being viewed rather than from a passed quiz.
+  const effectiveStatus = (s: Session) => {
+    const prog = data.sessions[s.id];
+    if (!isCS) return getSessionStatus(s, prog);
+    if (!prog) return "not-started" as const;
+    const allViewed = s.assets.every(
+      (a) => prog.assetStates[a.kind] === "viewed"
+    );
+    if (allViewed && s.assets.length > 0) return "completed" as const;
+    const anyTouched = s.assets.some(
+      (a) =>
+        prog.assetStates[a.kind] === "viewed" ||
+        prog.assetStates[a.kind] === "in-progress"
+    );
+    return anyTouched ? ("in-progress" as const) : ("not-started" as const);
+  };
+
   // Rank sessions: newest first (latest date wins).
   const ranked = useMemo(
     () =>
-      [...sessions].sort((a, b) => {
+      [...effectiveSessions].sort((a, b) => {
         // Newest sessions first. Sort by date desc, then by session number
         // desc as a tiebreaker (two sessions can share a date when more
         // than one happens in a day).
         if (a.date !== b.date) return a.date < b.date ? 1 : -1;
         return a.number < b.number ? 1 : -1;
       }),
-    []
+    [effectiveSessions]
   );
 
   const visibleSessions = useMemo(
     () =>
       ranked.filter((s) => {
         if (filter === "all") return true;
-        const status = getSessionStatus(s, data.sessions[s.id]);
-        return status === filter;
+        return effectiveStatus(s) === filter;
       }),
-    [ranked, filter, data]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [ranked, filter, data, isCS]
   );
 
-  // Portal-wide progress: viewed assets / total assets across every session.
-  // Denominator MUST derive from session.assets.length per session (not a
-  // hardcoded 5) — sessions can have different asset counts (intro was added
-  // after the original 5; future sessions may shed/add). With a hardcoded
-  // 5, completed sessions overflow past 100%.
-  const totalAssets = sessions.reduce((sum, s) => sum + s.assets.length, 0);
-  const totalViewed = sessions.reduce(
+  // Portal-wide progress: viewed assets / total assets across every
+  // (effective) session. For CS reps the quiz doesn't count toward either
+  // numerator or denominator since they don't see it.
+  const totalAssets = effectiveSessions.reduce(
+    (sum, s) => sum + s.assets.length,
+    0
+  );
+  const totalViewed = effectiveSessions.reduce(
     (sum, s) => sum + assetsViewedCount(data.sessions[s.id], s.assets.length),
     0
   );
-  const completedCount = sessions.filter(
-    (s) => getSessionStatus(s, data.sessions[s.id]) === "completed"
+  const completedCount = effectiveSessions.filter(
+    (s) => effectiveStatus(s) === "completed"
   ).length;
   const portalPct = totalAssets > 0
     ? Math.round((totalViewed / totalAssets) * 100)
@@ -136,7 +172,7 @@ function SessionsHomeInner() {
             Welcome back, {repName.split(" ")[0]}.
           </h1>
           <p className="text-slate-600 mt-1">
-            You&apos;ve completed {completedCount} of {sessions.length} sessions.
+            You&apos;ve completed {completedCount} of {effectiveSessions.length} sessions.
           </p>
           <div className="mt-3 h-2 bg-slate-200 rounded-full overflow-hidden max-w-md">
             <div
@@ -213,7 +249,7 @@ function SessionsHomeInner() {
                 key={s.id}
                 session={s}
                 progress={data.sessions[s.id]}
-                status={getSessionStatus(s, data.sessions[s.id])}
+                status={effectiveStatus(s)}
               />
             ))}
           </div>
