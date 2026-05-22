@@ -21,7 +21,7 @@ import Link from "next/link";
 import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import { getSessionById, getQuiz } from "@/data/sessions";
-import { isCustomerService } from "@/data/trainees";
+import { isCustomerService, isLeadGen } from "@/data/trainees";
 import { useSessionsProgress } from "@/hooks/useSessionsProgress";
 import {
   MultipleChoiceQuestion,
@@ -109,6 +109,31 @@ function QuizInner() {
           setRepName(name);
         }}
       />
+    );
+  }
+
+  // Lead Gen reps live in their own id space (lg-session-*). If they hit a
+  // sales session id by manual URL, send them back to the LG home so the
+  // original numbering never leaks. Sales/CS reps can't reach lg-session-*
+  // ids because they're never linked from those teams' UI.
+  if (isLeadGen(repSlug) && !session.id.startsWith("lg-session-")) {
+    return (
+      <main className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+        <div className="text-center max-w-md">
+          <p className="text-slate-800 font-semibold mb-2">
+            Not your session.
+          </p>
+          <p className="text-slate-600 text-sm mb-4">
+            This quiz belongs to a session that isn&apos;t part of your portal.
+          </p>
+          <Link
+            href="/sessions"
+            className="inline-block px-5 py-2.5 text-sm font-bold bg-[#1F3A5F] text-white rounded-lg hover:bg-[#172d4a] transition-colors"
+          >
+            ← Back to your sessions
+          </Link>
+        </div>
+      </main>
     );
   }
 

@@ -2320,9 +2320,79 @@ export const sessions: Session[] = [
   },
 ];
 
-/** Look-up by id (used by /sessions/[id] route). */
+// ─── Lead Gen projection ────────────────────────────────────────────────────
+// Lead Gen sees a curated 7-session series, sourced from a subset of the
+// sales material and renumbered 01–07 from their perspective. Same assets
+// (debrief, toolkit, intro video, podcast, presentation, quiz) — quiz
+// questions are filtered to multiple-choice only for this team per the
+// product brief.
+//
+// We project each source session into a NEW Session object with a new id
+// (`lg-session-N`) and a new `number` ("01"–"07"). The detail page routes
+// LG reps to these new ids, so anywhere "#{session.number}" or "Session N"
+// renders the new value — original numbering is never visible.
+//
+// Underlying asset URLs (Drive video IDs, PDF paths under
+// /public/sample-content/session-04-...) are unchanged: per the brief, only
+// portal-level labels are renumbered, not the underlying file titles.
+
+interface LeadGenMapEntry {
+  sourceId: string;
+  newNumber: string; // "01"..."07"
+}
+
+const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
+  { sourceId: "session-01-pitch-high", newNumber: "01" },
+  { sourceId: "session-02-big-energy", newNumber: "02" },
+  { sourceId: "session-04-rock-solid", newNumber: "03" },
+  { sourceId: "session-06-checklist", newNumber: "04" },
+  { sourceId: "session-07-likability", newNumber: "05" },
+  { sourceId: "session-08-numbers", newNumber: "06" },
+  { sourceId: "session-11-seo-pitch", newNumber: "07" },
+];
+
+function projectForLeadGen(source: Session, newNumber: string): Session {
+  // Filter quiz questions to multiple-choice only — Lead Gen quizzes don't
+  // include short-answer questions per the brief. If a session has no quiz
+  // (none in the current LG list), the assets pass through untouched.
+  const assets = source.assets.map((a) => {
+    if (a.kind !== "quiz") return a;
+    return {
+      ...a,
+      questions: a.questions.filter((q) => q.type === "multiple-choice"),
+    };
+  });
+
+  return {
+    ...source,
+    id: `lg-session-${parseInt(newNumber, 10)}`,
+    number: newNumber,
+    // Featured flag is intentionally stripped — the LG series shouldn't have
+    // any banner sessions (the only featured one in source is Session 14,
+    // which isn't part of the LG mapping anyway, but belt and braces).
+    featured: false,
+    bannerLabel: undefined,
+    assets,
+  };
+}
+
+export const leadGenSessions: Session[] = LEAD_GEN_SESSION_MAP.map((entry) => {
+  const source = sessions.find((s) => s.id === entry.sourceId);
+  if (!source) {
+    throw new Error(
+      `[leadGenSessions] source session not found: ${entry.sourceId}`
+    );
+  }
+  return projectForLeadGen(source, entry.newNumber);
+});
+
+/** Look-up by id (used by /sessions/[id] route). Checks both the canonical
+ *  sales sessions and the Lead Gen projection so either id space resolves. */
 export function getSessionById(id: string): Session | undefined {
-  return sessions.find((s) => s.id === id);
+  return (
+    sessions.find((s) => s.id === id) ??
+    leadGenSessions.find((s) => s.id === id)
+  );
 }
 
 /** Get the quiz asset off a session, or undefined. */

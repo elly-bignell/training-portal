@@ -18,8 +18,8 @@ import {
   SessionProgress,
   SessionStatus,
 } from "@/types/sessions";
-import { sessions, getSessionById } from "@/data/sessions";
-import { trainees } from "@/data/trainees";
+import { sessions, leadGenSessions, getSessionById } from "@/data/sessions";
+import { trainees, isLeadGen } from "@/data/trainees";
 
 const REP_SLUG_KEY = "sessions-rep-slug";
 
@@ -403,13 +403,17 @@ export function useSessionsProgress(slug: string | null) {
   );
 
   // Derived view: which session, if any, the rep should be nudged to resume.
+  // Iterates the rep's effective session list — Lead Gen reps live in their
+  // own id space (lg-session-*), so we point the iteration at leadGenSessions
+  // for them; everyone else uses the canonical sessions array.
   const continueWhereLeftOff = useCallback((): {
     session: Session;
     asset: AssetKind;
     resumeSeconds?: number;
   } | null => {
     if (!hydrated) return null;
-    const candidates = sessions
+    const pool = isLeadGen(slug) ? leadGenSessions : sessions;
+    const candidates = pool
       .map((s) => ({ session: s, prog: data.sessions[s.id] }))
       .filter(
         ({ session, prog }) =>
@@ -443,7 +447,7 @@ export function useSessionsProgress(slug: string | null) {
       asset,
       resumeSeconds: top.prog!.resumePositions[asset],
     };
-  }, [data, hydrated]);
+  }, [data, hydrated, slug]);
 
   return {
     data,

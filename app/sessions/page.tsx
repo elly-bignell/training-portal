@@ -15,8 +15,8 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import SessionCard from "@/components/sessions/SessionCard";
-import { sessions } from "@/data/sessions";
-import { isCustomerService } from "@/data/trainees";
+import { sessions, leadGenSessions } from "@/data/sessions";
+import { isCustomerService, isLeadGen } from "@/data/trainees";
 import {
   assetsViewedCount,
   getSessionStatus,
@@ -72,21 +72,27 @@ function SessionsHomeInner() {
     router.replace(qs ? `${pathname}?${qs}` : pathname);
   };
 
-  // Customer Service reps see every session with the quiz asset removed.
+  // Three teams, three projections:
+  //   • Sales       — every session, every asset (including quizzes)
+  //   • Customer Service — every session, quiz asset removed
+  //   • Lead Gen    — only the 7-session curated series (leadGenSessions),
+  //                   quizzes filtered to multiple-choice only (done at
+  //                   data layer in projectForLeadGen)
   // We project each Session into an "effective" version once and use that
   // everywhere downstream — same id, same metadata, just trimmed assets.
   // That way the dots, counts, denominators and status calcs all line up.
   const isCS = isCustomerService(repSlug);
-  const effectiveSessions: Session[] = useMemo(
-    () =>
-      isCS
-        ? sessions.map((s) => ({
-            ...s,
-            assets: s.assets.filter((a) => a.kind !== "quiz"),
-          }))
-        : sessions,
-    [isCS]
-  );
+  const isLG = isLeadGen(repSlug);
+  const effectiveSessions: Session[] = useMemo(() => {
+    if (isLG) return leadGenSessions;
+    if (isCS) {
+      return sessions.map((s) => ({
+        ...s,
+        assets: s.assets.filter((a) => a.kind !== "quiz"),
+      }));
+    }
+    return sessions;
+  }, [isCS, isLG]);
 
   // Rank sessions: newest first (latest date wins).
   const ranked = useMemo(

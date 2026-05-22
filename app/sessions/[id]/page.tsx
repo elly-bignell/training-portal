@@ -11,7 +11,7 @@ import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import AssetCard from "@/components/sessions/AssetCard";
 import { getSessionById } from "@/data/sessions";
-import { isCustomerService } from "@/data/trainees";
+import { isCustomerService, isLeadGen } from "@/data/trainees";
 import {
   assetsViewedCount,
   bestQuizScore,
@@ -53,9 +53,17 @@ function SessionDetailInner() {
     );
   }
 
+  // Lead Gen reps can ONLY view lg-session-* ids. If they land on a
+  // sales-only session id (manual URL, stale bookmark, etc.) we 404 so the
+  // original numbering never leaks into their experience.
+  const isLG = isLeadGen(repSlug);
+  if (isLG && !session.id.startsWith("lg-session-")) return notFound();
+
   // Customer Service team sees every asset EXCEPT the quiz. Filter once
   // here and pass the trimmed list to every downstream component so the
   // counts, dots, learning-path strip and cards all stay in sync.
+  // Lead Gen sees quizzes (multiple-choice only — already filtered at the
+  // data layer when projecting the session).
   const isCS = isCustomerService(repSlug);
   const visibleAssets = isCS
     ? session.assets.filter((a) => a.kind !== "quiz")

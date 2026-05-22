@@ -229,14 +229,35 @@ export const CUSTOMER_SERVICE_SLUGS: string[] = [
   "claire-wheaton",
 ];
 
-/** Anyone allowed into the Sessions area (sales + customer service). */
+// ─── Lead Gen team ───────────────────────────────────────────────────────────
+// Lead Gen reps see a curated 7-session series (sourced from a subset of the
+// sales material, renumbered 01–07 from their perspective). They DO take
+// quizzes — same UX as the sales boys (resit until 100%, no per-question
+// feedback) — but quizzes for this team are multiple-choice only. The full
+// 7-session projection is built in data/sessions.ts as `leadGenSessions`.
+export const LEAD_GEN_SLUGS: string[] = [
+  "cindy-rose-rondez-manrique",
+  "shian-roux",
+  "riley-kerrison",
+  "sydney-arnold",
+];
+
+/** Anyone allowed into the Sessions area (sales + customer service + lead gen). */
 export const SESSIONS_ALLOWED_SLUGS: string[] = [
   ...SALES_TEAM_SLUGS,
   ...CUSTOMER_SERVICE_SLUGS,
+  ...LEAD_GEN_SLUGS,
 ];
 
 /** True if this rep is on the Customer Service team — hides the quiz. */
 export function isCustomerService(slug: string | null | undefined): boolean {
   if (!slug) return false;
   return CUSTOMER_SERVICE_SLUGS.includes(slug);
+}
+
+/** True if this rep is on the Lead Gen team — sees only the 7-session series
+ *  and gets quizzes filtered to multiple-choice questions only. */
+export function isLeadGen(slug: string | null | undefined): boolean {
+  if (!slug) return false;
+  return LEAD_GEN_SLUGS.includes(slug);
 }
