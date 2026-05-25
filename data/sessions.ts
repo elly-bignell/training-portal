@@ -51,6 +51,165 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Session 15 — Pitch High. Read the Room. Hold the Line. (Mon 25 May) ─
+  // Visible to all sales + customer service (CS sees it without the quiz).
+  // Lead Gen still doesn't see it (their portal is the curated 7-session
+  // series only). No presentation asset for this session — debrief,
+  // toolkit, intro video, podcast, and quiz.
+  {
+    id: "session-15-read-the-room",
+    number: "15",
+    date: "2026-05-25",
+    title: "Pitch High. Read the Room. Hold the Line.",
+    summary:
+      "Profit is king, not turnover. Read the dialect — flashy vs utilitarian — before the pitch. Anchor high and let them choke. Replace generic claims with specific evidence. Dance the pressure, hold the line, let \"most people\" do the closing for you.",
+    keyTakeaway:
+      "Profit is the spending number, not turnover. Read the buyer's dialect in the first five minutes. Pitch upper-mid and reluctantly come down. Replace every generic claim with a specific the competitor couldn't copy. Hold the line — swiveling fast kills credibility. Dance the pressure: relieve, apply, relieve, close.",
+    director: "Corie Dawson",
+    totalTime: "~40 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-15-read-the-room/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-15-read-the-room/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("1SCug9LdAjt5B9lY0QRSrUosiJUjBtk_M"),
+      },
+      {
+        kind: "podcast",
+        estimate: "15 min listen",
+        url: drivePreview("1wSK9KSquilEeuU-zHe0Qz7uW9deo58Yx"),
+        durationSeconds: 900,
+      },
+      {
+        kind: "quiz",
+        estimate: "7 questions · ~8 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s15-q1",
+            type: "multiple-choice",
+            prompt:
+              "When sizing a pitch, which number tells you the buyer's real capacity to spend?",
+            topic: "Profit not turnover",
+            options: [
+              "Their annual turnover",
+              "Their number of staff",
+              "Their estimated profit after costs and lifestyle",
+              "The size of their previous marketing spend",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Profit is the capacity-to-spend number. Turnover can hide a low-margin business with no disposable cash, and it can hide a high-margin business with more than you'd guess. Always strip out costs and lifestyle before sizing the pitch.",
+          },
+          {
+            id: "s15-q2",
+            type: "multiple-choice",
+            prompt:
+              "A buyer arrives in a top-spec premium car, wearing a designer suit, mentions their last holiday in Europe. Which dialect should you pitch in?",
+            topic: "Flashy vs utilitarian",
+            options: [
+              "Utilitarian — focus on ROI, process maps, and cost-per-lead",
+              "Flashy — focus on prestige, looking the best in their industry, top-tier outcomes",
+              "Skeptical — focus on guarantees, certifications, and disclaimers",
+              "Hybrid — split your pitch evenly between value and prestige",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Read the room. Flashy buyers buy status — sell prestige, looks, and being the best in their industry. The signals are everywhere: the car, the suit, the trips. Mis-pitching the dialect kills good products.",
+          },
+          {
+            id: "s15-q3",
+            type: "multiple-choice",
+            prompt:
+              "Why open the pitch at an upper-mid package rather than the entry-level option?",
+            topic: "Pitch high",
+            options: [
+              "Going in cheap signals you misread the buyer and removes room to negotiate down",
+              "Cheaper packages have lower margin, so they should always be avoided",
+              "Buyers always reject the first price anyway, so it doesn't matter where you start",
+              "Starting cheap is unethical and damages the company's reputation",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "Pitch high. Going in cheap signals you misread the buyer's caliber and leaves no room to come down. Anchor at the upper-mid. Reluctantly descend if pushed. The buyer feels like they earned the deal.",
+          },
+          {
+            id: "s15-q4",
+            type: "multiple-choice",
+            prompt:
+              "Which of these is the strongest way to communicate the quality of your customer service to a buyer?",
+            topic: "Show, don't tell",
+            options: [
+              "\"We pride ourselves on excellent customer service\"",
+              "\"We have one of the best support teams in the industry\"",
+              "\"Our customer service is second to none — you'll love working with us\"",
+              "\"We run a support ticketing system — submit one at 2am, you get a reply by morning\"",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "Specifics beat generics every time. \"Great customer service\" is what every competitor says. \"A support ticketing system with measurable response times\" is something the buyer can picture — and verify. Hone in on the dish, not the restaurant.",
+          },
+          {
+            id: "s15-q5",
+            type: "multiple-choice",
+            prompt:
+              "What makes the narrative opener — \"Just out of interest, how are you finding the changes with the economy?\" — so effective?",
+            topic: "Asymmetric opener",
+            options: [
+              "It flatters the buyer by suggesting they're an economic expert",
+              "It's asymmetric — every possible answer leads back to \"that's the reason for my call\"",
+              "It's a closed question that forces a yes or no answer",
+              "It moves the buyer to discuss politics, which builds rapport faster",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The asymmetric opener has no losing branch. Booming, mixed, or flat — every answer flows back to \"that's exactly the reason for my call.\" It also reveals what's on the buyer's mind and opens a conversation that doesn't start with the pitch.",
+          },
+          {
+            id: "s15-q6",
+            type: "multiple-choice",
+            prompt:
+              "When a buyer pushes back on the recommended option and asks about alternatives, what's the most effective response?",
+            topic: "Hold the line",
+            options: [
+              "Immediately drop to the alternative to show flexibility",
+              "Promote the alternative as enthusiastically as the recommended option",
+              "Reluctantly mention it — \"There is another option, but I wouldn't recommend it\"",
+              "Refuse to discuss anything other than the recommended option",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Reluctance sells. Discouraging the alternative triggers desire — the duck on the menu, the Krispy Kreme effect. Swiveling instantly costs credibility. Stay with the recommendation, mention the alternative only when pushed, and frame it as inferior.",
+          },
+          {
+            id: "s15-q7",
+            type: "multiple-choice",
+            prompt:
+              "What's the purpose of telling the buyer \"you've got heaps of time, no need to decide today\" partway through closing?",
+            topic: "The out-in dance",
+            options: [
+              "Releasing pressure makes the buyer relax — and the small incentive that follows lands as a gift, not a manipulation",
+              "It shows you don't really care whether they buy, which makes you look professional",
+              "It gives the buyer permission to delay indefinitely, which protects the relationship",
+              "It signals that you've already moved on to other prospects",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "The dance is the close. Release pressure → apply soft incentive → release again → close. Pressure release relaxes the buyer; the incentive that follows feels like a gift rather than a sales tactic. Done well, the decision feels like the buyer's idea.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Session 14 — Frame It. Don't Spin It. (Mon 25 May 2026) ──────────────
   // Sales boys only (salesOnly: true) — Customer Service and Lead Gen don't
   // see this session in their portals.
