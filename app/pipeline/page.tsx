@@ -3,8 +3,8 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import PipelineAuth, { usePipelineAuth } from '../components/PipelineAuth';
 
-const CLOSERS = ['Lucas', 'Dylan', 'Felipe', 'Thomas'];
-const BOOKERS = ['Cindy', 'Krishna', 'Thomas', 'Riley', 'Sydney', 'Felipe', 'Dylan', 'Lucas'];
+const CLOSERS = ['Lucas', 'Dylan', 'Felipe'];
+const BOOKERS = ['Cindy', 'Shian', 'Riley', 'Sydney', 'Felipe', 'Dylan', 'Lucas'];
 const VIEWERS = ['Lucas', 'Dylan', 'Felipe', 'Admin'];
 
 const MS_PLANS  = ['Web Support','SEO Support','Digital Support'];
