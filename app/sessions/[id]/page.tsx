@@ -65,6 +65,12 @@ function SessionDetailInner() {
   // Lead Gen sees quizzes (multiple-choice only — already filtered at the
   // data layer when projecting the session).
   const isCS = isCustomerService(repSlug);
+
+  // salesOnly sessions are gated for the sales team. If a CS rep types a
+  // direct URL to one, 404 so they don't get a sneak preview of material
+  // that hasn't been cleared for their team.
+  if (isCS && session.salesOnly) return notFound();
+
   const visibleAssets = isCS
     ? session.assets.filter((a) => a.kind !== "quiz")
     : session.assets;
@@ -88,7 +94,7 @@ function SessionDetailInner() {
       <main className="min-h-screen bg-slate-50">
         <SessionsHeader
           repName={repName}
-          breadcrumb={`Session ${session.number}`}
+          breadcrumb="Bonus Session"
         />
         <div className="max-w-4xl mx-auto px-6 py-8">
           <Link

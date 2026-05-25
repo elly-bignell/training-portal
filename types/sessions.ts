@@ -114,6 +114,10 @@ export interface Session {
   featured?: boolean;
   /** Label shown above the title in the feature banner (home + detail). */
   bannerLabel?: string;
+  /** When true, only the sales team (Lucas, Dylan, Felipe) sees this
+   *  session. Customer Service reps and Lead Gen reps don't see it on
+   *  their home page or in their continue-where-you-left-off card. */
+  salesOnly?: boolean;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

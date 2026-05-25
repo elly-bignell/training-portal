@@ -74,7 +74,7 @@ function SessionsHomeInner() {
 
   // Three teams, three projections:
   //   • Sales       — every session, every asset (including quizzes)
-  //   • Customer Service — every session, quiz asset removed
+  //   • Customer Service — every session except salesOnly, quiz asset removed
   //   • Lead Gen    — only the 7-session curated series (leadGenSessions),
   //                   quizzes filtered to multiple-choice only (done at
   //                   data layer in projectForLeadGen)
@@ -86,10 +86,12 @@ function SessionsHomeInner() {
   const effectiveSessions: Session[] = useMemo(() => {
     if (isLG) return leadGenSessions;
     if (isCS) {
-      return sessions.map((s) => ({
-        ...s,
-        assets: s.assets.filter((a) => a.kind !== "quiz"),
-      }));
+      return sessions
+        .filter((s) => !s.salesOnly)
+        .map((s) => ({
+          ...s,
+          assets: s.assets.filter((a) => a.kind !== "quiz"),
+        }));
     }
     return sessions;
   }, [isCS, isLG]);

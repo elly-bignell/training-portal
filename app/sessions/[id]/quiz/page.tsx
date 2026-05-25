@@ -112,6 +112,30 @@ function QuizInner() {
     );
   }
 
+  // salesOnly sessions are gated for the sales team. A CS rep wouldn't
+  // see this URL in their UI but if they manually navigate to one, bounce
+  // them back to /sessions rather than letting them through the quiz.
+  if (isCustomerService(repSlug) && session.salesOnly) {
+    return (
+      <main className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+        <div className="text-center max-w-md">
+          <p className="text-slate-800 font-semibold mb-2">
+            Not in your portal.
+          </p>
+          <p className="text-slate-600 text-sm mb-4">
+            This session is only available to the sales team.
+          </p>
+          <Link
+            href="/sessions"
+            className="inline-block px-5 py-2.5 text-sm font-bold bg-[#1F3A5F] text-white rounded-lg hover:bg-[#172d4a] transition-colors"
+          >
+            ← Back to your sessions
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
   // Lead Gen reps live in their own id space (lg-session-*). If they hit a
   // sales session id by manual URL, send them back to the LG home so the
   // original numbering never leaks. Sales/CS reps can't reach lg-session-*

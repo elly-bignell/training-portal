@@ -21,13 +21,17 @@ const drivePreview = (id: string) =>
   `https://drive.google.com/file/d/${id}/preview`;
 
 export const sessions: Session[] = [
-  // ─── Featured: Client Growth Outreach ────────────────────────────────────
+  // ─── Featured: BONUS SESSION (Client Growth Outreach) ─────────────────────
   // One-off feature session. Single video, no PDF, no quiz, no learning
   // path. Renders as a full-width banner above the normal grid on the home
-  // page and uses a stripped-down hero on the detail page.
+  // page and uses a stripped-down hero on the detail page. Originally
+  // labelled "Session 14" — now reframed as a BONUS so it doesn't collide
+  // with the standard Session 14 (Frame It. Don't Spin It., 25 May 2026).
+  // The id stays as session-14-client-growth-outreach so existing progress
+  // records and URLs continue to work.
   {
     id: "session-14-client-growth-outreach",
-    number: "14",
+    number: "B",
     date: "2026-05-21",
     title: "Client Growth Outreach",
     summary:
@@ -37,13 +41,176 @@ export const sessions: Session[] = [
     director: "Corie Dawson",
     totalTime: "~10 min",
     featured: true,
-    bannerLabel: "Client Growth Outreach",
+    bannerLabel: "BONUS SESSION",
     assets: [
       {
         kind: "presentation",
         estimate: "10 min watch",
         url: drivePreview("1d8Z3Gip5XqaWwKLT0ZYwfVaYbCnOv3yr"),
         mode: "video",
+      },
+    ],
+  },
+  // ─── Session 14 — Frame It. Don't Spin It. (Mon 25 May 2026) ──────────────
+  // Sales boys only (salesOnly: true) — Customer Service and Lead Gen don't
+  // see this session in their portals.
+  {
+    id: "session-14-frame-it-dont-spin-it",
+    number: "14",
+    date: "2026-05-25",
+    title: "Frame It. Don't Spin It.",
+    summary:
+      "Walk into the debrief with exact numbers — booked, attended, closed. Lead with the win, then the gap. Plant the seed for recruitment, then let the bad day do the closing. Frame the facts; don't spin them.",
+    keyTakeaway:
+      "You can't frame what you can't count. State the numbers. Lead with the win. Plant the seed. Stay in the work. Discipline produces the outcome — you don't have a choice.",
+    director: "Corie Dawson",
+    totalTime: "~45 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-14-frame-it-dont-spin-it/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-14-frame-it-dont-spin-it/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("1L2jY4uGT6f8aTk7JvX7zjTnjIG2KzLmu"),
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1qdbXfpBjW75G_b9vZFuhbsmiGbQxu2p9"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "presentation",
+        estimate: "10 min watch",
+        url: drivePreview("1j5ZXy0HtlPry2Hn6ch8eWF2x2qLmNKqT"),
+        mode: "video",
+      },
+      {
+        kind: "quiz",
+        estimate: "7 questions · ~8 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s14-q1",
+            type: "multiple-choice",
+            prompt:
+              "When reporting a week's meeting results, which denominator gives the most accurate picture of how well you actually performed?",
+            topic: "Know your numbers",
+            options: [
+              "Meetings booked into the diary",
+              "Meetings that were actually attended",
+              "Meetings the customer requested",
+              "Meetings booked by the lead-gen team",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Attended is the real denominator. Booked includes the no-shows and postponements. The close rate against attended is the rate that tells you how you actually perform when you're in the room. State both — but lead with the rate against attended.",
+          },
+          {
+            id: "s14-q2",
+            type: "multiple-choice",
+            prompt:
+              "Which of the following is an action — not a plan — when the question is \"what are you doing about recruitment?\"",
+            topic: "Actions vs plans",
+            options: [
+              "Designing the ad copy",
+              "Discussing strategy with the leader",
+              "Researching where to post",
+              "Speaking to four people about the role on the weekend",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "Speaking to four people is an action — a number you can put on the table. The other three are plans dressed up as work. The test is simple: can you put a number on what you did? If not, it was a plan.",
+          },
+          {
+            id: "s14-q3",
+            type: "multiple-choice",
+            prompt: "What does the \"no choice\" principle actually mean?",
+            topic: "Discipline beats outcomes",
+            options: [
+              "You have no choice but to chase outcomes harder when results dip",
+              "The leader has no choice but to step in when you stop performing",
+              "If you keep the disciplines exactly, you don't have a choice — the outcome shows up",
+              "Outcomes happen randomly, so the choice is whether to keep showing up",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Discipline produces the outcome — automatically — if you keep it long enough for the maths to run. You don't get to choose the result; you get to choose whether you keep the discipline. Outcomes are a by-product, not a goal.",
+          },
+          {
+            id: "s14-q4",
+            type: "multiple-choice",
+            prompt:
+              "What is the difference between framing and spinning the facts?",
+            topic: "Framing vs spinning",
+            options: [
+              "Framing makes the result sound better; spinning makes it sound worse",
+              "Framing presents the facts accurately with the right denominator; spinning distorts the facts",
+              "Framing is for internal meetings; spinning is for customer-facing conversations",
+              "Framing is what the leader does; spinning is what reps do",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Framing presents the facts correctly with the meaningful denominator. Spinning distorts the facts to make you look good. Same data, but framing keeps you honest — spinning costs you trust the moment the leader checks the numbers.",
+          },
+          {
+            id: "s14-q5",
+            type: "multiple-choice",
+            prompt:
+              "The session described negativity from customers, peers and family as \"smog\" entering your head. What's the correct defence?",
+            topic: "Keep the smog out",
+            options: [
+              "Crowd it out by filling your head with wins and gratitude before the smog can settle",
+              "Argue with anyone who tries to put negativity into your head",
+              "Avoid people who carry negativity until you've hit your weekly target",
+              "Suppress the negativity and pretend it didn't land",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "You don't argue with the smog — you crowd it out. Be the first person to frame your day. Notice the wins. Say them out loud. When the toxin arrives, the room is already full of something else. Arguing with negativity gives it airtime.",
+          },
+          {
+            id: "s14-q6",
+            type: "multiple-choice",
+            prompt:
+              "If you're trying to bring someone new into the business, what's the right approach in the first conversation?",
+            topic: "Play the long game",
+            options: [
+              "Make the offer on the spot so they have time to think about it",
+              "Push hard on what's wrong with their current job to create urgency",
+              "Plant the seed — mention what you do, leave it there, check in lightly later",
+              "Wait until they explicitly ask you for a job before saying anything",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Plant the seed. Day-one pitches feel desperate and don't land. Light contact + the long game lets the bad day do the closing weeks later — and the seed you planted is the first thing they reach for when their current situation cracks.",
+          },
+          {
+            id: "s14-q7",
+            type: "multiple-choice",
+            prompt:
+              "What does it mean that a manager is \"in a display cabinet 24/7\"?",
+            topic: "Display cabinet",
+            options: [
+              "The manager has to be in the office whenever the team is in",
+              "The leader is always watching how the manager performs",
+              "Personal life and work life cannot be separated for a manager",
+              "The team is constantly reading the manager's energy — whatever you carry is broadcast",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "Once you have direct reports, you don't get to feel privately. The team reads your energy every morning and absorbs whatever you carry — frustration, fatigue, drift. The internal high standard stays internal. The external face is prepared, deliberate, upbeat.",
+          },
+        ],
       },
     ],
   },
