@@ -2675,6 +2675,7 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-07-likability", newNumber: "05" },
   { sourceId: "session-08-numbers", newNumber: "06" },
   { sourceId: "session-11-seo-pitch", newNumber: "07" },
+  { sourceId: "session-15-read-the-room", newNumber: "08" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
