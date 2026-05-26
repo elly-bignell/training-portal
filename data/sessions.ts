@@ -51,6 +51,126 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Session 16 — Follow the Instructions. Build the Lego. (Tue 26 May) ──
+  // Sales + Customer Service both see it (no salesOnly flag). Also wired
+  // into the Lead Gen track as their Session 09 (see LEAD_GEN_SESSION_MAP
+  // below). No podcast yet — pending regenerated audio.
+  {
+    id: "session-16-follow-the-instructions",
+    number: "16",
+    date: "2026-05-26",
+    title: "Follow the Instructions. Build the Lego.",
+    summary:
+      "Pick the parts. Pack the tray. Cross off each step. Build the piece. The Lego-set principle for sales execution — and why the drift moment (a third of the way in, when confidence spikes) is where the build collapses, not at the start.",
+    keyTakeaway:
+      "Creativity time and instruction time are two different jobs. The job inside a pitch is execution against a known set of instructions, not invention. Follow the playbook to the letter and the jet hopper builds itself. Free-style and the pile of bricks builds you.",
+    director: "Corie Dawson",
+    totalTime: "~30 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-16-follow-the-instructions/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-16-follow-the-instructions/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("1JDy66HuRU_KparGiiB61MEh-FreDGCtj"),
+      },
+      {
+        kind: "quiz",
+        estimate: "5 questions · ~6 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s16-q1",
+            type: "multiple-choice",
+            prompt:
+              "In the pick-and-pack system, why does crossing off each completed step matter?",
+            topic: "Cross-off as audit trail",
+            options: [
+              "It speeds up the build by tracking which parts are left",
+              "It signals to the coach which steps the rep has finished",
+              "It encourages the rep to slow down and concentrate",
+              "It's the audit trail — when something goes wrong, the crosses tell you what was the system and what was you",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "The cross-off is the audit trail. When something fails, the crosses show what was the system and what was the rep's improvisation. Without them, the rep can't tell — and neither can the coach. That's why the cross-off survives even when the rep is convinced they don't need it.",
+          },
+          {
+            id: "s16-q2",
+            type: "multiple-choice",
+            prompt:
+              "Which of these is the right moment to free-style rather than follow the instructions?",
+            topic: "Creativity vs instruction time",
+            options: [
+              "Halfway through a client pitch when the conversation feels off",
+              "Brainstorming the next product offer with the team",
+              "Running the close sequence on a deal",
+              "Delivering the script during a validation call",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Creativity time is for brainstorming, designing, naming, off-sites — open-ended work with no right answer. Instruction time is for pitching, closing, running the playbook. Free-styling during instruction time costs deals. The trick is knowing which mode you're in before you act.",
+          },
+          {
+            id: "s16-q3",
+            type: "multiple-choice",
+            prompt:
+              "Where in a pitch does the \"I'm a Lego master\" drift moment typically happen?",
+            topic: "The drift sequence",
+            options: [
+              "Right at the start — the rep never actually opens the playbook",
+              "Right at the end — the rep panics during the close",
+              "About a third of the way in — when the build feels familiar and confidence spikes",
+              "It's random — there's no predictable pattern",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The drift point is around the third of the way in. The rep almost always opens the playbook correctly — the danger isn't at the start. It's the confidence spike that comes from the first few moves landing well. Trainers and reps both need to catch it there, not when the build is already collapsing.",
+          },
+          {
+            id: "s16-q4",
+            type: "multiple-choice",
+            prompt:
+              "When a build collapses, which question should the rep answer before reaching for \"the instructions were wrong\"?",
+            topic: "The blame loop",
+            options: [
+              "\"Did I actually follow the instructions? Can I point at the cross-offs?\"",
+              "\"Are the leads in this market different from usual?\"",
+              "\"Should we update the playbook for next week?\"",
+              "\"Is the coach being too harsh in the debrief?\"",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "Before blaming the instructions, the rep has to verify they followed them. The cross-offs are the proof. If the rep can't point at completed cross-offs, the question \"did the system work?\" can't be answered — because the system hasn't actually been tested. The blame loop runs forever otherwise.",
+          },
+          {
+            id: "s16-q5",
+            type: "multiple-choice",
+            prompt:
+              "What's the purpose of the two-week test — committing to follow the playbook to the letter for a fixed window?",
+            topic: "The two-week test",
+            options: [
+              "To prove loyalty to the coach",
+              "To remove ambiguity — run the system cleanly with no improvisation, then read the actual result",
+              "To find out whether the rep can survive without their own ideas",
+              "To give the coach material for the next training session",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The two-week test exists to remove the rep's improvisation as a variable. Right now nobody knows if the system works because nobody's run it cleanly. The test is time-boxed (short enough to commit to), falsifiable (the rep wins either way), and it protects the coaching relationship from endless abstract argument.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Session 15 — Pitch High. Read the Room. Hold the Line. (Mon 25 May) ─
   // Visible to all sales + customer service (CS sees it without the quiz).
   // Lead Gen still doesn't see it (their portal is the curated 7-session
@@ -2676,6 +2796,7 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-08-numbers", newNumber: "06" },
   { sourceId: "session-11-seo-pitch", newNumber: "07" },
   { sourceId: "session-15-read-the-room", newNumber: "08" },
+  { sourceId: "session-16-follow-the-instructions", newNumber: "09" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
