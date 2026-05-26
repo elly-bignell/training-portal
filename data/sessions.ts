@@ -54,7 +54,8 @@ export const sessions: Session[] = [
   // ─── Session 16 — Follow the Instructions. Build the Lego. (Tue 26 May) ──
   // Sales + Customer Service both see it (no salesOnly flag). Also wired
   // into the Lead Gen track as their Session 09 (see LEAD_GEN_SESSION_MAP
-  // below). No podcast yet — pending regenerated audio.
+  // below). Full asset set now — podcast + presentation added in a follow-
+  // up commit after the regenerated audio landed.
   {
     id: "session-16-follow-the-instructions",
     number: "16",
@@ -65,7 +66,7 @@ export const sessions: Session[] = [
     keyTakeaway:
       "Creativity time and instruction time are two different jobs. The job inside a pitch is execution against a known set of instructions, not invention. Follow the playbook to the letter and the jet hopper builds itself. Free-style and the pile of bricks builds you.",
     director: "Corie Dawson",
-    totalTime: "~30 min",
+    totalTime: "~50 min",
     assets: [
       {
         kind: "debrief",
@@ -81,6 +82,18 @@ export const sessions: Session[] = [
         kind: "intro",
         estimate: "~5 min watch",
         url: drivePreview("1JDy66HuRU_KparGiiB61MEh-FreDGCtj"),
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1IOgd9xjN8rYMa4wOyrTTsS4f665cAFdi"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "presentation",
+        estimate: "10 min watch",
+        url: drivePreview("1Q_qoOD7Zjspv2wOazXXtRN81PvIoy7Eq"),
+        mode: "video",
       },
       {
         kind: "quiz",
