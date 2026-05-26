@@ -41,6 +41,7 @@ export const managementModules: ManagementModule[] = [
       "Marketing Sweet is not an agency that uses AI. From this point forward, Marketing Sweet is an AI business. The way we operate — data, scripts, vertical execution — needs to reflect that.",
     pdfUrl: "/management/ai-business.pdf",
     docxUrl: "/management/ai-business.docx",
+    introVideoDriveId: "1rQ_EONrXQtQYG_xbRt66nJnwbkvp5ghq",
   },
   {
     id: "ai-training",
@@ -52,6 +53,7 @@ export const managementModules: ManagementModule[] = [
       "Index the lessons, not the sessions. Build the chapters. Let the academic pressure pre-condition the talent pool — the job becomes the prize, not the starting point.",
     pdfUrl: "/management/ai-training.pdf",
     docxUrl: "/management/ai-training.docx",
+    introVideoDriveId: "1qNOsvPdKPT5728xu6jvtnNyXbbYRdhty",
   },
 ];
 
