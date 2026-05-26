@@ -35,6 +35,14 @@ const TRAINEES = {
     startDay: "2026-03-23",
     fieldStartDay: "2026-03-23",
   },
+  "shian-roux": {
+    name: "Shian",
+    fullName: "Shian Roux",
+    staffMatchNames: ["Shian Roux"],
+    absences: { publicHolidays: 0, sickDays: 0 },
+    startDay: "2026-05-11",
+    fieldStartDay: "2026-05-11",
+  },
 };
 
 const PERIOD_START     = "2026-02-16";

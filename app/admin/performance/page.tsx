@@ -33,7 +33,7 @@ const DEFAULT_DEAL_VALUE = 400;
 // ─── Buddy pairs ───
 const buddyPairs: { label: string; sublabel?: string; members: string[] }[] = [
   { label: "Lucas & Cindy", members: ["lucas-tirri", "cindy-rose-rondez-manrique"] },
-  { label: "Felipe & Sydney", members: ["felipe-garcia", "sydney-arnold"] },
+  { label: "Felipe, Sydney & Shian", members: ["felipe-garcia", "sydney-arnold", "shian-roux"] },
   { label: "Dylan & Riley", members: ["dylan-munro", "riley-kerrison"] },
 ];
 
