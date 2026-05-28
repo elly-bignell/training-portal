@@ -66,7 +66,7 @@ export const sessions: Session[] = [
     keyTakeaway:
       "Close the exits before you talk price. Every objection is a window or door the buyer's trying to escape through — the job is to predict the next one and close it calmly. Hold the line when they laugh. Let them come to you. And let them feel like they won.",
     director: "Corie Dawson",
-    totalTime: "~25 min",
+    totalTime: "~50 min",
     assets: [
       {
         kind: "debrief",
@@ -77,6 +77,23 @@ export const sessions: Session[] = [
         kind: "toolkit",
         estimate: "10 min reference",
         url: "/sample-content/session-17-close-the-exits/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: drivePreview("141c-HZMC7yCX7okAzU6HuPE218mamQwT"),
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1JV3pOAt456RjJX9bZuapMCe0H__NBich"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "presentation",
+        estimate: "10 min watch",
+        url: drivePreview("1t23t3LThUdk-YySXzDF_KBi84CznrbhA"),
+        mode: "video",
       },
       {
         kind: "quiz",
