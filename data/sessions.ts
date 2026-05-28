@@ -51,6 +51,154 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Session 17 — Close the Exits. Hold the Line. Win the Deal. (Thu 28) ─
+  // Visible to sales + Customer Service (no salesOnly flag — CS gets the
+  // quiz auto-stripped). Wired into the Lead Gen track as their Session 10.
+  // Three assets at launch — Synthesia / podcast / presentation coming
+  // when Elly sends through.
+  {
+    id: "session-17-close-the-exits",
+    number: "17",
+    date: "2026-05-28",
+    title: "Close the Exits. Hold the Line. Win the Deal.",
+    summary:
+      "When a buyer laughs at your price, that's a buying signal, not a rejection. Confirm alignment on process and company before talking money. Acknowledge their target literally, hold the line on value, and offer a discount path that doesn't compromise the work. Buyers pay extra to feel like they won.",
+    keyTakeaway:
+      "Close the exits before you talk price. Every objection is a window or door the buyer's trying to escape through — the job is to predict the next one and close it calmly. Hold the line when they laugh. Let them come to you. And let them feel like they won.",
+    director: "Corie Dawson",
+    totalTime: "~25 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-17-close-the-exits/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-17-close-the-exits/toolkit.pdf",
+      },
+      {
+        kind: "quiz",
+        estimate: "7 questions · ~8 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s17-q1",
+            type: "multiple-choice",
+            prompt:
+              "A buyer laughs and shakes their head when you state the price. What's the right read?",
+            topic: "Reading buying signals",
+            options: [
+              "They're walking away — soften the price quickly before they leave",
+              "They're engaged — the reaction is a buying signal, hold the price and confirm alignment",
+              "They're being rude — match the energy and end the call",
+              "They don't have the money — pivot to the cheapest option immediately",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The strong reaction is engagement, not rejection. Buyers who aren't interested don't bother engaging with the price — they politely end the call. A laugh means the buyer is testing whether the rep will fold under pressure, and whether the rep actually believes in the price they just quoted. Hold the line, confirm alignment, then revisit the number.",
+          },
+          {
+            id: "s17-q2",
+            type: "multiple-choice",
+            prompt:
+              "Why is dropping the price two or three times in the same conversation a costly mistake?",
+            topic: "Don't take pot shots",
+            options: [
+              "It reveals the agency's profit margin to the buyer",
+              "It makes the buyer worry the work will be lower quality",
+              "Every drop costs credibility — the buyer concludes the original price was inflated and any number is movable",
+              "It triggers an automatic discount approval from the manager",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Each drop in the same conversation trains the buyer that the original price was inflated and that any number you state is movable. By the third drop the conversation has stopped being about the offer and started being about how low you'll go. Pause, confirm alignment on process and company, then revisit price with a clear position.",
+          },
+          {
+            id: "s17-q3",
+            type: "multiple-choice",
+            prompt:
+              "Before negotiating the price, which two things should be confirmed with the buyer first?",
+            topic: "Confirm alignment first",
+            options: [
+              "That they like the process, and that they like the company",
+              "That they have decision-making authority, and that they have a budget",
+              "That they understand the timeline, and that they're comfortable with monthly payments",
+              "That they've seen the portfolio, and that they have a clear brief",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "The two foundation questions are: do you like the process, and do you like the company? Both yeses must be on the table before price negotiation begins. Without them, the conversation collapses into a discount dance. With them, price becomes the easiest part of the conversation — not the hardest.",
+          },
+          {
+            id: "s17-q4",
+            type: "multiple-choice",
+            prompt:
+              "The buyer says they were hoping to pay $3,000 on a job that genuinely costs $6,000+. What's the most effective response?",
+            topic: "Acknowledge the number literally",
+            options: [
+              "Offer a deep discount to meet them at $3,500 — splitting the difference",
+              "End the call politely — they're clearly not a serious buyer",
+              "Lower the scope of work to fit their budget",
+              "Acknowledge the number literally, tell them you can't get there, then offer a discount path (like hosting) that brings the number partway back",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "Take their number seriously. Tell them you can't get there. Then offer a path that doesn't compromise the value of the work — typically a discount that activates if they take a related action (hosting, monthly billing, longer term). This holds the line on value while still giving the buyer a sense of having earned a concession.",
+          },
+          {
+            id: "s17-q5",
+            type: "multiple-choice",
+            prompt:
+              "A buyer states $22,000 as their firm ceiling on a $28,000 item. After visibly working the deal, you can settle at $22,700 — $700 above their stated ceiling. What typically happens?",
+            topic: "The $700 lesson",
+            options: [
+              "The buyer takes the deal — they pay the extra $700 to feel like they won the negotiation",
+              "The buyer refuses — any number above their stated ceiling kills the deal",
+              "The buyer threatens to walk and demands you come down to $22,000",
+              "The buyer asks for a second discount to bring it to $21,500",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "The buyer pays the extra $700 because they feel they pushed the deal past where they said they'd go. The stated ceiling is a position, not a true maximum — the real maximum is whatever the buyer will pay if they feel they won. Visible effort on the seller's side proves the offer is at the limit. Critically: never close the small gap by asking the buyer to come up — the buyer must close it themselves.",
+          },
+          {
+            id: "s17-q6",
+            type: "multiple-choice",
+            prompt:
+              "Why does calibrated disinterest from the rep often pull a buyer toward the deal rather than push them away?",
+            topic: "Disinterest as positioning",
+            options: [
+              "It signals the rep doesn't need the deal financially, which builds trust",
+              "It removes the buyer's leverage and triggers a pull-toward instinct — the buyer wants what isn't being forced on them",
+              "It signals the product is in short supply and prices will rise soon",
+              "It tells the buyer the rep is talking to other prospects, creating competitive pressure",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Buyers expect to be chased. Removing the chase removes the leverage. The same psychological instinct that makes people want what is being withheld kicks in inside a sales conversation — the buyer starts pulling toward the deal the rep isn't pushing. Combined with calm professionalism (not rudeness), this is the strongest closing energy available.",
+          },
+          {
+            id: "s17-q7",
+            type: "multiple-choice",
+            prompt:
+              "What are the three values that have to sit underneath every sales technique to keep it from reading as manipulation?",
+            topic: "The three pillars",
+            options: [
+              "Confidence, charisma, and conviction",
+              "Speed, scarcity, and social proof",
+              "Honesty, integrity, and loyalty",
+              "Empathy, expertise, and enthusiasm",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Honesty, integrity, and loyalty are the foundation. Every technique in this session — holding the line, the $700 move, calibrated disinterest, \"I understand\" — reads as manipulation when run without these values, and as professionalism when run with them. Buyers read what reps do, not what they say. The three pillars are what they read.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Session 16 — Follow the Instructions. Build the Lego. (Tue 26 May) ──
   // Sales + Customer Service both see it (no salesOnly flag). Also wired
   // into the Lead Gen track as their Session 09 (see LEAD_GEN_SESSION_MAP
@@ -2810,6 +2958,7 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-11-seo-pitch", newNumber: "07" },
   { sourceId: "session-15-read-the-room", newNumber: "08" },
   { sourceId: "session-16-follow-the-instructions", newNumber: "09" },
+  { sourceId: "session-17-close-the-exits", newNumber: "10" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
