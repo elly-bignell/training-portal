@@ -82,6 +82,19 @@ function driveFileId(url: string): string | null {
   return m ? m[1] : null;
 }
 
+// Returns the YouTube video ID if `url` is a YouTube link, else null.
+// Handles youtu.be short links, watch?v= long links, and /embed/ URLs so
+// data files can store any of the three formats interchangeably.
+function youtubeVideoId(url: string): string | null {
+  if (!url) return null;
+  if (!url.includes("youtube.com") && !url.includes("youtu.be")) return null;
+  let m = url.match(/youtu\.be\/([^/?#]+)/);
+  if (m) return m[1];
+  m = url.match(/youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/)([^&?#]+)/);
+  if (m) return m[1];
+  return null;
+}
+
 /** Drive iframe embed used for both podcast (audio) and presentation (video). */
 function DriveEmbed({
   fileId,
@@ -130,6 +143,55 @@ function DriveEmbed({
         )}
         <span className="ml-auto text-xs text-slate-400">
           Drive player · sign in with your Marketing Sweet account
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/** YouTube iframe embed — used by IntroCard when the URL is a YouTube link
+ *  rather than a Drive file. Mirrors the DriveEmbed shape so the Mark Viewed
+ *  + auto-progress behaviour stays identical between the two sources. */
+function YouTubeEmbed({
+  videoId,
+  state,
+  onSetState,
+}: {
+  videoId: string;
+  state: AssetState;
+  onSetState: (kind: AssetKind, state: AssetState) => void;
+}) {
+  return (
+    <div>
+      <iframe
+        src={`https://www.youtube.com/embed/${videoId}`}
+        title="intro embed"
+        className="w-full aspect-video rounded-lg border border-slate-200 bg-black"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+        onLoad={() =>
+          state === "not-viewed" && onSetState("intro", "in-progress")
+        }
+      />
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <a
+          href={`https://www.youtube.com/watch?v=${videoId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-3 py-1.5 text-xs font-semibold border border-slate-300 text-slate-700 rounded-md hover:border-slate-400 transition-colors"
+        >
+          Open on YouTube
+        </a>
+        {state !== "viewed" && (
+          <button
+            onClick={() => onSetState("intro", "viewed")}
+            className="px-4 py-2 text-sm font-bold bg-[#3C8055] text-white rounded-md hover:bg-[#2d6342] transition-colors shadow-sm"
+          >
+            ✓ Mark viewed
+          </button>
+        )}
+        <span className="ml-auto text-xs text-slate-400">
+          YouTube player
         </span>
       </div>
     </div>
@@ -533,6 +595,7 @@ function IntroCard({
   onSetState,
 }: CommonProps & { asset: IntroAsset }) {
   const driveId = driveFileId(asset.url);
+  const ytId = !driveId ? youtubeVideoId(asset.url) : null;
   return (
     <div>
       <p className="text-sm text-slate-700 mb-2">
@@ -544,6 +607,12 @@ function IntroCard({
         <DriveEmbed
           fileId={driveId}
           kind="intro"
+          state={state}
+          onSetState={onSetState}
+        />
+      ) : ytId ? (
+        <YouTubeEmbed
+          videoId={ytId}
           state={state}
           onSetState={onSetState}
         />

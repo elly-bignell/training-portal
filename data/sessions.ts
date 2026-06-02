@@ -51,6 +51,107 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Sessions 18, 19, 20 — sales-only video-only entries ─────────────────
+  // These three sessions ship as intro video + podcast + presentation only —
+  // no debrief PDF, no toolkit PDF, no quiz. salesOnly so CS and Lead Gen
+  // don't see them (the intro is YouTube rather than Drive, so they also
+  // exercise the new YouTube embed branch in AssetCard).
+  {
+    id: "session-20-hunt-deals",
+    number: "20",
+    date: "2026-06-01",
+    title: "Hunt Deals, Not Activity. Focus on Outcomes, Not Numbers.",
+    summary:
+      "Activity metrics protect ego; outcomes don't. Stop measuring yourself by calls made or hours logged and start measuring what actually closed. The point of the work is the deal — not the volume of motion around it.",
+    keyTakeaway:
+      "Activity is the lazy metric — it gives you a story to tell when results aren't there. The only thing that matters is whether the deal closed. Hunt deals, not activity.",
+    director: "Corie Dawson",
+    totalTime: "~25 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/E9oTm-ogjSo",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1esP1TwUI-V1xVU7DBeebPJOsaOWS45Jd"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "presentation",
+        estimate: "10 min watch",
+        url: drivePreview("1x8DdUOrPXLPFQ3VKR4Ub0E0x7P6KaPSs"),
+        mode: "video",
+      },
+    ],
+  },
+  {
+    id: "session-19-reheat-the-meeting",
+    number: "19",
+    date: "2026-05-29",
+    title: "Reheat the Meeting. Win the Appointment Before It Starts.",
+    summary:
+      "The pitch is mostly won before you walk in the room. Reheat the meeting beforehand — confirm the time, reinforce the value, remove the cancellation impulse — so the buyer is leaning in by the time you arrive, not deciding whether to keep the slot.",
+    keyTakeaway:
+      "The appointment is won in the hours before it starts, not the hour it runs. Reheat the meeting — confirm, reinforce, remove ambiguity — and the buyer arrives ready to buy, not ready to be sold to.",
+    director: "Corie Dawson",
+    totalTime: "~25 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/KNNYVKyIOJM",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1m67wrDmmfuHxbDyH7FhENq6OyH0NwL7S"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "presentation",
+        estimate: "10 min watch",
+        url: drivePreview("1bpv95PJaBPX-LIJrNKVXuLCkTljgFGjI"),
+        mode: "video",
+      },
+    ],
+  },
+  {
+    id: "session-18-inherit-the-deal",
+    number: "18",
+    date: "2026-05-29",
+    title: "Inherit the Deal. Stop Pitching. Start Understanding.",
+    summary:
+      "When you walk into a deal someone else started, the urge is to re-pitch from scratch. Wrong move. Inherit the deal — understand what's already been said, what the buyer's already heard, what they're already weighing — and pick up the conversation where it left off.",
+    keyTakeaway:
+      "Stop pitching. Start understanding. Inheriting a deal isn't restarting it — it's stepping into a conversation already in motion and reading the room before you say a word.",
+    director: "Corie Dawson",
+    totalTime: "~25 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/ato2HsBa7x0",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1cPXb0h3dNIoVdfcyrlrVhiZOKC_mJCW-"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "presentation",
+        estimate: "10 min watch",
+        url: drivePreview("1zjycfVY0ELy364Uz7wstCWahuiLiM7xF"),
+        mode: "video",
+      },
+    ],
+  },
   // ─── Session 17 — Close the Exits. Hold the Line. Win the Deal. (Thu 28) ─
   // Visible to sales + Customer Service (no salesOnly flag — CS gets the
   // quiz auto-stripped). Wired into the Lead Gen track as their Session 10.
