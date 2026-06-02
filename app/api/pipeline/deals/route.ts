@@ -35,7 +35,8 @@ export async function POST(req: Request) {
     const body = await req.json();
     const res = await fetch(URL, {
       method: 'POST', headers: HEADERS,
-      body: JSON.stringify({ fields: body }),
+      // typecast lets Airtable auto-create missing single-select options (e.g. new Booker/Closer names)
+      body: JSON.stringify({ fields: body, typecast: true }),
     });
     if (!res.ok) return NextResponse.json({ error: await res.text() }, { status: 500 });
     const data = await res.json();

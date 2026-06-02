@@ -10,7 +10,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     const body = await req.json();
     const res = await fetch(
       `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE)}/${params.id}`,
-      { method: 'PATCH', headers: HEADERS, body: JSON.stringify({ fields: body }) }
+      // typecast lets Airtable auto-create missing single-select options (e.g. new Booker/Closer names)
+      { method: 'PATCH', headers: HEADERS, body: JSON.stringify({ fields: body, typecast: true }) }
     );
     if (!res.ok) return NextResponse.json({ error: await res.text() }, { status: 500 });
     const data = await res.json();
