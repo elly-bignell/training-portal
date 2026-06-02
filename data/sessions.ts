@@ -51,24 +51,35 @@ export const sessions: Session[] = [
       },
     ],
   },
-  // ─── Sessions 18, 19, 20 — sales-only video-only entries ─────────────────
-  // These three sessions ship as intro video + podcast + presentation only —
-  // no debrief PDF, no toolkit PDF, no quiz. salesOnly so CS and Lead Gen
-  // don't see them (the intro is YouTube rather than Drive, so they also
-  // exercise the new YouTube embed branch in AssetCard).
+  // ─── Sessions 18, 19, 20 — full asset sets + LG access ───────────────────
+  // Visible to sales (Lucas/Dylan/Felipe) AND Lead Gen (Cindy/Shian/Riley/
+  // Sydney) — wired into LEAD_GEN_SESSION_MAP as their 11, 12, 13. CS still
+  // excluded via salesOnly: true (per the user's instruction — they only
+  // asked for Lead Gen to be added, not CS).
+  // Intros are YouTube (the AssetCard YouTube embed branch handles them).
   {
     id: "session-20-hunt-deals",
     number: "20",
     date: "2026-06-01",
-    title: "Hunt Deals, Not Activity. Focus on Outcomes, Not Numbers.",
+    title: "Count Deals, Not Bookings. Reset the Metric.",
     summary:
-      "Activity metrics protect ego; outcomes don't. Stop measuring yourself by calls made or hours logged and start measuring what actually closed. The point of the work is the deal — not the volume of motion around it.",
+      "Once you're past the prove-you-can-pick-up-the-phone phase, bookings stop being the headline metric — money does. Reverse-engineer from the daily income target back to deals required, then to the minimum strong bookings. Phase two thinking on the moments that matter.",
     keyTakeaway:
-      "Activity is the lazy metric — it gives you a story to tell when results aren't there. The only thing that matters is whether the deal closed. Hunt deals, not activity.",
+      "Count deals, not bookings. Reverse-engineer from the money. Phase two on the moments that matter. Find the real win every day.",
     director: "Corie Dawson",
-    totalTime: "~25 min",
+    totalTime: "~50 min",
     salesOnly: true,
     assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-20-hunt-deals/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-20-hunt-deals/toolkit.pdf",
+      },
       {
         kind: "intro",
         estimate: "~5 min watch",
@@ -86,21 +97,149 @@ export const sessions: Session[] = [
         url: drivePreview("1x8DdUOrPXLPFQ3VKR4Ub0E0x7P6KaPSs"),
         mode: "video",
       },
+      {
+        kind: "quiz",
+        estimate: "7 questions · ~8 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s20-q1",
+            type: "multiple-choice",
+            prompt:
+              "Once a rep is past the early-phase \"prove you can pick up the phone\" stage, what's the right primary metric?",
+            topic: "Reset the metric",
+            options: [
+              "Bookings made per day",
+              "Money produced per day (and deals required to hit it)",
+              "Hours on the phone per day",
+              "Conversion rate per week",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Money produced per day is the right primary metric. Bookings are the means — never the end. A rep with 5 bookings and 2 deals beats a rep with 10 bookings and 1 deal. Tracking bookings as the headline number incentivises shallow volume over focused conversion.",
+          },
+          {
+            id: "s20-q2",
+            type: "multiple-choice",
+            prompt: "What does it mean to \"reverse-engineer from the money\"?",
+            topic: "Reverse-engineering",
+            options: [
+              "Calculate your commission first and ask for it upfront",
+              "Work out the cost of each deal before the pitch",
+              "Start with the daily income target, divide by commission per deal to get deals required, then work out the minimum strong bookings needed",
+              "Reverse the order you pitch your products in",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Reverse-engineering means starting from the money. Daily target ÷ commission per deal = deals required. From there, the minimum strong bookings is what your conversion supports — plus an insurance policy on top. The reverse direction protects against the trap of chasing booking volume.",
+          },
+          {
+            id: "s20-q3",
+            type: "multiple-choice",
+            prompt:
+              "What's the structure of the \"insurance policy\" approach to daily bookings?",
+            topic: "Insurance policy",
+            options: [
+              "Book as many as possible — overflow is always safer",
+              "Start with the core minimum (e.g. two). Add two as third-party-only insurance. Add two more as comprehensive insurance. Six strong bookings total.",
+              "Make sure every booking has a backup rep assigned",
+              "Use a separate insurance product to cover lost commissions",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Layer the bookings, don't pile them. Two core bookings + two third-party + two comprehensive = six strong bookings total. Six well-prepared bookings will convert better than twenty shallow ones because the prep, the confirmation, and the focus all stay intact.",
+          },
+          {
+            id: "s20-q4",
+            type: "multiple-choice",
+            prompt:
+              "Why does the session push back hard against using \"history\" to set your conversion ceiling?",
+            topic: "History is history",
+            options: [
+              "Because history is unreliable — buyers change too fast",
+              "Because past conversion ratios were produced under old conditions. New conditions (better prep, sharper pitches, new techniques) produce new ratios — but only if you stop treating the old ratio as fixed.",
+              "Because tracking history takes too much time",
+              "Because the manager already tracks history, so the rep shouldn't",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "History is what was true under old conditions. Treating it as fixed locks the rep into the past. Better prep, sharper pitches, and new techniques produce new ratios — but only if the rep stops assuming the old ratio is permanent. Be willing to aim above your history.",
+          },
+          {
+            id: "s20-q5",
+            type: "multiple-choice",
+            prompt:
+              "What's the difference between phase one and phase two thinking?",
+            topic: "Phase one vs phase two",
+            options: [
+              "Phase one is for beginners, phase two is for senior reps",
+              "Phase one is on the phone, phase two is in face-to-face meetings",
+              "Phase one is automatic / autopilot responses — most communication, most days. Phase two is considered thinking — used deliberately on the moments that matter.",
+              "Phase one is morning energy, phase two is afternoon energy",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Phase one is the autopilot — automatic, reactive, default answers. Most communication runs on it. Phase two is the considered version — pause, think, give the real answer. The skill isn't to live in phase two constantly (exhausting), it's to deliberately step into it on the moments that matter — forecasts, debriefs, key buyer questions.",
+          },
+          {
+            id: "s20-q6",
+            type: "multiple-choice",
+            prompt:
+              "The session described a \"pressure-test\" — asking yourself a question as if the stakes were extreme. What's the purpose?",
+            topic: "Pressure-testing",
+            options: [
+              "To stress-test the deal under real client pressure",
+              "To force the brain out of phase one autopilot into phase two considered thinking — which surfaces the real answer rather than the default one",
+              "To prepare the rep for high-pressure objections from the buyer",
+              "To simulate what would happen if the rep lost the deal",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Pressure-testing artificially raises the imagined stakes to force the brain out of phase one. When the answer matters, the brain stops auto-replying and starts actually thinking. Apply it to forecasts, deal predictions, stalled deals, and buyer pushback — the real answer surfaces fast.",
+          },
+          {
+            id: "s20-q7",
+            type: "multiple-choice",
+            prompt:
+              "What does \"awareness\" mean in the context of this session, and why does it matter?",
+            topic: "Awareness",
+            options: [
+              "Being polite and listening carefully",
+              "Knowing your industry well",
+              "The ability to see yourself, your situation, and your interactions from outside — which is the skill underneath every other technique. Without it, techniques run blind.",
+              "Being aware of the company's policies and procedures",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Awareness is the meta-skill. It's the ability to step outside yourself and observe what's actually happening — in your pitch, in your tone, in your pipeline, in your own decision-making. Without it, even the best techniques run blind. With it, every other skill compounds.",
+          },
+        ],
+      },
     ],
   },
   {
     id: "session-19-reheat-the-meeting",
     number: "19",
     date: "2026-05-29",
-    title: "Reheat the Meeting. Win the Appointment Before It Starts.",
+    title: "Reheat the Pie. Sell the Appointment Twice.",
     summary:
-      "The pitch is mostly won before you walk in the room. Reheat the meeting beforehand — confirm the time, reinforce the value, remove the cancellation impulse — so the buyer is leaning in by the time you arrive, not deciding whether to keep the slot.",
+      "Bookings inherited from the lead-gen team go cold — fast. The day-before confirmation call reheats the pie: re-energises the buyer, asks for a small prep task, and frames the meeting as 5–10 minutes. Sell the appointment twice — and the next step is the close.",
     keyTakeaway:
-      "The appointment is won in the hours before it starts, not the hour it runs. Reheat the meeting — confirm, reinforce, remove ambiguity — and the buyer arrives ready to buy, not ready to be sold to.",
+      "Bookings go cold. Reheat the pie. Sell the appointment twice. Confidence without pressure. The next step is the close.",
     director: "Corie Dawson",
-    totalTime: "~25 min",
+    totalTime: "~50 min",
     salesOnly: true,
     assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-19-reheat-the-meeting/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-19-reheat-the-meeting/toolkit.pdf",
+      },
       {
         kind: "intro",
         estimate: "~5 min watch",
@@ -118,21 +257,148 @@ export const sessions: Session[] = [
         url: drivePreview("1bpv95PJaBPX-LIJrNKVXuLCkTljgFGjI"),
         mode: "video",
       },
+      {
+        kind: "quiz",
+        estimate: "7 questions · ~8 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s19-q1",
+            type: "multiple-choice",
+            prompt:
+              "Why do bookings inherited from the lead-gen team often go cold by the time the meeting happens?",
+            topic: "Cold pie",
+            options: [
+              "Because lead-gen books too many meetings per day",
+              "Because the buyer's emotional engagement decays over time — the deal is the same, but the buyer's belief in attending isn't",
+              "Because the lead-gen reps oversell the meeting",
+              "Because buyers always have second thoughts after a sales conversation",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The pie is the same. The buyer's engagement isn't. Once the lead-gen call ends, the buyer's energy starts decaying — they move on to other priorities, and the meeting goes from a curiosity to a calendar item. The longer the gap, the more reheating is needed.",
+          },
+          {
+            id: "s19-q2",
+            type: "multiple-choice",
+            prompt: "When should the confirmation call be made?",
+            topic: "Day-before call",
+            options: [
+              "Immediately after the lead-gen team books the meeting",
+              "On the morning of the meeting",
+              "The day before the meeting — early enough that the buyer can prep, late enough that the meeting feels imminent",
+              "Whenever the rep has time, before the meeting",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The day before is the sweet spot. Earlier and the meeting still feels distant; on the day itself, the buyer's already scheduled around it (or skipped it). The day before is when the buyer's awareness can be reactivated and prep can be requested.",
+          },
+          {
+            id: "s19-q3",
+            type: "multiple-choice",
+            prompt:
+              "Why does framing a meeting as \"5–10 minutes\" work — even when the actual meeting will run longer?",
+            topic: "Asymmetric time frame",
+            options: [
+              "Because buyers respect a rep who keeps things brief",
+              "Because it commits the rep to short calls, which improves conversion",
+              "Because it's asymmetric risk — the short frame defuses the buyer's biggest objection, and if the meeting runs longer, the buyer extends it themselves",
+              "Because most meetings genuinely should be 5–10 minutes",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "It's asymmetric risk. The buyer's #1 objection — \"I don't have time\" — gets defused. If the meeting runs short, the buyer is delighted. If it runs long, the buyer extended it themselves — and won't get angry. Never literal; always the frame.",
+          },
+          {
+            id: "s19-q4",
+            type: "multiple-choice",
+            prompt: "\"Sell the appointment twice\" — what does this mean?",
+            topic: "Sell the appointment twice",
+            options: [
+              "Pitch the same product to the same buyer in two separate meetings",
+              "Lead-gen sells the booking once. The receiving rep needs to sell it again on the confirmation call — re-establishing value before the meeting happens",
+              "Always have two sales reps on every meeting to build trust",
+              "Try the close twice in the same conversation",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Lead-gen does the first sell. The receiving rep does the second sell on the confirmation call — reframing the value, asking for a small prep task, and resetting the buyer's belief in why the meeting matters. Skip the second sell, and the buyer arrives flat.",
+          },
+          {
+            id: "s19-q5",
+            type: "multiple-choice",
+            prompt:
+              "What's wrong with looking at a full calendar of bookings and thinking \"some will fall out, that's normal\"?",
+            topic: "Full-calendar trap",
+            options: [
+              "Nothing — that's a realistic expectation",
+              "The internal expectation shapes the outcome — accepting attrition as normal causes attrition to rise to match. The work has just begun, not finished.",
+              "It encourages reps to book more meetings than they can handle",
+              "It signals to the manager that the rep isn't focused",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The internal expectation shapes the outcome. The moment a rep accepts attrition as normal, attrition rises to match. A full calendar isn't the finish line — it's the starting line. The job becomes preparing well enough to convert all of them, not most of them.",
+          },
+          {
+            id: "s19-q6",
+            type: "multiple-choice",
+            prompt:
+              "What's the difference between \"sounds like you're ready to go the next step\" as a statement versus as a question?",
+            topic: "The next-step close",
+            options: [
+              "There's no difference — both work equally well",
+              "The question version is more polite and works better with senior buyers",
+              "Said as a statement (flat intonation, no question mark), the buyer can't politely exit. Said as a question, they default to \"let me think\"",
+              "The statement version only works on the phone, not in person",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The statement form (flat intonation, no rising tone) removes the buyer's clean exit. The question form invites \"let me think about it.\" The vocabulary is identical — the delivery is the whole technique. Practise the flat tone out loud.",
+          },
+          {
+            id: "s19-q7",
+            type: "multiple-choice",
+            prompt:
+              "A buyer says \"I don't want to be pressured.\" What's the most effective response?",
+            topic: "Apology close",
+            options: [
+              "Defend — \"I'm not pressuring you, I'm just being thorough.\"",
+              "Drop the price to ease the tension",
+              "Apologise, own it, and offer two paths — take the deal, or walk. The buyer almost always softens",
+              "Repeat the question to clarify what they mean",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Defending validates the buyer's complaint and turns the conversation into an argument. Apologising disarms them — most buyers will recover the relationship themselves (\"no, you weren't pressuring me\"). If they don't, the rep finds out fast that the deal was never going to close. Either answer is useful.",
+          },
+        ],
+      },
     ],
   },
   {
     id: "session-18-inherit-the-deal",
     number: "18",
     date: "2026-05-29",
-    title: "Inherit the Deal. Stop Pitching. Start Understanding.",
+    title: "Information Is Currency. Inherit the Deal.",
     summary:
-      "When you walk into a deal someone else started, the urge is to re-pitch from scratch. Wrong move. Inherit the deal — understand what's already been said, what the buyer's already heard, what they're already weighing — and pick up the conversation where it left off.",
+      "Stop pitching. Start gathering. Information is the asymmetric advantage — buying habits repeat, price tolerance reveals itself, networks unlock. Use statement-form questions to gather without triggering the buyer's defences. Walk in 85% validated; let the call do the last 15%.",
     keyTakeaway:
-      "Stop pitching. Start understanding. Inheriting a deal isn't restarting it — it's stepping into a conversation already in motion and reading the room before you say a word.",
+      "Gather first, recommend second, close inherited. Statements not questions. Listen back. Walk the value, not the price.",
     director: "Corie Dawson",
-    totalTime: "~25 min",
+    totalTime: "~50 min",
     salesOnly: true,
     assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-18-inherit-the-deal/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-18-inherit-the-deal/toolkit.pdf",
+      },
       {
         kind: "intro",
         estimate: "~5 min watch",
@@ -149,6 +415,122 @@ export const sessions: Session[] = [
         estimate: "10 min watch",
         url: drivePreview("1zjycfVY0ELy364Uz7wstCWahuiLiM7xF"),
         mode: "video",
+      },
+      {
+        kind: "quiz",
+        estimate: "7 questions · ~8 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s18-q1",
+            type: "multiple-choice",
+            prompt:
+              "Why is information gathering more valuable than pitching speed in a sales call?",
+            topic: "Information as currency",
+            options: [
+              "Because pitching too early can scare the buyer away",
+              "Because long calls always close better than short calls",
+              "Because buying habits repeat — knowing how the buyer made their last purchase predicts how they'll make the next one",
+              "Because information makes the rep sound more knowledgeable",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Buying habits repeat. The way a buyer made their last big purchase is the strongest predictor of how they'll make the next one. The rep who gathers that information first walks into the recommendation with a thesis the buyer is already aligned with. Pitching speed without that foundation is guessing — and the buyer can feel it.",
+          },
+          {
+            id: "s18-q2",
+            type: "multiple-choice",
+            prompt:
+              "A buyer says they \"can't remember\" who built their website. What's the most likely real reason?",
+            topic: "Reading 'I can't remember'",
+            options: [
+              "They genuinely don't remember",
+              "The question landed in the wrong way — \"I can't remember\" usually means \"I don't want to tell you\"",
+              "They're embarrassed about the website",
+              "They're testing whether the rep can do the research themselves",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "\"I can't remember\" is almost never a real memory gap. It's a polite \"none of your business.\" The fix isn't to give up — it's to reframe and ask again in statement form. The fact that the buyer is guarding the information is itself useful information.",
+          },
+          {
+            id: "s18-q3",
+            type: "multiple-choice",
+            prompt:
+              "Which of these is a statement-form question that gets the buyer to reveal their budget without asking directly?",
+            topic: "Statement questions",
+            options: [
+              "\"What's your budget for this project?\"",
+              "\"How much are you looking to spend?\"",
+              "\"Can you confirm your budget so I can recommend the right option?\"",
+              "\"Some clients in your space invest around $1,500 to $2,500 for what you're after.\"",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "Statement form invites correction. \"Some clients in your space invest around $1,500–$2,500\" gives the buyer a frame and lets them correct it (\"that's about right\" / \"actually we're closer to $5K\") without feeling interrogated. Direct questions about budget trigger defence.",
+          },
+          {
+            id: "s18-q4",
+            type: "multiple-choice",
+            prompt: "What does it mean to walk into a pitch \"85% validated\"?",
+            topic: "Have a thesis",
+            options: [
+              "You arrive with a working thesis about the buyer's situation and use the call to confirm or update it — not to improvise from scratch",
+              "You've already secured verbal commitment from the buyer before the call",
+              "You've personally reviewed 85% of their competitors before the call",
+              "You only pitch to leads who score above 85% on a qualification rubric",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "Walking in 85% validated means having a working thesis — industry, price tolerance, likely objections, likely solution — before the call. The call is for validating and updating that thesis, not improvising one from scratch. Strong reps update; weak reps either don't have a thesis or refuse to change it.",
+          },
+          {
+            id: "s18-q5",
+            type: "multiple-choice",
+            prompt: "Active listening in a pitch means doing what, specifically?",
+            topic: "Active listening",
+            options: [
+              "Nodding and confirming as the buyer speaks",
+              "Repeating the buyer's own words back to them three or so times during the pitch, tied explicitly to the recommendation",
+              "Asking follow-up questions about every statement the buyer makes",
+              "Taking detailed notes during the call so nothing is missed",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Active listening shows up in the pitch itself — when the rep repeats the buyer's own words back to them, three or so times, tied to the recommendation. \"You said you want to expand…\" + \"You mentioned the website hadn't been touched…\" Without those callbacks, the buyer doesn't know they were heard.",
+          },
+          {
+            id: "s18-q6",
+            type: "multiple-choice",
+            prompt: "What does \"inherit the close\" mean in practice?",
+            topic: "Inherit the close",
+            options: [
+              "Closing techniques are passed down from senior reps to junior ones",
+              "The rep waits for the buyer to ask to buy",
+              "The rep uses a scripted closing question at the end of every call",
+              "The yes is decided during the information stage — 90% of the rep's effort goes into discovery and recommendation, and the close itself is a confirmation",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "The close is decided during discovery. If the rep spends 90% on information and 10% on the close, the close is just a confirmation. If the rep spends 10% on info and 90% pushing for the yes, the close is a battle — and one most reps lose.",
+          },
+          {
+            id: "s18-q7",
+            type: "multiple-choice",
+            prompt:
+              "The buyer pushes back on the price. What does the mistake-walk-back close do instead of dropping the price?",
+            topic: "Mistake-walk-back",
+            options: [
+              "Reduces the scope of work — framing it as the rep's own over-scoping mistake — so the price drops without compromising the value of what's left",
+              "Offers a one-time discount with a strict expiry",
+              "Refers the buyer to a cheaper competitor",
+              "Escalates to the manager for approval",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "The mistake-walk-back drops the scope of work and frames it as the rep's own over-scoping error — not as a discount the buyer pushed for. Price drops, value-per-dollar stays the same, and the rep keeps integrity. Direct discounts cost more long-term than a clean scope reduction.",
+          },
+        ],
       },
     ],
   },
@@ -3077,6 +3459,9 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-15-read-the-room", newNumber: "08" },
   { sourceId: "session-16-follow-the-instructions", newNumber: "09" },
   { sourceId: "session-17-close-the-exits", newNumber: "10" },
+  { sourceId: "session-18-inherit-the-deal", newNumber: "11" },
+  { sourceId: "session-19-reheat-the-meeting", newNumber: "12" },
+  { sourceId: "session-20-hunt-deals", newNumber: "13" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
