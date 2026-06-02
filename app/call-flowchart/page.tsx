@@ -470,6 +470,680 @@ function MarketingSweetFlow({ activeNode, toggle }: { activeNode: string | null;
 }
 
 /* ════════════════════════════════════════════════════════════ */
+/* NEW SCRIPT — SHARED: YES MARKETING BRANCH (with If Happy ·  */
+/*              Probe sub-section)                              */
+/* ════════════════════════════════════════════════════════════ */
+function YesMarketingBranchNew({ prefix, activeNode, toggle }: { prefix: string; activeNode: string | null; toggle: (id: string) => void }) {
+  return (
+    <>
+      <FlowCard
+        node={{ id: `${prefix}-ask-type`, type: "script", label: "Ask What Type", script: "Is it SEO or Google Ads that you're doing?" }}
+        isActive={activeNode === `${prefix}-ask-type`}
+        onClick={() => toggle(`${prefix}-ask-type`)}
+      />
+      <Arrow />
+
+      {/* If Happy · Probe — NEW probing block */}
+      <div className="rounded-xl border-2 border-amber-200 bg-amber-50/40 p-4 my-2">
+        <div className="text-[11px] font-bold tracking-widest uppercase text-amber-700 mb-3">
+          ⚡ If Happy · Probe
+        </div>
+        <div className="space-y-2">
+          <FlowCard
+            node={{ id: `${prefix}-probe-1`, type: "script", label: "Probe Service Quality", script: "Are you happy with the service they give you or the amount of calls you are getting?" }}
+            isActive={activeNode === `${prefix}-probe-1`}
+            onClick={() => toggle(`${prefix}-probe-1`)}
+          />
+          <FlowCard
+            node={{ id: `${prefix}-probe-2`, type: "script", label: "Track Attribution", script: "Do you track specifically where the work comes from?" }}
+            isActive={activeNode === `${prefix}-probe-2`}
+            onClick={() => toggle(`${prefix}-probe-2`)}
+          />
+          <FlowCard
+            node={{ id: `${prefix}-probe-3`, type: "script", label: "Offer 2nd Opinion", script: "Not trying to step on anyone's toes — but would it offend you if I came to you with a 2nd opinion highlighting the shortfalls and how it could be improved?" }}
+            isActive={activeNode === `${prefix}-probe-3`}
+            onClick={() => toggle(`${prefix}-probe-3`)}
+          />
+          <FlowCard
+            node={{ id: `${prefix}-probe-4`, type: "script", label: "Clarify the Objection", script: "Are you purely not interested 'cause I'm giving you a cold call, or 'cause you absolutely love them?" }}
+            isActive={activeNode === `${prefix}-probe-4`}
+            onClick={() => toggle(`${prefix}-probe-4`)}
+          />
+        </div>
+      </div>
+
+      <Arrow />
+      <FlowCard
+        node={{ id: `${prefix}-ask-long`, type: "script", label: "Ask How Long", script: "How long have you been doing it for?" }}
+        isActive={activeNode === `${prefix}-ask-long`}
+        onClick={() => toggle(`${prefix}-ask-long`)}
+      />
+      <Arrow />
+      <FlowCard
+        node={{ id: `${prefix}-duration-dec`, type: "decision", label: "How Long?" }}
+        isActive={activeNode === `${prefix}-duration-dec`}
+        onClick={() => toggle(`${prefix}-duration-dec`)}
+      />
+
+      {/* Less than 6 months */}
+      <div className="mt-3 p-4 bg-white/60 rounded-lg border border-blue-100">
+        <BranchLabel text="LESS THAN 6 MONTHS" />
+        <FlowCard
+          node={{ id: `${prefix}-less-6mo`, type: "outcome-followup", label: "Follow Up" }}
+          isActive={activeNode === `${prefix}-less-6mo`}
+          onClick={() => toggle(`${prefix}-less-6mo`)}
+        />
+      </div>
+
+      {/* More than 6 months → Ask spend → 2nd opinion */}
+      <div className="mt-3 p-4 bg-white/60 rounded-lg border border-blue-100">
+        <BranchLabel text="MORE THAN 6 MONTHS" />
+        <FlowCard
+          node={{ id: `${prefix}-ask-spend`, type: "script", label: "Ask About Spend", script: "And if you don't mind me asking, what are you spending each month?" }}
+          isActive={activeNode === `${prefix}-ask-spend`}
+          onClick={() => toggle(`${prefix}-ask-spend`)}
+        />
+        <Arrow />
+        <FlowCard
+          node={{ id: `${prefix}-2nd-opinion`, type: "script", label: "Offer 2nd Opinion", script: "Perfect. Would it offend you at all if I came back with a 2nd opinion highlighting shortfalls and how easily it can be improved?" }}
+          isActive={activeNode === `${prefix}-2nd-opinion`}
+          onClick={() => toggle(`${prefix}-2nd-opinion`)}
+        />
+        <Arrow />
+        <FlowCard
+          node={{ id: `${prefix}-offend`, type: "decision", label: "Would it offend?" }}
+          isActive={activeNode === `${prefix}-offend`}
+          onClick={() => toggle(`${prefix}-offend`)}
+        />
+        <div className="grid grid-cols-2 gap-4 mt-3">
+          <div>
+            <BranchLabel text="YES" />
+            <FlowCard
+              node={{ id: `${prefix}-offend-yes`, type: "outcome-followup", label: "Follow Up", script: "No stress at all, I can follow up in a month or so." }}
+              isActive={activeNode === `${prefix}-offend-yes`}
+              onClick={() => toggle(`${prefix}-offend-yes`)}
+            />
+          </div>
+          <div>
+            <BranchLabel text="NO" />
+            <FlowCard
+              node={{ id: `${prefix}-offend-no`, type: "outcome-book", label: "Book", script: "Awesome, are you free for 15–20 mins on [day] at [time]?" }}
+              isActive={activeNode === `${prefix}-offend-no`}
+              onClick={() => toggle(`${prefix}-offend-no`)}
+            />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════ */
+/* NEW SCRIPT — QUODO FLOW                                     */
+/* ════════════════════════════════════════════════════════════ */
+function QuodoFlowNew({ activeNode, toggle }: { activeNode: string | null; toggle: (id: string) => void }) {
+  return (
+    <div className="space-y-0">
+
+      <div className="max-w-2xl mx-auto">
+        <FlowCard
+          node={{ id: "qn-reason", type: "script", label: "Reason for Call", script: "Just for some context, we're Australia's largest privately owned web design company, based in South Australia but operational right across the country. The reason for my call is I was just having a look at your website and I noticed that you have been around for [X] years. I'm assuming that most of your work comes through word of mouth and referrals?" }}
+          isActive={activeNode === "qn-reason"}
+          onClick={() => toggle("qn-reason")}
+        />
+      </div>
+
+      <Arrow />
+
+      <div className="max-w-2xl mx-auto">
+        <FlowCard
+          node={{ id: "qn-website-obs", type: "script", label: "Website Observation", script: "I also know that most of your referrals will be checking your website out and I hope you don't mind me saying but it's starting to look a bit on the tired side. Have you ever considered updating your website or touching it up?" }}
+          isActive={activeNode === "qn-website-obs"}
+          onClick={() => toggle("qn-website-obs")}
+        />
+        <div className="mt-3 px-5 py-3 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+          <p className="text-sm text-slate-500 italic"><strong>OR:</strong> &ldquo;...noticed it hasn&apos;t been updated since [year]. Have you ever considered updating your website or touching it up?&rdquo;</p>
+        </div>
+      </div>
+
+      <DecisionLabel text="Have they considered updating?" />
+
+      <div className="grid grid-cols-2 gap-8 max-w-4xl mx-auto items-start">
+
+        {/* NO / NOT INTERESTED */}
+        <div>
+          <div className="bg-slate-100 rounded-t-lg px-5 py-2.5">
+            <span className="text-xs font-bold text-slate-600">NO / NOT INTERESTED</span>
+          </div>
+          <div className="border border-t-0 border-slate-200 rounded-b-lg p-5 bg-slate-50/30">
+            <FlowCard
+              node={{ id: "qn-no-probe", type: "script", label: "Probe the Objection", script: "No worries at all — can I ask, is that just because you're too busy and don't have the time? Or is it more of a cost thing and you think it's going to be a lengthy process?" }}
+              isActive={activeNode === "qn-no-probe"}
+              onClick={() => toggle("qn-no-probe")}
+            />
+
+            <DecisionLabel text="What's holding them back?" />
+
+            <div className="grid grid-cols-2 gap-4 items-stretch">
+              <div>
+                <div className="bg-orange-50 rounded-t-lg px-3 py-1.5">
+                  <span className="text-[10px] font-bold text-orange-700">TOO BUSY / NO TIME</span>
+                </div>
+                <div className="border border-t-0 border-orange-100 rounded-b-lg p-4 bg-orange-50/10 flex flex-col">
+                  <FlowCard
+                    node={{ id: "qn-no-busy", type: "outcome-followup", label: "Follow Up", script: "I'm more than happy to follow up in a month's time to see how your schedule is tracking along. I'll only need you for 15 mins but in the meantime I can send you some examples of our work." }}
+                    isActive={activeNode === "qn-no-busy"}
+                    onClick={() => toggle("qn-no-busy")}
+                    className="flex-1"
+                  />
+                </div>
+              </div>
+              <div>
+                <div className="bg-blue-50 rounded-t-lg px-3 py-1.5">
+                  <span className="text-[10px] font-bold text-blue-700">COST CONCERN</span>
+                </div>
+                <div className="border border-t-0 border-blue-100 rounded-b-lg p-4 bg-blue-50/10 flex flex-col">
+                  <FlowCard
+                    node={{ id: "qn-no-cost", type: "script", label: "Overcome Cost Objection", script: "The best part about us is that we build websites for the price of a coffee a day and we handle 98% of the heavy lifting. The only thing we need from you is your approval and imagery." }}
+                    isActive={activeNode === "qn-no-cost"}
+                    onClick={() => toggle("qn-no-cost")}
+                    className="flex-1"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* YES, INTERESTED */}
+        <div>
+          <div className="bg-emerald-50 rounded-t-lg px-5 py-2.5">
+            <span className="text-xs font-bold text-emerald-700">YES, INTERESTED</span>
+          </div>
+          <div className="border border-t-0 border-emerald-100 rounded-b-lg p-5 bg-emerald-50/20">
+            <FlowCard
+              node={{ id: "qn-yes-update", type: "script", label: "Present the Solution", script: "I've got a great solution for you. I can get it fixed up for the price of a coffee a day." }}
+              isActive={activeNode === "qn-yes-update"}
+              onClick={() => toggle("qn-yes-update")}
+            />
+            <Arrow />
+            <FlowCard
+              node={{ id: "qn-email", type: "script", label: "Go For Booking", script: "I'd love to show you some examples of our work and explain our pricing. I'll only need you for 5-10 minutes. Does [XYZday] at [XYZtime] work for you?" }}
+              isActive={activeNode === "qn-email"}
+              onClick={() => toggle("qn-email")}
+            />
+            <Arrow />
+            <FlowCard
+              node={{ id: "qn-qualify", type: "script", label: "Send Examples & Confirm Email", script: "I'll book that in. We'll do it over Zoom so we can obviously show you visually. I'll also send you a few links to some of our work in the meantime and a bit about us. Is your best email [XYZ@xyz.com.au]?" }}
+              isActive={activeNode === "qn-qualify"}
+              onClick={() => toggle("qn-qualify")}
+            />
+
+            <Arrow />
+            <FlowCard
+              node={{ id: "qn-qualify-int", type: "script", label: "Qualify Their Interest", script: "Great! Do you mind if I ask you a quick question? Is this something you're genuinely interested in or are you being polite?" }}
+              isActive={activeNode === "qn-qualify-int"}
+              onClick={() => toggle("qn-qualify-int")}
+            />
+
+            <DecisionLabel text="Are they genuinely interested?" />
+
+            <div className="grid grid-cols-2 gap-4 items-stretch">
+              <div>
+                <div className="bg-slate-100 rounded-t-lg px-3 py-1.5">
+                  <span className="text-[10px] font-bold text-slate-600">BEING POLITE</span>
+                </div>
+                <div className="border border-t-0 border-slate-200 rounded-b-lg p-4 bg-slate-50/30 h-full">
+                  <FlowCard
+                    node={{ id: "qn-polite", type: "outcome-followup", label: "Follow Up Anyway", script: "No worries at all — I'll send the examples through anyway and you can have a look in your own time. I'll follow up in a week or so." }}
+                    isActive={activeNode === "qn-polite"}
+                    onClick={() => toggle("qn-polite")}
+                  />
+                </div>
+              </div>
+              <div>
+                <div className="bg-emerald-50 rounded-t-lg px-3 py-1.5">
+                  <span className="text-[10px] font-bold text-emerald-700">GENUINELY INTERESTED</span>
+                </div>
+                <div className="border border-t-0 border-emerald-100 rounded-b-lg p-4 bg-emerald-50/20 h-full">
+                  <FlowCard
+                    node={{ id: "qn-interested", type: "outcome-book", label: "Warm Close", script: "Okay great — well thank you for your time and we look forward to seeing you at [XYZtime] on [XYZday]! Have a great rest of your day." }}
+                    isActive={activeNode === "qn-interested"}
+                    onClick={() => toggle("qn-interested")}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════ */
+/* NEW SCRIPT — MARKETING SWEET FLOW                           */
+/* 3-way split: YES MARKETING / JUST WOM / NO MARKETING        */
+/* ════════════════════════════════════════════════════════════ */
+function MarketingSweetFlowNew({ activeNode, toggle }: { activeNode: string | null; toggle: (id: string) => void }) {
+  return (
+    <div className="space-y-0">
+
+      <div className="max-w-3xl mx-auto">
+        <FlowCard
+          node={{ id: "msn-reason", type: "script", label: "Reason for Call", script: "We are Marketing Sweet, 'Sweet' is spelt like the lolly. We're a full service agency that specialises in all aspects of web design and digital marketing.\n\nThe reason for my call, I was doing some research in your area and you popped up. I already know you are successful with your WOM and Referrals, and we've helped 1000's of clients just like you get in front of people who need you but don't know who you are. I just wanted to ask if we could bring you more work, would you be able to take it on?" }}
+          isActive={activeNode === "msn-reason"}
+          onClick={() => toggle("msn-reason")}
+        />
+      </div>
+
+      <DecisionLabel text="Can they take more work?" />
+
+      <div className="grid grid-cols-2 gap-8 max-w-4xl mx-auto items-start">
+
+        {/* ── YES — CAN TAKE WORK ── */}
+        <div>
+          <div className="bg-emerald-50 border border-emerald-200 rounded-t-xl px-6 py-3">
+            <span className="text-sm font-bold text-emerald-700">✅ YES — CAN TAKE MORE WORK</span>
+          </div>
+          <div className="border border-t-0 border-emerald-100 rounded-b-xl bg-white p-6">
+            <FlowCard
+              node={{ id: "msn-yes-mkt", type: "script", label: "Ask About Marketing", script: "Perfect. Are you doing any marketing right now or just word of mouth and referrals?" }}
+              isActive={activeNode === "msn-yes-mkt"}
+              onClick={() => toggle("msn-yes-mkt")}
+            />
+          </div>
+        </div>
+
+        {/* ── NO — TOO BUSY ── */}
+        <div>
+          <div className="bg-orange-50 border border-orange-200 rounded-t-xl px-6 py-3">
+            <span className="text-sm font-bold text-orange-700">⛔ NO — TOO BUSY / FULL</span>
+          </div>
+          <div className="border border-t-0 border-orange-100 rounded-b-xl bg-white p-6">
+            <FlowCard
+              node={{ id: "msn-busy-reframe", type: "script", label: "Reframe as Positive", script: "Great problem to have! Is that mostly through word of mouth and referrals, or are you doing any structured marketing at the moment?" }}
+              isActive={activeNode === "msn-busy-reframe"}
+              onClick={() => toggle("msn-busy-reframe")}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Converge to 3-way marketing question */}
+      <div className="flex flex-col items-center mt-6 mb-2">
+        <div className="flex items-center gap-3 w-full max-w-md">
+          <div className="h-px flex-1 bg-slate-200"></div>
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Both paths converge</span>
+          <div className="h-px flex-1 bg-slate-200"></div>
+        </div>
+        <Arrow />
+      </div>
+
+      <DecisionLabel text="Are they doing marketing?" />
+
+      {/* 3-way split */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-[1500px] mx-auto items-start">
+
+        {/* YES MARKETING */}
+        <div>
+          <div className="bg-blue-50 border border-blue-200 rounded-t-xl px-5 py-3">
+            <span className="text-sm font-bold text-blue-700">📈 YES — Marketing</span>
+          </div>
+          <div className="border border-t-0 border-blue-100 rounded-b-xl p-5 bg-blue-50/20">
+            <YesMarketingBranchNew prefix="msn-y" activeNode={activeNode} toggle={toggle} />
+          </div>
+        </div>
+
+        {/* JUST WOM */}
+        <div>
+          <div className="bg-amber-50 border border-amber-200 rounded-t-xl px-5 py-3">
+            <span className="text-sm font-bold text-amber-700">👥 JUST WOM</span>
+          </div>
+          <div className="border border-t-0 border-amber-100 rounded-b-xl p-5 bg-amber-50/20">
+            <FlowCard
+              node={{ id: "msn-pitch", type: "script", label: "Pitch the Value", script: "That's cool, most of our clients get the most through WOM and referrals, but aside from that we've been getting them in front of people who need them but don't know who they are. Would it offend you if I came to you with some ideas and strategies on how we can bring you more visibility and work?" }}
+              isActive={activeNode === "msn-pitch"}
+              onClick={() => toggle("msn-pitch")}
+            />
+            <Arrow />
+            <FlowCard
+              node={{ id: "msn-pitch-offend", type: "decision", label: "Would it offend?" }}
+              isActive={activeNode === "msn-pitch-offend"}
+              onClick={() => toggle("msn-pitch-offend")}
+            />
+            <div className="grid grid-cols-2 gap-4 mt-3">
+              <div>
+                <BranchLabel text="YES" />
+                <FlowCard
+                  node={{ id: "msn-pitch-yes", type: "outcome-followup", label: "Follow Up", script: "No stress at all, I can follow up in a month or so." }}
+                  isActive={activeNode === "msn-pitch-yes"}
+                  onClick={() => toggle("msn-pitch-yes")}
+                />
+              </div>
+              <div>
+                <BranchLabel text="NO" />
+                <FlowCard
+                  node={{ id: "msn-pitch-no", type: "outcome-book", label: "Book Meeting", script: "Awesome, are you free for 15–20 mins on [day] at [time]?" }}
+                  isActive={activeNode === "msn-pitch-no"}
+                  onClick={() => toggle("msn-pitch-no")}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* NO MARKETING */}
+        <div>
+          <div className="bg-slate-100 border border-slate-200 rounded-t-xl px-5 py-3">
+            <span className="text-sm font-bold text-slate-600">🌐 NO MARKETING</span>
+          </div>
+          <div className="border border-t-0 border-slate-200 rounded-b-xl p-5 bg-slate-50/30">
+            <FlowCard
+              node={{ id: "msn-nomkt-site", type: "script", label: "Website Angle", script: "Got it. In that case I wouldn't recommend pushing any more work until the website is properly set up to handle it. I actually had a look at your site — when was it last updated?" }}
+              isActive={activeNode === "msn-nomkt-site"}
+              onClick={() => toggle("msn-nomkt-site")}
+            />
+            <Arrow />
+            <FlowCard
+              node={{ id: "msn-nomkt-book", type: "script", label: "Go for Booking", script: "If I came back to you with a couple of ideas to freshen it up so you're ready for future growth, would that offend you?" }}
+              isActive={activeNode === "msn-nomkt-book"}
+              onClick={() => toggle("msn-nomkt-book")}
+            />
+            <Arrow />
+            <FlowCard
+              node={{ id: "msn-nomkt-offend", type: "decision", label: "Would it offend?" }}
+              isActive={activeNode === "msn-nomkt-offend"}
+              onClick={() => toggle("msn-nomkt-offend")}
+            />
+            <div className="grid grid-cols-2 gap-4 mt-3">
+              <div>
+                <BranchLabel text="YES" />
+                <FlowCard
+                  node={{ id: "msn-nomkt-yes", type: "outcome-followup", label: "Follow Up", script: "No stress at all, I can follow up in a month or so." }}
+                  isActive={activeNode === "msn-nomkt-yes"}
+                  onClick={() => toggle("msn-nomkt-yes")}
+                />
+              </div>
+              <div>
+                <BranchLabel text="NO" />
+                <FlowCard
+                  node={{ id: "msn-nomkt-no", type: "outcome-book", label: "Book Meeting", script: "Awesome, are you free for 15–20 mins on [day] at [time]?" }}
+                  isActive={activeNode === "msn-nomkt-no"}
+                  onClick={() => toggle("msn-nomkt-no")}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════ */
+/* NEW SCRIPT — EXTRA QUALIFICATION (categorised)              */
+/* ════════════════════════════════════════════════════════════ */
+function ExtraQualificationNew({ activeNode, toggle }: { activeNode: string | null; toggle: (id: string) => void }) {
+  return (
+    <div className="mt-12 max-w-5xl mx-auto">
+      <div className="mb-6 text-center">
+        <div className="inline-flex items-center gap-2 bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full text-xs font-bold mb-3 tracking-wide uppercase">
+          🎯 4. Extra Qualification
+        </div>
+        <h3 className="text-xl font-bold text-slate-900">Weave these in naturally while booking</h3>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        {/* STAFF */}
+        <div className="bg-white rounded-xl border border-slate-200 p-5">
+          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+            <span className="text-xl">👥</span>
+            <h4 className="font-bold text-slate-900">Staff</h4>
+          </div>
+          <div className="space-y-3">
+            <div>
+              <div className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1">Trade</div>
+              <FlowCard
+                node={{ id: "eqn-staff-trade", type: "script", label: "Trade", script: "How many boys do you have helping you out?" }}
+                isActive={activeNode === "eqn-staff-trade"}
+                onClick={() => toggle("eqn-staff-trade")}
+              />
+            </div>
+            <div>
+              <div className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1">Any Industry</div>
+              <FlowCard
+                node={{ id: "eqn-staff-any", type: "script", label: "Any Industry", script: "If you have so much work going on, do you do everything yourself or do you have anyone helping you out?" }}
+                isActive={activeNode === "eqn-staff-any"}
+                onClick={() => toggle("eqn-staff-any")}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* AREAS */}
+        <div className="bg-white rounded-xl border border-slate-200 p-5">
+          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+            <span className="text-xl">📍</span>
+            <h4 className="font-bold text-slate-900">Areas</h4>
+          </div>
+          <div className="space-y-3">
+            <FlowCard
+              node={{ id: "eqn-area-1", type: "script", label: "Base Area", script: "I can see you're based in [Area/City] — do you keep your work only in that area or are you happy to travel out?" }}
+              isActive={activeNode === "eqn-area-1"}
+              onClick={() => toggle("eqn-area-1")}
+            />
+            <FlowCard
+              node={{ id: "eqn-area-2", type: "script", label: "If They Travel", script: "Awesome, what is the max distance or area you'll go to?" }}
+              isActive={activeNode === "eqn-area-2"}
+              onClick={() => toggle("eqn-area-2")}
+            />
+            <FlowCard
+              node={{ id: "eqn-area-3", type: "script", label: "Target Area", script: "Is there any particular area you want to tap into?" }}
+              isActive={activeNode === "eqn-area-3"}
+              onClick={() => toggle("eqn-area-3")}
+            />
+          </div>
+        </div>
+
+        {/* SERVICES */}
+        <div className="bg-white rounded-xl border border-slate-200 p-5">
+          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+            <span className="text-xl">🛠️</span>
+            <h4 className="font-bold text-slate-900">Services</h4>
+          </div>
+          <div className="space-y-3">
+            <FlowCard
+              node={{ id: "eqn-svc-1", type: "script", label: "Preferences", script: "I can see that you do [x, y, z] — are you happy to do any of them or do you have a preference?" }}
+              isActive={activeNode === "eqn-svc-1"}
+              onClick={() => toggle("eqn-svc-1")}
+            />
+            <FlowCard
+              node={{ id: "eqn-svc-2", type: "script", label: "Most Wanted", script: "If I can help you pick and choose the work that you do, what specifically would you want more of?" }}
+              isActive={activeNode === "eqn-svc-2"}
+              onClick={() => toggle("eqn-svc-2")}
+            />
+            <FlowCard
+              node={{ id: "eqn-svc-3", type: "script", label: "Avoid", script: "Are there services on your website that you would like to avoid?" }}
+              isActive={activeNode === "eqn-svc-3"}
+              onClick={() => toggle("eqn-svc-3")}
+            />
+            <FlowCard
+              node={{ id: "eqn-svc-4", type: "script", label: "Wrap Up", script: "Let me do my research into these alongside which areas get demand — that way I can give you a detailed plan on what we can target together." }}
+              isActive={activeNode === "eqn-svc-4"}
+              onClick={() => toggle("eqn-svc-4")}
+            />
+          </div>
+        </div>
+
+      </div>
+
+      {/* Final Checklist */}
+      <div className="mt-6 bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-6 text-white">
+        <div className="flex items-start gap-4">
+          <span className="text-2xl">✅</span>
+          <div>
+            <h4 className="font-bold text-lg">Final Checklist</h4>
+            <p className="text-slate-300 text-sm mt-1">Before you hang up, confirm you have all four:</p>
+            <div className="mt-3 space-y-2 ml-4">
+              <p className="text-sm text-slate-300 flex items-start gap-2"><span className="text-[#E6017D] mt-0.5">★</span> How many staff do you have?</p>
+              <p className="text-sm text-slate-300 flex items-start gap-2"><span className="text-[#E6017D] mt-0.5">★</span> What services/products do you offer?</p>
+              <p className="text-sm text-slate-300 flex items-start gap-2"><span className="text-[#E6017D] mt-0.5">★</span> What area do you service?</p>
+              <p className="text-sm text-slate-300 flex items-start gap-2"><span className="text-[#E6017D] mt-0.5">★</span> Confirm email address for calendar invite</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════ */
+/* NEW SCRIPT — OBJECTION HANDLING                             */
+/* ════════════════════════════════════════════════════════════ */
+function ObjectionHandlingNew({ activeNode, toggle }: { activeNode: string | null; toggle: (id: string) => void }) {
+  return (
+    <div className="mt-12 max-w-5xl mx-auto">
+      <div className="mb-6 text-center">
+        <div className="inline-flex items-center gap-2 bg-red-50 text-red-700 px-3 py-1.5 rounded-full text-xs font-bold mb-3 tracking-wide uppercase">
+          🛡️ 5. Objection Handling
+        </div>
+        <h3 className="text-xl font-bold text-slate-900">Ready-made responses for common pushbacks</h3>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        {/* Been Burnt Before */}
+        <div className="bg-white rounded-xl border-l-4 border-l-red-500 border border-slate-200 p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-xl">🔥</span>
+            <h4 className="font-bold text-slate-900">Been Burnt Before</h4>
+          </div>
+          <div className="space-y-3">
+            <FlowCard
+              node={{ id: "obj-burnt-1", type: "script", label: "Acknowledge", script: "Let me guess — someone or multiple companies promised you the world and you got nothing?" }}
+              isActive={activeNode === "obj-burnt-1"}
+              onClick={() => toggle("obj-burnt-1")}
+            />
+            <FlowCard
+              node={{ id: "obj-burnt-2", type: "script", label: "Differentiate", script: "We hear this type of scenario all the time and it's a big reason we exist, 'cause we don't make any false promises or provide unrealistic expectations. We base all of our recommendations from research, facts, and experience." }}
+              isActive={activeNode === "obj-burnt-2"}
+              onClick={() => toggle("obj-burnt-2")}
+            />
+            <FlowCard
+              node={{ id: "obj-burnt-3", type: "script", label: "Origin Story", script: "I completely understand where you are coming from. On average we catch up and speak to 5 business owners a day and 4 out of the 5 are extremely skeptical as they have been burnt before. Our director actually started on your side of the fence — he ran his own business just like you, and he reached a point where he needed a marketing company that he could trust and rely on. And that's where things fell apart and how Marketing Sweet was born." }}
+              isActive={activeNode === "obj-burnt-3"}
+              onClick={() => toggle("obj-burnt-3")}
+            />
+          </div>
+        </div>
+
+        {/* Building Trust Fast */}
+        <div className="bg-white rounded-xl border-l-4 border-l-blue-500 border border-slate-200 p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-xl">🤝</span>
+            <h4 className="font-bold text-slate-900">Building Trust Fast</h4>
+          </div>
+          <div className="space-y-3">
+            <FlowCard
+              node={{ id: "obj-trust-1", type: "script", label: "Open the Door", script: "I understand you get bombarded by these calls and I don't expect you to trust me over the phone right away — but would you agree with me that the more information you have, the better informed decision you can make?" }}
+              isActive={activeNode === "obj-trust-1"}
+              onClick={() => toggle("obj-trust-1")}
+            />
+            <FlowCard
+              node={{ id: "obj-trust-2", type: "script", label: "We Stay", script: "People normally disappear. We're there the whole way." }}
+              isActive={activeNode === "obj-trust-2"}
+              onClick={() => toggle("obj-trust-2")}
+            />
+            <FlowCard
+              node={{ id: "obj-trust-3", type: "script", label: "High-End Service", script: "We're not a low end provider, we're a high end provider with great customer service." }}
+              isActive={activeNode === "obj-trust-3"}
+              onClick={() => toggle("obj-trust-3")}
+            />
+          </div>
+        </div>
+
+        {/* I'm Happy / Has Marketing (Semrush) */}
+        <div className="bg-white rounded-xl border-l-4 border-l-amber-500 border border-slate-200 p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-xl">😊</span>
+            <h4 className="font-bold text-slate-900">&lsquo;I&apos;m Happy&rsquo; / Has Marketing (Semrush check)</h4>
+          </div>
+          <div className="space-y-3">
+            <FlowCard
+              node={{ id: "obj-happy-1", type: "script", label: "Quality Check", script: "Are you happy with the service they give you or the amount of calls you are getting?" }}
+              isActive={activeNode === "obj-happy-1"}
+              onClick={() => toggle("obj-happy-1")}
+            />
+            <FlowCard
+              node={{ id: "obj-happy-2", type: "script", label: "Attribution Check", script: "Do you track specifically where the work comes from?" }}
+              isActive={activeNode === "obj-happy-2"}
+              onClick={() => toggle("obj-happy-2")}
+            />
+            <FlowCard
+              node={{ id: "obj-happy-3", type: "script", label: "2nd Opinion", script: "Not trying to step on anyone's toes — but would it offend you if I came to you with a 2nd opinion highlighting the shortfalls and how it could be improved?" }}
+              isActive={activeNode === "obj-happy-3"}
+              onClick={() => toggle("obj-happy-3")}
+            />
+            <FlowCard
+              node={{ id: "obj-happy-4", type: "script", label: "Clarify Objection", script: "Are you purely not interested 'cause I'm giving you a cold call, or 'cause you absolutely love them?" }}
+              isActive={activeNode === "obj-happy-4"}
+              onClick={() => toggle("obj-happy-4")}
+            />
+          </div>
+        </div>
+
+        {/* Quodo Too Busy / WOM Objections */}
+        <div className="bg-white rounded-xl border-l-4 border-l-pink-500 border border-slate-200 p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-xl">🌐</span>
+            <h4 className="font-bold text-slate-900">Quodo — Too Busy / WOM Objections</h4>
+          </div>
+          <div className="space-y-3">
+            <FlowCard
+              node={{ id: "obj-quodo-1", type: "script", label: "Referrals Check You Out", script: "You are already successful with your WOM/Referrals, most of my clients are too. The reason they get their website up to date is because we know that 90% of the time your referrals are checking you out — if they don't like what they see they just simply won't give you a call." }}
+              isActive={activeNode === "obj-quodo-1"}
+              onClick={() => toggle("obj-quodo-1")}
+            />
+            <FlowCard
+              node={{ id: "obj-quodo-2", type: "script", label: "Missed Opportunities", script: "I'm not concerned about the work you are getting now, I'm concerned about what you are missing out on." }}
+              isActive={activeNode === "obj-quodo-2"}
+              onClick={() => toggle("obj-quodo-2")}
+            />
+            <FlowCard
+              node={{ id: "obj-quodo-3", type: "script", label: "Insurance Policy", script: "Most of our clients aren't building a website because their business is quiet. 99% of them are booked out 6 months or more. You and I both know your website is losing you clients — think of it as an insurance policy for your pipeline." }}
+              isActive={activeNode === "obj-quodo-3"}
+              onClick={() => toggle("obj-quodo-3")}
+            />
+            <FlowCard
+              node={{ id: "obj-quodo-4", type: "script", label: "Google Search Reality", script: "When you get referred to someone — first thing you do is search them up on Google right? Your clients are doing the same when they get referred to you." }}
+              isActive={activeNode === "obj-quodo-4"}
+              onClick={() => toggle("obj-quodo-4")}
+            />
+          </div>
+        </div>
+
+        {/* Never Got Work From My Website */}
+        <div className="bg-white rounded-xl border-l-4 border-l-emerald-500 border border-slate-200 p-5 md:col-span-2">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-xl">📉</span>
+            <h4 className="font-bold text-slate-900">&lsquo;Never Got Work From My Website&rsquo;</h4>
+          </div>
+          <FlowCard
+            node={{ id: "obj-nowork-1", type: "script", label: "Pattern Interrupt", script: "Respectfully, I'm not surprised — 'cause if I got referred to you and saw your website I wouldn't give you a call either." }}
+            isActive={activeNode === "obj-nowork-1"}
+            onClick={() => toggle("obj-nowork-1")}
+          />
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════ */
 /* FOLLOW UP CALL SCRIPT                                       */
 /* ════════════════════════════════════════════════════════════ */
 function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | null; toggle: (id: string) => void }) {
@@ -752,6 +1426,7 @@ function FollowUpScriptSection({ activeNode, toggle }: { activeNode: string | nu
 export default function CallFlowchartPage() {
   const [activeNode, setActiveNode] = useState<string | null>(null);
   const [brand, setBrand] = useState<"quodo" | "ms">("quodo");
+  const [scriptVersion, setScriptVersion] = useState<"original" | "new">("original");
   const [rebookingType, setRebookingType] = useState<'noshow' | 'reschedule'>('reschedule');
   const [tryLaterPitch, setTryLaterPitch] = useState<'quodo' | 'ms'>('ms');
   const [tryLaterBranch, setTryLaterBranch] = useState<'A' | 'B' | 'C' | 'D'>('A');
@@ -843,6 +1518,42 @@ export default function CallFlowchartPage() {
 
         <div id="cold-call-script" className="max-w-[1600px] mx-auto px-8 py-8 print:py-4">
 
+          {/* Script Version Tabs (Original vs New) */}
+          <div className="flex justify-center mb-8 print:hidden">
+            <div className="inline-flex rounded-xl overflow-hidden border-2 border-slate-200 bg-white shadow-md">
+              <button
+                onClick={() => { setScriptVersion("original"); setActiveNode(null); }}
+                className="px-7 py-3 text-sm font-bold transition-all"
+                style={{
+                  background: scriptVersion === "original" ? "#0f172a" : "white",
+                  color: scriptVersion === "original" ? "white" : "#475569",
+                }}
+              >
+                📜 Original Script
+              </button>
+              <button
+                onClick={() => { setScriptVersion("new"); setActiveNode(null); }}
+                className="px-7 py-3 text-sm font-bold transition-all"
+                style={{
+                  background: scriptVersion === "new" ? "#E6017D" : "white",
+                  color: scriptVersion === "new" ? "white" : "#475569",
+                }}
+              >
+                ✨ New Script
+              </button>
+            </div>
+          </div>
+
+          {scriptVersion === "new" && (
+            <div className="max-w-3xl mx-auto mb-6 print:hidden">
+              <div className="bg-pink-50 border border-pink-200 rounded-xl p-4 text-sm text-pink-900">
+                <strong>New Script — In Training.</strong> This version reflects the sales team&apos;s latest amendments. Use the Original tab while the team is being trained on this version.
+              </div>
+            </div>
+          )}
+
+          {scriptVersion === "original" && (
+          <>
           {/* Shared intro */}
           <div className="max-w-2xl mx-auto">
             <FlowCard
@@ -956,6 +1667,121 @@ export default function CallFlowchartPage() {
           <div className="mt-8 text-center pb-8 print:mt-4 print:pb-2">
             <p className="text-xs text-slate-400">Reference: Module 4 — Cold Call Script &amp; Sales Resources</p>
           </div>
+          </>
+          )}
+
+          {scriptVersion === "new" && (
+          <>
+          {/* ──────────────────────────────────────────── */}
+          {/* NEW SCRIPT VERSION                          */}
+          {/* ──────────────────────────────────────────── */}
+
+          {/* Shared intro */}
+          <div className="max-w-2xl mx-auto">
+            <FlowCard
+              node={{ id: "new-intro", type: "start", label: "Introduction", script: "Hi [Name], it's [Your Name] here from Marketing Sweet, how are you?" }}
+              isActive={activeNode === "new-intro"}
+              onClick={() => toggle("new-intro")}
+            />
+          </div>
+
+          <DecisionLabel text="How do they respond?" />
+
+          <div className="grid grid-cols-2 gap-5 max-w-2xl mx-auto items-stretch">
+            <FlowCard
+              node={{ id: "new-positive", type: "response", label: "Positive", script: "That's really great to hear!" }}
+              isActive={activeNode === "new-positive"}
+              onClick={() => toggle("new-positive")}
+            />
+            <FlowCard
+              node={{ id: "new-negative", type: "response", label: "Negative / Busy", script: "No worries, I'll be quick." }}
+              isActive={activeNode === "new-negative"}
+              onClick={() => toggle("new-negative")}
+            />
+          </div>
+
+          <Arrow />
+
+          {/* Brand toggle (new) */}
+          <div className="flex justify-center my-4 print:hidden">
+            <div className="inline-flex rounded-xl overflow-hidden border-2 border-slate-200 bg-white shadow-lg">
+              <button
+                onClick={() => { setBrand("quodo"); setActiveNode(null); }}
+                className="px-8 py-4 text-base font-bold transition-all"
+                style={{
+                  background: brand === "quodo" ? "linear-gradient(135deg, #F473B7, #e85da0)" : "white",
+                  color: brand === "quodo" ? "white" : "#475569",
+                }}
+              >
+                Quodo — Replacing / New Website
+              </button>
+              <button
+                onClick={() => { setBrand("ms"); setActiveNode(null); }}
+                className="px-8 py-4 text-base font-bold transition-all"
+                style={{
+                  background: brand === "ms" ? "linear-gradient(135deg, #96d16a, #7dba54)" : "white",
+                  color: brand === "ms" ? "white" : "#475569",
+                }}
+              >
+                Marketing Sweet — Existing Website
+              </button>
+            </div>
+          </div>
+
+          {/* Flow content (new) */}
+          {brand === "quodo" ? (
+            <QuodoFlowNew activeNode={activeNode} toggle={toggle} />
+          ) : (
+            <MarketingSweetFlowNew activeNode={activeNode} toggle={toggle} />
+          )}
+
+          {/* Outcomes Summary */}
+          <div className="mt-12 max-w-3xl mx-auto">
+            <div className="bg-slate-900 rounded-2xl p-6 text-white">
+              <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+                <span>🎯</span> 3. Outcomes
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-emerald-700/30 border border-emerald-500/30 rounded-lg p-4">
+                  <div className="text-xs font-bold tracking-widest uppercase text-emerald-300 mb-2">Book the Meeting</div>
+                  <p className="text-sm italic leading-relaxed text-emerald-50">&ldquo;Awesome, are you free for 15-20 mins on [day] at [time]?&rdquo;</p>
+                  <p className="text-xs text-emerald-200/70 mt-3">✩ Always mention the link to the relevant sales presentation so they have something visual to reference.</p>
+                </div>
+                <div className="bg-[#E6017D]/20 border border-[#E6017D]/40 rounded-lg p-4">
+                  <div className="text-xs font-bold tracking-widest uppercase text-pink-200 mb-2">Follow Up</div>
+                  <p className="text-sm italic leading-relaxed text-pink-50">&ldquo;No stress at all, I can follow up in a month or so.&rdquo;</p>
+                  <p className="text-xs text-pink-200/70 mt-3">✩ Always mention the link so the prospect has something visual to reference.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Extra Qualification (new — categorised) */}
+          <ExtraQualificationNew activeNode={activeNode} toggle={toggle} />
+
+          {/* Every Follow Up = Mention the Link */}
+          <div className="mt-6 max-w-3xl mx-auto">
+            <div className="bg-[#E6017D]/5 border border-[#E6017D]/20 rounded-xl p-6">
+              <div className="flex items-start gap-4">
+                <span className="text-2xl">📋</span>
+                <div>
+                  <h3 className="font-bold text-lg text-[#E6017D]">Every Follow Up = Mention the Link</h3>
+                  <p className="text-slate-600 text-sm mt-1 leading-relaxed">
+                    Whether the outcome is a booking or a follow up, always mention the link to the relevant sales presentation so the prospect has something visual to reference.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Objection Handling */}
+          <ObjectionHandlingNew activeNode={activeNode} toggle={toggle} />
+
+          <div className="mt-8 text-center pb-8 print:mt-4 print:pb-2">
+            <p className="text-xs text-slate-400">Reference: Module 4 — Cold Call Script (New Version, in training)</p>
+          </div>
+          </>
+          )}
 
           {/* ──────────────────────────────────────────── */}
           {/* FOLLOW UP CALL SCRIPT SECTION               */}
