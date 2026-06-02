@@ -51,6 +51,318 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Session 22 — Genuine Stall vs Smoke. The Reversible Yes. (Tue 2) ────
+  // Sales + Lead Gen (LG #15). CS excluded via salesOnly. Full asset set.
+  // Same day as Session 21 — pair them together; 21 sets up urgency,
+  // 22 is the diagnostic for separating real stalls from polite delays.
+  {
+    id: "session-22-reversible-yes",
+    number: "22",
+    date: "2026-06-02",
+    title: "Genuine Stall vs Smoke. The Reversible Yes.",
+    summary:
+      "Buyers stall for two completely different reasons — and treating them the same costs deals. A genuine stall has specifics, a third party, and a booked callback. Smoke has none of those. The diagnostic question (\"just out of interest, which one?\") surfaces the lean. The reversible yes (\"small deposit, swap it later — same product\") moves the real ones forward and reveals the rest.",
+    keyTakeaway:
+      "Real stalls have specific reasons and booked callbacks. Smoke has neither. The reversible yes tells you which is which — and moves the real ones forward today.",
+    director: "Corie Dawson",
+    totalTime: "~45 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-22-reversible-yes/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-22-reversible-yes/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/FodzIZVXfCs",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("16FAliUPLkWOoe4Tvp1I2d6WHPXVs-iNy"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "presentation",
+        estimate: "10 min watch",
+        url: drivePreview("1ek6LgogYUwPUrpYoEeSlZGaf0Tkx6M0-"),
+        mode: "video",
+      },
+      {
+        kind: "quiz",
+        estimate: "6 questions · ~7 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s22-q1",
+            type: "multiple-choice",
+            prompt:
+              "Which of the following is the strongest signal that a stall is genuine rather than a smokescreen?",
+            topic: "Genuine vs smoke",
+            options: [
+              "The buyer says they want some time to think about it",
+              "The buyer names a specific personal or operational reason and books a specific callback time",
+              "The buyer says they need to chat to the team",
+              "The buyer asks the rep to email through more information",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Specific reasons + named third parties + booked callback times = real stall. Vague reasons, unnamed \"someones,\" and \"I'll get back to you\" with no fixed time = smoke. The presence of operational or personal detail (rather than generic excuses) is the strongest tell.",
+          },
+          {
+            id: "s22-q2",
+            type: "multiple-choice",
+            prompt:
+              "Before accepting a buyer's request to think about it, what's the most effective single question to ask?",
+            topic: "Diagnostic question",
+            options: [
+              "\"Are you actually serious about moving forward with this?\"",
+              "\"What would I need to do to close the deal today?\"",
+              "\"Can I lock you in with a small deposit right now?\"",
+              "\"Just out of interest — which one are you more likely to go for?\"",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "The casual \"just out of interest\" opener disarms the buyer — it signals informal curiosity, not a sales push. Asking which option they're more likely to choose surfaces their lean without demanding a commitment. The other options either push too hard or fail to gather information at all.",
+          },
+          {
+            id: "s22-q3",
+            type: "multiple-choice",
+            prompt:
+              "The buyer says they're leaning toward the up-front payment but want to check with their accountant first. What's the strongest next move?",
+            topic: "Mirror and advance",
+            options: [
+              "Mirror the preference, then offer a small deposit with the explicit option to swap it out later",
+              "Drop the price to make the up-front option more attractive",
+              "Push for the decision now since they've already named a preference",
+              "Send a detailed comparison document and book a follow-up in two weeks",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "Mirror the preference back (\"I'd just go up-front too\"), validate it briefly (\"$2,000/month elsewhere, this is only $5,000 once\"), then offer the reversible path (\"small deposit, we can swap if you change your mind\"). This advances the deal without removing the buyer's right to consult their accountant.",
+          },
+          {
+            id: "s22-q4",
+            type: "multiple-choice",
+            prompt:
+              "Why does the reversible-yes move (\"small deposit, we can swap it later\") unlock so many stalled deals?",
+            topic: "Reversible yes",
+            options: [
+              "Because buyers always say yes to the smallest commitment available",
+              "Because it lets the rep avoid talking about price",
+              "Because most buyers hesitate about commitment, not about the product — reversibility lowers the perceived cost of yes",
+              "Because it gives the rep grounds to follow up daily until the buyer commits",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Buyers don't usually hesitate about whether they want the product — they hesitate about whether they can change their mind. Reversibility removes that fear. The buyer is choosing the next step (the small deposit), not the destination — which is a much easier yes.",
+          },
+          {
+            id: "s22-q5",
+            type: "multiple-choice",
+            prompt:
+              "You've offered the reversible-yes move. The buyer enthusiastically agrees but says they'll \"sort it tomorrow.\" What's the right read?",
+            topic: "Soft smoke detection",
+            options: [
+              "Real interest — the deal is essentially closed",
+              "Soft smoke — follow up tomorrow but expect attrition; the deal isn't locked in",
+              "Hard smoke — write the deal off immediately",
+              "Neutral — buyers always need a day to think before committing",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Enthusiastic agreement followed by \"tomorrow\" is soft smoke. Real interest takes the deposit on the call. \"Tomorrow\" is a polite exit dressed in positive language. Follow up tomorrow — but treat the deal as at-risk, not closed. Most soft smoke evaporates by the time tomorrow arrives.",
+          },
+          {
+            id: "s22-q6",
+            type: "multiple-choice",
+            prompt:
+              "A buyer raises two distinct concerns in the same call: \"I need to check with my accountant\" and \"Monday is going to be a write-off because of a staff emergency.\" What's the right approach?",
+            topic: "Handle concerns separately",
+            options: [
+              "Treat both as one general hesitation and offer a discount to resolve both at once",
+              "Push past both concerns and ask for the close anyway",
+              "Focus only on the accountant concern since the timing one will resolve itself",
+              "Handle each concern separately — name it back, address it on its own merits, then move forward",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "Two distinct concerns need two distinct responses. Name each one back to confirm understanding, address each on its own merits (accountant = real, needs the diagnostic question + reversible yes; timing = real, accept and apply urgency to the callback), and only then move forward. Conflating concerns into one big \"hesitation\" hides the path to closing.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─── Session 21 — Urgency. Hold the Line. Close the Loop Today. (Tue 2) ──
+  // Sales + Lead Gen (LG #14). CS excluded via salesOnly. Full asset set.
+  {
+    id: "session-21-urgency",
+    number: "21",
+    date: "2026-06-02",
+    title: "Urgency. Hold the Line. Close the Loop Today.",
+    summary:
+      "Urgency is a tempo, not a panic. When a buyer is engaged, the deal window is the next 60 minutes — not the next week. Hold the line or call back in five with a director-authorised \"one better.\" Close on Monday, not Friday. And learn to find the no fast — it returns your most expensive resource.",
+    keyTakeaway:
+      "Urgency is a tempo, not a panic. Hold the line. Call back in five. Close on Monday. Find the no fast.",
+    director: "Corie Dawson",
+    totalTime: "~50 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-21-urgency/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-21-urgency/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/EEmeIjZEB24",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1fNZCm50s3ZnLvIwrss6-zR-8AofXnaka"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "presentation",
+        estimate: "10 min watch",
+        url: drivePreview("1I6FPL1_yThZsP_C1QIYqu_Fy2JkBLCYq"),
+        mode: "video",
+      },
+      {
+        kind: "quiz",
+        estimate: "7 questions · ~8 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s21-q1",
+            type: "multiple-choice",
+            prompt:
+              "What does urgency mean in a live sales conversation?",
+            topic: "Urgency as tempo",
+            options: [
+              "Pressuring the buyer to commit before they're ready",
+              "Getting urgent the moment you sense you might lose the deal",
+              "Matching your pace to the speed of a deadline you can't push back — a tempo, not a panic",
+              "Working as many leads as possible in the same week",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Urgency is a tempo, not a panic. It's the same intensity a rep would bring to anything that genuinely can't wait. Most reps get urgent at the wrong moment — when they fear losing the deal. The right moment to be urgent is when the buyer is engaged and the deal is live.",
+          },
+          {
+            id: "s21-q2",
+            type: "multiple-choice",
+            prompt:
+              "A buyer asks a question you can't answer instantly. What's the right move?",
+            topic: "Hold the line / call in five",
+            options: [
+              "Tell them you'll get back to them tomorrow once you've checked",
+              "Either hold the line while you find out, or call back inside five minutes — keep the deal hot",
+              "Make up your best guess and confirm by email later",
+              "Pass the question to your manager and step away from the deal",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Two scripts work: \"hold the line, I'll find out now\" or \"I'll call you back in five minutes.\" Both keep the deal hot. Tomorrow is too late — the buyer's interest will have fallen off the cliff by then. The callback itself is the manoeuvre, not the research.",
+          },
+          {
+            id: "s21-q3",
+            type: "multiple-choice",
+            prompt:
+              "What's the practical implication of the \"interest cliff\" — buyer engagement decaying after the call?",
+            topic: "Interest cliff",
+            options: [
+              "Most of the buyer's engagement disappears in the first hour, so the deal window is now, not next week",
+              "Buyers usually wait until Friday to make decisions, so plan around that",
+              "Interest stays stable for 24 hours then drops sharply",
+              "The buyer's interest grows as they have more time to think about it",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "Buyer engagement drops sharply in the first hour after hang-up and continues falling. By the next day it's a quarter of what it was; by Friday it's cold. The deal window is the same conversation — or the same day at the latest. Plan to close while the buyer is still hot, not when they've had time to cool.",
+          },
+          {
+            id: "s21-q4",
+            type: "multiple-choice",
+            prompt:
+              "When you call back inside the 5-minute window, what should you open with?",
+            topic: "The 'one better' move",
+            options: [
+              "An apology for the delay and a question to re-engage them",
+              "A repeat of the same offer you just gave them",
+              "A request to confirm whether they're still interested",
+              "A small \"one better\" — a director-authorised bonus the buyer didn't ask for",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "The \"one better\" is a director-authorised bonus the buyer didn't ask for. It changes the call from a chase to a small gift. Pair it with a relaxed close (\"no rush — by the end of the week as you planned\") and the buyer reads the rep as professional, generous, and trustworthy — not as a discount machine.",
+          },
+          {
+            id: "s21-q5",
+            type: "multiple-choice",
+            prompt:
+              "A buyer who was hesitant suddenly says \"actually, can I pay the whole thing up front?\" What's the smart response?",
+            topic: "Easy yeses can be decoys",
+            options: [
+              "Take the win — confirm payment details and end the call",
+              "Be slightly sceptical — offer the small-deposit path instead, which tests whether the yes is real",
+              "Upgrade them to the bigger package while they're feeling positive",
+              "Tell them you'll send paperwork and confirm by email tomorrow",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Easy yeses can be polite exit moves. The buyer creates a logistics gap and then doesn't pick up the callback. The test is to remove the gap — offer the small-deposit path that commits them today. Real yeses survive the test. Decoy yeses suddenly need to \"check with someone\" or \"call you back.\"",
+          },
+          {
+            id: "s21-q6",
+            type: "multiple-choice",
+            prompt:
+              "Why is finding out a buyer will say no actually more useful than predicting when they'll say yes?",
+            topic: "Find the no fast",
+            options: [
+              "Because no buyers ever change their mind once they've said yes",
+              "Because nos help the rep build a longer pipeline of contacts",
+              "Because a clear no returns the rep's time — yeses happen when they happen; nos let the rep stop spending energy on marginal deals",
+              "Because hearing no makes the rep tougher emotionally",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Reps spend too much energy trying to predict the yes. A yes happens when it happens. A clear no, on the other hand, returns the rep's most expensive resource — time — which can then be spent on real opportunities. Treat the no as a clean conversation ending, not a personal rejection.",
+          },
+          {
+            id: "s21-q7",
+            type: "multiple-choice",
+            prompt:
+              "Where in the conversation does the close actually get decided?",
+            topic: "Close at info stage",
+            options: [
+              "At the information stage — discovery, alignment, and value framing. The \"close\" itself is a confirmation, not a persuasion move.",
+              "At the moment you ask for the deposit",
+              "When you offer the discount",
+              "On the follow-up email the next day",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "The close lives in the information stage. If discovery, alignment, and value framing were done well, the close is just clicking the button. If the close feels hard, that's a signal the info stage was incomplete — go back and fill the gap rather than pushing the close.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Sessions 18, 19, 20 — full asset sets + LG access ───────────────────
   // Visible to sales (Lucas/Dylan/Felipe) AND Lead Gen (Cindy/Shian/Riley/
   // Sydney) — wired into LEAD_GEN_SESSION_MAP as their 11, 12, 13. CS still
@@ -3462,6 +3774,8 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-18-inherit-the-deal", newNumber: "11" },
   { sourceId: "session-19-reheat-the-meeting", newNumber: "12" },
   { sourceId: "session-20-hunt-deals", newNumber: "13" },
+  { sourceId: "session-21-urgency", newNumber: "14" },
+  { sourceId: "session-22-reversible-yes", newNumber: "15" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
