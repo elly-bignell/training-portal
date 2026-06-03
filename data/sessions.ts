@@ -51,6 +51,171 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Session 23 — Sales Competition Strategy. (Jun 2026) ────────────────
+  // Sales + Lead Gen (LG #16). CS excluded via salesOnly. Internal strategy
+  // note about the redesign of the sales competition itself — full 6-asset
+  // set so it reads alongside the regular sessions in the grid.
+  {
+    id: "session-23-competition-strategy",
+    number: "23",
+    date: "2026-06-03",
+    title: "Sales Competition Strategy. From Bookings to Deals.",
+    summary:
+      "Why the competition was redesigned: the per-booking incentive grew attendance but didn't push deals. The new structure points reps at deals (sliding-scale bonuses, the wheel with variable rewards) and keeps the booking bonus as a recruitment lever and safety net for the next ten hires.",
+    keyTakeaway:
+      "Shift the incentive to deals. Keep the booking safety net for recruitment. Spin the wheel for the highs. Build the system for the next ten hires, not just today's team.",
+    director: "Corie Dawson",
+    totalTime: "~45 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-23-competition-strategy/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-23-competition-strategy/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/6sckdBVxaas",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1QeIKKkL4e9k0n2gYdwg5Wwbx9xNSdeS0"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "presentation",
+        estimate: "10 min watch",
+        url: drivePreview("1btL6ZfVO7J_9rqUQ8u5QUHiv7a6BcyrQ"),
+        mode: "video",
+      },
+      {
+        kind: "quiz",
+        estimate: "7 questions · ~8 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s23-q1",
+            type: "multiple-choice",
+            prompt:
+              "Why is the headline metric of the new competition deals rather than bookings?",
+            topic: "Metric shift",
+            options: [
+              "Because closers have complained that bookings are too easy",
+              "Because deals are the outcome the agency actually wants — paying for bookings encourages reps to value attendance over conversion",
+              "Because deals are harder to game than bookings",
+              "Because the lead-gen team needs a new challenge",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Pay for the outcome you want. The team noticed it themselves — when the bonus was paid on attendance, reps got hungry for bookings that attended, not bookings that closed. The headline metric shapes behaviour. Shift the metric to deals, and the behaviour follows.",
+          },
+          {
+            id: "s23-q2",
+            type: "multiple-choice",
+            prompt:
+              "Why is the per-booking bonus being kept in the structure — even though experienced reps would happily lose it for a larger deal bonus?",
+            topic: "Safety net for recruitment",
+            options: [
+              "Because it's contractually required",
+              "Because the lead-gen team would quit without it",
+              "Because it functions as a recruitment lever and a safety net for new hires — they need wins from day one, before they've learned to close",
+              "Because removing it would create a tax problem",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The booking bonus is doing two jobs: recruitment lever (\"three layers of income from day one\") and safety net for new hires (wins before they've learned to close). Veterans don't need it; tomorrow's new hire does. The structure has to work for both.",
+          },
+          {
+            id: "s23-q3",
+            type: "multiple-choice",
+            prompt:
+              "The wheel rewards a mix of cash, experiences, mystery prizes, and a small \"booby trap\" reward. Why include the booby trap?",
+            topic: "Variable reinforcement",
+            options: [
+              "To punish reps who didn't deserve a spin",
+              "Because predictable upside fades — variable rewards with the possibility of landing on something small keep engagement sticky over time",
+              "To save money on the prize pool",
+              "Because tradition dictates it",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Variable reinforcement is the principle. The brain stops feeling predictable rewards after a while. Mixing in a small chance of an under-reward keeps the rest of the wheel feeling exciting. The booby trap is novelty, not punishment — and it's the contrast that makes the highs land.",
+          },
+          {
+            id: "s23-q4",
+            type: "multiple-choice",
+            prompt:
+              "The competition has two qualifying paths — an individual spin (three consecutive closes) and a team spin (ten deals across the team in a week). Why two paths?",
+            topic: "Two incentive geometries",
+            options: [
+              "Because the lead-gen team and the closers can't agree on a single path",
+              "Because two paths means twice the rewards paid out",
+              "Because different incentive geometries drive different behaviours — individual spins reward focused weeks, team spins reward behaviour that benefits both lead-gen and closers",
+              "Because some reps work alone and others work in pairs",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Different geometries for different behaviours. The individual spin rewards a rep having a focused week. The team spin rewards lead-gen handing over quality bookings AND closers converting them — both teams have to perform for the team spin to land. One path alone misses one of those behaviours.",
+          },
+          {
+            id: "s23-q5",
+            type: "multiple-choice",
+            prompt:
+              "What's the leadership principle behind the phrase \"give people what they want first, and you'll always get what you want in the end\"?",
+            topic: "Give people what they want",
+            options: [
+              "Pay rises should be automatic to keep reps loyal",
+              "Reps will only deliver if they feel financially rewarded first",
+              "Designing incentive structures around what the team genuinely values (not just what the company wants extracted) produces durable performance and retention — extracting maximum margin from the incentive backfires in the medium term",
+              "Compensation should always lead the market",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The principle is that durable performance comes from designing for what the team values, not from extracting maximum margin from the incentive. Reps who feel the structure was built for them will sustain effort. Reps who feel it was built against them won't — they'll leave or coast. Short-term cost savings, long-term attrition.",
+          },
+          {
+            id: "s23-q6",
+            type: "multiple-choice",
+            prompt:
+              "Why is the competition designed with the next ten hires in mind, not just today's team?",
+            topic: "Build for tomorrow's team",
+            options: [
+              "Because the current team is about to be replaced",
+              "Because the agency needs more reps",
+              "Because the incentive structure has to work as well for a brand-new rep on day one as it does for a veteran on day 500 — the system is built for the team that will exist in a year, not just the team that exists today",
+              "Because new hires get better bonuses than veterans",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The current team will absorb new reps continually. The structure has to work for a brand-new rep on day one (where the safety net matters) and a veteran on day 500 (where the deal bonus matters). Designing only for today's team produces a system that breaks the moment the team changes.",
+          },
+          {
+            id: "s23-q7",
+            type: "multiple-choice",
+            prompt:
+              "What does \"10x via leverage, not skill\" mean in the context of a sales career?",
+            topic: "Leverage beats skill",
+            options: [
+              "Use technology to close ten times more deals per hour",
+              "Earning ten times more comes from learning to recruit and develop other reps — not from getting personally better at closing. A rep who doubles their closing skill roughly doubles their income; a rep who learns to onboard others can compound their income",
+              "Charge ten times more per deal to existing clients",
+              "Spend ten times more hours on the phone",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The maths is stark. A rep who doubles their closing skill roughly doubles their income. A rep who learns to recruit and develop other reps can compound their income — because they multiply outputs across multiple people. The competition is designed to reward that compounding (via the team spin and the recruitment-pitch incentive), not just individual heroics.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Session 22 — Genuine Stall vs Smoke. The Reversible Yes. (Tue 2) ────
   // Sales + Lead Gen (LG #15). CS excluded via salesOnly. Full asset set.
   // Same day as Session 21 — pair them together; 21 sets up urgency,
@@ -3776,6 +3941,7 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-20-hunt-deals", newNumber: "13" },
   { sourceId: "session-21-urgency", newNumber: "14" },
   { sourceId: "session-22-reversible-yes", newNumber: "15" },
+  { sourceId: "session-23-competition-strategy", newNumber: "16" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
