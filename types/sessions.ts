@@ -118,6 +118,12 @@ export interface Session {
    *  session. Customer Service reps and Lead Gen reps don't see it on
    *  their home page or in their continue-where-you-left-off card. */
   salesOnly?: boolean;
+  /** Optional small gold pill rendered on the card AND at the top of the
+   *  detail page hero. Different from `featured` — the session stays in
+   *  the normal grid, it just gets a visual differentiator. Use for
+   *  one-off themed sessions you want to flag without hoisting them out
+   *  of the lineup (e.g. "SPIN TO WIN"). */
+  cardBanner?: string;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

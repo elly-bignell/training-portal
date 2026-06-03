@@ -73,6 +73,14 @@ export default function SessionCard({ session, progress, status }: Props) {
         {pill.label}
       </span>
 
+      {/* Optional gold "card banner" pill — for sessions we want to flag
+          in the grid without hoisting them out as featured (e.g. SPIN TO WIN). */}
+      {session.cardBanner && (
+        <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#D49A30] text-[#1F3A5F] rounded text-[10px] font-bold tracking-wider mb-2">
+          ★ {session.cardBanner}
+        </div>
+      )}
+
       {/* Session # · date */}
       <div className="text-xs text-slate-400 font-medium mb-2">
         #{session.number} · {formatDate(session.date)}

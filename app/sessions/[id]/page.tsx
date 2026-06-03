@@ -183,6 +183,11 @@ function SessionDetailInner() {
 
         {/* Hero */}
         <div className="mb-8">
+          {session.cardBanner && (
+            <div className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#D49A30] text-[#1F3A5F] rounded text-[11px] font-bold tracking-wider mb-3">
+              ★ {session.cardBanner}
+            </div>
+          )}
           <div className="text-xs font-bold tracking-wider text-slate-500 mb-3">
             SESSION {session.number} ·{" "}
             {new Date(session.date).toLocaleDateString("en-AU", {

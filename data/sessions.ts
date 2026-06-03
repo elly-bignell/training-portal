@@ -67,6 +67,7 @@ export const sessions: Session[] = [
     director: "Corie Dawson",
     totalTime: "~45 min",
     salesOnly: true,
+    cardBanner: "SPIN TO WIN",
     assets: [
       {
         kind: "debrief",
