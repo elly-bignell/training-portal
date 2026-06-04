@@ -51,6 +51,36 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Session 25 — How to Close. The Checklist. (Thu 4 Jun 2026) ────────
+  // Sales + Lead Gen (LG #18). CS excluded via salesOnly. Lightweight
+  // session — 2 assets only (intro video + the printable closing form).
+  // Same-day companion to Session 24. The form is what reps fill in
+  // before coming to the director to close a live deal.
+  {
+    id: "session-25-how-to-close-form",
+    number: "25",
+    date: "2026-06-04",
+    title: "How to Close. The Checklist.",
+    summary:
+      "Six-field deal breakdown — fill it in before you come to the director to close. Includes a worked example from training and a blank template to print one per live deal. Slow is smooth, and smooth is fast.",
+    keyTakeaway:
+      "Product first, then price. Take your time on the six fields. Bring the form to the director — and the close runs clean.",
+    director: "Corie Dawson",
+    totalTime: "~10 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/P_HMQLi7GCI",
+      },
+      {
+        kind: "toolkit",
+        estimate: "5 min reference",
+        url: "/sample-content/session-25-how-to-close-form/toolkit.pdf",
+      },
+    ],
+  },
   // ─── Session 24 — The Fortune Is In the Follow-Up. (Thu 4 Jun 2026) ─────
   // Sales + Lead Gen (LG #17). CS excluded via salesOnly. No presentation
   // this time — 5-asset set (debrief, toolkit, intro, podcast, quiz).
@@ -4102,6 +4132,7 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-22-reversible-yes", newNumber: "15" },
   { sourceId: "session-23-competition-strategy", newNumber: "16" },
   { sourceId: "session-24-follow-up", newNumber: "17" },
+  { sourceId: "session-25-how-to-close-form", newNumber: "18" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
