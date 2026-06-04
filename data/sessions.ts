@@ -51,6 +51,164 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Session 24 — The Fortune Is In the Follow-Up. (Thu 4 Jun 2026) ─────
+  // Sales + Lead Gen (LG #17). CS excluded via salesOnly. No presentation
+  // this time — 5-asset set (debrief, toolkit, intro, podcast, quiz).
+  {
+    id: "session-24-follow-up",
+    number: "24",
+    date: "2026-06-04",
+    title: "The Fortune Is In the Follow-Up. Capture the 50%.",
+    summary:
+      "Across a typical day on the phone: 10% yes today, 50% interested but not ready, 40% no. Most reps optimise for the 10% — and walk past the 50%. The session lays out the structure for capturing that bigger bucket: the 12-month mindset, permission-to-send, the asymmetric value hook, and the two-week rule.",
+    keyTakeaway:
+      "10% close today. 50% close later. The 50% is the fortune. Capture it with permission, curiosity, and the two-week rule.",
+    director: "Corie Dawson",
+    totalTime: "~40 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-24-follow-up/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-24-follow-up/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/nggez3v4YBI",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1TzRLwv3kWw2pBNQwEy47lM9s2-b0F7nj"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "quiz",
+        estimate: "7 questions · ~8 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s24-q1",
+            type: "multiple-choice",
+            prompt:
+              "The session described a 10/50/40 split for a typical day on the phone. What does each share represent?",
+            topic: "10/50/40 split",
+            options: [
+              "10% wins, 50% losses, 40% draws",
+              "10% yes today, 50% interested but not ready, 40% no",
+              "10% closers, 50% lead-gen team, 40% support staff",
+              "10% bookings, 50% calls, 40% emails",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Across a typical day: 10% yes today (the smallest bucket), 50% interested-but-not-ready (the biggest), 40% no (move on). The 50% is the share most reps ignore and where the real money sits — it's a 5x opportunity over only optimising for the 10%.",
+          },
+          {
+            id: "s24-q2",
+            type: "multiple-choice",
+            prompt:
+              "Which share holds the biggest untapped opportunity for most reps — and why?",
+            topic: "Where the fortune lives",
+            options: [
+              "The 10% — because that's where today's deals close",
+              "The 40% — because turning a no into a yes is the biggest sales skill",
+              "The 50% — because they're interested but not ready, and most reps walk past them while optimising for the 10%",
+              "None — they're all roughly equivalent in value",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Optimising for the 10% caps your conversion at 10% of daily volume. Capturing half of the 50% adds 25% to a rep's monthly conversion — a 2.5x improvement on the same activity. Most reps walk past it because the payoff lands in months 3, 6, 9 — not today.",
+          },
+          {
+            id: "s24-q3",
+            type: "multiple-choice",
+            prompt:
+              "Why does the session insist on the rep adopting a 12-month mindset (or at least 3–6 months) about their time in the role?",
+            topic: "12-month horizon",
+            options: [
+              "Because reps who commit publicly to a long stay get promoted faster",
+              "Because the pipeline only compounds if the rep believes they'll still be there to harvest it — short horizons produce short-horizon behaviour",
+              "Because the company won't invest in training reps who plan to leave",
+              "Because the commission structure rewards reps with long tenure",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Pipeline compounds over time. A rep who sees themselves as short-term cannot build a long-term pipeline — they'll be desperate for same-day yeses and won't invest in the follow-up structure. The horizon you choose is the horizon your behaviour reflects.",
+          },
+          {
+            id: "s24-q4",
+            type: "multiple-choice",
+            prompt:
+              "What is \"commission breath\" and how does the session say to lose it?",
+            topic: "Commission breath",
+            options: [
+              "Bad breath caused by talking too much — fixed with better hygiene",
+              "The desperation a buyer can hear in a rep's voice when they need the deal today. It's fixed by adopting a longer horizon — when the rep believes they have time, the energy changes",
+              "The smell of stale coffee on the phone — fixed by switching to water",
+              "An automatic vocal pattern reps develop after too many cold calls — fixed with voice training",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Commission breath is the desperation a buyer hears when a rep needs the deal today. Buyers read the energy long before they hear the offer. The fix isn't voice training — it's mindset. When the rep believes they have time, the energy changes.",
+          },
+          {
+            id: "s24-q5",
+            type: "multiple-choice",
+            prompt:
+              "Why does the phrasing \"would you be upset if I sent you some interesting findings?\" work so much better than \"can I send you some information?\"",
+            topic: "Permission to send",
+            options: [
+              "Because it's more polite",
+              "Because it shifts the buyer's decision from yes/no (which favours no) to upset/not-upset (which favours not-upset) — refusal feels melodramatic, so almost no one refuses",
+              "Because it implies the rep has already prepared the materials",
+              "Because it's compliant with privacy regulations",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "\"Would you be upset\" makes refusal feel melodramatic — most buyers won't take that option. It shifts the choice from a clean yes/no (which favours no) to upset/not-upset (which favours not-upset). The buyer takes the easy path.",
+          },
+          {
+            id: "s24-q6",
+            type: "multiple-choice",
+            prompt:
+              "Why is two weeks the recommended follow-up window — rather than one week or one month?",
+            topic: "Two-week rule",
+            options: [
+              "Because it gives the rep two weeks to research the buyer further",
+              "Because two weeks is close enough to keep the conversation warm but far enough that the buyer's defences don't fire. One week feels pushy. One month feels distant",
+              "Because the agency operates on two-week sprint cycles",
+              "Because buyers usually have a two-week vacation policy",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Two weeks is the calibrated number. One week feels pursued. One month feels forgotten. Two weeks lands as casual — \"sure, two weeks works.\" Over a three-month follow-up period, two-week touchpoints accumulate into six warm contacts. By the time the contract ends, you're not a cold caller anymore.",
+          },
+          {
+            id: "s24-q7",
+            type: "multiple-choice",
+            prompt:
+              "The session said \"buyers are liars.\" What does this actually mean in practice?",
+            topic: "Read behaviour, not words",
+            options: [
+              "Buyers will deliberately mislead reps to get better prices",
+              "Buyers should never be trusted with company information",
+              "Buyers say things to manage their own emotional safety — read their behaviour, not their language. Enthusiastic \"you're amazing\" calls with no action are softer no's; flat-toned price-negotiation calls are often live deals",
+              "Buyers always say they're not ready when they actually are, to extract concessions",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Buyers manage their emotional safety with language. The polite \"you're amazing\" call is often the soft breakup. The flat-toned call asking specific questions is often the live deal. Read behaviour: who follows up, who asks for the proposal, who corrects details. Words mislead — actions don't.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Session 23 — Sales Competition Strategy. (Jun 2026) ────────────────
   // Sales + Lead Gen (LG #16). CS excluded via salesOnly. Internal strategy
   // note about the redesign of the sales competition itself — full 6-asset
@@ -3943,6 +4101,7 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-21-urgency", newNumber: "14" },
   { sourceId: "session-22-reversible-yes", newNumber: "15" },
   { sourceId: "session-23-competition-strategy", newNumber: "16" },
+  { sourceId: "session-24-follow-up", newNumber: "17" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
