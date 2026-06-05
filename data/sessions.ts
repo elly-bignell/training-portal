@@ -51,6 +51,475 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Sessions 26, 27, 28 — Friday 5 June 2026 triple ────────────────────
+  // All three sales + Lead Gen (LG #19, #20, #21). CS excluded via
+  // salesOnly. Same 5-asset shape: debrief, toolkit, intro (YouTube),
+  // podcast (Drive), 7-question MC quiz. No presentation videos.
+  {
+    id: "session-28-seesaw",
+    number: "28",
+    date: "2026-06-05",
+    title: "Value, Price and the Seesaw.",
+    summary:
+      "A mental model for what's happening inside the buyer's head during a price conversation. Value and price sit on opposite sides of a lever — and the fair value gap is where the deal actually lives. Drop the price without adding a counterweight and the seesaw tips against you. Use \"contingency\" not \"discount.\"",
+    keyTakeaway:
+      "Never take weight off price without putting weight back on value. Referrals are the weight. \"Contingency\" is the word. The buyer feels they won. The rep walks away with the pipeline.",
+    director: "Corie Dawson",
+    totalTime: "~40 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-28-seesaw/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-28-seesaw/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/qRu3F88XNUI",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1IxqV8enTDsx-3bgbCYiKMoP-v-Hue9Kn"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "quiz",
+        estimate: "7 questions · ~8 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s28-q1",
+            type: "multiple-choice",
+            prompt:
+              "What does the seesaw model claim about the relationship between value and price inside the buyer's head?",
+            topic: "Seesaw model",
+            options: [
+              "Value and price are independent — the buyer evaluates each on its own merits",
+              "Value and price sit on opposite sides of a lever. When value is heavy, price doesn't matter as much. When value is light, price is the only thing the buyer can see",
+              "Price is always more important than value — buyers are fundamentally price-driven",
+              "Value is always more important than price — buyers will pay anything for the right product",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The seesaw is the central mental model. Value and price are weights on opposite sides of the same lever — they aren't independent. The buyer's decision is the seesaw's tilt at the moment they say yes or no. The rep's whole job is to keep value heavier than price throughout the conversation.",
+          },
+          {
+            id: "s28-q2",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"fair value gap\" — and why does the rep need to land the deal inside it?",
+            topic: "Fair value gap",
+            options: [
+              "The space between two competing quotes — the rep needs to land just below the competitor's price",
+              "The space between the package's perceived value and the price the buyer actually pays. The buyer says yes inside the gap because they feel they got fair value AND came out slightly ahead — that small win is what closes them",
+              "The space between the buyer's budget and their actual willingness to spend — the rep should aim for the higher figure",
+              "The difference between the rep's commission and the agency's profit — invisible to the buyer",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The fair value gap is where buyers actually close. Price above perceived value → they walk. Price too far below it → they get suspicious. The sweet zone is where they feel the trade was fair AND they got a small win. That small win is non-negotiable — buyers need to feel they came out slightly ahead, even when they didn't.",
+          },
+          {
+            id: "s28-q3",
+            type: "multiple-choice",
+            prompt:
+              "Why does dropping the price unilaterally (e.g. \"sure, I can do that\" to the buyer's lower number) damage more than just the dollar amount lost?",
+            topic: "Why unilateral drops are catastrophic",
+            options: [
+              "It triggers an audit obligation",
+              "It violates the standard pricing policy",
+              "It tells the buyer the original number was inflated, unwinds 45 minutes of value-building, removes the rep's negotiating room, and signals desperation — roughly 50% of value evaporates with the price drop",
+              "It triggers a notification to the agency's compliance team",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "A unilateral price drop tells the buyer the original number was a lie. It unwinds the value the rep built across the entire pitch. It removes their negotiating room. It signals desperation. \"Same money on paper, half the integrity in the buyer's head\" — that's the actual cost of a $100 drop.",
+          },
+          {
+            id: "s28-q4",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"counterweight\" in the seesaw model — and what's the most reliable one?",
+            topic: "Counterweight",
+            options: [
+              "An additional product bundled into the package — the most reliable is free hosting",
+              "Something added to the value side at the exact moment dollars are removed from the price side. The most reliable is referrals — they add real value to the rep AND make the buyer feel the trade is symmetric",
+              "A longer contract length — the most reliable is 24 months",
+              "A discount on a future service — the most reliable is 10% off year two",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The counterweight is anything added to the value side at the moment price comes off. Referrals are the most reliable counterweight because (a) they're worth far more than the price they cost and (b) they make the buyer feel the trade is symmetric. Both sides win. The buyer just doesn't notice the rep won more.",
+          },
+          {
+            id: "s28-q5",
+            type: "multiple-choice",
+            prompt:
+              "Why is the word \"contingency\" (or \"condition\") used instead of \"discount\" when offering the adjusted price?",
+            topic: "Contingency, not discount",
+            options: [
+              "Because \"discount\" is a restricted term under consumer law",
+              "Because \"contingency\" sounds more professional",
+              "Because \"contingency\" frames the adjustment as conditional on a trade — the buyer is giving referrals in exchange. The value of the package is preserved. \"Discount\" tells the buyer the original price was puffed up and they could push for more",
+              "Because contracts require the term to be used",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "\"Discount\" telegraphs that the rep had room all along and could move further. \"Contingency\" frames the adjustment as conditional on the buyer's contribution — the package value is preserved. Same money. Completely different psychological footprint. Replace \"discount\" with \"contingency\" in every conversation.",
+          },
+          {
+            id: "s28-q6",
+            type: "multiple-choice",
+            prompt:
+              "Why does the buyer secretly benefit from the referral arrangement — beyond just paying a lower price?",
+            topic: "The hidden insurance policy",
+            options: [
+              "Because they earn a referral fee when each name signs up",
+              "Because their referrals become eligible for a discount",
+              "Because the rep now has multiple reasons to deliver well on the buyer's campaign — the referral list acts as an unspoken insurance policy that locks in unusually high attention from the agency for the first 3–4 months",
+              "Because the buyer gets to vet the agency's other clients",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The hidden mechanism. The rep with 5–16 reasons to deliver well on the campaign WILL deliver well — the referrals depend on it. The buyer has, without naming it, locked in unusually high attention from the agency for the first quarter. Don't say this out loud; it breaks the spell. But the rep should understand it and lean into the implicit message.",
+          },
+          {
+            id: "s28-q7",
+            type: "multiple-choice",
+            prompt:
+              "When should the referral counterweight NOT be used?",
+            topic: "When not to use",
+            options: [
+              "Only when the buyer asks for a discount in writing",
+              "When the buyer's price is far below fair value, when the buyer isn't networked, when value hasn't been built yet, or when the rep can't deliver on the work the trade depends on",
+              "Only on the first call — always wait until the third call",
+              "Only when the buyer has more than 10 employees",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Powerful moves require fit. If the gap is too wide, the trade can't bridge it. If the buyer has no network, they can't deliver the names. If value hasn't been sold, the contingency just looks like a confused discount. If the rep can't deliver, trust collapses and the referrals never come — burning the bridge for next year too.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "session-27-second-opinion",
+    number: "27",
+    date: "2026-06-05",
+    title: "Booking the Second-Opinion Call. Read the Traffic.",
+    summary:
+      "How to convert a discovery call into a booked meeting when the buyer already has a provider — using SEM Rush data on screen, the traffic profile in front of you, and a tone that doesn't trash the competition. \"Second opinion\" beats \"switch providers\" because it removes the sunk-cost trap.",
+    keyTakeaway:
+      "If you can't tell the buyer something true and specific about their site in the first ninety seconds, you haven't done enough homework to deserve the meeting. Open SEM Rush before you pick up the phone.",
+    director: "Corie Dawson",
+    totalTime: "~35 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-27-second-opinion/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-27-second-opinion/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/3DIjch9zqzw",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1JNek2x0Kboavj8x2BSnmoSf55ujskaOh"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "quiz",
+        estimate: "7 questions · ~8 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s27-q1",
+            type: "multiple-choice",
+            prompt:
+              "When a buyer says \"I already have a provider,\" what frame should the rep adopt — and why?",
+            topic: "Second-opinion frame",
+            options: [
+              "Aggressive replacement frame — point out everything the current provider is doing wrong, so the buyer feels urgency to switch",
+              "Second-opinion frame — offer an unbiased professional read, no commitment to change. The buyer doesn't have to defend a sunk cost, so their defences don't fire",
+              "Discount frame — undercut the current provider's price by 20% to win the swap",
+              "Wait-and-see frame — say nothing about the provider and hope the buyer brings up dissatisfaction on their own",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The buyer with a provider has a sunk cost. Trashing the provider asks them to defend that cost — defences fire, conversation ends. The second-opinion frame removes the sunk-cost trap: no commitment, no switch, just an unbiased look. The buyer can take or leave it, which is exactly why they'll take it.",
+          },
+          {
+            id: "s27-q2",
+            type: "multiple-choice",
+            prompt:
+              "Why does \"your traffic is down 23.5%\" land harder than \"your traffic is down about 20%\" — even when both are roughly true?",
+            topic: "Specificity is credibility",
+            options: [
+              "Because the exact decimal triggers a regulatory disclosure obligation",
+              "Because the buyer will Google it and verify the figure",
+              "Because specificity is credibility — an exact percentage tells the buyer the rep has actually looked at the data, while a rounded number sounds like a guess",
+              "Because 23.5% is a bigger number than 20% so the buyer feels more urgency",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Specifics signal effort. \"23.5%\" tells the buyer the rep has the campaign open right now. \"About 20%\" tells them the rep is guessing. Same fact — completely different credibility. Always read the number off SEM Rush verbatim; never round.",
+          },
+          {
+            id: "s27-q3",
+            type: "multiple-choice",
+            prompt:
+              "What's the right booking line for a buyer whose site is getting healthy traffic (1,000+/month) but converting poorly?",
+            topic: "Pivot SEO → web",
+            options: [
+              "\"Your SEO is broken — let's start a new campaign from scratch.\"",
+              "\"Your provider is wasting your money on traffic that doesn't convert.\"",
+              "\"Your SEO is doing its job — your site isn't catching what it sends. A couple of tweaks could change that.\" — pivot from SEO pitch to website pitch",
+              "\"You need to spend more on ads to convert this traffic.\"",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "When SEO is working but conversion isn't, the leak is the website. Don't double down on the SEO pitch — pivot. The rep credits what's working (so the buyer doesn't have to defend their current provider) and redirects the attention to the actual problem. New service, same meeting.",
+          },
+          {
+            id: "s27-q4",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"keyword test\" move during a discovery call — and why does it close meetings?",
+            topic: "Keyword test",
+            options: [
+              "Asking the buyer to recite their target keywords from memory",
+              "Extracting a specific service area and suburb from the buyer, typing it into SEM Rush during the call, and reading back the live ranking position — turns abstract \"SEO\" talk into a concrete, on-screen finding",
+              "Promising the buyer rank-one position for a specific keyword by next month",
+              "Comparing the buyer's keyword list against a competitor's for free",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Buyers can't talk about \"SEO\" in the abstract — they can talk about jobs they actually do. Asking \"do you prefer Unley or Parkside?\" looks like curiosity but it's a sales question. The answer narrows the keyword, the live rank check produces a concrete on-screen finding, and that finding is the hook.",
+          },
+          {
+            id: "s27-q5",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"pricing jab\" — and when should it NOT be used?",
+            topic: "Pricing jab",
+            options: [
+              "Aggressively quoting a low price to win the deal — never use it on enterprise buyers",
+              "Deliberately under-estimating what you think the buyer is currently spending, so the correction becomes the meeting. Never use it on tentative small-business owners who'll just feel embarrassed",
+              "Naming a price before establishing rapport — never use it on the first call",
+              "Offering a discount that expires in 24 hours — never use it on referrals",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The jab is a controlled provocation. Under-quoting their spend stings the invested buyer into correcting you — and the correction is the meeting. Never use it on a tentative small-business owner: they'll feel embarrassed and the call ends. Reserve it for buyers who clearly have skin in the game already.",
+          },
+          {
+            id: "s27-q6",
+            type: "multiple-choice",
+            prompt:
+              "The session said \"show, don't tell.\" Why does the line \"it's much easier if I show you rather than talk on the phone\" book meetings so reliably?",
+            topic: "Show, don't tell",
+            options: [
+              "Because it implies a screen — and a screen implies a meeting. It also happens to be true (SEO data is genuinely confusing when described out loud), which makes the rep sound reasonable rather than pushy",
+              "Because the buyer will feel embarrassed about being confused on the phone, and accept the meeting to save face",
+              "Because phone calls are bad for sales and screens are better",
+              "Because the rep's calendar looks busier when meetings are booked",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "The line works because (a) it's true — SEO data really does look like noise out loud, and (b) \"show you\" implies a screen, which implies a meeting, which is the close. Crucially, it doesn't sound like a sales move because it isn't one — it's an honest reframe. That's why it converts.",
+          },
+          {
+            id: "s27-q7",
+            type: "multiple-choice",
+            prompt:
+              "What's the right move when a buyer pushes back with \"I'm fine with my current setup\"?",
+            topic: "Handling pushback",
+            options: [
+              "Argue harder — explain in detail why their current setup is failing them",
+              "Hang up and move on — they're a lost cause",
+              "Probe gently to find out what \"fine\" actually means, send an email with the specific data you've already collected (traffic, ranking, page-two keyword), and ask for 10 minutes next week — the email + meeting combo converts better than the call alone",
+              "Offer a deep discount on the spot to overcome the objection",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Don't argue with \"fine\" — probe it. Often \"fine\" just means \"not interested in a cold call right now,\" not \"my campaign is performing.\" The email gives the buyer the data on their own time, which softens them up. The 10-minute meeting ask is bounded and easy to grant. Move on if it's a hard no — log them and follow up in two weeks (Session 24's 50% bucket).",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "session-26-close-the-gap",
+    number: "26",
+    date: "2026-06-05",
+    title: "Close the Gap with Referrals. The Asymmetric Bet.",
+    summary:
+      "The way you treat your own goals is the way you treat your deals. Walk the 6-field How to Close form through a live deal, find the gap, close it with a referral counterweight — not a unilateral discount. The cooler question, the contingency framing, the handover close.",
+    keyTakeaway:
+      "Know what you want. Run the six fields. Cool the ask. Take referrals as the counterweight. Call it a contingency. Hand over with momentum.",
+    director: "Corie Dawson",
+    totalTime: "~45 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-26-close-the-gap/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-26-close-the-gap/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/SCG8tlONPZw",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1zI86OBaFOojl12YkcW0LqzZrrBixE2w9"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "quiz",
+        estimate: "7 questions · ~8 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s26-q1",
+            type: "multiple-choice",
+            prompt:
+              "When the buyer's price is below the rep's offer, where is the deal actually made?",
+            topic: "Where the gap lives",
+            options: [
+              "Wherever the rep concedes — usually halfway between the two numbers",
+              "In the gap between what the buyer wants to pay and what the rep is offering — and the rep's job is to close that gap with something other than a unilateral price drop",
+              "At the rep's number, because the buyer always comes up to meet a confident pitch",
+              "At the buyer's number, because the buyer holds the leverage",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The gap is the deal. Once the buyer says their number and the rep has pitched theirs, the air between the two figures is where the close happens. The rep's job is to bridge that gap with something other than a unilateral price cut — because a unilateral cut tells the buyer the original price was a lie.",
+          },
+          {
+            id: "s26-q2",
+            type: "multiple-choice",
+            prompt:
+              "Before the rep talks about closing the gap, what question must they ask the buyer first?",
+            topic: "Reaction + timeline",
+            options: [
+              "\"Are you authorised to make this decision?\"",
+              "\"What's your reaction to the gap? When do you need to be in?\" — because the buyer's reaction and timeline tell the rep what the deal actually needs",
+              "\"Have you compared us against three other quotes?\"",
+              "\"Can you afford the upfront cost as well?\"",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Reaction first, timeline second. Without the buyer's reaction, the rep is guessing at how big the gap actually feels. Without a timeline, the rep can't credibly play the \"let me speak to the director\" card. \"When do you need to be in?\" gives the rep urgency to work with.",
+          },
+          {
+            id: "s26-q3",
+            type: "multiple-choice",
+            prompt:
+              "What is a \"cooler question\" and why does the rep use it?",
+            topic: "Cooler question",
+            options: [
+              "A question that ends the call — used to politely sign off",
+              "A scripted opener used at the start of the call",
+              "A softer, conversational question layered on top of a real ask (e.g. \"how long have you been in business?\") — it cools the air so the buyer doesn't feel cornered by the actual request that came before it",
+              "A question that asks the buyer to reveal their real budget",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "A cooler is a softer question stacked on top of a harder ask — it gives the buyer somewhere comfortable to land. Asking \"how long have you been in business?\" right after asking for referral names lets the buyer talk about themselves, which lowers their guard. The real ask sits underneath the cooler.",
+          },
+          {
+            id: "s26-q4",
+            type: "multiple-choice",
+            prompt:
+              "Why does the rep ask the buyer for the names of people they could refer — before closing the deal?",
+            topic: "Referrals as counterweight",
+            options: [
+              "Because the agency needs to start cold-calling those names immediately",
+              "Because it's a way to test whether the buyer is sincere",
+              "Because the referral list becomes the counterweight the rep takes back to the director — it gives the rep something to trade for the price adjustment, instead of just dropping the number",
+              "Because the agency rewards reps for collecting names, regardless of whether they convert",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Referrals are the rep's counterweight. When the rep goes back to the director with a list of seven warm names in hand, the conversation is no longer \"I want to drop the price\" — it's \"I've secured seven warm leads, here's the trade.\" The buyer gets a softer price. The agency gets a pipeline. The rep gets the deal.",
+          },
+          {
+            id: "s26-q5",
+            type: "multiple-choice",
+            prompt:
+              "If a rep collects seven referral names from one client, roughly how many cold calls does that save the rep — and why?",
+            topic: "Referral maths",
+            options: [
+              "Seven calls — one referral replaces one call",
+              "Around seventy calls — because warm referrals convert at roughly 10x the rate of cold calls, so seven warm names do the work of about a day's cold calling",
+              "None — referrals still need to be cold-called the same way",
+              "Around seventeen — referrals are about 2.5x more efficient than cold calls",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Warm referrals convert at roughly 10x the rate of cold calls. Seven warm names ≈ seventy cold calls' worth of pipeline — roughly a day's work the rep doesn't have to do. This is why referrals are the most asymmetric trade in the rep's toolkit: small concession for the buyer, massive saving for the rep.",
+          },
+          {
+            id: "s26-q6",
+            type: "multiple-choice",
+            prompt:
+              "Why does the session insist on using the word \"contingency\" (or \"condition\") rather than \"discount\" when the rep offers an adjusted price?",
+            topic: "Contingency vs discount",
+            options: [
+              "Because \"discount\" is a regulated term and can't be used in writing",
+              "Because \"contingency\" makes the adjustment sound conditional and mutually beneficial — the buyer is giving something (referrals) in exchange, which protects the perceived value of the package. \"Discount\" telegraphs that the rep had room to move all along",
+              "Because \"contingency\" is a more professional-sounding word",
+              "Because legal asked the team to standardise on the term",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Language carries weight. \"Discount\" tells the buyer the original price was inflated and the rep had room to move. \"Contingency\" says the adjustment is conditional on a trade the buyer is making — so the perceived value of the package is protected. Same money. Completely different psychological footprint.",
+          },
+          {
+            id: "s26-q7",
+            type: "multiple-choice",
+            prompt:
+              "After the deal is closed, what does the rep do at months 1, 2 and 3 — and why does this matter for the long game?",
+            topic: "Handover with momentum",
+            options: [
+              "Nothing — the rep hands the client to the account manager and moves on",
+              "Sends one welcome email and unsubscribes the client from sales follow-ups",
+              "Personally checks in at months 1, 2 and 3 before the formal handover, so the client feels carried — and so the rep is well-placed to collect the referrals they were promised when the deal was struck",
+              "Reopens the contract to attempt an upsell at each milestone",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The handover is not a wave-off. Months 1, 2 and 3 personal check-ins give the client a sense of continuity, set up the referral collection (which was promised at the close), and lock in the relationship before the account manager fully takes over. Reps who skip this step lose the referrals they were owed.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Session 25 — How to Close. The Checklist. (Thu 4 Jun 2026) ────────
   // Sales + Lead Gen (LG #18). CS excluded via salesOnly. Lightweight
   // session — 2 assets only (intro video + the printable closing form).
@@ -4133,6 +4602,9 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-23-competition-strategy", newNumber: "16" },
   { sourceId: "session-24-follow-up", newNumber: "17" },
   { sourceId: "session-25-how-to-close-form", newNumber: "18" },
+  { sourceId: "session-26-close-the-gap", newNumber: "19" },
+  { sourceId: "session-27-second-opinion", newNumber: "20" },
+  { sourceId: "session-28-seesaw", newNumber: "21" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
