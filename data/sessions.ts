@@ -51,6 +51,181 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Session 29 — Buyers Are Liars. (Mon 9 Jun 2026) ────────────────────
+  // Sales + Lead Gen (LG #22). CS excluded via salesOnly. 5-asset shape
+  // (no presentation): debrief, toolkit, intro YouTube, podcast, quiz.
+  // First session with 8 quiz questions (others have been 5–7).
+  {
+    id: "session-29-buyers-are-liars",
+    number: "29",
+    date: "2026-06-09",
+    title: "Buyers Are Liars. Read the Real Picture.",
+    summary:
+      "How to handle the buyer who insists their SEO is great when the data on screen says otherwise. Industry benchmarks (500–1,500 visits/month for trades), the branded-vs-non-branded diagnostic, the incognito test, the calibrated price-range jab, the soft way in and the soft way out, and why \"we need to catch up\" books more meetings than any other line in the playbook.",
+    keyTakeaway:
+      "Assume the buyer is lying — politely. Bring the data. Use the soft way in. Give them the soft way out. Ask for 5 to 10 minutes — never more. \"We need to catch up\" closes more meetings than any other line.",
+    director: "Corie Dawson",
+    totalTime: "~40 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-29-buyers-are-liars/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-29-buyers-are-liars/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/Z5hDeyHE0pY",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1HUGxgOOBJZ36gqPUPWoJXX2wZqYbWXxE"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s29-q1",
+            type: "multiple-choice",
+            prompt:
+              "What is the industry standard monthly organic traffic benchmark for trade businesses?",
+            topic: "Industry benchmark",
+            options: [
+              "100–300 visits/month",
+              "500–1,500 visits/month — anything below 500 is below industry standard, anything below 100 is essentially invisible",
+              "2,000–5,000 visits/month — anything less is a sign of a weak campaign",
+              "10,000+ visits/month is the standard for any business with a website",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The working number. 500–1,500 visits/month is industry standard for a trade. Below 500 = below industry. Below 100 = invisible. Once a rep memorises this, every campaign they look at gets classified instantly — and the conversation writes itself. Roughly 90% of the prospect list sits below 500.",
+          },
+          {
+            id: "s29-q2",
+            type: "multiple-choice",
+            prompt:
+              "If a buyer has 50 visits/month and 49 of them are branded (people typing the business name), what does that tell the rep?",
+            topic: "Branded vs non-branded",
+            options: [
+              "The campaign is working well — branded traffic is high-quality",
+              "The SEO is decorative — the buyer is paying for traffic their brand reputation was already going to earn. SEO isn't adding value on top",
+              "The site has a technical problem — search engines can't crawl it",
+              "Nothing — branded vs non-branded is the same thing",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Branded traffic is people who already know the business name — your reputation is doing the earning, not your campaign. If 98% of traffic is branded, the SEO is decorative. The rep narrates this calmly: \"49 of 50 visits are typing your name. You're paying for SEO, but the SEO isn't earning the traffic.\"",
+          },
+          {
+            id: "s29-q3",
+            type: "multiple-choice",
+            prompt:
+              "What does the phrase \"buyers are liars\" actually mean — and what does it NOT mean?",
+            topic: "Buyers are liars",
+            options: [
+              "It means buyers are morally bad people and shouldn't be trusted with anything",
+              "It means defensive humans on a cold call use lies (\"I'm too busy,\" \"my SEO is great\") to escape the conversation. It's not about character — it's about the buyer's goal in the moment being escape, not truth. The rep who takes those statements at face value is working from corrupted data",
+              "It means the rep should always assume the buyer is lying and never trust anything they say",
+              "It means the rep should call the buyer out when they catch them lying",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The defensive humans on a cold call are not bad people — they're trying to get the unknown stranger off the phone. \"I'm busy, my SEO is great\" usually means \"please leave me alone.\" The rep who accepts those statements at face value is working from corrupted data. Treat enthusiastic dismissals with extra suspicion; treat irritated specifics as more likely true.",
+          },
+          {
+            id: "s29-q4",
+            type: "multiple-choice",
+            prompt:
+              "Why does the rep use a calibrated PRICE RANGE (\"$100 to $200, would that be about right?\") rather than a single number (\"$100\")?",
+            topic: "Calibrated price range",
+            options: [
+              "Because giving a range is more accurate than a single number",
+              "Because a range gives the buyer dignity. A single low number like \"$100\" is insulting; a range probes without insulting. The buyer can correct the rep without losing face — and the correction (\"no, I'm at $700\") is the booking signal",
+              "Because the agency requires reps to use ranges in all conversations",
+              "Because ranges convert better in regulated industries",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "A range gives the buyer dignity. \"$100\" alone is insultingly low — it can spiral the buyer into anger and end the call. \"$100 to $200, would I be right?\" probes the truth without the sting. If they're really at $700, they'll correct you — and the correction is the booking signal. The visceral correction is the data point.",
+          },
+          {
+            id: "s29-q5",
+            type: "multiple-choice",
+            prompt:
+              "What is the difference between the \"soft way in\" and the \"soft way out\" — and why does the rep need both?",
+            topic: "Soft way in/out",
+            options: [
+              "Soft way in opens the call; soft way out ends it",
+              "Soft way in is the rep's tone when introducing themselves; soft way out is the rep's tone when hanging up",
+              "Soft way in is how the rep raises the uncomfortable data without cornering the buyer (\"maybe my software's wrong\"). Soft way out is how the rep lets the buyer abandon their initial lie without losing face (\"whether you go with us or not, you should see this\"). Both preserve dignity — the buyer never has to admit they were lying",
+              "Soft way in is for new buyers; soft way out is for repeat customers",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Both moves exist to preserve the buyer's dignity. The soft way in raises the data without cornering them; the soft way out lets them quietly drop their initial defensive lie. Buyers who feel cornered hang up. Buyers who are given a graceful exit become customers. The rep never calls the buyer a liar — the data does it for them.",
+          },
+          {
+            id: "s29-q6",
+            type: "multiple-choice",
+            prompt:
+              "Why does the rep ask the buyer to open an incognito window and check their own ranking — instead of just telling them where they rank?",
+            topic: "Incognito test",
+            options: [
+              "Because the rep doesn't actually have access to ranking data",
+              "Because rankings vary by browser and incognito gives a more neutral result",
+              "Because the buyer participates (which makes them invested), discovers the truth themselves (which removes the rep's burden of breaking it to them), and the rep sounds reasonable rather than confrontational. The phrase \"my software might be wrong\" hands the buyer an out",
+              "Because incognito windows are required for compliance",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Participation = investment. The buyer types in the keyword themselves, sees the result themselves, and now the truth came from them — not from the rep. The phrase \"my software might be wrong\" is the magic — it hands the buyer an out so they're not being told they're wrong, the rep is just acknowledging their own data might be imperfect. The buyer agrees to look. The result speaks for itself.",
+          },
+          {
+            id: "s29-q7",
+            type: "multiple-choice",
+            prompt:
+              "Why does \"we need to catch up\" book meetings that \"can I book a meeting with you?\" doesn't?",
+            topic: "We need to catch up",
+            options: [
+              "Because it's grammatically more formal",
+              "Because it borrows the social grammar of running into a friend on the street — friendly, low-pressure, almost impossible to refuse without seeming rude. It bypasses the buyer's defensive script (which has prepared answers for sales asks but not for friendly catch-ups)",
+              "Because it's the standard line in the industry",
+              "Because it implies the buyer and rep already know each other from before",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The phrase borrows familiar social grammar — \"we need to catch up\" is what people say to friends. It's friendly, low-pressure, and almost impossible to refuse without seeming rude. The buyer's defensive script has prepared answers for \"can I book a meeting?\" but not for \"hey, we need to catch up.\" The energy carries it — warm, casual, genuine.",
+          },
+          {
+            id: "s29-q8",
+            type: "multiple-choice",
+            prompt:
+              "The session described meeting time as a currency — \"half an hour = $5,000, 5 minutes = 50¢.\" What does this mental model dictate about how the rep should pitch the meeting?",
+            topic: "Time as currency",
+            options: [
+              "Always ask for half an hour because more time means more value",
+              "Quote every meeting at 5 to 10 minutes — never half an hour, never 45 minutes. Low time commitment = low perceived cost to the buyer. Then make the meeting feel like a $5,000 painting on offer for 50¢ by adding \"I think you're going to love this\"",
+              "Quote the actual length of the meeting — usually 30–45 minutes — so the buyer knows what they're agreeing to",
+              "Ask the buyer how much time they're willing to give and adjust the pitch accordingly",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Time IS the currency. Half an hour from a stranger on a cold call feels like $5,000. Five minutes feels like 50¢. Quote every ask in the right currency. Then make the perceived value of the meeting much higher than the time cost — \"I think you're going to love this.\" High value, low cost, easy yes. Once they're in the meeting they'll happily spend an hour. The trick is getting them in.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Sessions 26, 27, 28 — Friday 5 June 2026 triple ────────────────────
   // All three sales + Lead Gen (LG #19, #20, #21). CS excluded via
   // salesOnly. Same 5-asset shape: debrief, toolkit, intro (YouTube),
@@ -4605,6 +4780,7 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-26-close-the-gap", newNumber: "19" },
   { sourceId: "session-27-second-opinion", newNumber: "20" },
   { sourceId: "session-28-seesaw", newNumber: "21" },
+  { sourceId: "session-29-buyers-are-liars", newNumber: "22" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
