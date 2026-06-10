@@ -51,6 +51,179 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Session 30 — There Is No Gatekeeper. (Tue 10 Jun 2026) ─────────────
+  // Sales + Lead Gen (LG #23). CS excluded via salesOnly. 5-asset shape.
+  {
+    id: "session-30-no-gatekeeper",
+    number: "30",
+    date: "2026-06-10",
+    title: "There Is No Gatekeeper. Treat Whoever Picks Up as the Perfect Person.",
+    summary:
+      "Drop the word \"gatekeeper\" — it pre-loads adversarial energy that leaks into every line. Whoever picks up is the perfect person to speak to: they'll either prove you right or correct you with the buyer's name. Stage-2 thinking, being correctable, the trial close, and Charlie Munger's punch card.",
+    keyTakeaway:
+      "There is no gatekeeper. There's a person picking up the phone, and they're the perfect person to speak to. Either they'll prove you right or they'll correct you — both outcomes get you closer to the deal.",
+    director: "Corie Dawson",
+    totalTime: "~45 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-30-no-gatekeeper/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-30-no-gatekeeper/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/XHclLhDiIOk",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1gbTHuFeP8ZI6zWesxn_jk5ZMzgNdGHxv"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s30-q1",
+            type: "multiple-choice",
+            prompt:
+              "Why does the session insist on dropping the word \"gatekeeper\" from the team's vocabulary?",
+            topic: "Drop gatekeeper",
+            options: [
+              "Because the term is outdated industry jargon",
+              "Because it's a melodramatic framing that pre-loads adversarial energy. When a rep frames the call as \"getting past the gatekeeper,\" that intent leaks into tone and pace — the person on the other end senses it and goes defensive",
+              "Because legal asked us to use \"receptionist\" for compliance reasons",
+              "Because newer terminology converts better in formal documentation",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Vocabulary shapes mindset. \"Gatekeeper\" frames the receptionist as an obstacle to defeat — adversarial energy that leaks into every word that follows. \"Receptionist\" or \"front desk\" frames her as a person doing her job. Same call, completely different tone. The buyer feels the difference instantly.",
+          },
+          {
+            id: "s30-q2",
+            type: "multiple-choice",
+            prompt:
+              "What does the party analogy say about how a rep's mindset shapes the cold call outcome?",
+            topic: "Party analogy",
+            options: [
+              "Reps with extroverted personalities convert more cold calls than introverts",
+              "Reps should call when they're in a good mood; mood determines outcome",
+              "Same call, same buyer, two different outcomes — depending on whether the rep enters looking to confirm \"these people are hostile\" or scanning for the one person they can connect with. The mindset is upstream of every tonal choice that follows",
+              "Reps should picture the buyer as a friend before dialing, to soften their tone",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Same party, same people, two reps. One scans the room confirming everyone's hostile, the other scans looking for the one person to connect with. Both find what they're looking for. The cold call is identical — the only variable is the rep's frame. Reps who burn out treat every closed door as evidence. Reps who last are still scanning on call 50.",
+          },
+          {
+            id: "s30-q3",
+            type: "multiple-choice",
+            prompt:
+              "What is the asymmetric upside of opening with \"I think you're the perfect person to speak to about this\"?",
+            topic: "The perfect person line",
+            options: [
+              "It always gets the rep through to the decision-maker",
+              "If they ARE the right person, they feel respected and the conversation starts on solid ground. If they AREN'T, they'll volunteer the right person's name to correct you — \"actually you need Bob.\" Either outcome moves the deal forward; neither has a real downside",
+              "It bypasses corporate phone trees automatically",
+              "It's required by sales compliance to establish identity early",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The line is asymmetric. Both outcomes move you forward and neither has a real downside. If they ARE the right person, the conversation starts on solid ground without the offensive \"is the owner there?\" opener. If they AREN'T, the correction (\"you need Bob\") gives you the buyer's name from an internal source — a warm intro, not a cold call.",
+          },
+          {
+            id: "s30-q4",
+            type: "multiple-choice",
+            prompt:
+              "What is the difference between a \"stage 1\" and a \"stage 2\" response — and which should the rep be thinking about?",
+            topic: "Stage 1 vs stage 2",
+            options: [
+              "Stage 1 is the call opener, stage 2 is the close — focus on the opener",
+              "Stage 1 is the literal words you said, stage 2 is what's actually happening in the buyer's head when they hear them. The rep needs to pause before each line and ask \"what is the buyer actually hearing right now?\" If it's \"another sales pitch I need to escape from,\" the line needs to change",
+              "Stage 1 is the first call, stage 2 is the follow-up — match your tone to the stage",
+              "Stage 1 is the rep's tone, stage 2 is the rep's volume — both matter equally",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Don't blurt stage-one responses. Pause and ask: what is the buyer actually hearing right now? \"How are you?\" reads as \"a sales pitch I need to escape.\" \"I've got some interesting findings\" reads as \"this person might actually have something for me.\" Same first three seconds. Completely different next thirty.",
+          },
+          {
+            id: "s30-q5",
+            type: "multiple-choice",
+            prompt:
+              "Why does the session recommend \"being correctable\" — and on what kinds of claims?",
+            topic: "Be correctable",
+            options: [
+              "Being correctable shows humility, which builds trust on all topics",
+              "People love to correct — it's a small pleasure. Make small, low-stakes claims (price range, role, name) — the buyer's correction gives you the information you wanted without ever asking a question. But NEVER be correctable on the buyer's pain or the product's value; those are where the rep has to be right",
+              "Reps should always agree with buyers to avoid friction",
+              "Being correctable is a regulatory requirement for sales reps",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "People love being right. Correcting someone is a small pleasure. The rep weaponises this gently with small claims (\"you must be paying around $100–$200?\") — the buyer's correction (\"actually it's $700\") is the information the rep needed, extracted without asking. But never be correctable on the buyer's pain or the product's value — those are the places the rep must lead.",
+          },
+          {
+            id: "s30-q6",
+            type: "multiple-choice",
+            prompt:
+              "Why does the session insist on treating the receptionist as \"the boss's partner\"?",
+            topic: "Receptionist as partner",
+            options: [
+              "Because receptionists often ARE the partner of the business owner",
+              "Because if a rep is dismissive of the receptionist on the way through to the owner, the owner often asks the receptionist what she thought after the pitch — and a quiet \"I didn't like that guy\" will silently torpedo the deal weeks later. The rep blames price; the real cause was a 30-second exchange",
+              "Because most receptionists are commissioned on the deals that close",
+              "Because the receptionist usually signs the contract on behalf of the owner",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Reception is the partner role at work. After the pitch, the owner asks her what she thought. A quiet \"didn't like him\" torpedoes the deal weeks later. The rep blames the price, the timing, the product — never knowing the deal died from a 30-second exchange at the front desk. Treat her with the same warmth you treat the owner. It compounds across the relationship.",
+          },
+          {
+            id: "s30-q7",
+            type: "multiple-choice",
+            prompt:
+              "When SHOULD a rep break their standard process during a deal?",
+            topic: "Follow the process",
+            options: [
+              "When the rep's gut tells them the buyer is enthusiastic",
+              "When the rep is running short on time and needs to wrap up",
+              "Only when the client themselves signals they're ready to close — e.g., \"just send me the contract.\" Otherwise, follow the process. Reps' instincts about who'll buy are wildly unreliable — flat buyers often close, enthusiastic ones often don't",
+              "When the buyer mentions a competitor",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The rep's gut about who'll buy is wildly unreliable. The bubbly enthusiast often doesn't close (they're being polite about saying no). The flat, terse buyer often does (they're negotiating, which means they intend to spend). The process exists to remove the rep's emotion from the call. Break the process ONLY when the buyer explicitly signals readiness to close.",
+          },
+          {
+            id: "s30-q8",
+            type: "multiple-choice",
+            prompt:
+              "What is a \"trial close\" — and what does it tell the rep?",
+            topic: "Trial close",
+            options: [
+              "A practice run of the close, done with a colleague before the actual sales call",
+              "A small, low-stakes question (\"is there anything I haven't covered?\" / \"any concerns?\") used near the end of a meeting to surface unspoken objections AND to test whether the rep is within striking distance of the deal. A clean \"no concerns\" means it's time to ask for the sale",
+              "A discounted introductory offer used to win the first deal",
+              "The first time a rep asks for the business in a multi-meeting deal cycle",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The trial close does two jobs at once. It surfaces unspoken objections (\"actually, I'm not sure about the contract length\") and it tells the rep whether they're in striking distance. Clean \"no concerns\" = time to ask. New questions = more ground to cover. Going for the kill from miles away is gambling. The trial close calibrates the range first.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Session 29 — Buyers Are Liars. (Mon 9 Jun 2026) ────────────────────
   // Sales + Lead Gen (LG #22). CS excluded via salesOnly. 5-asset shape
   // (no presentation): debrief, toolkit, intro YouTube, podcast, quiz.
@@ -4781,6 +4954,7 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-27-second-opinion", newNumber: "20" },
   { sourceId: "session-28-seesaw", newNumber: "21" },
   { sourceId: "session-29-buyers-are-liars", newNumber: "22" },
+  { sourceId: "session-30-no-gatekeeper", newNumber: "23" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
