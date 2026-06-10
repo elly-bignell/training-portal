@@ -27,7 +27,7 @@ export interface Booking {
 export const BUDDY_PAIRS: Record<string, string> = {
   // Active
   "Cindy Manrique": "Lucas Tirri",
-  "Darren Ravikumar": "Lucas Tirri",
+  "Daren Ravikumar": "Lucas Tirri",
   "Riley Kerrison": "Dylan Munro",
   "Sydney Arnold": "Felipe Garcia",
   "Shian Roux": "Felipe Garcia",
@@ -38,7 +38,7 @@ export const BUDDY_PAIRS: Record<string, string> = {
 };
 
 // Staff that appear in the New Booking dropdown (currently active only).
-export const ACTIVE_STAFF_MEMBERS = ["Cindy Manrique", "Shian Roux", "Riley Kerrison", "Sydney Arnold", "Darren Ravikumar"];
+export const ACTIVE_STAFF_MEMBERS = ["Cindy Manrique", "Shian Roux", "Riley Kerrison", "Sydney Arnold", "Daren Ravikumar"];
 
 // STAFF_MEMBERS is the dropdown source for forms / filters across the app.
 // Aliased to ACTIVE_STAFF_MEMBERS so archived staff don't reappear in pickers.

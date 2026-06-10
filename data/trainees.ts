@@ -184,9 +184,9 @@ export const trainees: Trainee[] = [
     startDate: "2026-05-11",
   },
   {
-    id: "darren-ravikumar",
-    name: "Darren Ravikumar",
-    slug: "darren-ravikumar",
+    id: "daren-ravikumar",
+    name: "Daren Ravikumar",
+    slug: "daren-ravikumar",
     startDate: "2026-06-08",
   },
   // ─── Customer Service team (Sessions area, no quizzes) ────────────────────
@@ -246,7 +246,7 @@ export const LEAD_GEN_SLUGS: string[] = [
   "shian-roux",
   "riley-kerrison",
   "sydney-arnold",
-  "darren-ravikumar",
+  "daren-ravikumar",
 ];
 
 /** Anyone allowed into the Sessions area (sales + customer service + lead gen). */
