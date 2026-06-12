@@ -51,6 +51,352 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Sessions 31, 32 — Friday 12 June 2026 pair ──────────────────────────
+  // Both sales + Lead Gen (LG #24, #25). CS excluded via salesOnly. Same
+  // 5-asset shape (no presentation): debrief, toolkit, intro YouTube,
+  // podcast Drive, 8-question MC quiz.
+  {
+    id: "session-32-burnt-buyer",
+    number: "32",
+    date: "2026-06-12",
+    title: "The Burnt Buyer. Agree First. Extract.",
+    summary:
+      "The most common objection on the phone: \"I've heard it all before, I've been burnt, all you guys are the same.\" The buyer delivering the speech is still on the call — which makes the speech a buying signal, not a refusal. Agree first, extract specifics, ask \"what do I need to become?\", come back with the calibrated five-minute callback.",
+    keyTakeaway:
+      "The buyer who delivers the \"all you guys are the same\" speech is still on the call — and that makes them a buyer. Agree first. Extract what they want. Promise five minutes. Don't argue. The hardest rejections come from the buyers most ready to be won.",
+    director: "Corie Dawson",
+    totalTime: "~45 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-32-burnt-buyer/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-32-burnt-buyer/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/amxICfKjjnA",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1JcaOHUFMKU9o-ZM8pibngdBAkEdjXvCL"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s32-q1",
+            type: "multiple-choice",
+            prompt:
+              "A buyer says: \"I've been burnt before. All you guys are the same.\" What does the session say this actually signals?",
+            topic: "Hardest rejections",
+            options: [
+              "A genuine refusal — the rep should politely end the call",
+              "An objection to be argued with — the rep should explain why the agency is different",
+              "A test, not a refusal. The buyer who genuinely doesn't care just hangs up. The buyer who delivers the speech is still on the call — and the speech IS the buying signal. They want to see what the rep does next",
+              "A sign the buyer needs a discount to stay in the conversation",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Counter-intuitive but reliable. The buyer who delivers a speech IS the buying signal — they're investing time in the call, which means they're still curious. The buyers who genuinely want nothing to do with the agency just hang up. The hardest rejections in this room come from the people most ready to be won.",
+          },
+          {
+            id: "s32-q2",
+            type: "multiple-choice",
+            prompt:
+              "What's the FIRST move when a buyer says \"all you guys are the same\" — and why?",
+            topic: "Agree, don't argue",
+            options: [
+              "Push back with proof of the agency's track record",
+              "Agree unconditionally — \"I totally understand. We hear the same line from people we ring, too.\" No \"but.\" The agreement disarms the buyer's defensive script — they were ready for a fight, and refusing to fight breaks the pattern. In the recalibration window, the call tips from adversarial to collaborative",
+              "Pivot to price — offer an introductory discount to overcome the objection",
+              "Ask which competitor they were with so the rep can attack that provider",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Agreement is the discipline. The buyer's defensive script is built for a fight. When the fight doesn't happen, the script crashes, and there's a 2–3 second window where the buyer's brain is recalibrating. In that window, the conversation can tip from adversarial to collaborative — which is exactly the move the rep needs to set up everything that follows.",
+          },
+          {
+            id: "s32-q3",
+            type: "multiple-choice",
+            prompt:
+              "After agreeing with the buyer, what's the EXTRACTION question — and what does it actually do?",
+            topic: "Extraction question",
+            options: [
+              "\"Can we send you some materials?\" — gives the buyer something easy to say yes to",
+              "\"What would make you feel comfortable? If we were to start a relationship, what would it need to look like?\" — flips the conversation from rep-pitching to buyer-specifying. The buyer hasn't been asked this before, so they have to commit to specifics. Those specifics become the rep's negotiation brief",
+              "\"Will you give us a chance?\" — establishes whether the buyer is open to a meeting",
+              "\"What's your budget?\" — qualifies the buyer financially before going further",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The flip puts the buyer in an unfamiliar position. They've been deflecting for months — \"all you guys are the same\" is a well-rehearsed exit. The extraction question has no rehearsed answer, so the buyer has to think. When they answer, they have to commit to specifics — and those specifics are the negotiation brief the rep couldn't have written themselves.",
+          },
+          {
+            id: "s32-q4",
+            type: "multiple-choice",
+            prompt:
+              "Why does the rep insert the phrases \"that's interesting\" and \"that's really good feedback\" after the buyer responds?",
+            topic: "The receipts",
+            options: [
+              "Because they're standard sales filler that buys thinking time",
+              "Because they're flattering and the buyer will feel better about themselves",
+              "Because they function as receipts — acknowledging the buyer's input as valuable. Most buyers aren't used to having their words treated as valuable; the small dose of recognition opens them up further. They keep talking, and the longer they talk, the more the rep learns about what will actually close them",
+              "Because legal requires confirmation phrases on sales calls",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The phrases work because they treat the buyer's input as valuable. Most buyers are used to being talked AT — not having their words received as data. Two words of recognition open the buyer up further. They keep talking. The rep keeps learning. The longer the conversation runs in this mode, the warmer the deal gets.",
+          },
+          {
+            id: "s32-q5",
+            type: "multiple-choice",
+            prompt:
+              "What's the calibrated \"callback line\" — and why is FIVE minutes (not ten) the right time window?",
+            topic: "Five-minute callback",
+            options: [
+              "\"Let me get back to you in 24 hours\" — gives the rep time to write a proper proposal",
+              "\"I don't think we can do it, but it's worth a shot, isn't it? Can you give me five minutes?\" — \"Five minutes\" is coffee-sized and almost impossible to refuse. \"Ten minutes\" puts the buyer on guard — they start wondering whether they're being roped in. The five-minute frame is what unlocks the permission to come back",
+              "\"Give me an hour and I'll come back with our best offer\" — shows the rep is doing real work",
+              "\"Can I email you tomorrow with details?\" — keeps the conversation asynchronous",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Time calibration is everything. \"Five minutes\" is the size of a quick coffee — small enough that refusing feels excessive. \"Ten minutes\" triggers the buyer's commitment-aversion, because ten minutes feels like ten minutes. The rep doesn't actually need five minutes — they need the buyer's permission to come back, and the five-minute frame is what unlocks it.",
+          },
+          {
+            id: "s32-q6",
+            type: "multiple-choice",
+            prompt:
+              "When the burnt buyer responds to extraction with a long list of demands (\"I want a free month, double traffic in 60 days, no contract, refund if it fails\"), how should the rep interpret that list?",
+            topic: "Wishlist is a test",
+            options: [
+              "As the actual price of doing business — agree to the list or walk away",
+              "As the buyer being unreasonable — push back and explain industry norms",
+              "As a TEST, not a wishlist. Almost no buyer expects every item to be granted — they want to see how the rep handles being asked for the impossible. Come back with SOMETHING, not EVERYTHING. The counter-offer is the real negotiation. If the rep grants everything, the buyer panics and backs out — \"too easy\" feels suspicious",
+              "As a sign the buyer is shopping multiple agencies — disqualify them",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Critical interpretive frame. The buyer's wishlist is a test of the rep, not a price quote. If the rep grants everything, the buyer panics — \"too easy\" feels like a scam. If the rep refuses everything, the buyer walks. The right move: come back with SOMETHING. The counter-offer is the real negotiation, and the close usually happens at the meeting, not on the call.",
+          },
+          {
+            id: "s32-q7",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"buyers are replaceable\" frame — and what mental discipline does it produce in the rep?",
+            topic: "Buyers are replaceable",
+            options: [
+              "It means reps shouldn't waste time on difficult buyers — always move to the next call quickly",
+              "It means every buyer is unique and special — treat each one like it's the only deal",
+              "Want the deal — never NEED any specific deal. The two energies are different and buyers detect the difference within seconds. Hungry energy hands the buyer leverage and concedes too easily. Abundant energy stays calm, holds the line on terms, and is willing to walk. The next deal is one phone call away",
+              "It means reps should disqualify buyers quickly using a checklist",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The two energies — wanting vs needing — produce completely different tones, and buyers detect the difference within seconds. A rep who needs THIS deal concedes too easily, drags out dead calls, and lets one bad call colour the next ten. A rep who wants the deal but knows the next one is right there is calmer, holds the line, and is more credible. Credibility closes.",
+          },
+          {
+            id: "s32-q8",
+            type: "multiple-choice",
+            prompt:
+              "What's the underlying discipline the session says enables every other technique in the playbook?",
+            topic: "Listening is the master skill",
+            options: [
+              "Memorising scripts so they come out automatically",
+              "Listening. The agree-first move only works because the rep heard what the buyer said. The extraction works because the rep is paying attention to specifics. None of it works on autopilot. Reps who fall behind are planning their next line while the buyer is still talking — the buyer detects the inattention instantly",
+              "Maintaining a fast call cadence — speed compensates for technique",
+              "Building rapport through small talk in the first 60 seconds",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Every technique in this playbook collapses if the rep isn't actually listening. Agree-first only works if you heard what was said. The extraction only works if you noted the specifics. The receipts only work if they're tied to what the buyer just told you. Reps who plan their next line while the buyer talks are heard immediately — the buyer can sense the inattention through the phone, and the call goes cold.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "session-31-build-the-wall",
+    number: "31",
+    date: "2026-06-12",
+    title: "Build the Wall. Scale Begins in Your Notebook.",
+    summary:
+      "A reset on time horizon. The 3-year mindset reframes today's choices in service of a future that hasn't arrived yet. Every question asked twice goes on the wall. Capture today's confusion while you can still remember it. Dedication is 5× as predictive of outcomes as tenure.",
+    keyTakeaway:
+      "Don't be the bottleneck. Be the builder. Every question you answer twice is a question you should put on the wall once. The reps who win at scale aren't the ones with the most answers in their head — they're the ones with the most answers on the wall behind them.",
+    director: "Corie Dawson",
+    totalTime: "~45 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-31-build-the-wall/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-31-build-the-wall/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/crI4KfX3mso",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("13C65k5CQyOc9xPlx5wj4Dj_4MJTF5aM4"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s31-q1",
+            type: "multiple-choice",
+            prompt:
+              "What does \"give yourself the gift of time\" actually mean — and why does the session insist on it?",
+            topic: "Gift of time",
+            options: [
+              "Take regular holidays to avoid burnout",
+              "Wait for the right moment before committing to the role",
+              "Commit mentally to staying long enough for compounding to work. The horizon you commit to is the horizon your behaviour reflects — a rep planning to stay 3 years asks different questions (\"how do I make sure the next 20 reps don't have to figure this out from scratch?\") than a rep planning to stay 3 months",
+              "Allocate time off the phone for training",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The phrase is a discipline, not an optimism slogan. A rep committing to 3 years acts in ways that only make sense if 3 years arrive — like building a wall that costs time today and pays nothing back until others are using it. The horizon the rep commits to is the horizon their behaviour reflects.",
+          },
+          {
+            id: "s31-q2",
+            type: "multiple-choice",
+            prompt:
+              "Why is building \"a wall of FAQs\" a better use of a senior rep's time than answering each question personally?",
+            topic: "System vs heroics",
+            options: [
+              "Because it satisfies HR documentation requirements",
+              "Because hero reps who answer everything personally are the bottleneck for every new starter — output is capped at their own hours. A wall makes the answers self-serve, so the senior rep's time compounds across every new hire instead of being consumed by them",
+              "Because written answers are more legally defensible",
+              "Because new hires prefer reading to talking",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Hero reps are bottlenecks. Senior rep + 5 new starters = 5 people waiting on 1. System builder + 5 new starters = 5 people self-serving from one resource the senior built once. The customer-service overhaul example: 3 days of system-building unlocked an estimated 10× of Corie's own output afterwards, because he stopped being the single point of failure.",
+          },
+          {
+            id: "s31-q3",
+            type: "multiple-choice",
+            prompt:
+              "Why does the session push back on the phrase \"new people coming through\" — and what's the preferred framing?",
+            topic: "Language reveals mindset",
+            options: [
+              "It's grammatically incorrect Australian English",
+              "Because \"coming through\" implies the new hires appeared by accident — that someone got ambushed. The preferred framing is \"we're hiring\" — subject and verb. The rep owns the growth as a plan they're executing, not as an inconvenience that arrives. Same hire, completely different first week",
+              "Because the term is reserved for casual workers",
+              "Because management prefers more formal language",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Language is the tell. \"Coming through\" treats new hires as events that happen TO the rep. \"We're hiring\" treats them as something the rep is doing. Same humans arriving; completely different first week, because one frame prepares the seat / desk / wall and the other braces for disruption.",
+          },
+          {
+            id: "s31-q4",
+            type: "multiple-choice",
+            prompt:
+              "What's the actual process for building the wall — beyond \"put questions on it\"?",
+            topic: "Wall process",
+            options: [
+              "Open a shared Slack channel; reps post questions as they come up",
+              "Every rep keeps a dedicated paper notepad (not Slack) and logs every question asked at their desk. Friday team meeting reviews the notepads, merges duplicates, discards junk, and posts the survivors on the wall with a one-sentence answer plus a reference number to a longer explainer",
+              "Once a quarter, the senior rep writes an FAQ document for HR",
+              "New hires write their own onboarding wiki as they learn",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Notepads, not Slack — writing slows the question down enough to think about it properly. Weekly review prevents the wall from drowning in junk. The reference number links each entry to a deeper explainer (video, doc) — so the wall is an index, not the whole library. Result: 70-80% reduction in interrupt traffic on senior reps after ~3 months.",
+          },
+          {
+            id: "s31-q5",
+            type: "multiple-choice",
+            prompt:
+              "What is the time-vs-dedication ratio Corie quoted — and what does it actually mean?",
+            topic: "Time vs dedication",
+            options: [
+              "1:1 — time and dedication contribute equally to outcomes",
+              "Dedication is roughly 5× as predictive of outcomes as time in role — one year of intensely dedicated effort beats five years of just-showing-up effort. Dedication means focusing the hours that are worked, refusing easy escape from hard tasks, and engaging with feedback rather than deflecting it",
+              "10:1 favouring time — long tenure is what matters most",
+              "2:1 favouring time — experience trumps intensity",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Dedication compresses time. The plane story: Corie flew daily for 2 weeks and did 50 circuits — mastering the plane in 14 days that takes most pilots 2 years. Same plane, same skies. The variable was compression. Most reps default to assuming time-in-role drives outcomes; the formula is closer to time × dedication², and dedication is the under-appreciated half.",
+          },
+          {
+            id: "s31-q6",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"teacher's curriculum\" analogy — and what does it mean for how the team trains new hires?",
+            topic: "Teacher's curriculum",
+            options: [
+              "Teachers should be hired as sales trainers because they're trained to teach",
+              "Teachers don't reinvent the syllabus every year — they have a curriculum and follow it. New students arrive expecting it to exist. The team needs to treat each new hire the same way: the first new hire is hard because the curriculum hasn't been written yet; the tenth should be easy because the curriculum is battle-tested. \"Lazy and smart\" — build once, reap forever",
+              "Reps should attend night classes to learn pedagogy",
+              "Sales training should be modelled on university lectures",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The teacher's discipline is the right model for sales onboarding. The curriculum gets built ONCE, refined annually, and applied to every new student. The first new hire requires bespoke effort because the curriculum hasn't been written yet. By the tenth, the curriculum has been battle-tested and the onboarding cost drops dramatically. \"Lazy and smart\" is precisely the right framing.",
+          },
+          {
+            id: "s31-q7",
+            type: "multiple-choice",
+            prompt:
+              "Why does the session say today's reps are in a \"privileged window\" for training future hires — and what should they capture?",
+            topic: "Privileged window",
+            options: [
+              "Because junior reps have more time to write training materials than senior reps",
+              "Because today's reps are still close enough to their own starting confusion to remember exactly what was confusing. Three years from now, fluency will replace that memory. They should keep a parallel \"things nobody told me\" log — in six months it becomes the onboarding curriculum, and no senior rep can reconstruct it",
+              "Because new hires trust reps closer to their own age",
+              "Because management gives bonuses for writing training documents",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "This is the most under-appreciated point in the session. In 3 years, today's reps will have lost the memory of what was confusing on day one — fluency will have overwritten it. The new hires they train then will need answers to questions today's reps can no longer remember asking. The capture has to happen NOW. Six months from now is too late.",
+          },
+          {
+            id: "s31-q8",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"toolbox\" mental model — and what is the daily ritual that fills it?",
+            topic: "Toolbox",
+            options: [
+              "The toolbox is a physical kit of sales scripts kept on every rep's desk",
+              "Every rep carries an internal toolbox. Empty at year 0, it's filled by deliberately capturing what works. End-of-day ritual: 5 minutes, two questions — \"what worked today that I want to do again?\" and \"what didn't work that I want to avoid?\" Write both down. Experience without capture isn't accumulation — it's exhaustion. After a year: 200+ entries, a personal sales bible",
+              "The toolbox is the agency's shared training portal",
+              "The toolbox is the rep's CRM with notes on each buyer",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Experience without capture is just exhaustion. The trap most reps fall into: they handle each call, win or lose, and move to the next — the tools never go in the toolbox because the rep never paused to put them there. Three years later: three years of experience, an empty toolbox. The 5-minute end-of-day ritual is the cheapest, highest-leverage habit a rep can install.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Session 30 — There Is No Gatekeeper. (Tue 10 Jun 2026) ─────────────
   // Sales + Lead Gen (LG #23). CS excluded via salesOnly. 5-asset shape.
   {
@@ -4955,6 +5301,8 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-28-seesaw", newNumber: "21" },
   { sourceId: "session-29-buyers-are-liars", newNumber: "22" },
   { sourceId: "session-30-no-gatekeeper", newNumber: "23" },
+  { sourceId: "session-31-build-the-wall", newNumber: "24" },
+  { sourceId: "session-32-burnt-buyer", newNumber: "25" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
