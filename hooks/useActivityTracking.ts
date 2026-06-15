@@ -94,26 +94,19 @@ export const WEEK0_RAMP: Record<number, DailyActivity> = {
   4: { calls_made: 0, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 },
 };
 
-// Week start dates (Sundays before each Monday)
-const weekStartDates: Record<number, string> = {
-  0: "2026-02-15", // Training: Sun before Mon 16 Feb
-  1: "2026-02-22", // Week 1: Sun before Mon 23 Feb
-  2: "2026-03-01",
-  3: "2026-03-08",
-  4: "2026-03-15",
-  5: "2026-03-22",
-  6: "2026-03-29",
-  7: "2026-04-05",
-  8: "2026-04-12",
-  9: "2026-04-19",  // Week 9:  Mon 20 Apr
-  10: "2026-04-26", // Week 10: Mon 27 Apr
-  11: "2026-05-03", // Week 11: Mon 4 May
-  12: "2026-05-10", // Week 12: Mon 11 May
-  13: "2026-05-17", // Week 13: Mon 18 May
-  14: "2026-05-24", // Week 14: Mon 25 May
-  15: "2026-05-31", // Week 15: Mon 1 Jun
-  16: "2026-06-07", // Week 16: Mon 8 Jun
-};
+// Week 0 anchor — Sun before Mon 16 Feb 2026. Every other week is derived
+// from this so the dashboard auto-rolls forward each week (no manual config
+// needed when a new week ticks over). Previously this lived as a hardcoded
+// Record<number, string> that needed to be updated manually — and got stuck
+// on Week 16 after Mon 8 Jun, freezing the scoreboard for the following week.
+const WEEK_0_SUNDAY_ISO = "2026-02-15";
+
+// Returns the Sunday (one day before that week's Monday) as a YYYY-MM-DD string.
+function getWeekSundayISO(weekNum: number): string {
+  const [year, month, day] = WEEK_0_SUNDAY_ISO.split("-").map(Number);
+  const d = new Date(Date.UTC(year, month - 1, day + weekNum * 7));
+  return d.toISOString().split("T")[0];
+}
 
 // Header label of the form "Week 18 (32% of year used, 68% remaining)".
 // Uses the ISO week number (Mon-anchored, Thursday-of-the-week rule) and the
@@ -141,18 +134,18 @@ export function getYearWeekLabel(): string {
   return `Week ${isoWeek} (${usedPct}% of year used, ${remainingPct}% remaining)`;
 }
 
-// Get current week number based on Adelaide time
+// Get current week number based on Adelaide time. Computed directly from
+// the WEEK_0_SUNDAY_ISO anchor — no hardcoded week table to maintain, so
+// the dashboard rolls forward automatically when a new week ticks over.
 export function getCurrentWeekNumber(): number {
-  const now = new Date();
-  const adelaide = new Date(now.toLocaleString("en-US", { timeZone: "Australia/Adelaide" }));
-  
-  for (let i = 16; i >= 0; i--) {
-    const weekStart = new Date(weekStartDates[i]);
-    if (adelaide >= weekStart) {
-      return i;
-    }
-  }
-  return 0;
+  const adelaideISO = new Date().toLocaleDateString("en-CA", { timeZone: "Australia/Adelaide" });
+  const today = new Date(adelaideISO + "T00:00:00Z");
+  const [year, month, day] = WEEK_0_SUNDAY_ISO.split("-").map(Number);
+  const week0Sunday = new Date(Date.UTC(year, month - 1, day));
+  const msPerDay = 24 * 60 * 60 * 1000;
+  const diffDays = Math.floor((today.getTime() - week0Sunday.getTime()) / msPerDay);
+  if (diffDays < 0) return 0;
+  return Math.floor(diffDays / 7);
 }
 
 // Get Adelaide date string
@@ -160,16 +153,17 @@ function getAdelaideDate(): string {
   return new Date().toLocaleDateString("en-CA", { timeZone: "Australia/Adelaide" });
 }
 
-// Get week boundaries for a given week number
+// Get week boundaries (Mon-Fri ISO dates) for a given week number — also
+// computed from the WEEK_0_SUNDAY_ISO anchor so it works for any future week
+// without needing the table extended.
 export function getWeekBoundaries(weekNum: number): { start: string; end: string } {
-  const startDate = new Date(weekStartDates[weekNum]);
-  startDate.setDate(startDate.getDate() + 1); // Monday
-  const endDate = new Date(startDate);
-  endDate.setDate(endDate.getDate() + 4); // Friday
-  
+  const [year, month, day] = WEEK_0_SUNDAY_ISO.split("-").map(Number);
+  // Monday = Sunday + 1 day; Friday = Sunday + 5 days.
+  const monday = new Date(Date.UTC(year, month - 1, day + weekNum * 7 + 1));
+  const friday = new Date(Date.UTC(year, month - 1, day + weekNum * 7 + 5));
   return {
-    start: startDate.toISOString().split("T")[0],
-    end: endDate.toISOString().split("T")[0],
+    start: monday.toISOString().split("T")[0],
+    end: friday.toISOString().split("T")[0],
   };
 }
 
