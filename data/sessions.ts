@@ -51,6 +51,179 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Session 33 — Clean the Boat. (Mon 15 Jun 2026) ──────────────────────
+  // Sales + Lead Gen (LG #26). CS excluded via salesOnly. 5-asset shape.
+  {
+    id: "session-33-clean-the-boat",
+    number: "33",
+    date: "2026-06-15",
+    title: "Clean the Boat. The Squid Ink Principle.",
+    summary:
+      "Most calls don't fail because the rep said the wrong thing — they fail because the rep let the previous call colour the current one. The squid ink principle reframes defensive lies as smoke (not data), the 147kW Toyota rule kills the search for a silver bullet, and the \"clean the boat\" ritual protects the rep's mental edge across a full day of dialling.",
+    keyTakeaway:
+      "There is no perfect line. There is no silver bullet. There is a 147-kilowatt engine, and your job is to keep it running clean. Buyers will spray ink. Hose the boat down between calls. Chase the deal, not the customer. The reps who last are the ones whose minds are still clean on call thirty.",
+    director: "Corie Dawson",
+    totalTime: "~45 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-33-clean-the-boat/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-33-clean-the-boat/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/Ey8umICQP7w",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1-JDAnscgpIq8SdTIBxYAlGELfYamX-TK"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s33-q1",
+            type: "multiple-choice",
+            prompt:
+              "Why does opening a call with \"can you take on more work?\" frequently backfire?",
+            topic: "Selective-hearing trap",
+            options: [
+              "Because it's a leading question regulators have flagged",
+              "Because the buyer hears \"I'm a client offering you a job,\" agrees enthusiastically, then realises ten seconds later they're being sold to and has to backtrack. The selective-hearing trap. Better: name the call's purpose clearly in the first sentence (\"I'm calling about your SEO traffic\")",
+              "Because it triggers a legal disclosure obligation",
+              "Because buyers don't like discussing capacity over the phone",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Selective hearing is real. The buyer hears the first sentence in the most self-serving way available — and once they've committed verbally, they have to construct a retreat. Name the call's purpose in the first sentence and the window closes. Costs the rep nothing. Removes a common failure mode entirely.",
+          },
+          {
+            id: "s33-q2",
+            type: "multiple-choice",
+            prompt:
+              "The session uses a Toyota analogy — what does the \"147 kilowatts\" metaphor actually claim about a salesperson's job?",
+            topic: "147kW — no silver bullet",
+            options: [
+              "Reps should drive Toyotas to save on fuel during prospecting trips",
+              "There's no silver bullet. The rep is operating at a fixed ceiling already — you can only make outcomes WORSE by saying dumb things. The job isn't to be the greatest closer; it's to be boringly reliable: run the process, don't blow yourself up, keep moving",
+              "Reps need engine maintenance — regular vacations and rest",
+              "Reps should specialise like Toyota — focus on one product type",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The 147kW reframe is the antidote to silver-bullet thinking. Reps chase a magic line that doesn't exist; chasing it produces the anxiety it claims to fix. The honest answer: the rep is already at the ceiling of what's persuadable. The only available variable is downward — by saying dumb things. The job is engine preservation, not horsepower extraction.",
+          },
+          {
+            id: "s33-q3",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"squid ink principle\" — and what does it mean for how the rep should interpret \"I'm not interested\"?",
+            topic: "Squid ink",
+            options: [
+              "Squids are valuable seafood; buyers are valuable, so treat them well",
+              "Squid ink is toxic and reps should avoid certain clients",
+              "When attacked, squids spray ink to confuse the moment and escape. Buyers on cold calls do the same with defensive lines. \"Not interested\" is rarely literal truth — it's an exit attempt. Don't take it personally, don't argue with it. Respond to what might be the real situation, not the literal claim",
+              "Squid ink is good for writing; the rep should write down everything the buyer says",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The squid metaphor removes the rep's moral outrage at being lied to. The buyer isn't being evil — they're doing what humans do when an unknown stranger calls. Internalise this and the lies stop leaking into the rep's mood. The reps who don't internalise it carry the frustration from call to call — and the buyers on later calls feel it.",
+          },
+          {
+            id: "s33-q4",
+            type: "multiple-choice",
+            prompt:
+              "Why is \"I'll buy SEO for all 10 of my businesses!\" treated as the SAME kind of lie as \"I can't take on more work\"?",
+            topic: "Over-statement vs under-statement",
+            options: [
+              "Because both statements trigger the same regulatory disclosure",
+              "Because the buyer is required to start with one business per agency policy",
+              "Because both are defensive moves, just in opposite directions. The over-statement is bait — using the size of the opportunity to extract concessions, then quietly walk when negotiation tightens. The discipline is the same: stay on process. Counter: \"with all due respect, let me prove myself on one campaign first\"",
+              "Because large orders take longer to fulfil and the agency prefers small deals",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Both directions are defensive. The under-statement deflects ('I'm too busy'). The over-statement baits ('I'll buy everything'). Reps who get excited by the over-statement get played — the buyer uses the size of the opportunity to extract concessions and walks. The discipline: prove yourself on one campaign first. If genuine, they'll happily start small. If bluffing, the bluff collapses.",
+          },
+          {
+            id: "s33-q5",
+            type: "multiple-choice",
+            prompt:
+              "What is \"cleaning the boat\" and why is it the central mindset move of the session?",
+            topic: "Clean the boat",
+            options: [
+              "Polishing the company logo before joining a video call",
+              "Discharging accumulated frustration BETWEEN calls — short walks, water, capturing looping thoughts — so the ink from call 7 doesn't leak into call 8. Without it, by call 20 the rep is talking to every buyer as though they've already been lied to. The buyer hears the tone and the day collapses",
+              "Cleaning your physical desk to project professionalism",
+              "Updating your CRM notes after every call",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The most practical move of the session. The accumulating ink from defensive calls leaks into the rep's tone. Buyers detect it within seconds. Without deliberate cleaning rituals (water, walks, capture), the day spirals. The reps who last are the ones whose minds are still clean on call thirty.",
+          },
+          {
+            id: "s33-q6",
+            type: "multiple-choice",
+            prompt:
+              "What does \"chase the deal, never chase the customer\" actually mean operationally?",
+            topic: "Chase the deal",
+            options: [
+              "Keep dialling new numbers every five minutes regardless of conversation",
+              "Always pursue the largest-revenue opportunity in the pipeline",
+              "The deal exists somewhere in the pipeline — keep dialling until you find the buyer who genuinely qualifies. The specific customer on the current call either qualifies or doesn't. Reps who stay on dead calls hoping to convert the un-convertible are stealing time from the live deal that's one dial away",
+              "Focus your follow-ups on customers who haven't responded to three emails",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Abundance applied at the call level. The deal exists — somewhere in the pipeline — but it's almost certainly not THIS call. Walking away from a dead call isn't giving up; it's reclaiming time for the live one. The reps with the highest volume aren't the ones with the highest per-call conversion — they're the ones who recognise dead calls fastest and move on.",
+          },
+          {
+            id: "s33-q7",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"cheeky callback\" line — and what tonal note makes or breaks it?",
+            topic: "Cheeky callback",
+            options: [
+              "A scheduled follow-up call placed two weeks later",
+              "When the buyer's selective hearing has tripped them up (said yes at start, panicked, now saying no), the rep gently names it with humour: \"Did I just do that to you? You said you could take more work, now you're booked out solid. Worth a finder's fee, isn't it?\" Tone is everything — cold = accusatory, warm = playful. Practise before using live",
+              "A discount offer made within the first 60 seconds of the call",
+              "A bot-automated SMS sent if the buyer hasn't responded to email",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Three jobs in one line: names the contradiction without accusing, uses humour to keep tone light, gives the buyer a way back in. Most buyers laugh, soften, and reopen the conversation. Cold delivery turns the line accusatory — the buyer hardens. Warm delivery makes it playful — they melt. Practise it verbatim with a colleague before using it live.",
+          },
+          {
+            id: "s33-q8",
+            type: "multiple-choice",
+            prompt:
+              "What's the rhythm the session recommends for the working week — and what does it protect against?",
+            topic: "Grateful + mildly unsatisfied",
+            options: [
+              "Work hard Monday through Friday, take the weekend off completely",
+              "Be grateful AND mildly unsatisfied. Choose one small thing to improve each week. End Friday with a pat on the back; restart Monday with a new small goal. Protects against both complacency (which produces no improvement) AND self-flagellation (which produces burnout). Mildly-unsatisfied reps compound",
+              "Set monthly stretch goals and only review at month-end",
+              "Run sprints of three high-intensity days followed by two recovery days",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The productive middle. Grateful protects against the depressive end. Mildly unsatisfied protects against complacency. Together they produce a rep who compounds — small improvements stacked across weeks. The Friday pat-on-back / Monday new-goal cadence is the loop. Reps who skip either side (no gratitude → burnout; no ambition → flatlining) don't last.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Sessions 31, 32 — Friday 12 June 2026 pair ──────────────────────────
   // Both sales + Lead Gen (LG #24, #25). CS excluded via salesOnly. Same
   // 5-asset shape (no presentation): debrief, toolkit, intro YouTube,
@@ -5303,6 +5476,7 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-30-no-gatekeeper", newNumber: "23" },
   { sourceId: "session-31-build-the-wall", newNumber: "24" },
   { sourceId: "session-32-burnt-buyer", newNumber: "25" },
+  { sourceId: "session-33-clean-the-boat", newNumber: "26" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
