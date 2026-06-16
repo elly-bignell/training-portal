@@ -51,6 +51,335 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Sessions 34, 35 — Tuesday 16 June 2026 pair ──────────────────────────
+  // Both sales + Lead Gen (LG #27, #28). CS excluded via salesOnly. Same
+  // 5-asset shape — no presentation video.
+  {
+    id: "session-35-ground-yourself",
+    number: "35",
+    date: "2026-06-16",
+    title: "Ground Yourself. The 90/10 Rule. Sell You First.",
+    summary:
+      "Power words don't work in a vacuum — they only land when the rep is grounded. 90% of every closed deal is the rep plus the brand; only 10% is the product. Sell yourself first, the company second, the product third. The cabin-crew analogy, the 'I could have worked anywhere' line, and why 'let me think about it' is almost always about you, not the product.",
+    keyTakeaway:
+      "Power words come from the ground. The ground is you. Sell yourself first. The company second. The product third. The buyer doesn't smell fuel when the crew is warm — and they don't ask \"can I think about it?\" when they're already certain about you.",
+    director: "Corie Dawson",
+    totalTime: "~50 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-35-ground-yourself/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-35-ground-yourself/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/JDMQCFzQ0Q8",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1xv2wJnSotm3Z9bjoV7t8DhYR5OVoTaQ-"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s35-q1",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"90/10 rule\" the session names as the central thesis of selling?",
+            topic: "90/10 rule",
+            options: [
+              "90% of buyers will say no on the first call; 10% will engage",
+              "Roughly 90% of what closes the buyer is the REP + THE BRAND. Only about 10% is the product. The buyer spends 2 minutes evaluating SEO and 25 evaluating the rep. Product detail closes the final 10% — only if the first 90% is already in place",
+              "Reps should spend 90% of their time on calls and 10% on admin",
+              "90% of leads come from referrals and 10% from cold calls",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The operating ratio observed across the agency's top performers. The buyer's time and attention go almost entirely to the human and the brand — not the technical detail of the offering. Reps who internalise this stop trying to win the call on product depth and start winning it on grounding. The product detail closes the LAST 10% — only if the first 90% has already been done.",
+          },
+          {
+            id: "s35-q2",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"grounding stack\" — and what order does the session say to sell in?",
+            topic: "Grounding stack",
+            options: [
+              "Product, then Price, then Terms — standard sales sequence",
+              "Sell yourself first, the company second, the product third. Trust accumulates upward — buyers can't trust a product before they trust the human and the organisation. Lead with product and you skip the foundation everything else stands on",
+              "Build rapport, then qualify, then propose — the BANT framework",
+              "Open with the close, then justify, then handle objections — assumptive selling",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Trust accumulates upward, not downward. The buyer has to trust the human first, the organisation second, and only then can they trust the offering. Lead with product and you've skipped the foundation. Lead with self, then company, then product — and the product almost sells itself by the time you get to it.",
+          },
+          {
+            id: "s35-q3",
+            type: "multiple-choice",
+            prompt:
+              "What does the session say power words REALLY are — and what makes them work or fail?",
+            topic: "Power words = grounding",
+            options: [
+              "Power words are a vocabulary list reps should memorise — they work when delivered with confidence",
+              "Power words are a tonal trick — they work when the voice lifts on the right syllable",
+              "Power words aren't a vocabulary skill — they're a grounding skill. A grounded rep generates them naturally because they mean them. An ungrounded rep using the same list sounds rehearsed. The list works because the rep means it — not because the words are inherently powerful",
+              "Power words are a closing technique — they work when used in the last 30 seconds of a pitch",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The most useful reframe in the session. The list is fine — but the list works only when the rep is grounded enough to genuinely believe what they're saying. Same words, completely different sale. This is also why studying the list without doing the grounding work produces no improvement — reps sound MORE rehearsed, not less.",
+          },
+          {
+            id: "s35-q4",
+            type: "multiple-choice",
+            prompt:
+              "What does the rule \"he or she who is most certain has the highest probability of getting their point across\" actually mean — and what's the trap?",
+            topic: "Most certain wins",
+            options: [
+              "Reps should always claim total expertise on every topic — uncertainty loses deals",
+              "Buyers default to the most certain-sounding voice (uncertainty triggers their uncertainty, which means they retreat). The trap: false certainty about everything collapses the moment the buyer catches one small inconsistency. Real certainty about what you ACTUALLY know beats false certainty about everything — by a wide margin",
+              "Reps should rehearse so much that every word sounds inevitable — natural delivery loses deals",
+              "Reps should out-shout objections — the louder voice wins",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Buyers default to certainty. Uncertainty triggers their own uncertainty, which sends them back to safe choices (i.e. no). The discipline: identify pre-call what you ARE certain about. Lean into those. Say \"I don't know — let me find out\" on the rest. \"I don't know\" said honestly compounds trust. False certainty caught once collapses every certainty you've claimed.",
+          },
+          {
+            id: "s35-q5",
+            type: "multiple-choice",
+            prompt:
+              "What's the line \"I could have worked anywhere — I chose this place\" actually doing — and what makes it land or fall flat?",
+            topic: "I chose this place",
+            options: [
+              "It's a polite social opener that buys 30 seconds of attention",
+              "It signals the rep has options (not desperate), implies a deliberate choice (so they believe in the work), and creates a narrative gap (\"why?\") the buyer wants to hear answered. It only LANDS if the rep has 2-3 SPECIFIC reasons to follow with. Generic reasons (\"great team\") fall flat. Specifics close",
+              "It's a humility move — buyers prefer modest reps",
+              "It's a commitment device — it makes the rep stay in the job longer",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Three jobs in one line. Options + choice + narrative gap. But the line dies without specific follow-up — \"great team\" / \"good company\" don't pass the credibility filter. The exercise: every rep writes their own 2-3 specific reasons in their own words. 30 minutes one time. The line lands every time after that.",
+          },
+          {
+            id: "s35-q6",
+            type: "multiple-choice",
+            prompt:
+              "When a buyer says \"let me think about it\" at the end of a pitch, what does the session say they're actually saying?",
+            topic: "Let me think about it",
+            options: [
+              "\"I want to comparison-shop with three other agencies\"",
+              "\"I'm not clear about YOU.\" Not the product, not the price, not the timeline — the human being who just pitched. The buyer can evaluate the product fine. What they can't yet evaluate is whether they trust the rep. Fix: follow up with personal, not product — reference something specific from the conversation",
+              "\"I want a discount before I decide\"",
+              "\"I need internal approval from my partner\"",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The most common reframe reps need. \"Let me think about it\" almost never means what reps assume. It means: the rep hasn't yet earned the buyer's trust as a human. Sending more product info confirms the buyer's instinct that the rep is more invested in selling than in them. Sending personal — specific, evidenced listening — is the move that converts.",
+          },
+          {
+            id: "s35-q7",
+            type: "multiple-choice",
+            prompt:
+              "What's the Filipino Airlines thought experiment trying to illustrate?",
+            topic: "Cabin crew analogy",
+            options: [
+              "Customers prefer warmer airlines — service training matters",
+              "Same plane, same fuel, same physics — the ONLY variable between a tense flight and a calm one was the crew's connection to the brand. Applied to sales: the rep IS the cabin crew. A grounded rep makes the buyer feel safe; an ungrounded rep makes everything (price, contract length, technical detail) feel like fuel — alarming rather than normal",
+              "International flights are unreliable and reps shouldn't take long-haul prospecting trips",
+              "Buyers will pay more for premium service — pitch a premium package",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The rep IS the cabin crew. Buyers interpret normal friction (price, contract length, technical surprises) through the lens of how the rep is showing up. A grounded rep makes the same friction read as ordinary. An ungrounded rep makes it read as red flags. Same friction, completely different deal.",
+          },
+          {
+            id: "s35-q8",
+            type: "multiple-choice",
+            prompt:
+              "What does the session say is the right frame for every face-to-face prospect meeting?",
+            topic: "Job interview frame",
+            options: [
+              "A pitch — the rep is the seller and the buyer is the audience",
+              "A consultation — the rep diagnoses and the buyer absorbs",
+              "A job interview — the rep is the candidate, the buyer is the interviewer, and the rep's job is to make the interviewer want to hire them. The frame produces all the right behaviours: arrive prepared, listen more than you talk, ask thoughtful questions about the buyer's business. Earn the role rather than beg for it",
+              "A negotiation — both sides trying to extract value from each other",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The reframe sharpens everything. Reps who pitch beg for the role. Reps who interview earn it. The frame produces the right behaviours automatically — preparation, listening, thoughtful questions, calm presence. The hiring rate goes up because the rep has stopped trying to convince and started trying to be chosen.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "session-34-librarian-pitch",
+    number: "34",
+    date: "2026-06-16",
+    title: "Explain Like They're Seven. The Librarian Pitch.",
+    summary:
+      "What to say when the buyer says \"I don't understand any of this SEO stuff.\" The three-word disarm (\"Perfect — that's my job\"), the 45-second librarian metaphor that turns confusion into \"oh, I get it\", the two SEO levers (authority + relevancy), and the low-hanging-fruit research offer that books the next meeting.",
+    keyTakeaway:
+      "If they can't picture it, they can't buy it. Give them the librarian. Give them the two levers. Give them the low-hanging fruit. Then book the meeting and stop talking.",
+    director: "Corie Dawson",
+    totalTime: "~40 min",
+    salesOnly: true,
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-34-librarian-pitch/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-34-librarian-pitch/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/sE3DJzuI57A",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1R0PaxrwMEwgfH2zgeqOPkk5aMX0EvDxQ"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "quiz",
+        estimate: "7 questions · ~8 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s34-q1",
+            type: "multiple-choice",
+            prompt:
+              "When a buyer says \"I don't understand any of this SEO stuff,\" what are they actually signalling?",
+            topic: "The real objection",
+            options: [
+              "A genuine refusal — the rep should politely end the call",
+              "A confession that the rep hasn't yet given them a frame for evaluating the offer. They can't safely say yes or no without one. Not rejection — a request to provide the sense-making in a way they can accept without losing face",
+              "A request for technical details — the rep should explain ranking algorithms",
+              "A negotiation tactic — they want a discount",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Not rejection — a confession. Buyers can't say yes to what they can't evaluate. The rep who reads it as rejection retreats; the rep who piles on more technical detail confirms the buyer's fear that the call will be hard work. Both lose. The rep who reads it correctly — as a request for sense-making — wins by providing exactly that, in 45 seconds, with the librarian.",
+          },
+          {
+            id: "s34-q2",
+            type: "multiple-choice",
+            prompt:
+              "What's the rep's FIRST response when the buyer admits they don't understand SEO — and why?",
+            topic: "Perfect — that's my job",
+            options: [
+              "\"Let me email you a brochure that explains everything.\" — gives the buyer something to read at their own pace",
+              "\"That's exactly why you need us.\" — flips confusion into a sales hook",
+              "\"Perfect — that's exactly my job.\" — removes the buyer's shame, positions the rep as guide rather than vendor, buys 45 seconds of full attention for the explanation that follows",
+              "\"Don't worry, the contract has all the details.\" — moves past the objection",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Three words and a smile. \"Perfect — that's exactly my job.\" The buyer relaxes. The dynamic flips from buyer-evaluating-vendor to buyer-being-helped-by-guide. The rep has earned the right to deliver the next 45 seconds. Defending or justifying confirms the buyer's suspicion that the call will be heavy work — and the call ends.",
+          },
+          {
+            id: "s34-q3",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"Einstein principle\" the session uses as a litmus test for the rep's own understanding?",
+            topic: "Einstein principle",
+            options: [
+              "If the rep can't quote Einstein, they don't understand SEO",
+              "If the rep can't explain SEO to a seven-year-old, they don't understand it themselves. Real understanding produces simple language. Pretend understanding produces jargon. The gap to close isn't more product knowledge — it's simpler language for the knowledge the rep already has",
+              "Einstein's law: every action has an equal and opposite reaction (applies to sales)",
+              "If the rep can't pass a technical exam, they shouldn't pitch SEO",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The litmus test isn't \"do I know SEO?\" — it's \"can I explain SEO in simple language?\" The gap to close isn't more product knowledge. It's simpler language for the knowledge the rep already has. If the rep can't deliver the librarian story cold in 45 seconds, that's the practice gap — not the technical one.",
+          },
+          {
+            id: "s34-q4",
+            type: "multiple-choice",
+            prompt:
+              "Why does the librarian metaphor (Google = library + librarian, websites = books) work so well in a tradie pitch?",
+            topic: "Librarian metaphor",
+            options: [
+              "Because tradies enjoy reading and the metaphor flatters them",
+              "Because the buyer holds three concrete objects (book, library, librarian) in their head and uses them for the rest of the call. \"Ranking\" → \"which 10 books the librarian picked.\" \"Competition\" → \"other books on the same shelf.\" The buyer feels smart for understanding — not stupid for asking",
+              "Because Google's algorithm is actually identical to library cataloguing",
+              "Because the metaphor is required by ACCC marketing guidelines",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Three concrete objects do the work. Once the buyer has them in their head, every later sentence the rep says lands somewhere — not in a void. The buyer feels smart for understanding the story. The rep has bought the right to keep going. Most importantly: the buyer is no longer hiding their confusion. They're listening.",
+          },
+          {
+            id: "s34-q5",
+            type: "multiple-choice",
+            prompt:
+              "What are the TWO SEO levers the rep should explain — and why no deeper?",
+            topic: "Authority + Relevancy",
+            options: [
+              "Speed and security — both are critical to Google's ranking algorithm",
+              "Authority (the JK Rowling rule — backlinks from credible sites endorse the book) and Relevancy (the content match — your book has to be about what they're searching for). Everything else fits under these two. Going technical past this point loses the buyer",
+              "Paid ads and organic search — both are needed for full coverage",
+              "Desktop and mobile — separate algorithms require separate strategies",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Two levers. Authority = JK Rowling endorsing your book (backlinks). Relevancy = your book is about what people are searching for (content). Everything else fits underneath. Reps who go past these two into technical sub-categories on a discovery call lose the buyer they just spent 45 seconds bringing into the room.",
+          },
+          {
+            id: "s34-q6",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"low-hanging fruit\" research offer — and what makes it convert?",
+            topic: "Low-hanging fruit offer",
+            options: [
+              "\"Let me email you our pricing list\" — easiest possible close",
+              "\"My research takes about 30 minutes. Then I'd like 5–10 minutes to show you what I found. Sound fair?\" Three deliberate choices: \"low-hanging fruit\" sounds practical to tradies, \"30 minutes\" puts the work upfront on the rep with no risk to the buyer, \"5–10 minutes\" is the same currency frame from Session 29 — small ask, easy to grant",
+              "\"Sign up for a free trial month\" — eliminates the buyer's risk entirely",
+              "\"Book a 60-minute discovery call\" — gives time to build rapport",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Close the meeting, not the deal. The phrase \"low-hanging fruit\" mirrors tradie language — practical, not theoretical. The 30 minutes of research positions the rep as doing the work upfront. The 5–10 minute ask is the currency frame from Session 29. Result: buyers say yes to this offer at materially higher rates than they say yes to \"can I send you a proposal?\"",
+          },
+          {
+            id: "s34-q7",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"baseline + lift\" tonality rule — and what are the two failure modes it prevents?",
+            topic: "Baseline + lift tonality",
+            options: [
+              "Every word should be delivered at maximum enthusiasm — failure modes are mumbling and stuttering",
+              "Every rep has a vocal baseline. Use it as the floor; LIFT one or two key words per sentence; then return to baseline. Two failure modes: (1) the flatliner — every word at the same level, sounds disengaged, power words land as noise; (2) the faker — every word pushed to max enthusiasm, creates a new flat line at the top, sounds rehearsed",
+              "Speak loudly throughout the call — failure modes are whispering and shouting",
+              "Match the buyer's pace exactly — failure modes are going too fast or too slow",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Baseline + lift. The lift is where power words live. The runway is everything else. Reps who flatline have their power words land as noise. Reps who fake every word up to max sound rehearsed. The drill: read 3 recent sentences flat, then read again lifting one key word per sentence. 10 minutes of conscious practice usually internalises it.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Session 33 — Clean the Boat. (Mon 15 Jun 2026) ──────────────────────
   // Sales + Lead Gen (LG #26). CS excluded via salesOnly. 5-asset shape.
   {
@@ -5477,6 +5806,8 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-31-build-the-wall", newNumber: "24" },
   { sourceId: "session-32-burnt-buyer", newNumber: "25" },
   { sourceId: "session-33-clean-the-boat", newNumber: "26" },
+  { sourceId: "session-34-librarian-pitch", newNumber: "27" },
+  { sourceId: "session-35-ground-yourself", newNumber: "28" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
