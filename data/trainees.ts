@@ -189,6 +189,12 @@ export const trainees: Trainee[] = [
     slug: "daren-ravikumar",
     startDate: "2026-06-08",
   },
+  {
+    id: "jade-bautista",
+    name: "Jade Bautista",
+    slug: "jade-bautista",
+    startDate: "2026-06-15",
+  },
   // ─── Customer Service team (Sessions area, no quizzes) ────────────────────
   // These reps see all session material but the quiz asset is hidden from
   // their view. They're allowlisted to /sessions just like the sales boys.
@@ -247,6 +253,7 @@ export const LEAD_GEN_SLUGS: string[] = [
   "riley-kerrison",
   "sydney-arnold",
   "daren-ravikumar",
+  "jade-bautista",
 ];
 
 /** Anyone allowed into the Sessions area (sales + customer service + lead gen). */

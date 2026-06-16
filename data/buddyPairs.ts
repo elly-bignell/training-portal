@@ -13,6 +13,7 @@ export const reverseBuddyPairs: Record<string, string> = {
   ...Object.fromEntries(Object.entries(buddyPairs).map(([senior, junior]) => [junior, senior])),
   "riley-kerrison": "lucas-tirri",
   "daren-ravikumar": "lucas-tirri",
+  "jade-bautista": "dylan-munro",
 };
 
 // Friendly names for display
@@ -25,6 +26,7 @@ export const buddyNames: Record<string, string> = {
   "krishna-patel": "Krishna",
   "riley-kerrison": "Riley",
   "daren-ravikumar": "Daren",
+  "jade-bautista": "Jade",
 };
 
 export function isSenior(slug: string): boolean {

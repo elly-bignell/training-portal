@@ -34,7 +34,7 @@ const DEFAULT_DEAL_VALUE = 400;
 const buddyPairs: { label: string; sublabel?: string; members: string[] }[] = [
   { label: "Lucas, Cindy & Daren", members: ["lucas-tirri", "cindy-rose-rondez-manrique", "daren-ravikumar"] },
   { label: "Felipe, Sydney & Shian", members: ["felipe-garcia", "sydney-arnold", "shian-roux"] },
-  { label: "Dylan & Riley", members: ["dylan-munro", "riley-kerrison"] },
+  { label: "Dylan, Riley & Jade", members: ["dylan-munro", "riley-kerrison", "jade-bautista"] },
 ];
 
 const allSlugs = buddyPairs.flatMap((p) => p.members);

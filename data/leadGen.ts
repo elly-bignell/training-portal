@@ -26,6 +26,7 @@ export const LEAD_GEN_SLUGS = [
   "riley-kerrison",
   "shian-roux",
   "daren-ravikumar",
+  "jade-bautista",
 ] as const;
 
 export type LeadGenSlug = (typeof LEAD_GEN_SLUGS)[number];

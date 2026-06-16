@@ -43,7 +43,7 @@ const teams = [
   },
   {
     name: "Team 3",
-    members: ["dylan-munro", "riley-kerrison"],
+    members: ["dylan-munro", "riley-kerrison", "jade-bautista"],
   },
 ];
 
