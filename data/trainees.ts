@@ -195,15 +195,13 @@ export const trainees: Trainee[] = [
     slug: "jade-bautista",
     startDate: "2026-06-15",
   },
-  // ─── Customer Service team (Sessions area, no quizzes) ────────────────────
-  // These reps see all session material but the quiz asset is hidden from
-  // their view. They're allowlisted to /sessions just like the sales boys.
-  {
-    id: "trent-spinelli",
-    name: "Trent Spinelli",
-    slug: "trent-spinelli",
-    startDate: "2026-05-21",
-  },
+  // ─── Customer Service team (Sessions area) ───────────────────────────────
+  // Logan and Claire were originally Customer Service (saw all sales material
+  // with quizzes hidden). On 16 Jun 2026 Elly moved them to the Lead Gen
+  // view — they now see the curated lead-gen track (LEAD_GEN_SLUGS below)
+  // with MC-only quizzes. Trent was removed from the portal at the same time.
+  // The CS records stay in `trainees` so any historical references resolve,
+  // but the CS allowlist below is empty.
   {
     id: "logan-earl",
     name: "Logan Earl",
@@ -235,11 +233,11 @@ export const SALES_TEAM_SLUGS: string[] = [
   "felipe-garcia",
 ];
 
-export const CUSTOMER_SERVICE_SLUGS: string[] = [
-  "trent-spinelli",
-  "logan-earl",
-  "claire-wheaton",
-];
+// Customer Service used to be Logan, Claire, and Trent. On 16 Jun 2026 Logan
+// and Claire moved over to the Lead Gen view (below) and Trent was removed.
+// The list is kept (empty) so the isCustomerService() helper and any future
+// CS additions still work without code changes.
+export const CUSTOMER_SERVICE_SLUGS: string[] = [];
 
 // ─── Lead Gen team ───────────────────────────────────────────────────────────
 // Lead Gen reps see a curated 7-session series (sourced from a subset of the
@@ -254,6 +252,10 @@ export const LEAD_GEN_SLUGS: string[] = [
   "sydney-arnold",
   "daren-ravikumar",
   "jade-bautista",
+  // Former CS reps moved over on 16 Jun 2026 — same curated lead-gen
+  // session list, same MC-only quiz projection.
+  "logan-earl",
+  "claire-wheaton",
 ];
 
 /** Anyone allowed into the Sessions area (sales + customer service + lead gen). */
