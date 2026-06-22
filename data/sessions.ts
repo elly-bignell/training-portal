@@ -51,6 +51,526 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Session 38 — Not a Priority. Never Will Be. (Thu 18 Jun 2026) ──────
+  // Sales + Lead Gen (LG #31). No salesOnly — CS allowlist empty after
+  // Logan/Claire move, so omitting salesOnly = "all teams that have access."
+  {
+    id: "session-38-not-a-priority",
+    number: "38",
+    date: "2026-06-18",
+    title: "Not a Priority. Never Will Be.",
+    summary:
+      "How to handle the most common website objection on the phone — the successful tradie who agrees their site is bad and tells the rep it isn't a priority. Agree first, then take the agreement further (\"never will be\"). The silent-killer / silent-winner frame, the under-quote trick, the nudging words (\"most\" / \"generally\"), and attacking process — not price.",
+    keyTakeaway:
+      "Agree first — and take the agreement further than the buyer did. \"Not a priority\" → \"never will be.\" Then make the silent killer visible. Under-quote the loss. Use \"most\" and \"generally\" everywhere. Attack process, not price. The rep with the right tools opens the lock. The rep who hammers every lock breaks them all.",
+    director: "Corie Dawson",
+    totalTime: "~45 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-38-not-a-priority/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-38-not-a-priority/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/2-nGj7d3ULw",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1QAPhD1ooj4tmc4g8K2Q6NxH2mKk2FSuB"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s38-q1",
+            type: "multiple-choice",
+            prompt:
+              "When a referral-driven trade business says \"my website's bad but it's not a priority right now,\" what's the right FIRST move?",
+            topic: "Agree, then go further",
+            options: [
+              "Manufacture urgency by quoting a competitor who recently launched",
+              "Pivot to value — explain how a good website pays back within 90 days",
+              "Agree — and take the agreement FURTHER than the buyer did. \"I totally understand. It's not a priority — and to be honest, it never will be.\" The buyer is prepared to defend \"not now.\" They have no defensive script ready for \"never.\" You've just removed their most reliable exit (\"I'll do it later\") by gently noting that later doesn't arrive",
+              "Ask whether they'd be open to a limited-time discount",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The \"never\" extension is the unlock. The buyer was ready to defend \"not now\" — they have no defensive script for \"never.\" Their typical response is a beat of silence then \"yeah, you're probably right.\" From that moment, the conversation is no longer about WHETHER to do something — it's about WHEN. That's the conversation the rep wants to be in, and the rep got there without an argument.",
+          },
+          {
+            id: "s38-q2",
+            type: "multiple-choice",
+            prompt:
+              "What makes the \"silent killer / silent winner\" frame work — and why is the website objection so sticky without it?",
+            topic: "Silent killer frame",
+            options: [
+              "Websites are sometimes good and sometimes bad — buyers don't know which",
+              "Good websites work invisibly (referrals convert and the buyer never finds out the site did anything). Bad websites also work invisibly (referrals leave without calling, and the buyer never finds out either). Buyers don't have a feedback loop showing referrals who checked them out and went elsewhere. The leak persists because it's invisible — making it visible is the rep's job",
+              "Websites are technically complex and buyers don't understand them",
+              "Buyers receive too many cold calls about websites and tune them out",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The invisibility is the whole problem. Buyers feel busy. They feel referred. They don't feel the leak — because the leak is silent on both sides. The rep doesn't need to prove HOW MANY referrals are leaving (impossible to measure). They only need the buyer to acknowledge that the number is greater than zero. Once it is, multiplied by the average job value, the loss is real.",
+          },
+          {
+            id: "s38-q3",
+            type: "multiple-choice",
+            prompt:
+              "What's the \"under-quote\" trick — and what does it actually accomplish?",
+            topic: "Under-quote trick",
+            options: [
+              "Quote the buyer the lowest possible package price to win the deal",
+              "Deliberately under-estimate the buyer's average job value (e.g. \"about $5,000?\"). The buyer auto-corrects upward — \"mate, it's more like $20,000.\" They've now volunteered their own loss number out loud. The rep never had to argue the figure. The loss is no longer abstract — it's $20k per referral that didn't call, in the buyer's own words",
+              "Quote a low price for the website to get the buyer on the hook before revealing extras",
+              "Tell the buyer their loss is 50% smaller than it really is to avoid scaring them",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The most useful tactical move in the session. The rep doesn't need to know the buyer's actual average job value — they need the buyer to volunteer it, in a moment of mild irritation that they're being undervalued. The buyer's own number, said out loud, is much more persuasive than anything the rep could have proposed. Stack with under-estimating the site's age (most are 10-20 years old) and the rebuild frequency (\"every five years probably\") — three corrections, three small commitments to action.",
+          },
+          {
+            id: "s38-q4",
+            type: "multiple-choice",
+            prompt:
+              "Why does the session insist on using \"most\" and \"generally\" rather than \"all\" and \"every\"?",
+            topic: "Nudging words",
+            options: [
+              "\"All\" and \"every\" trigger regulatory disclosure requirements",
+              "\"Most\" and \"generally\" are nudging words — they create soft confidence without arrogant absolutes. \"All\" and \"every\" set up an argument the rep can lose if the buyer thinks of a single counter-example. \"Most\" can't be argued with. \"Generally\" can't be argued with. Same authority. None of the brittleness",
+              "Buyers prefer informal language and \"all\" sounds too formal",
+              "Sales scripts must avoid universal claims for compliance reasons",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Nudging words look small but work hard. \"Most builders get their work from referrals\" — true and unarguable. \"All builders\" — defensible only until the buyer thinks of one exception. The cumulative effect across a 30-minute call is enormous. Reps who systematically replace absolutes with nudgers report significantly less buyer pushback. The cost of the change is zero. The benefit compounds.",
+          },
+          {
+            id: "s38-q5",
+            type: "multiple-choice",
+            prompt:
+              "Why is \"whether with us or someone else\" a critical toolbox phrase — and what does it actually do on the call?",
+            topic: "Whether with us or someone else",
+            options: [
+              "It opens up referral opportunities to competitors as a goodwill gesture",
+              "It signals to the buyer that the rep is more interested in their outcome than the rep's commission. Positions the rep as honest broker rather than vendor. Removes the sales pressure the buyer was bracing against — which is what was producing the resistance. Buyers who feel the rep cares about the right outcome (not just the agency's outcome) lean in",
+              "It's a regulatory disclaimer required when quoting prices",
+              "It tells the buyer to compare three quotes — standard industry practice",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The phrase is one of the agency's most-tested. It works because it's true — the rep genuinely doesn't care whether the buyer signs with this agency or another, as long as they fix the actual problem. That sincerity is what the buyer feels. Sales pressure produces sales resistance. Removing the pressure removes the resistance. The deals close in the silence after the pressure stops.",
+          },
+          {
+            id: "s38-q6",
+            type: "multiple-choice",
+            prompt:
+              "What's a \"grudge purchase\" — and why does identifying it change how the rep handles the call?",
+            topic: "Grudge purchase",
+            options: [
+              "A purchase the buyer regrets after the fact — reps should reassure they made the right choice",
+              "A discount-driven impulse buy — reps should reframe it as an investment",
+              "Purchases the buyer doesn't enjoy — tyres, insurance, plumbing repairs, websites. The buyer treats them like cleaning the gutters: important, never urgent, easy to push off another month. Acknowledging it out loud (\"I know how you feel about this — nobody gets excited about building a website\") disarms the buyer because they feel heard. The wall comes down",
+              "Purchases made under social pressure — reps should remove the pressure",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Naming the grudge purpose disarms the buyer because they feel heard. They've been hearing themselves described as a tough sale for months. Hearing the rep say \"this is genuinely awful, nobody enjoys this, I get it\" is unexpected — and the wall comes down. The frame also gives the rep a path forward: \"the exciting part for me is what happens AFTER it's done.\" The buyer's focus shifts from the painful purchase to the desirable outcome.",
+          },
+          {
+            id: "s38-q7",
+            type: "multiple-choice",
+            prompt:
+              "What does the kitchen-maker story actually teach — and how should the rep use it?",
+            topic: "Kitchen-maker story",
+            options: [
+              "Always ask buyers for referrals after closing a deal — kitchen-makers refer well",
+              "A specific, personal worked example: kitchen-maker without a website lost a referred $100k job because the customer couldn't get a sense of his work. He refused a $7k website on principle (\"I don't want those kinds of clients\"). His business closed years later. The numbers (7k vs 100k) make the loss instantly understandable. When the buyer hears it, they stop thinking about the cost of the website and start thinking about the cost of NOT having one",
+              "Tradies often have ego problems that block sales — reps should pre-emptively address this",
+              "The agency should target kitchen-makers as a priority vertical",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The story works because it's specific, personal, and the numbers are stark. $7k vs $100k isn't a hypothetical — it's a ratio any tradie understands instantly. The added detail (he refused on principle, his business closed) lands the ego cost. When the buyer hears it, the math in their head changes — they stop thinking about the cost of the website and start thinking about the cost of NOT having one. The deal moves in that moment.",
+          },
+          {
+            id: "s38-q8",
+            type: "multiple-choice",
+            prompt:
+              "What are the TWO pain points behind the \"not a priority\" objection — and which one should the rep attack?",
+            topic: "Attack process, not price",
+            options: [
+              "Time and effort — attack effort",
+              "Brand and competition — attack brand",
+              "Money and process. The rep has very little room to move on money — the agency's prices are what they are. But the rep has enormous room to move on PROCESS — and that's where the agency's actual advantage lives. Most buyers who've built a website before had a nightmare experience. Acknowledge it, then describe the agency's process. Price defends itself when the buyer trusts the process — and loses every time when the buyer doesn't",
+              "Cost and quality — attack quality",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The single most important strategic insight in the session. The rep can't out-negotiate on price — the prices are the prices. The rep CAN out-pitch on process — and the agency's process is genuinely better. Most buyers who've built before had a nightmare. Naming it, then describing the agency's seven-step process by memory, produces the conviction that closes the deal. Process is where the agency wins. Make the process the centre of the pitch.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─── Sessions 36, 37 — Wednesday 17 June 2026 pair ───────────────────────
+  // Both sales + Lead Gen (LG #29, #30). No salesOnly — CS allowlist is
+  // empty after the Logan/Claire move + Trent removal, so omitting
+  // salesOnly is the way to say "all teams that have access."
+  // NB: the original Session 36 prep ('Hunt Together') was discarded
+  // before commit — replaced with this tighter version focused on the
+  // 100-day rule and determination. The old session-36-hunt-together/
+  // folder is orphaned in /public/sample-content and can be deleted.
+  {
+    id: "session-37-dream-like-a-child",
+    number: "37",
+    date: "2026-06-17",
+    title: "Dream Like A Child. Execute Like A Wolverine.",
+    summary:
+      "Most adults stop dreaming — life trains it out of them. The seven-year-old picks the destination without filter; the Wolverine refuses to die on the way there. Reclaim the dreamer, deploy the executor, and recognise the predictable obstacles (the walls, the money critique, the predictable excuses, the ghost) that try to talk you out of both.",
+    keyTakeaway:
+      "The walls are lies. The excuses are predictable. The ghost will arrive on schedule. None of these are obstacles to the dream — they're the test of how much you wanted the dream in the first place. Dream like a child. Execute like a Wolverine. Build a future bigger than the limits you once believed in.",
+    director: "Corie Dawson",
+    totalTime: "~45 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-37-dream-like-a-child/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-37-dream-like-a-child/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/vtmWnNFGAjo",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("18pOX8srLL8CyOttqYtu3FiNg6ukacrv_"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s37-q1",
+            type: "multiple-choice",
+            prompt:
+              "Why does the session say children dream differently from adults — and what's the implication for adult careers?",
+            topic: "Children dream differently",
+            options: [
+              "Children have more time on their hands and adults are too busy",
+              "Children haven't been disappointed yet so they're more optimistic",
+              "Children imagine without pre-validating. They don't calculate whether the dream is realistic or list reasons it won't work before letting the idea form. Adults reverse this — they kill ideas with practical questions before the ideas have a chance to live. The implication: adults keep the executor and fire the idea generator, leaving competence directed at small things, which produces a small life",
+              "Children watch more inspirational content and adults watch more news",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The diagnosis the session offers is precise. Adults didn't lose the ability to dream — they buried it under reflexive pre-validation. The seven-year-old generates ideas freely; the adult executes ideas. Most adults end up underliving because they kept the executor and silenced the idea generator. Reactivating the seven-year-old isn't sentimental — it's practical. Without it, the executor has nothing meaningful to do.",
+          },
+          {
+            id: "s37-q2",
+            type: "multiple-choice",
+            prompt: "What does \"the walls are lies\" actually mean?",
+            topic: "Walls are lies",
+            options: [
+              "The walls of the office should be redecorated to inspire the team",
+              "Most of the limitations the rep believes are real (market size, team ceiling, income cap, qualifications) aren't structural reality — they're assumptions, stories, predictions. They feel solid because the rep stopped questioning them. They describe what IS, not what will be. Corie's example: his childhood bedroom was his parents' lounge room — the walls weren't lying then; they just weren't predictive",
+              "Marketing claims on competitor websites are often false",
+              "The agency's projections aren't always accurate",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The walls describe a moment, not a future. They feel like truth because they're physically present. They aren't truth — they're snapshots. The example makes this concrete: the bedroom that was the lounge room three decades ago isn't predictive of the bedroom three decades from now. Following the discipline anyway is what changes the walls. The walls don't have a choice.",
+          },
+          {
+            id: "s37-q3",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"money critique\" trap — and what does it produce?",
+            topic: "Money critique trap",
+            options: [
+              "Reps who talk too much about money in client conversations lose credibility",
+              "Reps who critique competitor pricing end up sounding desperate",
+              "People who can't reach a thing have a tendency to attack it. Reps who can't yet earn the income they want gradually develop a critique of wealth itself — dressed up as wisdom. The moment they convince themselves money is unimportant, they stop pursuing it; once they stop pursuing it, they don't reach it; the failure confirms the critique that justified stopping. The loop closes",
+              "Reps who negotiate too hard on commissions damage team morale",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The most uncomfortable part of the session, but operationally important. The critique sounds like wisdom. It's a coping frame. Notice when it comes out of your own mouth. Notice whose mouths it tends to come out of in your life. Be honest about the difference between \"I'm choosing something else\" (a choice) and \"I've decided this thing isn't worth wanting because I can't get it\" (a trap).",
+          },
+          {
+            id: "s37-q4",
+            type: "multiple-choice",
+            prompt:
+              "What is the order the session says actually works — and what order are most reps using?",
+            topic: "Dream first, path later",
+            options: [
+              "Most reps use \"plan first, then execute\" — which is the right order",
+              "Most reps reverse the natural order. They get the idea and immediately ask \"how?\" — which kills the dream before it lives. The right order: dream FIRST (let the destination be vivid and specific), then work backwards. \"What's possible from where I am?\" produces small destinations and small lives — because that's what \"how from here?\" optimises for. \"Where do I want to be?\" then \"how do I get there?\" produces bigger lives",
+              "Most reps use \"execute first, plan later\" — which is wrong",
+              "Most reps work in agile sprints — which the session endorses",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The order is everything. Reps who plan from \"where I am\" produce destinations sized for \"where I am.\" Reps who plan from \"where I want to be\" produce destinations sized for that life. The planning process optimises for what you give it. Feed it small inputs and you get small outputs. Feed it the dream and the path emerges from working backwards.",
+          },
+          {
+            id: "s37-q5",
+            type: "multiple-choice",
+            prompt:
+              "What does \"it's none of your business how you get there\" actually mean — and why does it work?",
+            topic: "Path appears as you walk",
+            options: [
+              "Reps shouldn't share their career goals with management",
+              "Reps should only focus on quarterly targets, not long-term plans",
+              "Once the destination is clear, the rep doesn't need to know the path in advance. The path appears in 5-foot sections as you walk forward. Nobody who built something meaningful had the whole plan in their head when they started — they had a direction. Stopping until the whole path is visible is how reps stay exactly where they are for the rest of their lives",
+              "Reps shouldn't ask the boss how to develop their careers",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Counterintuitive but accurate. Nobody who built something meaningful had the whole plan in their head when they started. They had a direction. The path emerged from sustained motion toward the direction — opportunities, contacts, lucky tangents — none of which were visible in advance. Demanding to see the whole path before starting is how careers don't happen.",
+          },
+          {
+            id: "s37-q6",
+            type: "multiple-choice",
+            prompt:
+              "What does the session say about the excuses that arrive when a dream becomes difficult?",
+            topic: "Predictable excuses",
+            options: [
+              "The excuses are unique to each rep and require personal coaching to resolve",
+              "Each excuse feels uniquely yours when it arrives — tailored to your specific doubts. But the excuses are predictable: they arrive for everyone, in roughly the same order, with roughly the same content (\"not smart enough,\" \"too old,\" \"too young,\" \"too busy,\" \"too difficult,\" \"not worth it\"). The question isn't whether they arrive. They will. The question is whether you believe them",
+              "Reps should write out their excuses and burn them as a ritual",
+              "Reps should share their excuses with a partner who can talk them out of it",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Predictability is the point. Each excuse feels uniquely tailored to your specific weaknesses (because that's how the brain delivers them). That tailoring is what makes them persuasive. But they're not unique — they're the same excuses everyone meets. Knowing this in advance defuses them when they arrive. They're not novel insights. They're predictable visitors.",
+          },
+          {
+            id: "s37-q7",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"ghost\" — and what's the discipline for handling it when it arrives?",
+            topic: "The ghost",
+            options: [
+              "The ghost is a coaching technique used by senior reps",
+              "The ghost is the voice that arrives mid-pursuit telling you to stop, telling you it won't work, telling you to lower your expectations — usually with perfect timing, just before the breakthrough. The discipline: expect it. Don't be surprised. Don't argue (arguing keeps it in the room). Notice it. Three words: \"That's the ghost.\" Then keep going. The ghost loses its power the moment it stops being a surprise",
+              "The ghost is a euphemism for departed clients who still hold influence",
+              "The ghost is a vision-board technique",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Naming the ghost is the move. Once it has a name, the rep recognises it as the thing it is — a predictable visitor, not a wise counsellor. The same ghost talks every adult out of pursuing the dream. Its job is to stop you. Your job is to keep going. Arguing with it keeps it in the room. Recognising it lets you walk past it.",
+          },
+          {
+            id: "s37-q8",
+            type: "multiple-choice",
+            prompt:
+              "What does the \"dream like a child / execute like a Wolverine\" combination actually mean — and why does it require both halves?",
+            topic: "Both halves required",
+            options: [
+              "Reps should switch between childlike enthusiasm and aggressive execution depending on the buyer",
+              "Two completely different capacities, both required, used in sequence. The 7-year-old picks the destination — without filter, without pre-validation. The Wolverine handles the execution — relentless, refusing to die on the way. The 7-year-old alone produces half-finished dreams. The Wolverine alone produces grinding competence applied to nothing worth the effort. Combined, they're the most powerful career engine available",
+              "Reps should approach buyers with childlike curiosity and competitive aggression",
+              "Sales is part creativity and part discipline — both are required at the daily level",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Both halves required. Neither half alone produces the life. The seven-year-old picks the destination because the adult brain is too cautious to. The Wolverine handles the journey because the seven-year-old is too easily discouraged. Reps who do both halves consciously — reserving time for each — build the careers. Reps who neglect one or the other don't. The combination isn't a metaphor — it's an operational instruction.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "session-36-determination",
+    number: "36",
+    date: "2026-06-17",
+    title: "Determination Is The Ingredient. Give Yourself 100 Days.",
+    summary:
+      "The uncomfortable period that comes before competence is the work itself — not the warm-up to it. Confidence doesn't come first; competence does. The 100-day rule, the determination-beats-smarts proof, refusing both verdicts (one bad day OR one good day) on identity, the coaching contract (effort first), and the reframe of \"successful people\" as people who simply stayed longer.",
+    keyTakeaway:
+      "Confidence doesn't come first — competence does. Give yourself 100 days. Treat difficulty as the test, not the obstacle. Effort is the only variable you fully control — and it's also the variable that compounds. Success isn't reserved for the gifted. It's reserved for the people who refuse to walk away before the work starts paying back.",
+    director: "Corie Dawson",
+    totalTime: "~45 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-36-determination/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-36-determination/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/-3KVhcs3xQ0",
+      },
+      {
+        kind: "podcast",
+        estimate: "10 min listen",
+        url: drivePreview("1HsvCLwpNG-mteLiFDLFNXC9HaZSrDtB9"),
+        durationSeconds: 600,
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s36-q1",
+            type: "multiple-choice",
+            prompt:
+              "What does \"give yourself the gift of time\" actually mean — and what does it protect against?",
+            topic: "Gift of time",
+            options: [
+              "Take regular holidays to avoid burnout",
+              "Commit mentally to staying long enough that any verdict on your performance actually has evidence behind it. Most reps who quit don't quit because they failed — they quit because they judged themselves too early. The gift of time protects against the early-exit decision that almost always turns out to be the wrong call",
+              "Block out three hours per week for skills development",
+              "Allocate downtime between difficult calls",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Most reps who quit don't quit because they failed. They quit because they judged themselves too early — before there was evidence to judge. The gift of time is the discipline of refusing to render the verdict prematurely. Mistaking learning for failure is what produces the early exit, and the early exit is almost always the wrong call.",
+          },
+          {
+            id: "s36-q2",
+            type: "multiple-choice",
+            prompt:
+              "What's the order of confidence, competence, repetition, and experience — and why does it matter?",
+            topic: "Confidence comes last",
+            options: [
+              "Confidence first, then competence — confidence drives the practice that produces results",
+              "All four arrive together once a rep has the right mindset",
+              "Competence first. Then repetition. Then experience. Confidence is the RESULT, not the starting point. Reps who wait for confidence before performing wait forever — confidence doesn't arrive on its own. It accumulates as a byproduct of the other three",
+              "Experience first, then confidence, then repetition, then competence",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The order most reps get wrong. They wait for confidence before performing — and wait forever, because confidence doesn't arrive on its own. The actual order is competence → repetition → experience → confidence, with confidence as the byproduct of the other three. Reps who perform without confidence end up with both. Reps who wait for confidence end up with neither.",
+          },
+          {
+            id: "s36-q3",
+            type: "multiple-choice",
+            prompt:
+              "What does the session say is the variable that actually separates reps who make careers from reps who don't?",
+            topic: "Determination beats smarts",
+            options: [
+              "Intelligence — smarter reps close more deals",
+              "Natural talent — some people are simply built for sales",
+              "Determination — the willingness to keep going after the excitement disappears, to keep showing up when the work becomes repetitive, to continue when progress feels slow. Plenty of intelligent people start sales careers and drift out. Less-obviously-gifted people who refuse to quit make the careers",
+              "Network — reps with strong personal networks always outperform",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The qualifying trait isn't something you either have or don't. It's something you choose, daily, by staying at the desk and running the process. \"I'm not smart enough\" feels humble; it functions as an exit. Refusing to use it as an exit is the move. The qualifying trait is something you opt into.",
+          },
+          {
+            id: "s36-q4",
+            type: "multiple-choice",
+            prompt:
+              "What does the pilot's licence story actually prove — and what makes it relevant to the team?",
+            topic: "Difficulty as test",
+            options: [
+              "Anyone can fly with enough training time and instructor access",
+              "Setting ambitious personal goals each year builds character",
+              "Difficult challenges reveal something important — not what you know, not how talented you are, but how determined you are when things stop being fun. The 8-month stoppage and $60k cost was the perfect quitting opportunity. The licence was earned by refusing to let any single moment be the moment. Same principle applies to the team — difficulty is the test, not the obstacle",
+              "Flight training transfers skills useful in business negotiations",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The story's point isn't \"Corie can fly a plane.\" It's that difficulty reveals the variable. The 8-month stoppage and $60k cost was a perfect quitting moment. He didn't quit. Same principle applies to every difficult stretch in this team's career — the difficult stretches are revealing what kind of rep is in the chair, not whether they should be in the chair.",
+          },
+          {
+            id: "s36-q5",
+            type: "multiple-choice",
+            prompt:
+              "What's the mistake reps make about \"successful people\" — and what's actually going on?",
+            topic: "Successful people stayed longer",
+            options: [
+              "Successful people are simply more disciplined — most reps lack discipline",
+              "Successful people are smarter and more talented — most reps are average and shouldn't compete with them",
+              "Successful people are often not fundamentally different — they just stayed longer, persisted longer, gave themselves more time. Over years, that compounding produces an enormous visible gap that gets misattributed to talent. The implication: the model is available to anyone with the discipline to use it",
+              "Successful people make better decisions — most reps make poor strategic choices",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Reframing the assumption that \"successful people are different\" is one of the most important moves a rep can make. The frame lets them off the hook — they're not to blame for not achieving what other people did. The corrective frame removes the hook: the model is available, the only cost is staying long enough to use it. Anyone can. Most don't. The few who do make the careers.",
+          },
+          {
+            id: "s36-q6",
+            type: "multiple-choice",
+            prompt:
+              "What's the mistake reps make about daily outcomes — and what's the correct framing?",
+            topic: "Refuse both verdicts",
+            options: [
+              "Reps should celebrate every win and grieve every loss — emotions drive performance",
+              "Reps should set strict daily targets and adjust strategy immediately when they're missed",
+              "Same rep, same process, same lines can produce wildly different outcomes day-to-day. That's the noise inherent in the work. The mistake is letting daily outcomes determine identity. One bad day doesn't mean you're bad. One good day doesn't mean you've mastered it. The right move is to refuse both verdicts and keep the identity stable around effort + process + consistency",
+              "Reps should switch tactics whenever results don't match expectations",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Letting daily outcomes determine identity is what produces the spiral. The bad-day verdict produces the early exit. The good-day verdict produces complacency that ends the streak. Refusing both verdicts keeps the identity stable, which keeps the process stable, which keeps the longer-term results stable. The day is just the day. The rep is the constant.",
+          },
+          {
+            id: "s36-q7",
+            type: "multiple-choice",
+            prompt:
+              "What's the coaching contract the boss is operating under — and why is it relief, not pressure?",
+            topic: "Effort first",
+            options: [
+              "Both effort and results are measured equally",
+              "EFFORT is measured first. If effort is there and results aren't, the conversation is about process — what to adjust, how to coach. If effort isn't there, the conversation changes. The only form of underperformance the agency doesn't ride out is someone who has stopped trying. Reps don't need to fake confidence or hide bad results — they need to keep rowing",
+              "Results are measured weekly and bottom performers leave each month",
+              "Only results matter — effort is irrelevant once you're past probation",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The contract is precise and reassuring. Reps having a hard month don't need to fake confidence or hide bad results. The thing being measured isn't where they are — it's how hard they're rowing. The only form of underperformance the agency doesn't ride out is someone who has stopped trying. Effort first. Results follow. Don't fake either.",
+          },
+          {
+            id: "s36-q8",
+            type: "multiple-choice",
+            prompt:
+              "What does the session say culture actually IS — and why does that matter for how reps participate in it?",
+            topic: "Culture compounds",
+            options: [
+              "Culture is the values statement on the wall and the team's quarterly events",
+              "Culture is what people experience daily — what happens on a Wednesday afternoon when something goes wrong, the trust extended without reason, the way one colleague speaks about another out of earshot. It's created through ACTIONS repeated consistently over time, not words. And like everything else in this session, it COMPOUNDS — for better or worse. Reps either contribute deliberately or they don't",
+              "Culture is the responsibility of management; reps focus on results",
+              "Culture is determined by hiring decisions; once the team is set, it doesn't change",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Culture is what happens in moments nobody is performing for — small acts of trust, support, or disrespect that compound over months into a workplace that's either generative or corrosive. Reps either contribute to the generative version or they don't. There's no neutral participation. The reps who contribute deliberately are the ones who change the culture's trajectory.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Sessions 34, 35 — Tuesday 16 June 2026 pair ──────────────────────────
   // Both sales + Lead Gen (LG #27, #28). CS excluded via salesOnly. Same
   // 5-asset shape — no presentation video.
@@ -5808,6 +6328,9 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-33-clean-the-boat", newNumber: "26" },
   { sourceId: "session-34-librarian-pitch", newNumber: "27" },
   { sourceId: "session-35-ground-yourself", newNumber: "28" },
+  { sourceId: "session-36-determination", newNumber: "29" },
+  { sourceId: "session-37-dream-like-a-child", newNumber: "30" },
+  { sourceId: "session-38-not-a-priority", newNumber: "31" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
