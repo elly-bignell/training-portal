@@ -4,68 +4,84 @@ const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
 const BLOCKS = [
   {
-    label: "Landline Cold Calls",
-    time: "9:00–9:45am · 45min",
-    target: "Target: 1 booking",
-    type: "calls",
-    icon: "📞",
-    rows: { start: 1, span: 3 },
+    label: "Morning Team Meeting",
+    time: "9:00–9:15am · 15min",
+    target: null,
+    type: "meeting",
+    icon: "👥",
+    rows: { start: 1, span: 1 },
   },
   {
-    label: "Rebooking Calls",
-    time: "9:45–10:00am · 15min",
+    label: "Send Today's Text & Morning Checklist",
+    time: "9:15–9:30am · 15min",
     target: null,
+    type: "admin",
+    icon: "📝",
+    rows: { start: 2, span: 1 },
+  },
+  {
+    label: "Rebooking & Follow-Up Calls",
+    time: "9:30–10:00am · 30min",
+    target: "Target: 1 booking (Follow-Ups only — rebookings don't count)",
     type: "followup",
     icon: "🔄",
-    rows: { start: 4, span: 1 },
+    rows: { start: 3, span: 2 },
   },
   {
     label: "Cold Calls",
-    time: "10:00am–12:00pm · 2hrs",
-    target: "Target: 2 bookings",
+    time: "10:00–11:30am · 1.5hrs",
+    target: "Target: 1.5 bookings",
     type: "calls",
     icon: "📞",
-    rows: { start: 5, span: 8 },
+    rows: { start: 5, span: 6 },
   },
   {
-    label: "Follow-up Calls",
-    time: "12:00–12:30pm · 30min",
-    target: "Target: 1 booking",
-    type: "followup",
-    icon: "📋",
-    rows: { start: 13, span: 2 },
-  },
-  {
-    label: "Zoom Checkpoint",
-    time: "12:30–1:00pm · 30min",
+    label: "Huddle #1",
+    time: "11:30–11:45am · 15min",
     target: null,
-    type: "zoom",
+    type: "meeting",
     icon: "🎙",
-    rows: { start: 15, span: 2 },
+    rows: { start: 11, span: 1 },
   },
   {
-    label: "Break",
-    time: "1:00–1:30pm · 30min",
+    label: "Cold Calls",
+    time: "11:45am–1:30pm · 1.75hrs",
+    target: "Target: 1.5 bookings",
+    type: "calls",
+    icon: "📞",
+    rows: { start: 12, span: 7 },
+  },
+  {
+    label: "Lunch",
+    time: "1:30–2:30pm · 1hr",
     target: null,
     type: "break",
     icon: null,
-    rows: { start: 17, span: 2 },
-  },
-  {
-    label: "Meeting 1",
-    time: "1:30–2:30pm · 1hr",
-    target: null,
-    type: "meeting",
-    icon: "🤝",
     rows: { start: 19, span: 4 },
   },
   {
+    label: "Huddle #2",
+    time: "2:30–2:45pm · 15min",
+    target: null,
+    type: "meeting",
+    icon: "🎙",
+    rows: { start: 23, span: 1 },
+  },
+  {
     label: "Cold Calls",
-    time: "2:30–5:00pm · 2.5hrs",
-    target: "Target: 2.5 bookings",
+    time: "2:45–4:45pm · 2hrs",
+    target: "Target: 2 bookings",
     type: "calls",
     icon: "📞",
-    rows: { start: 23, span: 10 },
+    rows: { start: 24, span: 8 },
+  },
+  {
+    label: "End of Day Admin",
+    time: "4:45–5:00pm · 15min",
+    target: null,
+    type: "admin",
+    icon: "✅",
+    rows: { start: 32, span: 1 },
   },
 ];
 
@@ -85,16 +101,16 @@ const TIME_LABELS = [
 const TYPE_STYLES: Record<string, string> = {
   calls:    "bg-blue-50 border border-blue-200 text-blue-800",
   followup: "bg-amber-50 border border-amber-200 text-amber-800",
-  zoom:     "bg-purple-50 border border-purple-200 text-purple-700",
   meeting:  "bg-green-50 border border-green-200 text-green-800",
+  admin:    "bg-slate-50 border border-slate-200 text-slate-700",
   break:    "bg-gray-50 border border-gray-100 text-gray-400",
 };
 
 const LEGEND = [
-  { label: "Cold / Landline Calls", color: "bg-blue-100 border border-blue-300" },
+  { label: "Cold Calls", color: "bg-blue-100 border border-blue-300" },
   { label: "Follow-up / Rebooking", color: "bg-amber-100 border border-amber-300" },
-  { label: "Meeting", color: "bg-green-100 border border-green-300" },
-  { label: "Zoom Checkpoint", color: "bg-purple-100 border border-purple-300" },
+  { label: "Meeting / Huddle", color: "bg-green-100 border border-green-300" },
+  { label: "Admin", color: "bg-slate-100 border border-slate-300" },
 ];
 
 export default function SchedulePage() {
@@ -125,16 +141,21 @@ export default function SchedulePage() {
               gridTemplateRows: `repeat(${totalRows}, 38px)`,
             }}
           >
-            {/* Time labels */}
-            {TIME_LABELS.map((t, i) => (
-              <div
-                key={t}
-                className="flex items-start justify-end pr-3 pt-1 text-xs text-gray-400 border-b border-gray-100"
-                style={{ gridRow: i + 1, gridColumn: 1 }}
-              >
-                {t.endsWith(":00am") || t.endsWith(":00pm") || t === "9:00am" ? t : ""}
-              </div>
-            ))}
+            {/* Time labels — every 15-min mark, with the top of each hour bolded */}
+            {TIME_LABELS.map((t, i) => {
+              const isHour = t.endsWith(":00am") || t.endsWith(":00pm");
+              return (
+                <div
+                  key={t}
+                  className={`flex items-start justify-end pr-3 pt-1 text-[11px] border-b border-gray-100 ${
+                    isHour ? "text-gray-600 font-semibold" : "text-gray-400"
+                  }`}
+                  style={{ gridRow: i + 1, gridColumn: 1 }}
+                >
+                  {t}
+                </div>
+              );
+            })}
 
             {/* Day columns background lines */}
             {DAYS.map((_, di) =>
