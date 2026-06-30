@@ -22,16 +22,30 @@ interface WeeklyData {
 // Based on 4 hours calling per day
 // Per hour: 18 calls → 10 connects (55.6%) → 1.5 bookings (15%) → 0.75 attended (50%) → 0.375 deals (50%)
 // Revenue: $350 per deal
+// Universal daily targets — same across every week regardless of trainee
+// time-on-board. Updated 18 Jun 2026: previously the table ramped from
+// week 1 (high calls, lower connects) through to "The Standard" at week 6.
+// New policy: every rep, from day 1, runs against the same daily target.
+const UNIVERSAL_DAILY_STANDARD: DailyActivity = {
+  calls_made: 110,
+  calls: 70,
+  bookings: 7,
+  follow_up_call_scheduled: 0,
+  meetings: 3,
+  units: 1.5,
+  revenue: 525,
+};
+
 export const weeklyStandards: Record<number, DailyActivity> = {
-  0: { calls_made: 0, calls: 0, bookings: 0, follow_up_call_scheduled: 0, meetings: 0, units: 0, revenue: 0 }, // Training
-  1: { calls_made: 125, calls: 70, bookings: 7, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  2: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  3: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  4: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  5: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  6: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 }, // The Standard
-  7: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
-  8: { calls_made: 72, calls: 40, bookings: 6, follow_up_call_scheduled: 0, meetings: 3, units: 1.5, revenue: 525 },
+  0: UNIVERSAL_DAILY_STANDARD,
+  1: UNIVERSAL_DAILY_STANDARD,
+  2: UNIVERSAL_DAILY_STANDARD,
+  3: UNIVERSAL_DAILY_STANDARD,
+  4: UNIVERSAL_DAILY_STANDARD,
+  5: UNIVERSAL_DAILY_STANDARD,
+  6: UNIVERSAL_DAILY_STANDARD,
+  7: UNIVERSAL_DAILY_STANDARD,
+  8: UNIVERSAL_DAILY_STANDARD,
 };
 
 // Lead-gen trainees that participate in the ramp-up flow (badges + week

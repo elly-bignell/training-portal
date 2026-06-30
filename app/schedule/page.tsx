@@ -12,7 +12,7 @@ const BLOCKS = [
     rows: { start: 1, span: 1 },
   },
   {
-    label: "Send Today's Text & Morning Checklist",
+    label: "Morning Checklist + Today's Text",
     time: "9:15–9:30am · 15min",
     target: null,
     type: "admin",
@@ -22,7 +22,7 @@ const BLOCKS = [
   {
     label: "Rebooking & Follow-Up Calls",
     time: "9:30–10:00am · 30min",
-    target: "Target: 1 booking (Follow-Ups only — rebookings don't count)",
+    target: "Target: 1 booking (Follow-Ups only)",
     type: "followup",
     icon: "🔄",
     rows: { start: 3, span: 2 },
@@ -46,7 +46,7 @@ const BLOCKS = [
   {
     label: "Cold Calls",
     time: "11:45am–1:30pm · 1.75hrs",
-    target: "Target: 1.5 bookings",
+    target: "Target: 2 bookings",
     type: "calls",
     icon: "📞",
     rows: { start: 12, span: 7 },
@@ -138,7 +138,7 @@ export default function SchedulePage() {
             className="grid"
             style={{
               gridTemplateColumns: "80px repeat(5, 1fr)",
-              gridTemplateRows: `repeat(${totalRows}, 38px)`,
+              gridTemplateRows: `repeat(${totalRows}, 52px)`,
             }}
           >
             {/* Time labels — every 15-min mark, with the top of each hour bolded */}
