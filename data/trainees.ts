@@ -184,12 +184,6 @@ export const trainees: Trainee[] = [
     startDate: "2026-05-11",
   },
   {
-    id: "daren-ravikumar",
-    name: "Daren Ravikumar",
-    slug: "daren-ravikumar",
-    startDate: "2026-06-08",
-  },
-  {
     id: "jade-bautista",
     name: "Jade Bautista",
     slug: "jade-bautista",
@@ -250,7 +244,6 @@ export const LEAD_GEN_SLUGS: string[] = [
   "shian-roux",
   "riley-kerrison",
   "sydney-arnold",
-  "daren-ravikumar",
   "jade-bautista",
   // Former CS reps moved over on 16 Jun 2026 — same curated lead-gen
   // session list, same MC-only quiz projection.

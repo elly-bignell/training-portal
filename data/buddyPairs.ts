@@ -12,7 +12,6 @@ export const buddyPairs: Record<string, string> = {
 export const reverseBuddyPairs: Record<string, string> = {
   ...Object.fromEntries(Object.entries(buddyPairs).map(([senior, junior]) => [junior, senior])),
   "riley-kerrison": "lucas-tirri",
-  "daren-ravikumar": "lucas-tirri",
   "jade-bautista": "dylan-munro",
 };
 
@@ -25,7 +24,6 @@ export const buddyNames: Record<string, string> = {
   "sydney-arnold": "Sydney",
   "krishna-patel": "Krishna",
   "riley-kerrison": "Riley",
-  "daren-ravikumar": "Daren",
   "jade-bautista": "Jade",
 };
 

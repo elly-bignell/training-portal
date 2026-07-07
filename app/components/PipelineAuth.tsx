@@ -8,6 +8,7 @@ const CREDENTIALS: Record<string, string> = {
   'TRennie0202!':'Thomas Rennie',
   'LTirri0202!': 'Lucas Tirri',
   'FGarcia0202!':'Felipe Garcia',
+  'RKerrison0202!':'Riley Kerrison',
 };
 
 const STORAGE_KEY = 'pipeline_auth_user';

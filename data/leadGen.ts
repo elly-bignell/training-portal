@@ -25,7 +25,6 @@ export const LEAD_GEN_SLUGS = [
   "sydney-arnold",
   "riley-kerrison",
   "shian-roux",
-  "daren-ravikumar",
   "jade-bautista",
 ] as const;
 
