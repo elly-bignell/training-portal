@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import PipelineAuth, { usePipelineAuth } from '../components/PipelineAuth';
 
-const CLOSERS = ['Lucas', 'Dylan', 'Felipe'];
+const CLOSERS = ['Lucas', 'Dylan', 'Felipe', 'Riley'];
 const BOOKERS = ['Cindy', 'Shian', 'Riley', 'Sydney', 'Jade', 'Felipe', 'Dylan', 'Lucas'];
 const VIEWERS = ['Lucas', 'Dylan', 'Felipe', 'Admin'];
 
