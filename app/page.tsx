@@ -430,7 +430,7 @@ function HomeContent() {
             Select Your Dashboard
           </h2>
           {(() => {
-            const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold", "riley-kerrison", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "shahmir-saajad", "shian-roux"];
+            const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold", "riley-kerrison", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "shahmir-saajad", "shian-roux", "peter-vizzari", "holly-best"];
             const CS_SLUGS = ["jeremy-valiente", "dasha-axenova", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith", "kateryna-bakumenko", "dylanna-thach", "trevor-koulenios"];
             const ARCHIVED_SLUGS = ["connie-matthews", "reegan-james", "rachel-astachnowicz", "aston-marsh", "shani-thomas", "krishna-patel", "thomas-rennie", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "shahmir-saajad", "khushi-patel", "kristy-lee-busk", "ella-smith"];
 

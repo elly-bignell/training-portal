@@ -189,6 +189,20 @@ export const trainees: Trainee[] = [
     slug: "jade-bautista",
     startDate: "2026-06-15",
   },
+  {
+    // Placeholder startDate (future) — hides the "Week" badge until they
+    // actually start. Update to their real start date when they begin.
+    id: "peter-vizzari",
+    name: "Peter Vizzari",
+    slug: "peter-vizzari",
+    startDate: "2026-12-31",
+  },
+  {
+    id: "holly-best",
+    name: "Holly Best",
+    slug: "holly-best",
+    startDate: "2026-12-31",
+  },
   // ─── Customer Service team (Sessions area) ───────────────────────────────
   // Logan and Claire were originally Customer Service (saw all sales material
   // with quizzes hidden). On 16 Jun 2026 Elly moved them to the Lead Gen
@@ -245,6 +259,8 @@ export const LEAD_GEN_SLUGS: string[] = [
   "riley-kerrison",
   "sydney-arnold",
   "jade-bautista",
+  "peter-vizzari",
+  "holly-best",
   // Former CS reps moved over on 16 Jun 2026 — same curated lead-gen
   // session list, same MC-only quiz projection.
   "logan-earl",
