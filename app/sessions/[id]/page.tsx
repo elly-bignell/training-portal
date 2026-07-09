@@ -10,7 +10,7 @@ import Link from "next/link";
 import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import AssetCard from "@/components/sessions/AssetCard";
-import { getSessionById } from "@/data/sessions";
+import { getSessionById, customerServiceSessions } from "@/data/sessions";
 import { isCustomerService, usesLeadGenTrack } from "@/data/trainees";
 import {
   assetsViewedCount,
@@ -64,6 +64,13 @@ function SessionDetailInner() {
   // ids anyway) but kept for safety in case a legacy `salesOnly` flag makes
   // it into the LG projection.
   if (isCS && session.salesOnly) return notFound();
+
+  // CS-hidden gate — some LG-track sessions are sales-team plumbing that CS
+  // shouldn't see (e.g. Competition Strategy). CS's projection filters those
+  // out at the data layer; this guard catches manual URL access.
+  if (isCS && !customerServiceSessions.some((s) => s.id === session.id)) {
+    return notFound();
+  }
 
   // Every asset is visible on the LG track — the quiz projection already
   // handles the LG-specific quiz treatment (MC-only) at the data layer.

@@ -15,7 +15,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import SessionCard from "@/components/sessions/SessionCard";
-import { sessions, leadGenSessions } from "@/data/sessions";
+import { sessions, leadGenSessions, customerServiceSessions } from "@/data/sessions";
 import { isCustomerService, usesLeadGenTrack } from "@/data/trainees";
 import {
   assetsViewedCount,
@@ -85,9 +85,10 @@ function SessionsHomeInner() {
   const isCS = isCustomerService(repSlug);
   const onLeadGenTrack = usesLeadGenTrack(repSlug);
   const effectiveSessions: Session[] = useMemo(() => {
+    if (isCS) return customerServiceSessions;
     if (onLeadGenTrack) return leadGenSessions;
     return sessions;
-  }, [onLeadGenTrack]);
+  }, [isCS, onLeadGenTrack]);
 
   // Rank sessions: newest first (latest date wins).
   const ranked = useMemo(

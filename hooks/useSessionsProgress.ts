@@ -18,8 +18,18 @@ import {
   SessionProgress,
   SessionStatus,
 } from "@/types/sessions";
-import { sessions, leadGenSessions, getSessionById } from "@/data/sessions";
-import { trainees, isLeadGen, usesLeadGenTrack } from "@/data/trainees";
+import {
+  sessions,
+  leadGenSessions,
+  customerServiceSessions,
+  getSessionById,
+} from "@/data/sessions";
+import {
+  trainees,
+  isCustomerService,
+  isLeadGen,
+  usesLeadGenTrack,
+} from "@/data/trainees";
 
 const REP_SLUG_KEY = "sessions-rep-slug";
 
@@ -413,7 +423,11 @@ export function useSessionsProgress(slug: string | null) {
     resumeSeconds?: number;
   } | null => {
     if (!hydrated) return null;
-    const pool = usesLeadGenTrack(slug) ? leadGenSessions : sessions;
+    const pool = isCustomerService(slug)
+      ? customerServiceSessions
+      : usesLeadGenTrack(slug)
+      ? leadGenSessions
+      : sessions;
     const candidates = pool
       .map((s) => ({ session: s, prog: data.sessions[s.id] }))
       .filter(

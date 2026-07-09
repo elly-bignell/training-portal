@@ -51,6 +51,73 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Sessions 41 / 42 / 43 — Customer Service training set (9 Jul 2026) ───
+  // Three CS-origin videos delivered as a batch on 9 Jul 2026. All three
+  // teams (Sales, Lead Gen, Customer Service) see them; the origin tag +
+  // grid split means CS reps get them first on their /sessions home page,
+  // while Sales / LG reps see them below the sales-origin content. Intro
+  // asset only — no debrief, toolkit, podcast, presentation or quiz.
+  // Renumbered 34 / 35 / 36 in the LG projection via LEAD_GEN_SESSION_MAP.
+  {
+    id: "session-43-work-on-your-terms",
+    number: "43",
+    date: "2026-07-09",
+    title: "Work on Your Terms. Not the World's.",
+    summary:
+      "Ownership of the frame. The inbox, the phone, other people's urgency will happily dictate your day if you let them — this one is about deciding what your day is for before the day decides for you.",
+    keyTakeaway:
+      "You choose the frame or the frame chooses you. Set the day up on your terms — what you're going to do, when, and how you'll respond when someone else's urgency lands on your desk. Don't be the person the world moves through unresisted.",
+    director: "Corie Dawson",
+    totalTime: "~5 min",
+    origin: "customer-service",
+    assets: [
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/8gKfqdo1Sao",
+      },
+    ],
+  },
+  {
+    id: "session-42-slow-is-smooth",
+    number: "42",
+    date: "2026-07-09",
+    title: "Slow Is Smooth. Smooth is Fast.",
+    summary:
+      "The SEAL Team maxim applied to work. Rushing costs more than it saves — pausing, thinking, doing it right the first time compounds faster than sloppy speed.",
+    keyTakeaway:
+      "Speed you can trust beats speed you can't. Slow down enough to be smooth, and the smooth version turns out to be the fast version. The sloppy rush is what actually costs you the day.",
+    director: "Corie Dawson",
+    totalTime: "~5 min",
+    origin: "customer-service",
+    assets: [
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/ZuoeYQ4JPr0",
+      },
+    ],
+  },
+  {
+    id: "session-41-get-involved-create-value",
+    number: "41",
+    date: "2026-07-09",
+    title: "Get Involved. Create Value.",
+    summary:
+      "Showing up isn't the job. Get involved — participate, notice things, do the thing that wasn't asked. The habits that turn a role from \"what you were hired for\" into value the business can't do without.",
+    keyTakeaway:
+      "The people who create value are the people who get involved. Not \"do more tasks\" — get closer to the work, notice what's actually happening, offer the thing before you're asked. That's the difference between doing the role and being indispensable in it.",
+    director: "Corie Dawson",
+    totalTime: "~5 min",
+    origin: "customer-service",
+    assets: [
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/xnarbY_3zsk",
+      },
+    ],
+  },
   // ─── Session 40 — Deals, Not Dials. (Wed 8 Jul 2026) ───────────────────
   // Sales + Lead Gen (LG #33). No salesOnly (all teams that have access).
   // 4-asset shape — no podcast provided.
@@ -6631,6 +6698,11 @@ export const sessions: Session[] = [
 interface LeadGenMapEntry {
   sourceId: string;
   newNumber: string; // "01"..."07"
+  /** When true, this LG-projected session is hidden from Customer Service
+   *  reps. LG reps still see it. Use for sales-team plumbing (e.g. the
+   *  competition strategy) that's on the LG track for Lead Gen context
+   *  but irrelevant to CS. Applied at the CS projection layer. */
+  csHidden?: boolean;
 }
 
 const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
@@ -6649,7 +6721,7 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-20-hunt-deals", newNumber: "13" },
   { sourceId: "session-21-urgency", newNumber: "14" },
   { sourceId: "session-22-reversible-yes", newNumber: "15" },
-  { sourceId: "session-23-competition-strategy", newNumber: "16" },
+  { sourceId: "session-23-competition-strategy", newNumber: "16", csHidden: true },
   { sourceId: "session-24-follow-up", newNumber: "17" },
   { sourceId: "session-25-how-to-close-form", newNumber: "18" },
   { sourceId: "session-26-close-the-gap", newNumber: "19" },
@@ -6667,6 +6739,9 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-38-not-a-priority", newNumber: "31" },
   { sourceId: "session-39-anchor-high", newNumber: "32" },
   { sourceId: "session-40-deals-not-dials", newNumber: "33" },
+  { sourceId: "session-41-get-involved-create-value", newNumber: "34" },
+  { sourceId: "session-42-slow-is-smooth", newNumber: "35" },
+  { sourceId: "session-43-work-on-your-terms", newNumber: "36" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
@@ -6699,6 +6774,23 @@ export const leadGenSessions: Session[] = LEAD_GEN_SESSION_MAP.map((entry) => {
   if (!source) {
     throw new Error(
       `[leadGenSessions] source session not found: ${entry.sourceId}`
+    );
+  }
+  return projectForLeadGen(source, entry.newNumber);
+});
+
+/** Customer Service projection — same shape as leadGenSessions (curated
+ *  track, MC-only quizzes) but with LG map entries flagged `csHidden`
+ *  filtered out. Use this for CS reps instead of leadGenSessions so
+ *  sales-team-plumbing sessions (e.g. Competition Strategy) don't leak
+ *  into the CS portal. */
+export const customerServiceSessions: Session[] = LEAD_GEN_SESSION_MAP.filter(
+  (entry) => !entry.csHidden
+).map((entry) => {
+  const source = sessions.find((s) => s.id === entry.sourceId);
+  if (!source) {
+    throw new Error(
+      `[customerServiceSessions] source session not found: ${entry.sourceId}`
     );
   }
   return projectForLeadGen(source, entry.newNumber);
