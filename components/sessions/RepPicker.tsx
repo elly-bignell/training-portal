@@ -108,13 +108,50 @@ export default function RepPicker({ onSelected, forceShow = false }: Props) {
   const [error, setError] = useState<string>("");
 
   // Names to show in the second dropdown once a department is picked.
-  // Sorted alphabetically by full name so reps can scan the list quickly.
+  // Default rule: sort alphabetically by first name so reps can scan
+  // the list quickly. Per-department overrides:
+  //   • Sales — Lucas, Dylan, Felipe, Riley are pinned to the top in
+  //     that order (Elly's preferred pecking order — closers first,
+  //     then Riley), then everyone else by first name.
+  //   • Customer Service — Logan Earl sits directly beneath Claire
+  //     Wheaton (they work together and that's how Elly looks for them).
+  // Any pinned slug that isn't in the current department list is
+  // ignored, so the fallbacks are safe.
   const departmentTrainees = useMemo(() => {
     if (!department) return [];
     const slugs = DEPARTMENTS.find((d) => d.value === department)?.slugs ?? [];
-    return trainees
-      .filter((t) => slugs.includes(t.slug))
-      .sort((a, b) => a.name.localeCompare(b.name));
+    const firstName = (fullName: string) => fullName.split(" ")[0] ?? fullName;
+    const filtered = trainees.filter((t) => slugs.includes(t.slug));
+
+    if (department === "sales") {
+      const pinnedOrder = [
+        "lucas-tirri",
+        "dylan-munro",
+        "felipe-garcia",
+        "riley-kerrison",
+      ];
+      const pinned = pinnedOrder
+        .map((s) => filtered.find((t) => t.slug === s))
+        .filter((t): t is (typeof filtered)[number] => Boolean(t));
+      const rest = filtered
+        .filter((t) => !pinnedOrder.includes(t.slug))
+        .sort((a, b) => firstName(a.name).localeCompare(firstName(b.name)));
+      return [...pinned, ...rest];
+    }
+
+    // Customer Service (and any future department) — first-name alpha
+    // with the Claire → Logan override applied at the end.
+    const sorted = [...filtered].sort((a, b) =>
+      firstName(a.name).localeCompare(firstName(b.name))
+    );
+    const claireIdx = sorted.findIndex((t) => t.slug === "claire-wheaton");
+    const loganIdx = sorted.findIndex((t) => t.slug === "logan-earl");
+    if (claireIdx === -1 || loganIdx === -1) return sorted;
+
+    const [logan] = sorted.splice(loganIdx, 1);
+    const claireIdxAfter = sorted.findIndex((t) => t.slug === "claire-wheaton");
+    sorted.splice(claireIdxAfter + 1, 0, logan);
+    return sorted;
   }, [department]);
 
   useEffect(() => {
