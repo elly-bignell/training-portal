@@ -124,6 +124,13 @@ export interface Session {
    *  one-off themed sessions you want to flag without hoisting them out
    *  of the lineup (e.g. "SPIN TO WIN"). */
   cardBanner?: string;
+  /** Which team the session was originally run for. Used to render a
+   *  small coloured pill on the card + detail hero ("SALES TRAINING" in
+   *  blue, "CUSTOMER SERVICE TRAINING" in teal) and to reorder the
+   *  session grid by the viewing rep's own team. Defaults to "sales" at
+   *  the render layer if omitted, since most historical sessions were
+   *  sales-team debriefs. */
+  origin?: "sales" | "customer-service";
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

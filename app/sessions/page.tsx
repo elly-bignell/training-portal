@@ -16,7 +16,7 @@ import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import SessionCard from "@/components/sessions/SessionCard";
 import { sessions, leadGenSessions } from "@/data/sessions";
-import { isCustomerService, isLeadGen } from "@/data/trainees";
+import { isCustomerService, usesLeadGenTrack } from "@/data/trainees";
 import {
   assetsViewedCount,
   getSessionStatus,
@@ -72,29 +72,22 @@ function SessionsHomeInner() {
     router.replace(qs ? `${pathname}?${qs}` : pathname);
   };
 
-  // Three teams, three projections:
-  //   • Sales       — every session, every asset (including quizzes)
-  //   • Customer Service — every session except salesOnly, quiz asset removed
-  //   • Lead Gen    — only the 7-session curated series (leadGenSessions),
-  //                   quizzes filtered to multiple-choice only (done at
-  //                   data layer in projectForLeadGen)
+  // Two projections (as of 9 Jul 2026):
+  //   • Sales — every session, every asset (including quizzes)
+  //   • Lead Gen + Customer Service — the curated Lead Gen series
+  //     (leadGenSessions), quizzes filtered to multiple-choice only
+  //     (done at data layer in projectForLeadGen)
+  // CS previously had its own "all sessions, quiz hidden" view; that was
+  // retired 9 Jul 2026 in favour of piping CS through the same LG track.
   // We project each Session into an "effective" version once and use that
-  // everywhere downstream — same id, same metadata, just trimmed assets.
-  // That way the dots, counts, denominators and status calcs all line up.
+  // everywhere downstream — same id, same metadata. That way the dots,
+  // counts, denominators and status calcs all line up.
   const isCS = isCustomerService(repSlug);
-  const isLG = isLeadGen(repSlug);
+  const onLeadGenTrack = usesLeadGenTrack(repSlug);
   const effectiveSessions: Session[] = useMemo(() => {
-    if (isLG) return leadGenSessions;
-    if (isCS) {
-      return sessions
-        .filter((s) => !s.salesOnly)
-        .map((s) => ({
-          ...s,
-          assets: s.assets.filter((a) => a.kind !== "quiz"),
-        }));
-    }
+    if (onLeadGenTrack) return leadGenSessions;
     return sessions;
-  }, [isCS, isLG]);
+  }, [onLeadGenTrack]);
 
   // Rank sessions: newest first (latest date wins).
   const ranked = useMemo(
@@ -127,12 +120,33 @@ function SessionsHomeInner() {
           return getSessionStatus(s, data.sessions[s.id]) === filter;
         }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ranked, filter, data, isCS]
+    [ranked, filter, data, onLeadGenTrack]
   );
 
+  // Split the visible list by session origin so each team sees their own
+  // team's material first. CS reps see CS-origin sessions up top, sales
+  // reps and LG reps see sales-origin up top. Sessions without an origin
+  // field default to "sales" for the grouping — most historical debriefs
+  // were run for the sales team.
+  const primarySessions = useMemo(() => {
+    if (isCS) return visibleSessions.filter((s) => s.origin === "customer-service");
+    return visibleSessions.filter((s) => (s.origin ?? "sales") === "sales");
+  }, [visibleSessions, isCS]);
+  const secondarySessions = useMemo(() => {
+    if (isCS) return visibleSessions.filter((s) => (s.origin ?? "sales") === "sales");
+    return visibleSessions.filter((s) => s.origin === "customer-service");
+  }, [visibleSessions, isCS]);
+  const primaryHeading = isCS
+    ? "Customer Service training"
+    : "Sales training";
+  const secondaryHeading = isCS
+    ? "Sales training"
+    : "Customer Service training";
+
   // Portal-wide progress: viewed assets / total assets across every
-  // (effective) session. For CS reps the quiz doesn't count toward either
-  // numerator or denominator since they don't see it.
+  // (effective) session. Lead Gen / Customer Service reps run against the
+  // curated LG track — the quiz asset is included in both the numerator
+  // and denominator since they now take the MC-only quizzes.
   const totalAssets = effectiveSessions.reduce(
     (sum, s) => sum + s.assets.length,
     0
@@ -292,13 +306,50 @@ function SessionsHomeInner() {
           })}
         </div>
 
-        {/* Card grid */}
+        {/* Card grid — split by team-of-origin. The viewer's own team
+            appears first, the other team below under a secondary heading.
+            When one of the groups is empty (e.g. no CS content yet) we
+            just render the single group without a heading so it doesn't
+            look like a broken empty section. */}
         {visibleSessions.length === 0 ? (
           <div className="text-center text-slate-500 py-16 bg-white rounded-2xl border border-slate-200">
             <p className="font-medium text-slate-700">Nothing here yet.</p>
             <p className="text-sm mt-1">
               Try a different filter, or wait for the next session to drop.
             </p>
+          </div>
+        ) : primarySessions.length > 0 && secondarySessions.length > 0 ? (
+          <div className="space-y-10">
+            <section>
+              <h2 className="text-sm font-bold tracking-wider text-slate-500 uppercase mb-4">
+                {primaryHeading}
+              </h2>
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {primarySessions.map((s) => (
+                  <SessionCard
+                    key={s.id}
+                    session={s}
+                    progress={data.sessions[s.id]}
+                    status={getSessionStatus(s, data.sessions[s.id])}
+                  />
+                ))}
+              </div>
+            </section>
+            <section>
+              <h2 className="text-sm font-bold tracking-wider text-slate-500 uppercase mb-4">
+                {secondaryHeading}
+              </h2>
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {secondarySessions.map((s) => (
+                  <SessionCard
+                    key={s.id}
+                    session={s}
+                    progress={data.sessions[s.id]}
+                    status={getSessionStatus(s, data.sessions[s.id])}
+                  />
+                ))}
+              </div>
+            </section>
           </div>
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

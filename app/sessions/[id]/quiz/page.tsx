@@ -21,7 +21,7 @@ import Link from "next/link";
 import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import { getSessionById, getQuiz } from "@/data/sessions";
-import { isCustomerService, isLeadGen } from "@/data/trainees";
+import { usesLeadGenTrack } from "@/data/trainees";
 import { useSessionsProgress } from "@/hooks/useSessionsProgress";
 import {
   MultipleChoiceQuestion,
@@ -112,35 +112,11 @@ function QuizInner() {
     );
   }
 
-  // salesOnly sessions are gated for the sales team. A CS rep wouldn't
-  // see this URL in their UI but if they manually navigate to one, bounce
-  // them back to /sessions rather than letting them through the quiz.
-  if (isCustomerService(repSlug) && session.salesOnly) {
-    return (
-      <main className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
-        <div className="text-center max-w-md">
-          <p className="text-slate-800 font-semibold mb-2">
-            Not in your portal.
-          </p>
-          <p className="text-slate-600 text-sm mb-4">
-            This session is only available to the sales team.
-          </p>
-          <Link
-            href="/sessions"
-            className="inline-block px-5 py-2.5 text-sm font-bold bg-[#1F3A5F] text-white rounded-lg hover:bg-[#172d4a] transition-colors"
-          >
-            ← Back to your sessions
-          </Link>
-        </div>
-      </main>
-    );
-  }
-
-  // Lead Gen reps live in their own id space (lg-session-*). If they hit a
-  // sales session id by manual URL, send them back to the LG home so the
-  // original numbering never leaks. Sales/CS reps can't reach lg-session-*
-  // ids because they're never linked from those teams' UI.
-  if (isLeadGen(repSlug) && !session.id.startsWith("lg-session-")) {
+  // Lead Gen + Customer Service reps live on the curated LG track and can
+  // only reach lg-session-* ids. If they hit a sales session id by manual
+  // URL, bounce them back to the LG home so the original numbering never
+  // leaks into their experience.
+  if (usesLeadGenTrack(repSlug) && !session.id.startsWith("lg-session-")) {
     return (
       <main className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
         <div className="text-center max-w-md">
@@ -155,31 +131,6 @@ function QuizInner() {
             className="inline-block px-5 py-2.5 text-sm font-bold bg-[#1F3A5F] text-white rounded-lg hover:bg-[#172d4a] transition-colors"
           >
             ← Back to your sessions
-          </Link>
-        </div>
-      </main>
-    );
-  }
-
-  // Customer Service team doesn't take quizzes. If one of them lands here
-  // via a stale link, send them back to the session detail page rather
-  // than letting them through.
-  if (isCustomerService(repSlug)) {
-    return (
-      <main className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
-        <div className="text-center max-w-md">
-          <p className="text-slate-800 font-semibold mb-2">
-            No quiz for this team.
-          </p>
-          <p className="text-slate-600 text-sm mb-4">
-            Quizzes are part of the sales rep workflow — they&apos;re not
-            included in the customer service portal at this stage.
-          </p>
-          <Link
-            href={`/sessions/${session.id}`}
-            className="inline-block px-5 py-2.5 text-sm font-bold bg-[#1F3A5F] text-white rounded-lg hover:bg-[#172d4a] transition-colors"
-          >
-            ← Back to the session
           </Link>
         </div>
       </main>

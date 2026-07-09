@@ -11,7 +11,7 @@ import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import AssetCard from "@/components/sessions/AssetCard";
 import { getSessionById } from "@/data/sessions";
-import { isCustomerService, isLeadGen } from "@/data/trainees";
+import { isCustomerService, usesLeadGenTrack } from "@/data/trainees";
 import {
   assetsViewedCount,
   bestQuizScore,
@@ -53,27 +53,21 @@ function SessionDetailInner() {
     );
   }
 
-  // Lead Gen reps can ONLY view lg-session-* ids. If they land on a
-  // sales-only session id (manual URL, stale bookmark, etc.) we 404 so the
-  // original numbering never leaks into their experience.
-  const isLG = isLeadGen(repSlug);
-  if (isLG && !session.id.startsWith("lg-session-")) return notFound();
-
-  // Customer Service team sees every asset EXCEPT the quiz. Filter once
-  // here and pass the trimmed list to every downstream component so the
-  // counts, dots, learning-path strip and cards all stay in sync.
-  // Lead Gen sees quizzes (multiple-choice only — already filtered at the
-  // data layer when projecting the session).
+  // Lead Gen + Customer Service reps live on the curated LG track and can
+  // ONLY view lg-session-* ids. If they land on a sales session id (manual
+  // URL, stale bookmark, etc.) we 404 so the original numbering never leaks.
   const isCS = isCustomerService(repSlug);
+  const onLeadGenTrack = usesLeadGenTrack(repSlug);
+  if (onLeadGenTrack && !session.id.startsWith("lg-session-")) return notFound();
 
-  // salesOnly sessions are gated for the sales team. If a CS rep types a
-  // direct URL to one, 404 so they don't get a sneak preview of material
-  // that hasn't been cleared for their team.
+  // salesOnly gate is redundant for CS now (CS only reaches lg-session-*
+  // ids anyway) but kept for safety in case a legacy `salesOnly` flag makes
+  // it into the LG projection.
   if (isCS && session.salesOnly) return notFound();
 
-  const visibleAssets = isCS
-    ? session.assets.filter((a) => a.kind !== "quiz")
-    : session.assets;
+  // Every asset is visible on the LG track — the quiz projection already
+  // handles the LG-specific quiz treatment (MC-only) at the data layer.
+  const visibleAssets = session.assets;
 
   const progress = data.sessions[session.id];
   const status = getSessionStatus(session, progress);
@@ -183,8 +177,24 @@ function SessionDetailInner() {
 
         {/* Hero */}
         <div className="mb-8">
+          {(() => {
+            const origin = session.origin ?? "sales";
+            const label =
+              origin === "customer-service"
+                ? "CUSTOMER SERVICE TRAINING"
+                : "SALES TRAINING";
+            const bg = origin === "customer-service" ? "#0F8A8A" : "#1F3A5F";
+            return (
+              <div
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-bold tracking-wider mb-3 text-white"
+                style={{ backgroundColor: bg }}
+              >
+                {label}
+              </div>
+            );
+          })()}
           {session.cardBanner && (
-            <div className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#D49A30] text-[#1F3A5F] rounded text-[11px] font-bold tracking-wider mb-3">
+            <div className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#D49A30] text-[#1F3A5F] rounded text-[11px] font-bold tracking-wider mb-3 ml-2">
               ★ {session.cardBanner}
             </div>
           )}
@@ -301,21 +311,17 @@ function SessionDetailInner() {
                   </span>{" "}
                   button to record that you&apos;ve completed it.
                 </li>
-                {!isCS && (
-                  <li>
-                    Take the quiz whenever you&apos;re ready — no need to mark
-                    every asset viewed first. You need{" "}
-                    <span className="font-semibold">{passMark}%</span> on the
-                    multiple-choice questions to pass. Unlimited retries.
-                  </li>
-                )}
-                {!isCS && (
-                  <li>
-                    If you don&apos;t get 100%, you&apos;ll need to re-sit.
-                    We won&apos;t tell you which questions you got wrong, so
-                    go back through the assets above before trying again.
-                  </li>
-                )}
+                <li>
+                  Take the quiz whenever you&apos;re ready — no need to mark
+                  every asset viewed first. You need{" "}
+                  <span className="font-semibold">{passMark}%</span> on the
+                  multiple-choice questions to pass. Unlimited retries.
+                </li>
+                <li>
+                  If you don&apos;t get 100%, you&apos;ll need to re-sit.
+                  We won&apos;t tell you which questions you got wrong, so
+                  go back through the assets above before trying again.
+                </li>
               </ol>
               <p className="text-xs text-slate-500 mt-3 italic">
                 Your progress is saved automatically and recorded for the trainers.

@@ -309,3 +309,12 @@ export function isLeadGen(slug: string | null | undefined): boolean {
   if (!slug) return false;
   return LEAD_GEN_SLUGS.includes(slug);
 }
+
+/** True if this rep should see the curated Lead Gen session track. Applies
+ *  to both Lead Gen reps and Customer Service reps — CS was folded into the
+ *  same viewing model on 9 Jul 2026 so CS sees exactly what LG sees
+ *  (curated session list, MC-only quizzes). Use this helper in session-
+ *  viewing code paths in preference to `isLeadGen` alone. */
+export function usesLeadGenTrack(slug: string | null | undefined): boolean {
+  return isLeadGen(slug) || isCustomerService(slug);
+}

@@ -19,7 +19,7 @@ import {
   SessionStatus,
 } from "@/types/sessions";
 import { sessions, leadGenSessions, getSessionById } from "@/data/sessions";
-import { trainees, isLeadGen } from "@/data/trainees";
+import { trainees, isLeadGen, usesLeadGenTrack } from "@/data/trainees";
 
 const REP_SLUG_KEY = "sessions-rep-slug";
 
@@ -403,16 +403,17 @@ export function useSessionsProgress(slug: string | null) {
   );
 
   // Derived view: which session, if any, the rep should be nudged to resume.
-  // Iterates the rep's effective session list — Lead Gen reps live in their
-  // own id space (lg-session-*), so we point the iteration at leadGenSessions
-  // for them; everyone else uses the canonical sessions array.
+  // Iterates the rep's effective session list — Lead Gen + Customer Service
+  // reps live in the curated LG id space (lg-session-*), so we point the
+  // iteration at leadGenSessions for them; sales reps use the canonical
+  // sessions array.
   const continueWhereLeftOff = useCallback((): {
     session: Session;
     asset: AssetKind;
     resumeSeconds?: number;
   } | null => {
     if (!hydrated) return null;
-    const pool = isLeadGen(slug) ? leadGenSessions : sessions;
+    const pool = usesLeadGenTrack(slug) ? leadGenSessions : sessions;
     const candidates = pool
       .map((s) => ({ session: s, prog: data.sessions[s.id] }))
       .filter(

@@ -73,10 +73,31 @@ export default function SessionCard({ session, progress, status }: Props) {
         {pill.label}
       </span>
 
+      {/* Origin tag — tiny coloured pill flagging which team the session
+          was originally run for. Sales runs default (blue); Customer
+          Service runs get the teal treatment. Missing origin field is
+          treated as "sales" to cover legacy records. */}
+      {(() => {
+        const origin = session.origin ?? "sales";
+        const label =
+          origin === "customer-service"
+            ? "CUSTOMER SERVICE TRAINING"
+            : "SALES TRAINING";
+        const bg = origin === "customer-service" ? "#0F8A8A" : "#1F3A5F";
+        return (
+          <div
+            className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold tracking-wider mb-2 text-white"
+            style={{ backgroundColor: bg }}
+          >
+            {label}
+          </div>
+        );
+      })()}
+
       {/* Optional gold "card banner" pill — for sessions we want to flag
           in the grid without hoisting them out as featured (e.g. SPIN TO WIN). */}
       {session.cardBanner && (
-        <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#D49A30] text-[#1F3A5F] rounded text-[10px] font-bold tracking-wider mb-2">
+        <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#D49A30] text-[#1F3A5F] rounded text-[10px] font-bold tracking-wider mb-2 ml-2">
           ★ {session.cardBanner}
         </div>
       )}
