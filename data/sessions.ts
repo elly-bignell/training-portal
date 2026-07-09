@@ -146,7 +146,7 @@ export const sessions: Session[] = [
       {
         kind: "intro",
         estimate: "~5 min watch",
-        url: "https://youtu.be/f-IHsVzuugI",
+        url: "https://youtu.be/58Bwfpud6p0",
       },
       {
         kind: "quiz",
