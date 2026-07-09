@@ -9,16 +9,37 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
-import { trainees, SESSIONS_ALLOWED_SLUGS } from "@/data/trainees";
+import { useEffect, useMemo, useState } from "react";
+import {
+  trainees,
+  SESSIONS_ALLOWED_SLUGS,
+  SALES_TEAM_SLUGS,
+  LEAD_GEN_SLUGS,
+  CUSTOMER_SERVICE_SLUGS,
+} from "@/data/trainees";
 import {
   getSelectedRepSlug,
   setSelectedRepSlug,
 } from "@/hooks/useSessionsProgress";
 
-// SESSIONS_ALLOWED_SLUGS now lives in data/trainees.ts and combines the
-// sales team and customer service team. Anyone whose slug isn't in either
-// list won't see themselves in the dropdown and can't proceed.
+// Department options for the top-level dropdown. Each department maps to
+// the slug list that filters the name dropdown. Reps first pick their
+// department, then their name — this keeps the name list short and
+// scannable as the team grows (particularly Customer Service).
+type Department = "sales" | "lead-gen" | "customer-service";
+
+const DEPARTMENTS: { value: Department; label: string; slugs: string[] }[] = [
+  { value: "sales",            label: "Sales",             slugs: SALES_TEAM_SLUGS },
+  { value: "lead-gen",         label: "Lead Gen",          slugs: LEAD_GEN_SLUGS },
+  { value: "customer-service", label: "Customer Service",  slugs: CUSTOMER_SERVICE_SLUGS },
+];
+
+function departmentForSlug(slug: string): Department | null {
+  if (SALES_TEAM_SLUGS.includes(slug)) return "sales";
+  if (LEAD_GEN_SLUGS.includes(slug)) return "lead-gen";
+  if (CUSTOMER_SERVICE_SLUGS.includes(slug)) return "customer-service";
+  return null;
+}
 
 // Per-rep auth lives in localStorage so a rep doesn't re-enter the password
 // on every page hop within their browser. Expires after 12 hours so an
@@ -65,12 +86,23 @@ interface Props {
 }
 
 export default function RepPicker({ onSelected, forceShow = false }: Props) {
+  const [department, setDepartment] = useState<Department | "">("");
   const [pendingSlug, setPendingSlug] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [hydrated, setHydrated] = useState(false);
   const [shouldShow, setShouldShow] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string>("");
+
+  // Names to show in the second dropdown once a department is picked.
+  // Sorted alphabetically by full name so reps can scan the list quickly.
+  const departmentTrainees = useMemo(() => {
+    if (!department) return [];
+    const slugs = DEPARTMENTS.find((d) => d.value === department)?.slugs ?? [];
+    return trainees
+      .filter((t) => slugs.includes(t.slug))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [department]);
 
   useEffect(() => {
     if (forceShow) {
@@ -91,6 +123,15 @@ export default function RepPicker({ onSelected, forceShow = false }: Props) {
       if (t) {
         onSelected(t.slug, t.name);
         setShouldShow(false);
+      }
+    }
+    // If a rep-slug is remembered but not authed (e.g. TTL expired), pre-fill
+    // the dropdowns so they only need to re-enter their password.
+    if (repPickerSlug) {
+      const dept = departmentForSlug(repPickerSlug);
+      if (dept) {
+        setDepartment(dept);
+        setPendingSlug(repPickerSlug);
       }
     }
     setHydrated(true);
@@ -161,10 +202,32 @@ export default function RepPicker({ onSelected, forceShow = false }: Props) {
           </div>
           <h1 className="text-xl font-bold text-slate-900">Who are you?</h1>
           <p className="text-slate-500 text-sm mt-1">
-            Pick your name and enter your password. Each rep&apos;s password
-            only works for their own profile — no copying off your teammates.
+            Pick your department, then your name, then enter your password.
+            Each rep&apos;s password only works for their own profile — no
+            copying off your teammates.
           </p>
         </div>
+        <label className="block text-sm font-medium text-slate-700 mb-2">
+          Department
+        </label>
+        <select
+          value={department}
+          onChange={(e) => {
+            const next = e.target.value as Department | "";
+            setDepartment(next);
+            setPendingSlug("");
+            setError("");
+          }}
+          disabled={submitting}
+          className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#1F3A5F] focus:border-[#1F3A5F] outline-none mb-4"
+        >
+          <option value="">— Select your department —</option>
+          {DEPARTMENTS.map((d) => (
+            <option key={d.value} value={d.value}>
+              {d.label}
+            </option>
+          ))}
+        </select>
         <label className="block text-sm font-medium text-slate-700 mb-2">
           Your name
         </label>
@@ -174,17 +237,19 @@ export default function RepPicker({ onSelected, forceShow = false }: Props) {
             setPendingSlug(e.target.value);
             setError("");
           }}
-          disabled={submitting}
-          className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#1F3A5F] focus:border-[#1F3A5F] outline-none mb-4"
+          disabled={submitting || !department}
+          className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#1F3A5F] focus:border-[#1F3A5F] outline-none mb-4 disabled:bg-slate-50 disabled:text-slate-400"
         >
-          <option value="">— Select your name —</option>
-          {trainees
-            .filter((t) => SESSIONS_ALLOWED_SLUGS.includes(t.slug))
-            .map((t) => (
-              <option key={t.slug} value={t.slug}>
-                {t.name}
-              </option>
-            ))}
+          <option value="">
+            {department
+              ? "— Select your name —"
+              : "— Pick a department first —"}
+          </option>
+          {departmentTrainees.map((t) => (
+            <option key={t.slug} value={t.slug}>
+              {t.name}
+            </option>
+          ))}
         </select>
         <label className="block text-sm font-medium text-slate-700 mb-2">
           Your password

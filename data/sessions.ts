@@ -51,6 +51,340 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Session 40 — Deals, Not Dials. (Wed 8 Jul 2026) ───────────────────
+  // Sales + Lead Gen (LG #33). No salesOnly (all teams that have access).
+  // 4-asset shape — no podcast provided.
+  {
+    id: "session-40-deals-not-dials",
+    number: "40",
+    date: "2026-07-08",
+    title: "Deals, Not Dials.",
+    summary:
+      "A reframe of what reps should actually be measuring. Two deals a day is the measurement — the 70 calls is guidance. The falcon-overhead meta-awareness model, productive-vs-unproductive daily classification, stacking as the compounding mechanism, and the longer-horizon reframe: what do you want to own by 60?",
+    keyTakeaway:
+      "Two deals a day is the measurement. Everything upstream — the calls, the tone, the falcon overhead — is in service of getting to two. Don't grind harder on the wrong metric. Start at the end. Stack every day. Blind faith in the destination + Wolverine execution on the daily habits = the career you're actually here to build.",
+    director: "Corie Dawson",
+    totalTime: "~35 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-40-deals-not-dials/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-40-deals-not-dials/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/f-IHsVzuugI",
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s40-q1",
+            type: "multiple-choice",
+            prompt:
+              "Which is the actual measurement of the day — and which is the guidance?",
+            topic: "Deals, not dials",
+            options: [
+              "The 70 calls is the measurement. Two deals is a downstream outcome the rep can't fully control",
+              "Both are equally important — reps should hit BOTH or the day doesn't count",
+              "TWO DEALS is the measurement. The 70 calls is a guide — a rough check on whether you tried hard enough. A rep who hits 20 calls and gets 3 deals had a spectacular day. A rep who hits 70 calls and gets 0 deals had a bad day, even though the scoreboard says otherwise",
+              "Neither — reps should measure themselves on meeting bookings only",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The whole session turns on this reframe. Reps who obsess over the 70 pad calls, tighten their tone, degrade their listening, and hit the number with nothing to show for it. Reps who focus on two deals slow down when they need to, listen properly, and close. The scoreboard says the first rep worked harder. The bank account says the second rep won.",
+          },
+          {
+            id: "s40-q2",
+            type: "multiple-choice",
+            prompt:
+              "What is \"commission breath\" in the context of over-dialling — and what causes it?",
+            topic: "Commission breath",
+            options: [
+              "Verbal filler that reps use when they're nervous — comes from lack of confidence",
+              "The desperation the buyer hears in a rep's voice when the rep is chasing their call count. Feeling behind on 70 → dialling faster, staying on the line shorter, treating each call as a box to tick. Buyer senses the rush, pulls back. Rep speeds up further to compensate. The call is now controlled by the rep's anxiety about their own metric, not by the actual conversation",
+              "Bad breath caused by too much coffee during long shifts",
+              "A regulatory term for aggressive selling that requires a cooling-off period",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Commission breath was named in earlier sessions in a different form — the desperation buyers hear when the rep needs the deal today. Here it's caused by chasing a call metric rather than commission specifically. The mechanism is the same: rep anxiety leaks into the call, buyer feels it, buyer pulls back. The corrective is counterintuitive: sometimes fewer calls close more deals.",
+          },
+          {
+            id: "s40-q3",
+            type: "multiple-choice",
+            prompt:
+              "What should a rep do when they're stuck mid-day and the calls are going nowhere?",
+            topic: "Circuit-breaker",
+            options: [
+              "Grind through — the streak eventually breaks if they push hard enough",
+              "Physically leave the desk for 10 minutes. Walk. Water. Reset. Come back different. The mind is looping and the loop tightens with every additional call — a physical circuit-breaker is what interrupts it. \"Punch a tree\" (metaphorically). The rep who came back after 10 minutes is functionally a different rep. The rep who stayed and grinded is the same rep, just more tired",
+              "Switch to email prospecting until the phone streak improves",
+              "Ask a colleague to take over their leads for the rest of the day",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The mind is looping. Additional calls tighten the loop. The only way out is a physical circuit-breaker. Ten minutes away from the desk resets the falcon. The rep who returns is functionally different from the rep who left. Reps who grind through bad stretches produce more bad calls; reps who take the break produce a better next call.",
+          },
+          {
+            id: "s40-q4",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"call scorecard\" — and what's the right way to observe teammates while using it?",
+            topic: "Call scorecard",
+            options: [
+              "A management KPI dashboard reviewed weekly by team leads",
+              "A grading tool with the attributes that make a great call (confidence, product knowledge, certainty, tonality, humour, pacing, listening). Observation should be casual — sidle in, be in the room, overhear. Don't stand behind the rep with a clipboard — that puts them off and changes their behaviour. Feedback later, when they're not in performance mode. Patterns emerge over 1-2 weeks",
+              "A self-scored quiz reps fill in after every call",
+              "An AI-generated call quality report",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The tool is simple. The delivery matters. Standing behind a rep with a clipboard changes their behaviour and defeats the point. Sidle in. Overhear. Grade quietly. Debrief later. Over 1-2 weeks, patterns emerge. Most reps don't see their own patterns — someone else has to see them. Every rep has one, winning or losing.",
+          },
+          {
+            id: "s40-q5",
+            type: "multiple-choice",
+            prompt:
+              "What is \"the falcon\" — and what specifically does it do during a call?",
+            topic: "The falcon",
+            options: [
+              "A CRM automation that flags at-risk deals",
+              "A slang term for a top-performing rep on the team",
+              "A mental model for meta-awareness. Picture a falcon perched on your shoulder — during any call it lifts off, hovers 10 metres above the room, and watches the rep AND the buyer AND the dynamic between them all at once. It reports back in real time: \"you're going too fast,\" \"buyer disengaging,\" \"you've got them, close now.\" Reps who never send the falcon up are trapped inside the call. Reps who deploy it consistently get real-time feedback on how the call is actually landing",
+              "A relaxation exercise done before difficult calls",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The falcon is the central meta-awareness model of the session. Reps trapped inside their own call can hear their voice and the buyer's response but miss the dynamic between them. The falcon overhead sees the whole dynamic and reports back. Consistent falcon use produces close-rate lifts reps can't attribute to any specific script change — because the change is in the meta-awareness, not in the words.",
+          },
+          {
+            id: "s40-q6",
+            type: "multiple-choice",
+            prompt:
+              "What's the difference between the \"good day / bad day\" classification and the \"productive / unproductive\" one — and why does it matter?",
+            topic: "Productive vs unproductive",
+            options: [
+              "\"Good/bad\" is more accurate; \"productive/unproductive\" is a euphemism",
+              "\"Good/bad\" is a mood judgement — depends on how you happen to feel at 6pm. \"Productive/unproductive\" is binary and objective: did I move something forward, yes or no. Crucially, productive doesn't require a deal — a day where the rep learned something, identified a specific weakness, or had two conversations that will convert next week is productive. Reps who classify this way have more resilient careers",
+              "\"Good/bad\" tracks results; \"productive/unproductive\" tracks effort",
+              "\"Good/bad\" is for reps; \"productive/unproductive\" is for managers",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The reclassification is more useful than it sounds. Reps who ask \"did I have a good day?\" get a mood-dependent answer. Reps who ask \"did I move something forward?\" get an objective one. Productive days don't require deals — they require forward motion. Stringing together productive days is how careers compound even when the deal outcomes are slow to land.",
+          },
+          {
+            id: "s40-q7",
+            type: "multiple-choice",
+            prompt:
+              "What is \"stacking\" — and how does it explain the difference between an average and a great career?",
+            topic: "Stacking",
+            options: [
+              "Layering multiple discounts to close difficult deals",
+              "Prioritising the highest-value prospects at the top of each day",
+              "Every productive day, the rep adds one small thing to their kit — a new objection response, a new tonal move, a new pattern noticed. None transforms the rep on its own. Two thousand of them, accumulated over years, produce a rep who looks completely different from where they started. Stacking is invisible day to day and obvious at the two-year mark. Termites. Nibble every day. Eventually the house comes down",
+              "Batching similar prospect calls together for efficiency",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Termites, nibbling. The reps who stack are the reps who compound. The reps who treat each day as its own isolated event — without capturing what worked or what didn't — run in place for a decade and wonder why the more junior rep next to them just overtook them. Stacking is the entire difference between average and great.",
+          },
+          {
+            id: "s40-q8",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"start at the end\" question — and why is \"what do I want to own?\" the operational version of it?",
+            topic: "Start at the end",
+            options: [
+              "Reps should visualise their final call each day before making it",
+              "Fuzzy goals produce fuzzy work. Words like \"a career\" or \"success\" mean nothing operational. \"Own\" is concrete — what car, what house, what lifestyle, what options. Naming what you want to own tells you how much money you need to earn, over what timeline, to arrive at the life you said you wanted. The daily calls stop being the measurement — they become instruments in service of the end-state. Vision board specifics, not slogans",
+              "Reps should focus on ownership of client accounts, not deals",
+              "Ownership of the sales process is what separates senior from junior reps",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "\"Career\" doesn't tell you what to do tomorrow. \"Own the house at Point Turton, the boat, the private island, three kids growing up around dinner\" tells you exactly what you need to earn, over what timeline, doing what work. The specificity is the point. Vague dreams produce vague work. Specific dreams produce specific work — and the specific work is what actually gets you there.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─── Session 39 — Anchor High. Assume Abundance. (Mon 22 Jun 2026) ──────
+  // Sales + Lead Gen (LG #32). No salesOnly (all teams that have access).
+  // 4-asset shape — no podcast provided.
+  {
+    id: "session-39-anchor-high",
+    number: "39",
+    date: "2026-06-22",
+    title: "Anchor High. Assume Abundance.",
+    summary:
+      "What to do when a buyer asks for a price in the first two minutes of the call. The anchor-high move, the Platinum Ranger principle, the three-number range, the \"I don't think it's necessary\" nudger, the abundance mindset that protects the rep from pre-judging the wallet, and the deeper mental model that the pricing battle is fought between the rep's ears before it's fought on the call.",
+    keyTakeaway:
+      "Anchor high. Walk down with \"I don't think it's necessary.\" Assume the buyer has loads of money and a real problem. Don't pre-judge the wallet. Match their energy. Judge by what they do, not what they say. Same performance, every audience. The pricing battle is fought between your ears before it's fought on the call — win it there first.",
+    director: "Corie Dawson",
+    totalTime: "~35 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-39-anchor-high/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-39-anchor-high/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~5 min watch",
+        url: "https://youtu.be/lEcRjSfgInI",
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s39-q1",
+            type: "multiple-choice",
+            prompt:
+              "When a buyer asks \"how much is it?\" in the first two minutes of a cold call, what does the session say the question actually signals?",
+            topic: "Price question = buying signal",
+            options: [
+              "A refusal — they're trying to disqualify the call before it goes further",
+              "Confusion — they don't understand the product and want to start with the price tag",
+              "A buying signal — the buyer is asking themselves whether they can afford to keep talking. The rep who answers cleanly turns the signal into a deal. The rep who hedges loses the call. Welcome the question — don't be scared of it",
+              "Impatience — the rep should wrap up quickly and email a quote",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The reframe that unlocks the whole session. The buyer asking for price isn't trying to disqualify the call — they're testing whether the conversation is worth continuing. That's a buying signal. Reps who hedge or refuse to give a number telegraph evasion, which makes the buyer suspicious. The rep who gives a clean range welcomes the question and earns the next ten minutes of the call.",
+          },
+          {
+            id: "s39-q2",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"three-number range\" the rep should deliver — and in what order?",
+            topic: "Three-number range",
+            options: [
+              "Likely → Floor → Ceiling — start with the most relevant number",
+              "Ceiling → Floor → Likely — anchor high, show low, settle middle",
+              "Floor → Ceiling → Likely. Name the floor briefly so the buyer knows there's a low entry point. Then name the ceiling confidently — the high anchor. THEN deliver the likely range. The ceiling must land BEFORE the likely number — that's what makes the likely number feel reasonable instead of expensive",
+              "Likely only — never name the ceiling because it can scare off price-sensitive buyers",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Order is everything. The high anchor MUST land before the likely number — otherwise the likely number has nothing to be reasonable next to. The buyer's expectation is a balloon. The ceiling inflates it; the likely number deflates it back to a place that feels manageable. Reverse the sequence and the balloon stays small, making the likely number feel like the expensive option.",
+          },
+          {
+            id: "s39-q3",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"Platinum Ranger\" principle — and why does Ford put it on the showroom floor?",
+            topic: "Platinum Ranger",
+            options: [
+              "Ford sells most of its Platinum Rangers — it's their highest-volume model",
+              "Ford uses the Platinum to anchor expectations upward. Most buyers end up purchasing the Sport (the model below it), and the Sport feels reasonable BECAUSE the Platinum sits next to it. Without the Platinum on the floor, the Sport feels like the expensive option. Every car manufacturer knows this. The agency should use the same principle in pricing conversations",
+              "Ford requires dealers to display the top trim level — it's a brand contract obligation",
+              "Ford uses the Platinum to attract media attention to its showrooms",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Ford doesn't sell most of its Platinum Rangers — they exist to anchor. Same principle for the agency. The high tier exists on the menu because it makes the middle tier feel reasonable. Without the high anchor, the middle feels expensive. WITH the high anchor, the middle feels like a sensible choice — and that's the deal that closes.",
+          },
+          {
+            id: "s39-q4",
+            type: "multiple-choice",
+            prompt:
+              "Why does the session insist on \"I don't think it's necessary\" as a core toolbox phrase?",
+            topic: "I don't think it's necessary",
+            options: [
+              "It's regulatory language reps must use when describing premium tiers",
+              "It's a hedge that protects the rep if the buyer can't afford the premium package",
+              "It does three things at once. It signals competence — the rep has assessed and decided the buyer doesn't need premium. It signals integrity — the rep isn't trying to upsell into the most expensive tier. And it signals the rep is on the buyer's side, which is where every easier conversation flows from",
+              "It buys the rep time to look up the actual price",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The phrase punches above its weight. Each use signals three things — competence, integrity, alignment with the buyer's interests. The rep who says it three times during a pricing call is positioning themselves as a guide, not a vendor. Buyers respect that posture and close more often. Use it on the premium tier. Use it on the floor. Use it on features the buyer doesn't need. Three uses per call, minimum.",
+          },
+          {
+            id: "s39-q5",
+            type: "multiple-choice",
+            prompt:
+              "What does the Lotus Emura story actually teach about pre-judging the buyer?",
+            topic: "Lotus Emura story",
+            options: [
+              "Luxury car salespeople are unfriendly and reps should expect the same",
+              "Track-suited buyers are usually time-wasters and the Lotus dealer was correct to require a deposit",
+              "Same buyer, same wallet, two completely different sales experiences. The Lotus dealer assumed Corie couldn't afford the car (based on his tracksuit) and demanded a $1k deposit just to test-drive — losing a six-figure sale. The Ford dealer assumed he had the money, matched his energy, and closed in fifteen minutes. The only variable was the assumption each salesperson made. Same risk applies to every prospect call",
+              "Luxury cars are overpriced and reps should be wary of customers who pursue them",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The Lotus story is the worked example of the entire session. The salesperson lost a six-figure sale because of one assumption made in three seconds based on what the buyer was wearing. The Ford dealer made the opposite assumption with the same buyer and closed in fifteen minutes. Every prospect call carries the same risk. The assumption shapes the call before anything price-related is even said.",
+          },
+          {
+            id: "s39-q6",
+            type: "multiple-choice",
+            prompt:
+              "What are the TWO assumptions the rep should hold before every prospect call — and why?",
+            topic: "Assume abundance",
+            options: [
+              "The buyer is competent + has authority to decide. Anything else wastes time",
+              "The buyer has loads of money + has a real problem. The asymmetric risk runs in one direction only — the downside of assuming abundance and being wrong is small (buyer corrects you, you adjust). The downside of assuming scarcity and being wrong is huge (you pitch small, get a small deal or no deal, from someone who'd have spent 5x more). Bet the way that has upside only",
+              "The buyer will probably say no + the rep needs a fallback plan",
+              "The buyer is comparison-shopping + the rep needs to discount preemptively",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Asymmetric risk. The downside of being wrong about wealth (when you assumed abundance) is bounded — the buyer tells you their real number, you adjust. The downside of being wrong about scarcity (when you assumed they were broke) is unbounded — you pitched small to a buyer who'd have spent 5x more, OR you didn't pitch at all. Always bet the way that has upside-only.",
+          },
+          {
+            id: "s39-q7",
+            type: "multiple-choice",
+            prompt:
+              "Why does the session say to judge buyers by what they DO, not what they say?",
+            topic: "Actions over words",
+            options: [
+              "Buyers always exaggerate their needs in early conversations",
+              "Reps shouldn't trust verbal information from any source",
+              "Counter-intuitive but reliable. The buyer who's verbally enthusiastic (\"this is wonderful, you're brilliant, I love what you're doing\") is often saying a long goodbye — they're being polite while declining. The buyer who's flat, terse, and price-focused (\"how much, what's included, when does it ship\") is often a real deal in progress. Polite enthusiasm is what people use to let you down gently",
+              "Sales scripts require objective behavioural metrics",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "This inverts the rep's emotional feedback loop. The warm call feels great; the rep wants to spend more time on it. The cold call feels uncomfortable; the rep wants to escape it. Both instincts are backwards. Polite enthusiasm is what people use to let the rep down gently. Flat transactional tone is what people use when they're concentrating on a transaction they intend to complete. Test the warm call with an immediate ask for the next step — the polite buyer will retreat; the real buyer will say yes.",
+          },
+          {
+            id: "s39-q8",
+            type: "multiple-choice",
+            prompt:
+              "What is the \"Broadway show\" principle — and what does it mean for how reps should approach their day?",
+            topic: "Broadway show",
+            options: [
+              "Reps should rehearse pitches like Broadway performers rehearse lines",
+              "Reps should treat each call as a performance and project confidence",
+              "Broadway performers give the same performance every night — same energy for one seat or a thousand. The audience does its job; the performer does theirs. Applied to the desk: show up with the same energy on call 1 and call 30. Don't let the rude buyer at 11am make the polite buyer at 3pm pay for it. Don't let the closer at 9am make the difficult buyer at 4pm benefit from coasting. Same performance, every audience",
+              "Reps should memorise scripts verbatim and never deviate",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Same performance every audience. The discipline IS the work. Reps who let the rude 11am buyer affect the polite 3pm buyer have abandoned the principle — the buyer at 3pm is paying for behaviour caused by someone else. The reps who can hold this across a day, a week, a year are the reps who build careers. The performance is the performer's responsibility; the audience does its own job.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Session 38 — Not a Priority. Never Will Be. (Thu 18 Jun 2026) ──────
   // Sales + Lead Gen (LG #31). No salesOnly — CS allowlist empty after
   // Logan/Claire move, so omitting salesOnly = "all teams that have access."
@@ -6331,6 +6665,8 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-36-determination", newNumber: "29" },
   { sourceId: "session-37-dream-like-a-child", newNumber: "30" },
   { sourceId: "session-38-not-a-priority", newNumber: "31" },
+  { sourceId: "session-39-anchor-high", newNumber: "32" },
+  { sourceId: "session-40-deals-not-dials", newNumber: "33" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {

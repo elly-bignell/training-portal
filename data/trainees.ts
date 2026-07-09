@@ -204,12 +204,9 @@ export const trainees: Trainee[] = [
     startDate: "2026-12-31",
   },
   // ─── Customer Service team (Sessions area) ───────────────────────────────
-  // Logan and Claire were originally Customer Service (saw all sales material
-  // with quizzes hidden). On 16 Jun 2026 Elly moved them to the Lead Gen
-  // view — they now see the curated lead-gen track (LEAD_GEN_SLUGS below)
-  // with MC-only quizzes. Trent was removed from the portal at the same time.
-  // The CS records stay in `trainees` so any historical references resolve,
-  // but the CS allowlist below is empty.
+  // Logan and Claire were briefly moved to the Lead Gen view (16 Jun 2026)
+  // then moved back to Customer Service (9 Jul 2026) when the CS team was
+  // expanded. CS reps see all session material with the quiz asset hidden.
   {
     id: "logan-earl",
     name: "Logan Earl",
@@ -221,6 +218,24 @@ export const trainees: Trainee[] = [
     name: "Claire Wheaton",
     slug: "claire-wheaton",
     startDate: "2026-05-21",
+  },
+  {
+    id: "lucy-aylmer",
+    name: "Lucy Aylmer",
+    slug: "lucy-aylmer",
+    startDate: "2026-07-09",
+  },
+  {
+    id: "heather-caldwell",
+    name: "Heather Caldwell",
+    slug: "heather-caldwell",
+    startDate: "2026-07-09",
+  },
+  {
+    id: "daisy-craig",
+    name: "Daisy Craig",
+    slug: "daisy-craig",
+    startDate: "2026-07-09",
   },
 ];
 
@@ -241,11 +256,23 @@ export const SALES_TEAM_SLUGS: string[] = [
   "felipe-garcia",
 ];
 
-// Customer Service used to be Logan, Claire, and Trent. On 16 Jun 2026 Logan
-// and Claire moved over to the Lead Gen view (below) and Trent was removed.
-// The list is kept (empty) so the isCustomerService() helper and any future
-// CS additions still work without code changes.
-export const CUSTOMER_SERVICE_SLUGS: string[] = [];
+// Customer Service team — reactivated 9 Jul 2026 after Elly expanded the
+// team. Logan and Claire moved back from Lead Gen; Jeremy, Dasha, Kateryna,
+// Dylanna, Trevor were already in `trainees` from earlier onboarding and now
+// get portal access; Lucy, Heather and Daisy are new starters. CS reps see
+// all session material with the quiz asset hidden.
+export const CUSTOMER_SERVICE_SLUGS: string[] = [
+  "jeremy-valiente",
+  "dasha-axenova",
+  "kateryna-bakumenko",
+  "dylanna-thach",
+  "trevor-koulenios",
+  "logan-earl",
+  "claire-wheaton",
+  "lucy-aylmer",
+  "heather-caldwell",
+  "daisy-craig",
+];
 
 // ─── Lead Gen team ───────────────────────────────────────────────────────────
 // Lead Gen reps see a curated 7-session series (sourced from a subset of the
@@ -261,10 +288,6 @@ export const LEAD_GEN_SLUGS: string[] = [
   "jade-bautista",
   "peter-vizzari",
   "holly-best",
-  // Former CS reps moved over on 16 Jun 2026 — same curated lead-gen
-  // session list, same MC-only quiz projection.
-  "logan-earl",
-  "claire-wheaton",
 ];
 
 /** Anyone allowed into the Sessions area (sales + customer service + lead gen). */
