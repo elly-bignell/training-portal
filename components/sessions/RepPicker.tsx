@@ -22,21 +22,34 @@ import {
   setSelectedRepSlug,
 } from "@/hooks/useSessionsProgress";
 
-// Department options for the top-level dropdown. Each department maps to
-// the slug list that filters the name dropdown. Reps first pick their
-// department, then their name — this keeps the name list short and
-// scannable as the team grows (particularly Customer Service).
-type Department = "sales" | "lead-gen" | "customer-service";
+// Department options for the top-level dropdown. From the rep's point of
+// view there are just two teams — Sales and Customer Service. The Sales
+// bucket combines closers (Lucas, Dylan, Felipe) and lead gen reps into
+// one alphabetical name list, because reps don't self-identify by that
+// distinction. Under the hood, closer vs lead gen still drives content
+// gating (closers see the full sales track with quizzes; lead gen sees
+// the curated LG projection with MC-only quizzes) — that split is enforced
+// downstream by isLeadGen / usesLeadGenTrack, not by this picker.
+type Department = "sales" | "customer-service";
 
 const DEPARTMENTS: { value: Department; label: string; slugs: string[] }[] = [
-  { value: "sales",            label: "Sales",             slugs: SALES_TEAM_SLUGS },
-  { value: "lead-gen",         label: "Lead Gen",          slugs: LEAD_GEN_SLUGS },
-  { value: "customer-service", label: "Customer Service",  slugs: CUSTOMER_SERVICE_SLUGS },
+  {
+    value: "sales",
+    label: "Sales",
+    // Closers + Lead Gen reps rolled up into a single Sales list.
+    slugs: [...SALES_TEAM_SLUGS, ...LEAD_GEN_SLUGS],
+  },
+  {
+    value: "customer-service",
+    label: "Customer Service",
+    slugs: CUSTOMER_SERVICE_SLUGS,
+  },
 ];
 
 function departmentForSlug(slug: string): Department | null {
-  if (SALES_TEAM_SLUGS.includes(slug)) return "sales";
-  if (LEAD_GEN_SLUGS.includes(slug)) return "lead-gen";
+  if (SALES_TEAM_SLUGS.includes(slug) || LEAD_GEN_SLUGS.includes(slug)) {
+    return "sales";
+  }
   if (CUSTOMER_SERVICE_SLUGS.includes(slug)) return "customer-service";
   return null;
 }
