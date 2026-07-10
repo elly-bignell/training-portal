@@ -160,12 +160,6 @@ export const trainees: Trainee[] = [
     startDate: "2026-04-16",
   },
   {
-    id: "trevor-koulenios",
-    name: "Trevor Koulenios",
-    slug: "trevor-koulenios",
-    startDate: "2026-05-13",
-  },
-  {
     id: "sydney-arnold",
     name: "Sydney Arnold",
     slug: "sydney-arnold",
@@ -257,16 +251,16 @@ export const SALES_TEAM_SLUGS: string[] = [
 ];
 
 // Customer Service team — reactivated 9 Jul 2026 after Elly expanded the
-// team. Logan and Claire moved back from Lead Gen; Jeremy, Dasha, Kateryna,
-// Dylanna, Trevor were already in `trainees` from earlier onboarding and now
-// get portal access; Lucy, Heather and Daisy are new starters. CS reps see
-// all session material with the quiz asset hidden.
+// team. Logan and Claire moved back from Lead Gen; Jeremy, Dasha, Kateryna
+// and Dylanna were already in `trainees` from earlier onboarding and now
+// get portal access; Lucy, Heather and Daisy are new starters. Trevor
+// Koulenios was removed on 10 Jul 2026. CS reps see all session material
+// with the quiz asset hidden.
 export const CUSTOMER_SERVICE_SLUGS: string[] = [
   "jeremy-valiente",
   "dasha-axenova",
   "kateryna-bakumenko",
   "dylanna-thach",
-  "trevor-koulenios",
   "logan-earl",
   "claire-wheaton",
   "lucy-aylmer",

@@ -386,8 +386,8 @@ function HomeContent() {
           <div className="space-y-4">
             {(() => {
               const CS_APPLICANT_SLUGS: string[] = [];
-              const NO_SCORECARD_SLUGS = ["dasha-axenova", "jeremy-valiente", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith", "dylanna-thach", "trevor-koulenios"];
-              return ["jeremy-valiente", "dasha-axenova", "lauren-kim", "yashika-sood", "dylanna-thach", "trevor-koulenios"]
+              const NO_SCORECARD_SLUGS = ["dasha-axenova", "jeremy-valiente", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith", "dylanna-thach"];
+              return ["jeremy-valiente", "dasha-axenova", "lauren-kim", "yashika-sood", "dylanna-thach"]
                 .map(s => trainees.find(t => t.slug === s)!)
                 .filter(Boolean)
                 .map((trainee) => {
@@ -431,7 +431,7 @@ function HomeContent() {
           </h2>
           {(() => {
             const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold", "riley-kerrison", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "shahmir-saajad", "shian-roux", "peter-vizzari", "holly-best"];
-            const CS_SLUGS = ["jeremy-valiente", "dasha-axenova", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith", "kateryna-bakumenko", "dylanna-thach", "trevor-koulenios"];
+            const CS_SLUGS = ["jeremy-valiente", "dasha-axenova", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith", "kateryna-bakumenko", "dylanna-thach"];
             const ARCHIVED_SLUGS = ["connie-matthews", "reegan-james", "rachel-astachnowicz", "aston-marsh", "shani-thomas", "krishna-patel", "thomas-rennie", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "shahmir-saajad", "khushi-patel", "kristy-lee-busk", "ella-smith"];
 
             // Group order: Sales first, then Customer Service. Within each
