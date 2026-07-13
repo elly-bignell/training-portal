@@ -51,16 +51,186 @@ export const sessions: Session[] = [
       },
     ],
   },
-  // ─── Sessions 41 / 42 / 43 — Customer Service training set (9 Jul 2026) ───
+  // ─── Session 41 — Cement, Then Negotiate. (Mon 13 Jul 2026) ────────────
+  // Sales-origin, all-teams. Number 41 in the sales-training sequence
+  // (closer view). Renumbered 34 in the LG/CS projection via
+  // LEAD_GEN_SESSION_MAP — this is #34 for both LG and CS reps because
+  // they're up to #33 (Deals Not Dials). 4-asset shape: debrief +
+  // toolkit + intro video + quiz.
+  {
+    id: "session-41-cement-then-negotiate",
+    number: "41",
+    date: "2026-07-13",
+    title: "Cement, Then Negotiate.",
+    summary:
+      "Price and terms are the only two objections that matter. Cement the 12-month term at the START of the pitch with \"obviously\" — never at the end as a surprise. Isolate whether the real blocker is price or terms with the \"if it wasn't for X\" question. Never just accept a discount — add referrals as the counterweight so the seesaw stays balanced. Trial close with \"so far.\" When you mean it — say \"I want your business.\"",
+    keyTakeaway:
+      "Only two objections: price or terms. Everything else is a symptom. Cement early with \"obviously.\" Isolate with \"if it wasn't for X — would you go ahead today?\" Get the verbal commitment BEFORE you walk away to the director. Never just accept a discount — add referrals to balance the seesaw. Break the pattern on feedback: criticism to the head, praise to the heart.",
+    director: "Corie Dawson",
+    totalTime: "~40 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-41-cement-then-negotiate/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-41-cement-then-negotiate/toolkit.pdf",
+      },
+      {
+        kind: "intro",
+        estimate: "~10 min watch",
+        url: "https://www.youtube.com/watch?v=2sJXfWGsGlA",
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s41-q1",
+            type: "multiple-choice",
+            prompt:
+              "Why does the session insist on raising the 12-month term EARLY in the pitch instead of at the end?",
+            topic: "Cement early",
+            options: [
+              "Legal requires disclosure of contract length in the first five minutes",
+              "Raised at the END, the term feels like a surprise gotcha — the buyer's guard goes up and they treat it as a bargaining chip. Raised at the START with the word \"obviously,\" it becomes background context baked into the deal the buyer is already saying yes to. Buyers who fixate on the exit at the moment of committing are like people asking about the prenup at the wedding — looking for an exit before they've said yes to the entrance",
+              "Raising it early gives the rep more time to explain the value of the term",
+              "Sales scripts require the term to appear before pricing for regulatory reasons",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The prenup-at-the-wedding image is the operational picture. Buyers looking for the exit before they've said yes to the entrance are showing structural anxiety — often because the rep raised the terms conversation LATE. Introducing the term casually early makes it part of the package the buyer is evaluating, not a fight the rep has to win at the finish line.",
+          },
+          {
+            id: "s41-q2",
+            type: "multiple-choice",
+            prompt:
+              "What does the specific word \"obviously\" do when used to introduce the 12-month term?",
+            topic: "The \"obviously\" move",
+            options: [
+              "It's a filler word that gives the rep thinking time",
+              "It cements the position — signalling to the buyer that the term is stated as a given, not an option. It does so casually enough that the buyer processes it as background context, not as a hostile term to fight. \"Obviously all our packages are minimum 12 months — we need time to get results\"",
+              "It softens the term so the buyer feels less trapped",
+              "It's a legal disclaimer required by consumer protection law",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Small word, enormous work. \"Obviously\" tells the buyer's brain \"this isn't up for debate — it's just how things work.\" Delivered casually enough that the buyer doesn't push back on it in the moment. If they do push back later, the rep is negotiating from a CEMENTED position rather than an uncemented one — a much stronger starting point.",
+          },
+          {
+            id: "s41-q3",
+            type: "multiple-choice",
+            prompt:
+              "What is the pivotal verbal-commitment question the rep asks when a buyer pushes back on the term — and what does the answer sort?",
+            topic: "Verbal commitment",
+            options: [
+              "\"How important is the term to you?\" — measures the buyer's real priority",
+              "\"If it wasn't for the 12 months — would you definitely go ahead today?\" YES means the term is the ONLY blocker and the rep has a verbal commitment to close against. HEDGE means the term isn't the real issue — the rep needs to keep listening for the actual blocker. Either answer sorts the deal",
+              "\"What term length would work for you?\" — jumps to negotiation too fast",
+              "\"Have you thought about the alternatives?\" — surfaces comparison shopping",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The pivotal question sorts the deal. Reps who never ask it try to solve the wrong problem — negotiating on terms when the real issue is price, or vice versa. Asking cleanly gives a clean answer. Yes means the rep now has TWO verbal commitments to close against (once when they ask, once when they confirm before walking to the director). Deals close on those double commitments.",
+          },
+          {
+            id: "s41-q4",
+            type: "multiple-choice",
+            prompt:
+              "What are the ONLY two real objections a genuinely interested buyer can have?",
+            topic: "The two-objection filter",
+            options: [
+              "Trust and timing — buyers need to trust the vendor and feel ready",
+              "Brand and product — buyers need to trust the company and the offering",
+              "Price and terms. Everything else — \"I need to think about it,\" \"my partner has to approve,\" \"send me some information,\" \"not the right timing\" — is a surface symptom of one of those two. Once the rep internalises this, closing becomes dramatically simpler: only need to isolate which of the two, then work on that one",
+              "Authority and budget — buyers need decision power and financial capacity",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The diagnostic that makes closing dramatically simpler. Once the rep believes only two objections exist, they stop chasing surface symptoms and start isolating the actual blocker. Every \"I need to think about it\" gets translated. \"My partner has to approve\" gets translated. All roads lead to price or terms. Isolate. Work on the one that's real.",
+          },
+          {
+            id: "s41-q5",
+            type: "multiple-choice",
+            prompt:
+              "What's the correct move when a buyer asks for a discount — and what's the WRONG move most reps default to?",
+            topic: "Discount move",
+            options: [
+              "Correct: refuse the discount entirely. Wrong: negotiate freely",
+              "Correct: match a competitor's price. Wrong: hold firm on list price",
+              "Correct: add referrals to balance the seesaw — \"give me two names of mates you'd refer, and I'll get this through the director.\" Wrong: just say \"yeah, we can do that.\" The discount given freely lands as a scam — buyer immediately thinks \"why didn't you offer me that price in the first place?\" Value proposition dies. Some buyers cancel within a week",
+              "Correct: offer a bonus feature. Wrong: adjust the term length",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The single most damaging thing a rep can do on the pricing side is accept a discount freely. Buyer's brain immediately downgrades the entire product. The correct move is resistance + counterweight — take time with the ask, add referrals as the trade, come back with the discount as if it was hard-won. Same money. Completely different perceived value.",
+          },
+          {
+            id: "s41-q6",
+            type: "multiple-choice",
+            prompt:
+              "Why is the referral counterweight structurally superior to just accepting or refusing the discount?",
+            topic: "The seesaw",
+            options: [
+              "Referrals generate more revenue for the agency over time",
+              "It keeps the value-proposition seesaw balanced. When the rep drops the price, weight comes off the price side — the value side FEELS heavier (\"why so easy?\"). Adding referrals puts weight back on the price side. Bonus: the referrals also function as an accountability contract — the rep now has skin in the game to actually deliver, or lose the warm contacts. The insurance policy runs both ways",
+              "Referrals are free marketing and reduce customer acquisition cost",
+              "Referrals lock the buyer in longer and reduce churn",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The seesaw explains the invisible mechanism. Buyers' brains process deals as balanced when the price and value sides match. Any change to one side needs a matching change to the other, or the balance goes off. Adding referrals is a genuine value contribution from the buyer's side — it rebalances the seesaw AND creates accountability. The rep gets skin in the game to deliver. The buyer's brain accepts the deal because it FEELS fair.",
+          },
+          {
+            id: "s41-q7",
+            type: "multiple-choice",
+            prompt:
+              "What's the correct rep pacing — and how do reps use \"deal detection\" to apply it?",
+            topic: "Deal detection",
+            options: [
+              "Fast on all calls to maximise volume, then follow up on high-value leads",
+              "Slow on all calls to build rapport and build value properly",
+              "When the deal IS there (buying signals present, buyer engaging), slow down — every word matters more. When the deal is NOT there (flat responses, deflections), move through the pitch quickly to test what lands; if nothing does, wrap up cleanly and move on. The rep's ability to recognise dead calls quickly and live calls slowly is one of the highest-leverage skills they can develop",
+              "Match the buyer's pace exactly on every call",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The physical prompt the session suggested — a paper flipped DEAL / NO DEAL during calls — makes the pacing decision conscious. Most reps default to the same pace on every call, which means they burn time on dead calls and rush live ones. Reversing the defaults is one of the fastest ways to lift close rate without changing anything about the pitch itself.",
+          },
+          {
+            id: "s41-q8",
+            type: "multiple-choice",
+            prompt:
+              "The session named a counter-intuitive default most people follow with feedback — and prescribed the reverse. What is it?",
+            topic: "Head vs heart on feedback",
+            options: [
+              "Take praise seriously and dismiss criticism — most people don't",
+              "Most people take CRITICISM to the heart (where it produces depression, self-doubt, defensiveness) and PRAISE to the head (where they intellectualise, discount, move on). Both defaults are backwards. The corrective: take criticism to the HEAD (process it, note the specific correction, apply it, move on). Take praise to the HEART (let it register emotionally, believe it, carry it as fuel). Reverse the defaults deliberately",
+              "Always seek out negative feedback because that's where growth comes from",
+              "Treat feedback from bosses differently from feedback from peers",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The head/heart swap is one of the highest-leverage mindset changes a rep can make. Reps who take criticism to the heart get depressed and defensive; reps who take praise to the head don't let it register. Both defaults sabotage growth. Reversing them deliberately — process criticism intellectually, let praise land emotionally — turns feedback into fuel instead of friction.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─── Customer Service training set (9 Jul 2026) ─────────────────────────
   // Three CS-origin videos delivered as a batch on 9 Jul 2026. All three
-  // teams (Sales, Lead Gen, Customer Service) see them; the origin tag +
-  // grid split means CS reps get them first on their /sessions home page,
-  // while Sales / LG reps see them below the sales-origin content. Intro
-  // asset only — no debrief, toolkit, podcast, presentation or quiz.
-  // Renumbered 34 / 35 / 36 in the LG projection via LEAD_GEN_SESSION_MAP.
+  // teams see them; the origin tag + grid split means CS reps get them at
+  // the top on their /sessions home page, while Sales / LG reps see them
+  // below the sales-origin content. Intro asset only. Numbered CS-1/2/3
+  // so they don't collide with the numbered sales-training sequence for
+  // any team (LG map entries below use the same CS-1/2/3 slugs).
   {
     id: "session-43-work-on-your-terms",
-    number: "43",
+    number: "CS-3",
     date: "2026-07-09",
     title: "Work on Your Terms. Not the World's.",
     summary:
@@ -80,7 +250,7 @@ export const sessions: Session[] = [
   },
   {
     id: "session-42-slow-is-smooth",
-    number: "42",
+    number: "CS-2",
     date: "2026-07-09",
     title: "Slow Is Smooth. Smooth is Fast.",
     summary:
@@ -100,7 +270,7 @@ export const sessions: Session[] = [
   },
   {
     id: "session-41-get-involved-create-value",
-    number: "41",
+    number: "CS-1",
     date: "2026-07-09",
     title: "Get Involved. Create Value.",
     summary:
@@ -6739,9 +6909,12 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-38-not-a-priority", newNumber: "31" },
   { sourceId: "session-39-anchor-high", newNumber: "32" },
   { sourceId: "session-40-deals-not-dials", newNumber: "33" },
-  { sourceId: "session-41-get-involved-create-value", newNumber: "34" },
-  { sourceId: "session-42-slow-is-smooth", newNumber: "35" },
-  { sourceId: "session-43-work-on-your-terms", newNumber: "36" },
+  { sourceId: "session-41-cement-then-negotiate", newNumber: "34" },
+  // CS-origin videos — projected onto the LG/CS track with CS-1/2/3
+  // display numbers so they don't take up numbered sales-training slots.
+  { sourceId: "session-41-get-involved-create-value", newNumber: "CS-1" },
+  { sourceId: "session-42-slow-is-smooth", newNumber: "CS-2" },
+  { sourceId: "session-43-work-on-your-terms", newNumber: "CS-3" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
@@ -6756,9 +6929,15 @@ function projectForLeadGen(source: Session, newNumber: string): Session {
     };
   });
 
+  // Numeric newNumber → "lg-session-N" (keeps existing URLs stable).
+  // Non-numeric (e.g. "CS-1") → "lg-session-cs-1" (lowercased, kept unique
+  // so CS-origin videos don't collide with any numbered slot).
+  const idSuffix = /^\d+$/.test(newNumber)
+    ? String(parseInt(newNumber, 10))
+    : newNumber.toLowerCase();
   return {
     ...source,
-    id: `lg-session-${parseInt(newNumber, 10)}`,
+    id: `lg-session-${idSuffix}`,
     number: newNumber,
     // Featured flag is intentionally stripped — the LG series shouldn't have
     // any banner sessions (the only featured one in source is Session 14,
