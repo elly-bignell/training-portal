@@ -231,6 +231,18 @@ export const trainees: Trainee[] = [
     slug: "daisy-craig",
     startDate: "2026-07-09",
   },
+  {
+    id: "matthew-nourse",
+    name: "Matthew Nourse",
+    slug: "matthew-nourse",
+    startDate: "2026-07-17",
+  },
+  {
+    id: "lachlan-hunt",
+    name: "Lachlan Hunt",
+    slug: "lachlan-hunt",
+    startDate: "2026-07-17",
+  },
 ];
 
 export function getTraineeBySlug(slug: string): Trainee | undefined {
@@ -253,9 +265,9 @@ export const SALES_TEAM_SLUGS: string[] = [
 // Customer Service team — reactivated 9 Jul 2026 after Elly expanded the
 // team. Logan and Claire moved back from Lead Gen; Jeremy, Dasha, Kateryna
 // and Dylanna were already in `trainees` from earlier onboarding and now
-// get portal access; Lucy, Heather and Daisy are new starters. Trevor
-// Koulenios was removed on 10 Jul 2026. CS reps see all session material
-// with the quiz asset hidden.
+// get portal access; Lucy, Heather and Daisy joined 9 Jul 2026. Matthew
+// and Lachlan added 17 Jul 2026. Trevor Koulenios was removed on 10 Jul
+// 2026. CS reps see all session material with the quiz asset hidden.
 export const CUSTOMER_SERVICE_SLUGS: string[] = [
   "jeremy-valiente",
   "dasha-axenova",
@@ -266,6 +278,8 @@ export const CUSTOMER_SERVICE_SLUGS: string[] = [
   "lucy-aylmer",
   "heather-caldwell",
   "daisy-craig",
+  "matthew-nourse",
+  "lachlan-hunt",
 ];
 
 // ─── Lead Gen team ───────────────────────────────────────────────────────────
