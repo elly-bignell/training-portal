@@ -16,7 +16,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { getTraineeBySlug } from "@/data/trainees";
+import { useTraineeContext } from "@/hooks/useTraineeContext";
 
 const AUTH_STORAGE_KEY = "training-portal-auth";
 const AUTH_EXPIRY_HOURS = 24;
@@ -85,6 +85,9 @@ function formatRelative(iso: string): string {
 }
 
 export default function QuestionBoxPage() {
+  // Trainee list is Airtable-driven — used below to resolve auth.slug to
+  // the person's display name for the question author field.
+  const { allTrainees } = useTraineeContext();
   const [auth, setAuth] = useState<AuthState | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [showPrompt, setShowPrompt] = useState(false);
@@ -122,7 +125,7 @@ export default function QuestionBoxPage() {
 
   const isAdmin = auth?.role === "Admin";
   const authorName =
-    (auth && getTraineeBySlug(auth.slug)?.name) ||
+    (auth && allTrainees.find((t) => t.slug === auth.slug)?.name) ||
     (auth?.role === "Admin" ? "Admin" : auth?.slug || "");
 
   // --- load questions ---

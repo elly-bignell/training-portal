@@ -4,7 +4,7 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { getTraineeBySlug } from "@/data/trainees";
+import { useTraineeContext } from "@/hooks/useTraineeContext";
 import { isSenior, isJunior } from "@/data/buddyPairs";
 import { BOOKERS } from "@/data/checklistTemplate";
 import PasswordGate from "@/components/PasswordGate";
@@ -16,7 +16,10 @@ import ScorecardRulesJunior from "@/components/ScorecardRulesJunior";
 function ScorecardPageContent() {
   const params = useParams();
   const slug = params.slug as string;
-  const trainee = getTraineeBySlug(slug);
+  // Look up the trainee from the Airtable-driven context. Falls back
+  // to bundled data if Airtable is unreachable.
+  const { allTrainees } = useTraineeContext();
+  const trainee = allTrainees.find((t) => t.slug === slug);
 
   if (!trainee) {
     return (

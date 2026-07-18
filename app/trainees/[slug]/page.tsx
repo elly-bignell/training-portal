@@ -4,7 +4,6 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { getTraineeBySlug } from "@/data/trainees";
 import { useTraineeContext } from "@/hooks/useTraineeContext";
 import { trainingProgram } from "@/data/trainingProgram";
 import { useTraineeProgress } from "@/hooks/useLocalStorage";
@@ -15,12 +14,10 @@ import PasswordGate from "@/components/PasswordGate";
 function TraineeDashboardContent() {
   const params = useParams();
   const slug = params.slug as string;
-  const trainee = getTraineeBySlug(slug);
-
-  // Airtable-driven flags for this trainee. CSOnboarding = "on the CS-
-  // specific onboarding program that skips Module 4." Applicant = "still
-  // in the applicant window." Both are per-row toggleable in Airtable.
-  const { isCSOnboarding } = useTraineeContext();
+  // Look up the trainee + related flags from the Airtable-driven context.
+  // Falls back to bundled data if Airtable is unreachable.
+  const { allTrainees, isCSOnboarding } = useTraineeContext();
+  const trainee = allTrainees.find((t) => t.slug === slug);
   const filteredProgram = isCSOnboarding(slug)
     ? trainingProgram.filter((m) => m.id !== "module-4")
     : trainingProgram;
