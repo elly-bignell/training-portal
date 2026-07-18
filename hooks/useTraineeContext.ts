@@ -1,23 +1,19 @@
 // hooks/useTraineeContext.ts
 //
 // Client-side hook that fetches the current trainee context from
-// /api/trainees (which in turn reads from Airtable). Provides the trainee
-// list + team allowlists + the isCustomerService / isLeadGen /
-// usesLeadGenTrack membership checks that all the sessions pages use.
+// /api/trainees (which in turn reads from Airtable). Two scopes:
+//   • Active trainees + team allowlists — used by /sessions RepPicker
+//   • All trainees + archived/applicant/csOnboarding + buddy — used by
+//     the admin dashboard and the onboarding trainee page
 //
 // Behaviour:
-//   • On mount, hydrates synchronously from the localStorage cache (so the
-//     UI renders instantly on subsequent loads without a network round-trip).
-//   • Fires a background fetch to /api/trainees to refresh. The endpoint is
-//     edge-cached for 60 seconds, so this is cheap.
+//   • On mount, hydrates synchronously from the localStorage cache (so
+//     UI renders instantly on subsequent loads).
+//   • Fires a background fetch to /api/trainees to refresh. The endpoint
+//     is edge-cached for 60 seconds.
 //   • Writes the fresh response back to localStorage.
 //   • If both the cache and the network fetch fail, uses the FALLBACK_*
-//     arrays bundled into the app so the portal keeps working offline.
-//
-// New Airtable rows appear here within: (60s edge cache) + (browser cache) —
-// so realistically 1-2 minutes after a colleague adds someone in Airtable,
-// they'll be in the RepPicker. Force-refresh (Cmd/Ctrl+Shift+R) if you need
-// it immediately.
+//     arrays bundled into the app.
 
 "use client";
 
@@ -27,8 +23,22 @@ import {
   FALLBACK_SALES_TEAM_SLUGS,
   FALLBACK_LEAD_GEN_SLUGS,
   FALLBACK_CUSTOMER_SERVICE_SLUGS,
+  FALLBACK_ARCHIVED_SLUGS,
+  FALLBACK_APPLICANT_SLUGS,
+  FALLBACK_CS_ONBOARDING_SLUGS,
 } from "@/data/trainees";
 import { Trainee } from "@/types";
+
+/** Trainee with Stage 2 metadata. Extends the base Trainee shape with
+ *  team assignment + admin dashboard flags. */
+export interface EnrichedTrainee extends Trainee {
+  team: "Sales" | "Lead Gen" | "Customer Service" | "Admin" | "Unassigned";
+  active: boolean;
+  archived: boolean;
+  applicant: boolean;
+  csOnboarding: boolean;
+  buddy?: string;
+}
 
 export interface TraineeContext {
   trainees: Trainee[];
@@ -36,14 +46,33 @@ export interface TraineeContext {
   leadGenSlugs: string[];
   customerServiceSlugs: string[];
   sessionsAllowedSlugs: string[];
+  allTrainees: EnrichedTrainee[];
+  archivedSlugs: string[];
+  applicantSlugs: string[];
+  csOnboardingSlugs: string[];
+  buddyBySlug: Record<string, string>;
   source: "airtable" | "fallback" | "cache";
   fetchedAt: string;
 }
 
-const CACHE_KEY = "trainee-context-v1";
-const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
+const CACHE_KEY = "trainee-context-v2";
+const CACHE_TTL_MS = 10 * 60 * 1000;
 
 function fallbackContext(): TraineeContext {
+  const inferTeam = (slug: string): EnrichedTrainee["team"] => {
+    if (FALLBACK_SALES_TEAM_SLUGS.includes(slug)) return "Sales";
+    if (FALLBACK_LEAD_GEN_SLUGS.includes(slug)) return "Lead Gen";
+    if (FALLBACK_CUSTOMER_SERVICE_SLUGS.includes(slug)) return "Customer Service";
+    return "Unassigned";
+  };
+  const allTrainees: EnrichedTrainee[] = FALLBACK_TRAINEES.map((t) => ({
+    ...t,
+    team: inferTeam(t.slug),
+    active: !FALLBACK_ARCHIVED_SLUGS.includes(t.slug),
+    archived: FALLBACK_ARCHIVED_SLUGS.includes(t.slug),
+    applicant: FALLBACK_APPLICANT_SLUGS.includes(t.slug),
+    csOnboarding: FALLBACK_CS_ONBOARDING_SLUGS.includes(t.slug),
+  }));
   return {
     trainees: FALLBACK_TRAINEES,
     salesTeamSlugs: FALLBACK_SALES_TEAM_SLUGS,
@@ -54,6 +83,11 @@ function fallbackContext(): TraineeContext {
       ...FALLBACK_LEAD_GEN_SLUGS,
       ...FALLBACK_CUSTOMER_SERVICE_SLUGS,
     ],
+    allTrainees,
+    archivedSlugs: FALLBACK_ARCHIVED_SLUGS,
+    applicantSlugs: FALLBACK_APPLICANT_SLUGS,
+    csOnboardingSlugs: FALLBACK_CS_ONBOARDING_SLUGS,
+    buddyBySlug: {},
     source: "fallback",
     fetchedAt: new Date().toISOString(),
   };
@@ -64,10 +98,7 @@ function readCache(): TraineeContext | null {
   try {
     const raw = localStorage.getItem(CACHE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as {
-      value: TraineeContext;
-      ts: number;
-    };
+    const parsed = JSON.parse(raw) as { value: TraineeContext; ts: number };
     if (!parsed.value || typeof parsed.ts !== "number") return null;
     if (Date.now() - parsed.ts > CACHE_TTL_MS) return null;
     return { ...parsed.value, source: "cache" };
@@ -79,21 +110,15 @@ function readCache(): TraineeContext | null {
 function writeCache(value: TraineeContext) {
   if (typeof window === "undefined") return;
   try {
-    localStorage.setItem(
-      CACHE_KEY,
-      JSON.stringify({ value, ts: Date.now() })
-    );
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ value, ts: Date.now() }));
   } catch {
-    // Storage might be full or disabled — silently ignore, we still have
-    // the in-memory state.
+    // Silently ignore — we still have in-memory state.
   }
 }
 
-/** Returns the current trainee context, plus membership check functions
+/** Returns the current trainee context + membership check functions
  *  keyed to the current (live) team allowlists. */
 export function useTraineeContext() {
-  // Seed synchronously with cache or fallback so the first render has
-  // something to work with — avoids a "empty dropdown" flash.
   const [context, setContext] = useState<TraineeContext>(
     () => readCache() ?? fallbackContext()
   );
@@ -109,8 +134,7 @@ export function useTraineeContext() {
         setContext(fresh);
         writeCache(fresh);
       } catch {
-        // Network failure — keep the seeded context. The next successful
-        // page load will refresh from the API.
+        // Keep the seeded context; next mount will refresh.
       }
     })();
     return () => {
@@ -138,10 +162,31 @@ export function useTraineeContext() {
     [context.leadGenSlugs, context.customerServiceSlugs]
   );
 
+  const isArchived = useCallback(
+    (slug: string | null | undefined) =>
+      !!slug && context.archivedSlugs.includes(slug),
+    [context.archivedSlugs]
+  );
+
+  const isApplicant = useCallback(
+    (slug: string | null | undefined) =>
+      !!slug && context.applicantSlugs.includes(slug),
+    [context.applicantSlugs]
+  );
+
+  const isCSOnboarding = useCallback(
+    (slug: string | null | undefined) =>
+      !!slug && context.csOnboardingSlugs.includes(slug),
+    [context.csOnboardingSlugs]
+  );
+
   return {
     ...context,
     isCustomerService,
     isLeadGen,
     usesLeadGenTrack,
+    isArchived,
+    isApplicant,
+    isCSOnboarding,
   };
 }

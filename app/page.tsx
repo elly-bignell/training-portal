@@ -4,7 +4,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { trainees } from "@/data/trainees";
+import { useTraineeContext } from "@/hooks/useTraineeContext";
 import { trainingProgram, getTotalChecklistItems } from "@/data/trainingProgram";
 import PasswordGate from "@/components/PasswordGate";
 import PerformanceSummary from "@/components/PerformanceSummary";
@@ -78,10 +78,19 @@ function formatAdelaideDate(dateString: string | undefined, includeTime: boolean
 }
 
 function HomeContent() {
+  const { allTrainees, archivedSlugs, applicantSlugs, csOnboardingSlugs } =
+    useTraineeContext();
   const [progressData, setProgressData] = useState<TraineeProgressData[]>([]);
   const [examResults, setExamResults] = useState<ExamSubmission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+
+  // `trainees` alias — Stage 2 migration reads from Airtable via
+  // useTraineeContext, so downstream code that expected the old hardcoded
+  // `trainees` array keeps working without needing every call site
+  // rewritten. Team-side membership derives from the .team field on the
+  // enriched objects.
+  const trainees = allTrainees;
+
   const totalItems = getTotalChecklistItems();
   const totalModules = trainingProgram.length;
 
@@ -385,9 +394,18 @@ function HomeContent() {
           <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3 mt-6">Customer Service Team Quick Access</h3>
           <div className="space-y-4">
             {(() => {
-              const CS_APPLICANT_SLUGS: string[] = [];
-              const NO_SCORECARD_SLUGS = ["dasha-axenova", "jeremy-valiente", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith", "dylanna-thach"];
-              return ["jeremy-valiente", "dasha-axenova", "lauren-kim", "yashika-sood", "dylanna-thach"]
+              // Applicant flag + "no scorecard" (CS onboarding) flag come
+              // straight from Airtable via useTraineeContext. Both are now
+              // per-row toggleable in Airtable rather than hardcoded here.
+              const CS_APPLICANT_SLUGS = applicantSlugs;
+              const NO_SCORECARD_SLUGS = csOnboardingSlugs;
+              // Quick Access strip only lists the CS trainees whose
+              // dashboards need to be looked at day-to-day: applicants +
+              // active CS trainees on the CS onboarding track.
+              const quickAccessSlugs = Array.from(
+                new Set([...applicantSlugs, ...csOnboardingSlugs])
+              ).filter((slug) => !archivedSlugs.includes(slug));
+              return quickAccessSlugs
                 .map(s => trainees.find(t => t.slug === s)!)
                 .filter(Boolean)
                 .map((trainee) => {
@@ -430,9 +448,17 @@ function HomeContent() {
             Select Your Dashboard
           </h2>
           {(() => {
-            const SALES_SLUGS = ["dylan-munro", "thomas-rennie", "lucas-tirri", "felipe-garcia", "connie-matthews", "cindy-rose-rondez-manrique", "krishna-patel", "sydney-arnold", "riley-kerrison", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "shahmir-saajad", "shian-roux", "peter-vizzari", "holly-best"];
-            const CS_SLUGS = ["jeremy-valiente", "dasha-axenova", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith", "kateryna-bakumenko", "dylanna-thach"];
-            const ARCHIVED_SLUGS = ["connie-matthews", "reegan-james", "rachel-astachnowicz", "aston-marsh", "shani-thomas", "krishna-patel", "thomas-rennie", "caia-cuggy", "jj-chatrawee", "sushant-maharjan", "maddison-bruce", "shahmir-saajad", "khushi-patel", "kristy-lee-busk", "ella-smith"];
+            // Team assignment + archived flag now come from Airtable via
+            // useTraineeContext. Derive the SALES/CS slug groupings from
+            // the .team field on each enriched trainee rather than
+            // maintaining parallel hardcoded lists.
+            const SALES_SLUGS = allTrainees
+              .filter((t) => t.team === "Sales" || t.team === "Lead Gen")
+              .map((t) => t.slug);
+            const CS_SLUGS = allTrainees
+              .filter((t) => t.team === "Customer Service")
+              .map((t) => t.slug);
+            const ARCHIVED_SLUGS = archivedSlugs;
 
             // Group order: Sales first, then Customer Service. Within each
             // group, preserve the order from data/trainees.ts.
