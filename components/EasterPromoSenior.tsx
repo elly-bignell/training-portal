@@ -3,7 +3,7 @@
 "use client";
 
 import { useEasterPromo } from "@/hooks/useEasterPromo";
-import { getBuddyName } from "@/data/buddyPairs";
+import { useTraineeContext } from "@/hooks/useTraineeContext";
 
 interface Props {
   traineeSlug: string;
@@ -12,6 +12,7 @@ interface Props {
 
 export default function EasterPromoSenior({ traineeSlug, traineeName }: Props) {
   const { today, totals, isLoading, isSaving, increment } = useEasterPromo(traineeSlug, traineeName);
+  const { getBuddyName } = useTraineeContext();
   const buddyName = getBuddyName(traineeSlug);
   const initials = traineeName.split(" ").map((n) => n[0]).join("").toUpperCase();
 

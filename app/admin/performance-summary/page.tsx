@@ -7,6 +7,7 @@ import Link from "next/link";
 import { trainees } from "@/data/trainees";
 import PasswordGate from "@/components/PasswordGate";
 import { usePersistedState } from "@/hooks/usePersistedState";
+import { useTraineeContext } from "@/hooks/useTraineeContext";
 import EasterPromoAdmin from "@/components/EasterPromoAdmin";
 import PrintButton from "@/components/PrintButton";
 import RennieDealTracker from "@/components/RennieDealTracker";
@@ -57,8 +58,12 @@ const DEFAULT_CLOSE_RATE = 0.5;
 const DEFAULT_HOURS = 3.5;
 const DEFAULT_DEAL_VALUE = 400;
 
-// ─── Buddy pairs (no Tom) ───
-const buddyPairs = [
+// ─── Buddy pair fallbacks + per-pair config ───
+// The visual config (colour, startGlobalWeek, weekLabelOffset) stays
+// hardcoded here. Only the roster (members + primary lead-gen slug) is
+// derived from Airtable inside the component. `members` and `leadGen`
+// below act as fallbacks used when Airtable is unreachable.
+const FALLBACK_BUDDY_PAIRS = [
   {
     label: "Lucas & Cindy",
     color: "indigo",
@@ -87,8 +92,6 @@ const buddyPairs = [
     weekLabelOffset: -5,
   },
 ];
-
-const allSlugs = buddyPairs.flatMap((p) => p.members);
 
 const compMetrics: { key: Metric; label: string; emoji: string; projKey: string }[] = [
   { key: "calls_made", label: "Calls", emoji: "📞", projKey: "calls" },
@@ -308,6 +311,29 @@ function generateExecSummary(
 // ═══════════════════════════════════════════
 
 function PerformanceSummaryContent() {
+  const { juniorSlugsBySeniorSlug } = useTraineeContext();
+
+  // Derive `members` (and the primary `leadGen` slug) from Airtable for
+  // each pair. Falls back to the hardcoded roster if the closer has no
+  // juniors assigned in Airtable (e.g. Airtable fetch failed). Sort
+  // juniors alphabetically so the primary lead-gen slug is deterministic.
+  const buddyPairs = useMemo(() => {
+    return FALLBACK_BUDDY_PAIRS.map((fallback) => {
+      const airtableJuniors = juniorSlugsBySeniorSlug[fallback.closer];
+      if (airtableJuniors && airtableJuniors.length > 0) {
+        const sortedJuniors = [...airtableJuniors].sort();
+        return {
+          ...fallback,
+          members: [fallback.closer, ...sortedJuniors],
+          leadGen: sortedJuniors[0],
+        };
+      }
+      return { ...fallback };
+    });
+  }, [juniorSlugsBySeniorSlug]);
+
+  const allSlugs = useMemo(() => buddyPairs.flatMap((p) => p.members), [buddyPairs]);
+
   const [allData, setAllData] = useState<Map<string, DailyRecord[]>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTabs, setSelectedTabs] = useState<Record<string, number>>({});
@@ -360,7 +386,8 @@ function PerformanceSummaryContent() {
       setSelectedTabs(tabs);
     };
     fetchAll();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allSlugs.join(",")]);
 
   const getValue = (slug: string, date: string, metric: Metric): number => {
     const records = allData.get(slug) || [];
@@ -416,7 +443,7 @@ function PerformanceSummaryContent() {
 
       return { pair, closerName, lgName, weekData: weekDataWithTrend };
     });
-  }, [allData, currentWeek, projTeamDaily]);
+  }, [allData, currentWeek, projTeamDaily, buddyPairs]);
 
   if (isLoading && pageTab === "performance") {
     return (

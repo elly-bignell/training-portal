@@ -3,9 +3,10 @@
 "use client";
 
 import React from "react";
-import { getBuddyName } from "@/data/buddyPairs";
+import { useTraineeContext } from "@/hooks/useTraineeContext";
 
 export default function ScorecardRulesJunior({ slug }: { slug: string }) {
+  const { getBuddyName } = useTraineeContext();
   const buddyName = getBuddyName(slug);
 
   return (

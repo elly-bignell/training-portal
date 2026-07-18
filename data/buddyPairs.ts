@@ -1,4 +1,16 @@
 // data/buddyPairs.ts
+//
+// DEPRECATED — Airtable is now the source of truth for buddy relationships
+// via useTraineeContext(). The Portal Users table's `Buddy` single-select
+// (Lucas Tirri / Dylan Munro / Felipe Garcia) drives:
+//   • isSenior(), isJunior(), getBuddySlug(), getBuddyName() from
+//     hooks/useTraineeContext.ts
+//   • buddyBySlug, seniorSlugByJuniorSlug, juniorSlugsBySeniorSlug maps
+//     from lib/airtable-trainees.ts
+//
+// This file is retained only as a reference for the pre-migration mapping;
+// no application code imports from it any more. Delete once we're
+// confident the Airtable-driven path is stable.
 
 // Senior (sales) → primary Junior (lead gen) buddy pairs
 export const buddyPairs: Record<string, string> = {

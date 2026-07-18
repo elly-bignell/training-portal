@@ -51,6 +51,8 @@ export interface TraineeContext {
   applicantSlugs: string[];
   csOnboardingSlugs: string[];
   buddyBySlug: Record<string, string>;
+  seniorSlugByJuniorSlug: Record<string, string>;
+  juniorSlugsBySeniorSlug: Record<string, string[]>;
   source: "airtable" | "fallback" | "cache";
   fetchedAt: string;
 }
@@ -88,6 +90,8 @@ function fallbackContext(): TraineeContext {
     applicantSlugs: FALLBACK_APPLICANT_SLUGS,
     csOnboardingSlugs: FALLBACK_CS_ONBOARDING_SLUGS,
     buddyBySlug: {},
+    seniorSlugByJuniorSlug: {},
+    juniorSlugsBySeniorSlug: {},
     source: "fallback",
     fetchedAt: new Date().toISOString(),
   };
@@ -180,6 +184,60 @@ export function useTraineeContext() {
     [context.csOnboardingSlugs]
   );
 
+  // ─── Buddy relationship helpers ──────────────────────────────────────
+  // Mirror the API of the deprecated data/buddyPairs.ts module so
+  // consumers can drop these in. All lookups derive from Airtable via
+  // the seniorSlugByJuniorSlug / juniorSlugsBySeniorSlug maps.
+
+  const isSenior = useCallback(
+    (slug: string | null | undefined): boolean => {
+      if (!slug) return false;
+      const juniors = context.juniorSlugsBySeniorSlug[slug];
+      return !!juniors && juniors.length > 0;
+    },
+    [context.juniorSlugsBySeniorSlug]
+  );
+
+  const isJunior = useCallback(
+    (slug: string | null | undefined): boolean =>
+      !!slug && !!context.seniorSlugByJuniorSlug[slug],
+    [context.seniorSlugByJuniorSlug]
+  );
+
+  const getBuddySlug = useCallback(
+    (slug: string | null | undefined): string | null => {
+      if (!slug) return null;
+      // Junior → their senior
+      const senior = context.seniorSlugByJuniorSlug[slug];
+      if (senior) return senior;
+      // Senior → first junior (prefer active, alphabetical by slug; fall
+      // back to any if all are archived)
+      const juniors = context.juniorSlugsBySeniorSlug[slug];
+      if (!juniors || juniors.length === 0) return null;
+      const activeJuniors = juniors.filter(
+        (j) => !context.archivedSlugs.includes(j)
+      );
+      const pool = activeJuniors.length > 0 ? activeJuniors : juniors;
+      return [...pool].sort()[0];
+    },
+    [
+      context.seniorSlugByJuniorSlug,
+      context.juniorSlugsBySeniorSlug,
+      context.archivedSlugs,
+    ]
+  );
+
+  const getBuddyName = useCallback(
+    (slug: string | null | undefined): string => {
+      const buddySlug = getBuddySlug(slug);
+      if (!buddySlug) return "Buddy";
+      const t = context.allTrainees.find((tr) => tr.slug === buddySlug);
+      if (!t) return "Buddy";
+      return t.name.split(" ")[0];
+    },
+    [getBuddySlug, context.allTrainees]
+  );
+
   return {
     ...context,
     isCustomerService,
@@ -188,5 +246,9 @@ export function useTraineeContext() {
     isArchived,
     isApplicant,
     isCSOnboarding,
+    isSenior,
+    isJunior,
+    getBuddySlug,
+    getBuddyName,
   };
 }

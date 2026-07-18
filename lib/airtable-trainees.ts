@@ -73,8 +73,19 @@ export interface TraineeContext {
   archivedSlugs: string[];
   applicantSlugs: string[];
   csOnboardingSlugs: string[];
-  /** Map slug → buddy name (Lucas Tirri / Dylan Munro / Felipe Garcia). */
+  /** Map junior slug → their senior closer's NAME (as it appears in the
+   *  Airtable Buddy single-select — e.g. "Lucas Tirri"). Kept for display
+   *  purposes; use `seniorSlugByJuniorSlug` when you need to resolve to a
+   *  slug for further lookups. */
   buddyBySlug: Record<string, string>;
+  /** Map junior slug → their senior closer's SLUG (e.g. "lucas-tirri").
+   *  Derived by matching the Buddy name against the closer's Name field. */
+  seniorSlugByJuniorSlug: Record<string, string>;
+  /** Map senior closer slug → array of junior slugs assigned to them.
+   *  Used to build the "Calls & Bookings" team groupings on the admin
+   *  home page, plus the two admin performance pages. Includes archived
+   *  juniors — filter in the consumer if you only want active. */
+  juniorSlugsBySeniorSlug: Record<string, string[]>;
 
   // ─── Meta ────────────────────────────────────────────────────────────
   source: "airtable" | "fallback";
@@ -130,6 +141,8 @@ function buildFallback(): TraineeContext {
     applicantSlugs: FALLBACK_APPLICANT_SLUGS,
     csOnboardingSlugs: FALLBACK_CS_ONBOARDING_SLUGS,
     buddyBySlug: {},
+    seniorSlugByJuniorSlug: {},
+    juniorSlugsBySeniorSlug: {},
     source: "fallback",
     fetchedAt: new Date().toISOString(),
   };
@@ -254,6 +267,27 @@ export async function getTraineeContext(): Promise<TraineeContext> {
       return buildFallback();
     }
 
+    // ─── Derive the closer↔junior maps ──────────────────────────────────
+    // Buddy in Airtable is stored as a name string (e.g. "Lucas Tirri") on
+    // the single-select. Convert that into slug-based lookups by matching
+    // against the Sales team's Name fields.
+    const closerNameToSlug: Record<string, string> = {};
+    for (const t of allTrainees) {
+      if (t.team === "Sales") closerNameToSlug[t.name] = t.slug;
+    }
+    const seniorSlugByJuniorSlug: Record<string, string> = {};
+    const juniorSlugsBySeniorSlug: Record<string, string[]> = {};
+    for (const t of allTrainees) {
+      if (!t.buddy) continue;
+      const seniorSlug = closerNameToSlug[t.buddy];
+      if (!seniorSlug) continue; // buddy name doesn't resolve — skip
+      seniorSlugByJuniorSlug[t.slug] = seniorSlug;
+      if (!juniorSlugsBySeniorSlug[seniorSlug]) {
+        juniorSlugsBySeniorSlug[seniorSlug] = [];
+      }
+      juniorSlugsBySeniorSlug[seniorSlug].push(t.slug);
+    }
+
     return {
       trainees,
       salesTeamSlugs,
@@ -269,6 +303,8 @@ export async function getTraineeContext(): Promise<TraineeContext> {
       applicantSlugs,
       csOnboardingSlugs,
       buddyBySlug,
+      seniorSlugByJuniorSlug,
+      juniorSlugsBySeniorSlug,
       source: "airtable",
       fetchedAt: new Date().toISOString(),
     };

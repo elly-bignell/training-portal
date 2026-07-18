@@ -3,7 +3,7 @@
 "use client";
 
 import { useEasterPromo, useBuddyCloses } from "@/hooks/useEasterPromo";
-import { reverseBuddyPairs, buddyNames } from "@/data/buddyPairs";
+import { useTraineeContext } from "@/hooks/useTraineeContext";
 
 interface Props {
   traineeSlug: string;
@@ -11,8 +11,11 @@ interface Props {
 }
 
 export default function EasterPromoJunior({ traineeSlug, traineeName }: Props) {
-  const seniorSlug = reverseBuddyPairs[traineeSlug];
-  const seniorName = seniorSlug ? buddyNames[seniorSlug] || seniorSlug : "Your buddy";
+  const { seniorSlugByJuniorSlug, allTrainees } = useTraineeContext();
+  const seniorSlug = seniorSlugByJuniorSlug[traineeSlug];
+  const seniorName = seniorSlug
+    ? allTrainees.find((t) => t.slug === seniorSlug)?.name.split(" ")[0] || seniorSlug
+    : "Your buddy";
   const { totalCloses, expressCloses, standardCloses, isLoading: closesLoading, refresh } = useBuddyCloses(seniorSlug || "");
   const { today, totals, isLoading: bookingsLoading, isSaving, increment } = useEasterPromo(traineeSlug, traineeName);
 

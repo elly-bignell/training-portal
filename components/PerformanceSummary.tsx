@@ -2,10 +2,11 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import { trainees } from "@/data/trainees";
 import { LEAD_GEN_SLUGS } from "@/data/leadGen";
+import { useTraineeContext } from "@/hooks/useTraineeContext";
 import { weeklyStandards, getCurrentWeekNumber, getWeekBoundaries, getDayOfWeek, TRAINEE_WEEK_OVERRIDES, getTraineeWeek, getYearWeekLabel } from "@/hooks/useActivityTracking";
 
 interface DailyData {
@@ -31,20 +32,15 @@ interface TraineeWeekData {
   };
 }
 
-// Team structure — defines display order and grouping
-const teams = [
-  {
-    name: "Team 1",
-    members: ["lucas-tirri", "cindy-rose-rondez-manrique"],
-  },
-  {
-    name: "Team 2",
-    members: ["felipe-garcia", "sydney-arnold", "shian-roux"],
-  },
-  {
-    name: "Team 3",
-    members: ["dylan-munro", "riley-kerrison", "jade-bautista"],
-  },
+// Team structure — display order (closer slug order) is preserved when
+// deriving from Airtable so widget renders as Team 1 = Lucas's group,
+// Team 2 = Felipe's, Team 3 = Dylan's. Membership itself is fetched
+// from Airtable inside the component below. Fallback ordering used
+// when Airtable is unreachable.
+const TEAM_CLOSERS: { name: string; closer: string; fallbackMembers: string[] }[] = [
+  { name: "Team 1", closer: "lucas-tirri", fallbackMembers: ["lucas-tirri", "cindy-rose-rondez-manrique"] },
+  { name: "Team 2", closer: "felipe-garcia", fallbackMembers: ["felipe-garcia", "sydney-arnold", "shian-roux"] },
+  { name: "Team 3", closer: "dylan-munro", fallbackMembers: ["dylan-munro", "riley-kerrison", "jade-bautista"] },
 ];
 
 // Trainees who carry the 7/day individual booking target. Sourced from
@@ -204,13 +200,37 @@ function getWeekDates(weekNum: number): string[] {
 }
 
 export default function PerformanceSummary() {
+  const { juniorSlugsBySeniorSlug } = useTraineeContext();
   const [weekData, setWeekData] = useState<TraineeWeekData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshTick, setRefreshTick] = useState(0);
   const currentWeek = getCurrentWeekNumber();
 
+  // Derive per-team member lists from Airtable. Each team's members =
+  // [closerSlug, ...juniorSlugs]. If Airtable hasn't loaded (or the
+  // closer has no juniors assigned there), fall back to the pre-Airtable
+  // hardcoded roster so the widget always renders something.
+  const teams = useMemo(() => {
+    return TEAM_CLOSERS.map((t) => {
+      const juniors = juniorSlugsBySeniorSlug[t.closer];
+      const members = juniors && juniors.length > 0
+        ? [t.closer, ...juniors]
+        : t.fallbackMembers;
+      return { name: t.name, members };
+    });
+  }, [juniorSlugsBySeniorSlug]);
+
   // All slugs we want to display (from team definitions)
-  const displaySlugs = new Set(teams.flatMap((t) => t.members));
+  const displaySlugs = useMemo(
+    () => new Set(teams.flatMap((t) => t.members)),
+    [teams]
+  );
+  // Stable string key for the fetch effect deps — a Set has unstable
+  // identity every render even when contents match.
+  const displaySlugsKey = useMemo(
+    () => teams.flatMap((t) => t.members).sort().join(","),
+    [teams]
+  );
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -286,7 +306,7 @@ export default function PerformanceSummary() {
     const interval = setInterval(() => setRefreshTick((t) => t + 1), 5 * 60 * 1000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentWeek, refreshTick]);
+  }, [currentWeek, refreshTick, displaySlugsKey]);
 
   if (isLoading) {
     return (

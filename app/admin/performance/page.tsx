@@ -7,6 +7,7 @@ import Link from "next/link";
 import { trainees } from "@/data/trainees";
 import PasswordGate from "@/components/PasswordGate";
 import { usePersistedState } from "@/hooks/usePersistedState";
+import { useTraineeContext } from "@/hooks/useTraineeContext";
 
 // ─── Types ───
 interface DailyRecord {
@@ -30,14 +31,16 @@ const DEFAULT_CLOSE_RATE = 0.5;
 const DEFAULT_HOURS = 3.5;
 const DEFAULT_DEAL_VALUE = 400;
 
-// ─── Buddy pairs ───
-const buddyPairs: { label: string; sublabel?: string; members: string[] }[] = [
-  { label: "Lucas & Cindy", members: ["lucas-tirri", "cindy-rose-rondez-manrique"] },
-  { label: "Felipe, Sydney & Shian", members: ["felipe-garcia", "sydney-arnold", "shian-roux"] },
-  { label: "Dylan, Riley & Jade", members: ["dylan-munro", "riley-kerrison", "jade-bautista"] },
+// ─── Buddy pair fallbacks ───
+// Preserves the pre-Airtable labels + members so the page keeps rendering
+// something sensible if Airtable is unreachable (Buddy maps come back empty
+// in fallback mode). Actual `members` for each pair are derived from
+// Airtable inside the component below when available.
+const FALLBACK_BUDDY_PAIRS: { closer: string; label: string; sublabel?: string; members: string[] }[] = [
+  { closer: "lucas-tirri", label: "Lucas & Cindy", members: ["lucas-tirri", "cindy-rose-rondez-manrique"] },
+  { closer: "felipe-garcia", label: "Felipe, Sydney & Shian", members: ["felipe-garcia", "sydney-arnold", "shian-roux"] },
+  { closer: "dylan-munro", label: "Dylan, Riley & Jade", members: ["dylan-munro", "riley-kerrison", "jade-bautista"] },
 ];
-
-const allSlugs = buddyPairs.flatMap((p) => p.members);
 
 // ─── Metrics config ───
 const metrics: { key: Metric; label: string; shortLabel: string; format: (v: number) => string }[] = [
@@ -141,6 +144,26 @@ function fmtTarget(v: number): string {
 
 // ─── Main Component ───
 function PerformanceDashboardContent() {
+  const { juniorSlugsBySeniorSlug } = useTraineeContext();
+
+  // Derive team groupings from Airtable. Each closer in the fallback list
+  // gets its actual juniors from Airtable; if a closer has no juniors
+  // there (e.g. Airtable is down and buddy maps are empty), we keep the
+  // hardcoded fallback members so the page still renders. Labels stay
+  // hardcoded because they're wordy ("Felipe, Sydney & Shian" etc.) and
+  // rarely change.
+  const buddyPairs = useMemo(() => {
+    return FALLBACK_BUDDY_PAIRS.map((fallback) => {
+      const airtableJuniors = juniorSlugsBySeniorSlug[fallback.closer];
+      const members = airtableJuniors
+        ? [fallback.closer, ...airtableJuniors]
+        : fallback.members;
+      return { label: fallback.label, sublabel: undefined as string | undefined, members };
+    });
+  }, [juniorSlugsBySeniorSlug]);
+
+  const allSlugs = useMemo(() => buddyPairs.flatMap((p) => p.members), [buddyPairs]);
+
   const [allData, setAllData] = useState<Map<string, DailyRecord[]>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
 
@@ -204,7 +227,8 @@ function PerformanceDashboardContent() {
       setIsLoading(false);
     };
     fetchAll();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allSlugs.join(",")]);
 
   const toggleWeek = (weekNum: number) => {
     setCollapsedWeeks((prev) =>
