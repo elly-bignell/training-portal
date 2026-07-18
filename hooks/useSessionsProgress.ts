@@ -24,12 +24,7 @@ import {
   customerServiceSessions,
   getSessionById,
 } from "@/data/sessions";
-import {
-  trainees,
-  isCustomerService,
-  isLeadGen,
-  usesLeadGenTrack,
-} from "@/data/trainees";
+import { useTraineeContext } from "@/hooks/useTraineeContext";
 
 const REP_SLUG_KEY = "sessions-rep-slug";
 
@@ -166,6 +161,7 @@ export function assetsViewedCount(
 // ─── Hook ────────────────────────────────────────────────────────────────────
 
 export function useSessionsProgress(slug: string | null) {
+  const { trainees, isCustomerService, usesLeadGenTrack } = useTraineeContext();
   const [data, setData] = useState<RepSessionsProgress>(EMPTY_REP_PROGRESS);
   const [hydrated, setHydrated] = useState(false);
 
@@ -462,7 +458,7 @@ export function useSessionsProgress(slug: string | null) {
       asset,
       resumeSeconds: top.prog!.resumePositions[asset],
     };
-  }, [data, hydrated, slug]);
+  }, [data, hydrated, slug, isCustomerService, usesLeadGenTrack]);
 
   return {
     data,

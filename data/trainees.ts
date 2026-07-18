@@ -326,3 +326,21 @@ export function isLeadGen(slug: string | null | undefined): boolean {
 export function usesLeadGenTrack(slug: string | null | undefined): boolean {
   return isLeadGen(slug) || isCustomerService(slug);
 }
+
+// ─── Fallback aliases (Stage 1 Airtable migration, 18 Jul 2026) ─────────────
+//
+// The hardcoded arrays above are the fallback the /api/trainees route uses
+// when Airtable is unreachable. New code should NOT import trainees /
+// SALES_TEAM_SLUGS / etc. directly — go through useTraineeContext() (client)
+// or getTraineeContext() (server) instead. These aliases exist so the
+// fetcher module (lib/airtable-trainees.ts) can import them under names
+// that make their role obvious.
+//
+// Once the migration is fully cut over, we can decide whether to keep
+// updating these fallback arrays (safer — keeps the site alive if Airtable
+// dies) or delete them (simpler — one source of truth, no drift risk).
+
+export const FALLBACK_TRAINEES = trainees;
+export const FALLBACK_SALES_TEAM_SLUGS = SALES_TEAM_SLUGS;
+export const FALLBACK_LEAD_GEN_SLUGS = LEAD_GEN_SLUGS;
+export const FALLBACK_CUSTOMER_SERVICE_SLUGS = CUSTOMER_SERVICE_SLUGS;

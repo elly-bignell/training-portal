@@ -10,13 +10,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import {
-  trainees,
-  SESSIONS_ALLOWED_SLUGS,
-  SALES_TEAM_SLUGS,
-  LEAD_GEN_SLUGS,
-  CUSTOMER_SERVICE_SLUGS,
-} from "@/data/trainees";
+import { useTraineeContext } from "@/hooks/useTraineeContext";
 import {
   getSelectedRepSlug,
   setSelectedRepSlug,
@@ -31,28 +25,6 @@ import {
 // the curated LG projection with MC-only quizzes) — that split is enforced
 // downstream by isLeadGen / usesLeadGenTrack, not by this picker.
 type Department = "sales" | "customer-service";
-
-const DEPARTMENTS: { value: Department; label: string; slugs: string[] }[] = [
-  {
-    value: "sales",
-    label: "Sales",
-    // Closers + Lead Gen reps rolled up into a single Sales list.
-    slugs: [...SALES_TEAM_SLUGS, ...LEAD_GEN_SLUGS],
-  },
-  {
-    value: "customer-service",
-    label: "Customer Service",
-    slugs: CUSTOMER_SERVICE_SLUGS,
-  },
-];
-
-function departmentForSlug(slug: string): Department | null {
-  if (SALES_TEAM_SLUGS.includes(slug) || LEAD_GEN_SLUGS.includes(slug)) {
-    return "sales";
-  }
-  if (CUSTOMER_SERVICE_SLUGS.includes(slug)) return "customer-service";
-  return null;
-}
 
 // Per-rep auth lives in localStorage so a rep doesn't re-enter the password
 // on every page hop within their browser. Expires after 12 hours so an
@@ -99,6 +71,14 @@ interface Props {
 }
 
 export default function RepPicker({ onSelected, forceShow = false }: Props) {
+  const {
+    trainees,
+    salesTeamSlugs,
+    leadGenSlugs,
+    customerServiceSlugs,
+    sessionsAllowedSlugs,
+  } = useTraineeContext();
+
   const [department, setDepartment] = useState<Department | "">("");
   const [pendingSlug, setPendingSlug] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -106,6 +86,25 @@ export default function RepPicker({ onSelected, forceShow = false }: Props) {
   const [shouldShow, setShouldShow] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string>("");
+
+  // Department → slug list, derived from the live trainee context so new
+  // hires added in Airtable automatically flow through.
+  const departmentSlugs = useMemo<Record<Department, string[]>>(
+    () => ({
+      // Closers + Lead Gen reps rolled up into a single Sales list.
+      sales: [...salesTeamSlugs, ...leadGenSlugs],
+      "customer-service": customerServiceSlugs,
+    }),
+    [salesTeamSlugs, leadGenSlugs, customerServiceSlugs]
+  );
+
+  const departmentForSlug = (slug: string): Department | null => {
+    if (salesTeamSlugs.includes(slug) || leadGenSlugs.includes(slug)) {
+      return "sales";
+    }
+    if (customerServiceSlugs.includes(slug)) return "customer-service";
+    return null;
+  };
 
   // Names to show in the second dropdown once a department is picked.
   // Default rule: sort alphabetically by first name so reps can scan
@@ -119,7 +118,7 @@ export default function RepPicker({ onSelected, forceShow = false }: Props) {
   // ignored, so the fallbacks are safe.
   const departmentTrainees = useMemo(() => {
     if (!department) return [];
-    const slugs = DEPARTMENTS.find((d) => d.value === department)?.slugs ?? [];
+    const slugs = departmentSlugs[department] ?? [];
     const firstName = (fullName: string) => fullName.split(" ")[0] ?? fullName;
     const filtered = trainees.filter((t) => slugs.includes(t.slug));
 
@@ -152,7 +151,7 @@ export default function RepPicker({ onSelected, forceShow = false }: Props) {
     const claireIdxAfter = sorted.findIndex((t) => t.slug === "claire-wheaton");
     sorted.splice(claireIdxAfter + 1, 0, logan);
     return sorted;
-  }, [department]);
+  }, [department, departmentSlugs, trainees]);
 
   useEffect(() => {
     if (forceShow) {
@@ -167,7 +166,7 @@ export default function RepPicker({ onSelected, forceShow = false }: Props) {
     if (
       stored &&
       repPickerSlug === stored.slug &&
-      SESSIONS_ALLOWED_SLUGS.includes(stored.slug)
+      sessionsAllowedSlugs.includes(stored.slug)
     ) {
       const t = trainees.find((tr) => tr.slug === stored.slug);
       if (t) {
@@ -272,7 +271,12 @@ export default function RepPicker({ onSelected, forceShow = false }: Props) {
           className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#1F3A5F] focus:border-[#1F3A5F] outline-none mb-4"
         >
           <option value="">— Select your department —</option>
-          {DEPARTMENTS.map((d) => (
+          {(
+            [
+              { value: "sales", label: "Sales" },
+              { value: "customer-service", label: "Customer Service" },
+            ] as { value: Department; label: string }[]
+          ).map((d) => (
             <option key={d.value} value={d.value}>
               {d.label}
             </option>

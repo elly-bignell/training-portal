@@ -21,7 +21,7 @@ import Link from "next/link";
 import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import { getSessionById, getQuiz } from "@/data/sessions";
-import { usesLeadGenTrack } from "@/data/trainees";
+import { useTraineeContext } from "@/hooks/useTraineeContext";
 import { useSessionsProgress } from "@/hooks/useSessionsProgress";
 import {
   MultipleChoiceQuestion,
@@ -80,6 +80,7 @@ function QuizInner() {
   const [repSlug, setRepSlug] = useState<string | null>(null);
   const [repName, setRepName] = useState<string>("");
   const { data, recordQuizAttempt, hydrated } = useSessionsProgress(repSlug);
+  const { usesLeadGenTrack } = useTraineeContext();
 
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number | string>>({});

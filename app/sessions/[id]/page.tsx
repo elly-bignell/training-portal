@@ -11,7 +11,7 @@ import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import AssetCard from "@/components/sessions/AssetCard";
 import { getSessionById, customerServiceSessions } from "@/data/sessions";
-import { isCustomerService, usesLeadGenTrack } from "@/data/trainees";
+import { useTraineeContext } from "@/hooks/useTraineeContext";
 import {
   assetsViewedCount,
   bestQuizScore,
@@ -56,6 +56,7 @@ function SessionDetailInner() {
   // Lead Gen + Customer Service reps live on the curated LG track and can
   // ONLY view lg-session-* ids. If they land on a sales session id (manual
   // URL, stale bookmark, etc.) we 404 so the original numbering never leaks.
+  const { isCustomerService, usesLeadGenTrack } = useTraineeContext();
   const isCS = isCustomerService(repSlug);
   const onLeadGenTrack = usesLeadGenTrack(repSlug);
   if (onLeadGenTrack && !session.id.startsWith("lg-session-")) return notFound();

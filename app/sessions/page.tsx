@@ -16,7 +16,7 @@ import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import SessionCard from "@/components/sessions/SessionCard";
 import { sessions, leadGenSessions, customerServiceSessions } from "@/data/sessions";
-import { isCustomerService, usesLeadGenTrack } from "@/data/trainees";
+import { useTraineeContext } from "@/hooks/useTraineeContext";
 import {
   assetsViewedCount,
   getSessionStatus,
@@ -82,6 +82,7 @@ function SessionsHomeInner() {
   // We project each Session into an "effective" version once and use that
   // everywhere downstream — same id, same metadata. That way the dots,
   // counts, denominators and status calcs all line up.
+  const { isCustomerService, usesLeadGenTrack } = useTraineeContext();
   const isCS = isCustomerService(repSlug);
   const onLeadGenTrack = usesLeadGenTrack(repSlug);
   const effectiveSessions: Session[] = useMemo(() => {
