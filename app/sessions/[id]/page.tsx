@@ -39,6 +39,9 @@ function SessionDetailInner() {
   const [repName, setRepName] = useState<string>("");
   const { data, setAssetState, setResumePosition } =
     useSessionsProgress(repSlug);
+  // Hook calls must all happen BEFORE any early returns — React's
+  // rules-of-hooks requires the same hook call order every render.
+  const { isCustomerService, usesLeadGenTrack } = useTraineeContext();
 
   if (!session) return notFound();
 
@@ -56,7 +59,6 @@ function SessionDetailInner() {
   // Lead Gen + Customer Service reps live on the curated LG track and can
   // ONLY view lg-session-* ids. If they land on a sales session id (manual
   // URL, stale bookmark, etc.) we 404 so the original numbering never leaks.
-  const { isCustomerService, usesLeadGenTrack } = useTraineeContext();
   const isCS = isCustomerService(repSlug);
   const onLeadGenTrack = usesLeadGenTrack(repSlug);
   if (onLeadGenTrack && !session.id.startsWith("lg-session-")) return notFound();
