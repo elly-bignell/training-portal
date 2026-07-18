@@ -63,30 +63,12 @@ export const trainees: Trainee[] = [
     slug: "dasha-axenova",
     startDate: "2026-03-06",
   },
-  {
-    id: "rachel-astachnowicz",
-    name: "Rachel Astachnowicz",
-    slug: "rachel-astachnowicz",
-    startDate: "2026-03-18",
-  },
-  {
-    id: "aston-marsh",
-    name: "Aston Marsh",
-    slug: "aston-marsh",
-    startDate: "2026-03-18",
-  },
-  {
-    id: "reegan-james",
-    name: "Reegan James",
-    slug: "reegan-james",
-    startDate: "2026-03-19",
-  },
-  {
-    id: "shani-thomas",
-    name: "Shani Thomas",
-    slug: "shani-thomas",
-    startDate: "2026-03-24",
-  },
+  // ─── Deleted from Airtable 18 Jul 2026 (people who never really
+  // started). Removed from this fallback array too so the site stays
+  // consistent with Airtable if it ever falls back: Rachel Astachnowicz,
+  // Aston Marsh, Reegan James, Shani Thomas, Khushi Patel, Lauren Kim,
+  // Kristy Lee Busk, Yashika Sood, Caia Cuggy, JJ Chatrawee,
+  // Sushant Maharjan, Maddison Bruce, Shahmir Saajad, Ella Smith.
   {
     id: "riley-kerrison",
     name: "Riley Kerrison",
@@ -94,69 +76,9 @@ export const trainees: Trainee[] = [
     startDate: "2026-03-27",
   },
   {
-    id: "khushi-patel",
-    name: "Khushi Patel",
-    slug: "khushi-patel",
-    startDate: "2026-04-15",
-  },
-  {
-    id: "lauren-kim",
-    name: "Lauren Kim",
-    slug: "lauren-kim",
-    startDate: "2026-04-15",
-  },
-  {
-    id: "kristy-lee-busk",
-    name: "Kristy Lee Busk",
-    slug: "kristy-lee-busk",
-    startDate: "2026-04-16",
-  },
-  {
-    id: "yashika-sood",
-    name: "Yashika Sood",
-    slug: "yashika-sood",
-    startDate: "2026-04-16",
-  },
-  {
-    id: "caia-cuggy",
-    name: "Caia Cuggy",
-    slug: "caia-cuggy",
-    startDate: "2026-04-16",
-  },
-  {
-    id: "jj-chatrawee",
-    name: "JJ Chatrawee",
-    slug: "jj-chatrawee",
-    startDate: "2026-04-16",
-  },
-  {
-    id: "sushant-maharjan",
-    name: "Sushant Maharjan",
-    slug: "sushant-maharjan",
-    startDate: "2026-04-16",
-  },
-  {
-    id: "maddison-bruce",
-    name: "Maddison Bruce",
-    slug: "maddison-bruce",
-    startDate: "2026-04-16",
-  },
-  {
     id: "kateryna-bakumenko",
     name: "Kateryna Bakumenko",
     slug: "kateryna-bakumenko",
-    startDate: "2026-04-16",
-  },
-  {
-    id: "shahmir-saajad",
-    name: "Shahmir Saajad",
-    slug: "shahmir-saajad",
-    startDate: "2026-04-16",
-  },
-  {
-    id: "ella-smith",
-    name: "Ella Smith",
-    slug: "ella-smith",
     startDate: "2026-04-16",
   },
   {
@@ -344,3 +266,36 @@ export const FALLBACK_TRAINEES = trainees;
 export const FALLBACK_SALES_TEAM_SLUGS = SALES_TEAM_SLUGS;
 export const FALLBACK_LEAD_GEN_SLUGS = LEAD_GEN_SLUGS;
 export const FALLBACK_CUSTOMER_SERVICE_SLUGS = CUSTOMER_SERVICE_SLUGS;
+
+// ─── Stage 2 fallback aliases (admin dashboard migration, 18 Jul 2026) ─────
+//
+// Used by the admin dashboard (app/page.tsx) and the onboarding trainee
+// dashboard (app/trainees/[slug]/page.tsx). Same fallback-only role as the
+// Stage 1 aliases above — Airtable is the primary source, these arrays are
+// only read when Airtable is unreachable.
+
+/** Trainees who have left the business. Shown greyed-out on admin
+ *  dashboard so historical training data stays contextual. Pruned
+ *  18 Jul 2026 — Elly deleted rows for people who never really started
+ *  in the Airtable Portal Users table. Only leavers with actual training
+ *  history are kept. */
+export const FALLBACK_ARCHIVED_SLUGS: string[] = [
+  "connie-matthews",
+  "krishna-patel",
+  "thomas-rennie",
+];
+
+/** Trainees flagged as still-an-applicant. Empty as of 18 Jul 2026 —
+ *  Dasha was untkicked once she was confirmed to CS. Kept as an export
+ *  so the code has something to import; Airtable is the live source. */
+export const FALLBACK_APPLICANT_SLUGS: string[] = [];
+
+/** Trainees on the CS-specific onboarding program. Skip Module 4 on the
+ *  onboarding dashboard and don't get an Activity Scorecard link on the
+ *  admin dashboard. Pruned 18 Jul 2026 to match the current Airtable
+ *  state — deleted trainees removed. */
+export const FALLBACK_CS_ONBOARDING_SLUGS: string[] = [
+  "dasha-axenova",
+  "jeremy-valiente",
+  "dylanna-thach",
+];

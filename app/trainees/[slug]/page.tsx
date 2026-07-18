@@ -4,7 +4,8 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { trainees, getTraineeBySlug } from "@/data/trainees";
+import { getTraineeBySlug } from "@/data/trainees";
+import { useTraineeContext } from "@/hooks/useTraineeContext";
 import { trainingProgram } from "@/data/trainingProgram";
 import { useTraineeProgress } from "@/hooks/useLocalStorage";
 import ProgressBar from "@/components/ProgressBar";
@@ -16,10 +17,11 @@ function TraineeDashboardContent() {
   const slug = params.slug as string;
   const trainee = getTraineeBySlug(slug);
 
-  // Customer service team: exclude Module 4 (sales-specific)
-  const EXCLUDE_MODULE_4_SLUGS = ["jeremy-valiente", "dasha-axenova", "khushi-patel", "lauren-kim", "kristy-lee-busk", "yashika-sood", "ella-smith", "dylanna-thach"];
-  const CS_APPLICANT_SLUGS = ["dasha-axenova"];
-  const filteredProgram = EXCLUDE_MODULE_4_SLUGS.includes(slug)
+  // Airtable-driven flags for this trainee. CSOnboarding = "on the CS-
+  // specific onboarding program that skips Module 4." Applicant = "still
+  // in the applicant window." Both are per-row toggleable in Airtable.
+  const { isCSOnboarding } = useTraineeContext();
+  const filteredProgram = isCSOnboarding(slug)
     ? trainingProgram.filter((m) => m.id !== "module-4")
     : trainingProgram;
 
@@ -29,7 +31,7 @@ function TraineeDashboardContent() {
     "module-2": ["Understanding of Marketing Sweet"],
     "module-3": ["Understanding of Quodo"],
   };
-  const isCSApplicant = EXCLUDE_MODULE_4_SLUGS.includes(slug);
+  const isCSApplicant = isCSOnboarding(slug);
 
   // Get all checklist item IDs for overall progress calculation (excluding section headers)
   const allChecklistIds = filteredProgram.flatMap((module) =>
@@ -254,16 +256,16 @@ function TraineeDashboardContent() {
           })}
         </div>
 
-        {/* Expiry notice for applicants */}
-        {CS_APPLICANT_SLUGS.includes(slug) && (
-          <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center gap-3">
-            <span className="text-amber-500 text-xl">⏰</span>
-            <p className="text-sm text-amber-800 font-medium">These resources will close at 6pm Sunday 8 March.</p>
-          </div>
-        )}
+        {/* Applicant banner intentionally removed 18 Jul 2026. The
+            Applicant flag still surfaces as a chip on the admin dashboard
+            (via useTraineeContext.isApplicant), but the trainee-facing
+            banner is gone — the previous text was date-specific and went
+            stale. If a future applicant program needs a trainee-facing
+            message, wire it up here reading from Airtable rather than
+            hardcoding the date. */}
 
         {/* Resource Reflection — Customer Service applicants only */}
-        {EXCLUDE_MODULE_4_SLUGS.includes(slug) && (
+        {isCSOnboarding(slug) && (
           <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-lg">💡</span>
