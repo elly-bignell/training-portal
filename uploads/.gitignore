@@ -1,0 +1,5 @@
+# Ignore everything the colleague drops in for a session publish,
+# but keep the folder (via README.md and this .gitignore).
+*
+!.gitignore
+!README.md
