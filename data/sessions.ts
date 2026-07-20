@@ -51,6 +51,450 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Session 45 — Build Mental Resilience. (Mon 20 Jul 2026) ──────────
+  // Sales-origin, all-teams. Number 45 in the sales-training sequence
+  // (closer view). Renumbered 37 in the LG/CS projection via
+  // LEAD_GEN_SESSION_MAP. 3-asset shape: debrief + toolkit + quiz
+  // (no intro video, no podcast, no presentation).
+  {
+    id: "session-45-build-mental-resilience",
+    number: "45",
+    date: "2026-07-20",
+    title: "Build Mental Resilience. Recover Faster. That's the Whole Skill.",
+    summary:
+      "The trait that separates the reps who last from the reps who don't isn't the absence of setbacks — it's how fast they recover. Drop the expectation that life will get easier. Obstacles keep appearing because you're still moving. Swap \"why is this happening?\" for \"what do I do next?\" Feelings are weather; commitment is a choice. Keep the promises you make to yourself — that internal trust is what holds under pressure.",
+    keyTakeaway:
+      "Challenges are guaranteed. The variable is recovery time. Stop expecting things to get easier — expect obstacles because you're still moving. Replace \"why is this happening?\" with \"what do I do next?\" Feelings are temporary; commitment is a choice. Keep the promises you make to yourself. And when hard seasons reveal who's around you, treat it as clarity, not disappointment.",
+    director: "Corie Dawson",
+    totalTime: "~40 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-45-build-mental-resilience/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-45-build-mental-resilience/toolkit.pdf",
+      },
+      {
+        kind: "quiz",
+        estimate: "7 questions · ~8 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s45-q1",
+            type: "multiple-choice",
+            prompt:
+              "According to the session, what actually separates the reps who succeed from those who quit?",
+            topic: "Recovery time is the skill",
+            options: [
+              "They avoid the biggest setbacks by choosing lower-risk paths and safer opportunities",
+              "They recover faster — recovery time is the variable, not the frequency of the challenges",
+              "They have more natural talent for the work than the average person on the sales floor",
+              "They enjoy access to earlier mentorship and stronger family or personal support networks",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Everyone faces challenges. The variable is recovery time. Reps who make careers see their recovery time get shorter and shorter over years of practice. Early on, a bad month knocks them flat for weeks. Ten years in, the same bad month lands and they're functioning by Thursday. That reduction IS the skill.",
+          },
+          {
+            id: "s45-q2",
+            type: "multiple-choice",
+            prompt:
+              "What mindset shift does the session recommend around expecting life to \"eventually settle down\"?",
+            topic: "Drop the \"easier\" expectation",
+            options: [
+              "Wait patiently — the settled period does arrive after enough persistence and hard work",
+              "Drop the expectation — obstacles keep appearing because you're still moving forward",
+              "Aim to reduce work hours so that the settled period arrives sooner and stays longer",
+              "Diversify your commitments — spreading effort makes the pressure feel more manageable",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Once the rep drops the expectation of \"easier,\" they stop being surprised by obstacles. Stop being surprised — stop giving them power over emotions. Obstacles become logistics, not injustices. The consistent presence of problems is the felt signature of a career that's actually going somewhere.",
+          },
+          {
+            id: "s45-q3",
+            type: "multiple-choice",
+            prompt:
+              "Why does the session say obstacles are often SIGNS OF PROGRESS rather than reasons to quit?",
+            topic: "Standard just went up",
+            options: [
+              "Because obstacles create character stories that make later success feel more meaningful",
+              "Because obstacles produce customer sympathy that makes the sales pitch more persuasive later",
+              "Because your standard just went up — you're improving, so the demands on you got greater",
+              "Because setbacks weed out the competition, leaving fewer rivals for you in the market",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Counter-intuitive but reliable. When something starts getting harder, the useful reading is often \"the standard just went up because I'm improving.\" Learning new = uncomfortable. Improving = mistakes more obvious. Aiming higher = greater demands. Growth doesn't feel comfortable — it feels demanding. That's the signature.",
+          },
+          {
+            id: "s45-q4",
+            type: "multiple-choice",
+            prompt:
+              "Which pair of questions does the session say reps should learn to swap during a setback?",
+            topic: "What do I do next?",
+            options: [
+              "\"Whose fault is this?\" → \"How do I avoid it happening the same way in the future?\"",
+              "\"Why is this happening?\" → \"What do I do next?\" — one stops motion, one restarts it",
+              "\"Was this the right choice?\" → \"Should I speak with a mentor about the decision I made?\"",
+              "\"Is this the wrong company?\" → \"Would a different role suit my skills and personality better?\"",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "\"Why is this happening?\" points backward. Loops through fairness and blame. Produces no action. Stops motion. \"What do I do next?\" points forward. Demands a concrete action. Produces motion. Answer the second question often enough and obstacles stop being obstacles — they become problems you solved on the way to the outcome.",
+          },
+          {
+            id: "s45-q5",
+            type: "multiple-choice",
+            prompt:
+              "What does the session mean by \"feelings are temporary — commitment is a choice\"?",
+            topic: "Feelings vs commitment",
+            options: [
+              "Successful reps train themselves to feel motivated every day through positive daily rituals",
+              "Reps should ignore their feelings entirely because feelings are unreliable data on performance",
+              "Even successful reps feel doubt — they just don't let feelings make their operational decisions",
+              "Reps should communicate their feelings to their manager so support can be offered when needed",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Even highly successful people experience doubt, frustration, and moments of wanting to give up. The difference isn't the absence of feelings — it's the refusal to let feelings make the decisions. Feelings are weather. Commitment is what you show up to on schedule, regardless of what the weather says.",
+          },
+          {
+            id: "s45-q6",
+            type: "multiple-choice",
+            prompt:
+              "What does the session say builds \"self-trust\" over time — and why does self-trust matter?",
+            topic: "Reputation with yourself",
+            options: [
+              "Positive affirmations spoken aloud each morning before the first prospect call of the day",
+              "External recognition from managers — recognised reps trust themselves more under pressure",
+              "Keeping the promises you make to yourself — each kept promise builds trust under pressure",
+              "Regular training that builds product knowledge — knowledge produces confidence, which becomes trust",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Every promise you keep to yourself builds trust in yourself. Every promise you break weakens it. Over months and years this becomes a resource you draw on under pressure — internal trust that says \"I'll handle this\" and MEANS it. Reps with strong internal trust are far more resilient under pressure than reps without it.",
+          },
+          {
+            id: "s45-q7",
+            type: "multiple-choice",
+            prompt:
+              "How does the session say reps should interpret people who \"disappear\" during their hard seasons?",
+            topic: "Hard times reveal the circle",
+            options: [
+              "As a personal betrayal that should prompt confrontation once the difficult stretch has finished",
+              "As information — a clear signal about who genuinely belongs in the circle and who doesn't",
+              "As a reason to stop sharing personal difficulty publicly so it can't cost you these relationships",
+              "As proof that you should work harder to keep those relationships intact through the hard patch",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The temptation is to feel wounded by the people who disappeared. A better frame: treat it as clarity, not disappointment. Difficult times don't create the disloyalty — they just reveal what was already there underneath. Now you know, factually, who genuinely belongs. Move loyal ones closer. Move disappearing ones out. The circle gets healthier.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─── Session 44 — Progress Is Supposed to Feel Slow. (Mon 20 Jul 2026) ─
+  // Sales-origin, all-teams. Number 44 in the sales-training sequence
+  // (closer view). Renumbered 36 in the LG/CS projection via
+  // LEAD_GEN_SESSION_MAP. 3-asset shape: debrief + toolkit + quiz.
+  {
+    id: "session-44-progress-is-slow",
+    number: "44",
+    date: "2026-07-20",
+    title: "Progress Is Supposed to Feel Slow.",
+    summary:
+      "The single biggest reason people quit meaningful pursuits too early: progress almost never feels like progress while you're living it. Success is repetitive, uncomfortable, slow — that isn't a bug, it's the texture of building anything worthwhile. Judge yourself on consistency of action, not on emotional readings. Stay in the game long enough for the invisible daily gains to compound into visible ground.",
+    keyTakeaway:
+      "Progress is supposed to feel slow. Growth is supposed to feel uncomfortable. Difficulty is not a signal you're on the wrong path — it's the texture of the right one. Stay consistent, judge by behaviour not emotion, and trust that the invisible daily gains will become visible at the six-month mark. Extraordinary results belong to the reps who stay committed long enough for compounding to show up.",
+    director: "Corie Dawson",
+    totalTime: "~40 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-44-progress-is-slow/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-44-progress-is-slow/toolkit.pdf",
+      },
+      {
+        kind: "quiz",
+        estimate: "7 questions · ~8 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s44-q1",
+            type: "multiple-choice",
+            prompt:
+              "What does the session say is the biggest reason most people quit meaningful pursuits too early?",
+            topic: "The boring middle",
+            options: [
+              "They lack the natural talent for what they're doing and eventually accept their limitations",
+              "They don't get enough recognition, so they lose motivation over the long stretch of it",
+              "Progress rarely feels like progress while they're living it — the middle reads as failure",
+              "The competition is too aggressive and eventually pushes them out of the market for good",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The boring middle is the whole trap. If the rep expects progress to feel exciting, they'll interpret the flat middle as failure and exit. If they expect it to feel slow, they'll interpret it as exactly what it is — the boring middle on the way to the outcome. Expectation is upstream of everything.",
+          },
+          {
+            id: "s44-q2",
+            type: "multiple-choice",
+            prompt:
+              "The session says confidence, competence, repetition, and experience arrive in what order?",
+            topic: "Confidence is the result",
+            options: [
+              "Confidence first, then competence — because confidence powers the effort that produces skill",
+              "All four arrive together once the rep has properly internalised the right sales mindset",
+              "Competence, repetition, experience — confidence is the result, not the starting point",
+              "Experience first, then everything else compounds naturally from years of accumulated work",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The order most reps get wrong. They wait for confidence before performing — and wait forever, because confidence doesn't arrive on its own. It accumulates as a byproduct of competence, repetition, and experience. Reps who perform without confidence end up with both. Reps who wait end up with neither.",
+          },
+          {
+            id: "s44-q3",
+            type: "multiple-choice",
+            prompt:
+              "According to the session, how does time actually behave during a difficult stretch versus in retrospect?",
+            topic: "Slow inside, fast in retrospect",
+            options: [
+              "Time feels equally slow whether you're inside the stretch or looking back at it years later",
+              "Time feels fast during the difficulty because adrenaline compresses your perception of hours",
+              "Time feels SLOW inside the stretch and FAST in retrospect — both perceptions are real",
+              "Time feels normal on most days, then slows only during a genuine crisis or emergency",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The cognitive distortion is real. Slow inside the stretch. Fast in retrospect. The operational implication: never judge progress based on how it feels in the moment. Moment-perception is unreliable. Behaviour is the signal — emotion is noise. Trust the behaviour.",
+          },
+          {
+            id: "s44-q4",
+            type: "multiple-choice",
+            prompt:
+              "What does the session say the ACTUAL difference is between successful people and people who quit?",
+            topic: "Same path, different response",
+            options: [
+              "Successful people had smoother terrain — the setbacks and losses were smaller for them",
+              "Successful people walked the same path — they refused to make setbacks into stopping points",
+              "Successful people had earlier access to better mentors and denser professional networks",
+              "Successful people had more natural talent — they were simply better suited to the work",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The comforting belief that successful people had smoother terrain is wrong. Same path. Same setbacks. Same tempting-quit moments. The only difference is response — they refused to let setbacks become stopping points. The model is available to any rep with the discipline to use it.",
+          },
+          {
+            id: "s44-q5",
+            type: "multiple-choice",
+            prompt:
+              "Why did Corie pursue his pilot's licence, according to the session?",
+            topic: "Chosen discomfort",
+            options: [
+              "To help him travel between the different Marketing Sweet offices located across the country",
+              "Because he was preparing to move into commercial aviation as a second career after sales",
+              "To prove to himself he'd still choose difficulty — still learning, still risking failure",
+              "Because his father had wanted to fly and never got to, so he decided to complete it in honour",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Chosen discomfort. Corie didn't need the licence for work, business, or any prior interest in flying. He chose it to prove to himself he'd still put himself into difficult territory voluntarily. It's easy to encourage other people to leave their comfort zone. Much harder to do it yourself. The licence was his own commitment to the principle.",
+          },
+          {
+            id: "s44-q6",
+            type: "multiple-choice",
+            prompt:
+              "The session says progress should be measured by what — and NOT by what?",
+            topic: "Consistency, not emotion",
+            options: [
+              "Measured by revenue and NOT by pipeline value — pipeline is a lagging metric that misleads",
+              "Measured by consistency of action and NOT by emotional readings of how the day felt",
+              "Measured by close rate and NOT by call volume — quality always beats quantity in sales",
+              "Measured by manager approval and NOT by self-assessment — self-scoring produces bias",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Consistency IS the measurement. Emotion is noise. If a rep did the work every day for 30 days, they made progress — even if today feels like nothing changed. Reps who judge by emotional readings quit when their emotions dip; reps who judge by behaviour keep working through the dip and compound anyway.",
+          },
+          {
+            id: "s44-q7",
+            type: "multiple-choice",
+            prompt:
+              "What kind of confidence does the session say holds up when things get hard — and what kind collapses?",
+            topic: "Proof-based confidence",
+            options: [
+              "Confidence built on training holds; confidence built on natural ability collapses under stress",
+              "Confidence built on results holds; confidence built on feedback collapses when results dry up",
+              "Confidence from praise holds; confidence from experience is unstable and dependent on outcomes",
+              "Confidence built from proving things to yourself holds; praise-based confidence collapses",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "Praise-based confidence collapses when the praise stops. Proof-based confidence — built by doing hard things — holds through the next hard stretch, because the rep has data on themselves. Data says they've done hard things before and did them anyway. That's the confidence that survives.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─── Session 43 — Process Your Problems. Don't Hide Them. (Mon 20 Jul 2026)
+  // Sales-origin, all-teams. Number 43 in the sales-training sequence
+  // (closer view). Renumbered 35 in the LG/CS projection via
+  // LEAD_GEN_SESSION_MAP. 3-asset shape: debrief + toolkit + quiz.
+  // Note: the id `session-43-process-your-problems` is distinct from the
+  // existing CS-3 slug `session-43-work-on-your-terms` — no collision.
+  {
+    id: "session-43-process-your-problems",
+    number: "43",
+    date: "2026-07-20",
+    title: "Process Your Problems. Don't Hide Them.",
+    summary:
+      "The mistake most reps make when personal life gets hard is trying to hide the emotion or push through as though it isn't happening. This session offers the opposite discipline — how to PROCESS problems rather than bury them, why real gratitude finds one true anchor inside a hard moment, and why processed reps sound calmer, present better, and close more than reps who've suppressed the weight they're carrying.",
+    keyTakeaway:
+      "You don't hide problems — you process them. Real gratitude finds one true anchor inside a hard moment. \"What can I learn from this?\" beats \"why is this happening to me?\" every time. Processed reps sound calmer, present better, and close more — not because they've suppressed the emotion, but because they've already dealt with it before the call starts.",
+    director: "Corie Dawson",
+    totalTime: "~40 min",
+    assets: [
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-43-process-your-problems/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "10 min reference",
+        url: "/sample-content/session-43-process-your-problems/toolkit.pdf",
+      },
+      {
+        kind: "quiz",
+        estimate: "7 questions · ~8 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s43-q1",
+            type: "multiple-choice",
+            prompt:
+              "The session claims the mistake most reps make when personal life gets hard is...",
+            topic: "Suppress vs process",
+            options: [
+              "Talking about it too openly, distracting colleagues from their own focus and their work",
+              "Trying to hide or suppress emotion, believing performance requires switching feelings off",
+              "Taking too many sick days, damaging relationships with senior colleagues and clients",
+              "Waiting too long to ask for help when management would gladly have granted it sooner",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "You're a person, not a machine. The attempt to become one produces worse outcomes than the honest alternative. Emotion suppressed doesn't disappear — it accumulates, leaks into calls, and eventually surfaces as burnout. Processing is the alternative to suppressing. Both require you to acknowledge what's actually happening.",
+          },
+          {
+            id: "s43-q2",
+            type: "multiple-choice",
+            prompt:
+              "What kind of gratitude does the session say actually helps a rep process a difficult stretch?",
+            topic: "Real gratitude, not the mug kind",
+            options: [
+              "Public gratitude — thanking colleagues out loud so team culture stays warm and positive",
+              "Gratitude journalling done every morning before the first prospect call of the day",
+              "Finding one real thing to appreciate inside the hard moment, without pretending it isn't hard",
+              "The kind that finds silver linings by convincing yourself the situation was ultimately for the best",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Not the greeting-card kind. Real gratitude finds one true point of appreciation INSIDE a genuinely hard moment. Not pretending the moment isn't hard. Not manufacturing false positivity. Just refusing to let the hardest part of a stretch become the entire field of view.",
+          },
+          {
+            id: "s43-q3",
+            type: "multiple-choice",
+            prompt:
+              "The Corie's-father story is used to illustrate what specific point about hard experiences?",
+            topic: "Meaning inside pain",
+            options: [
+              "Family emergencies should always take priority over work commitments, regardless of the timing",
+              "Gratitude doesn't erase pain — it helps the rep find meaning inside the moment they're living",
+              "Difficult family news is best delivered in person rather than over the phone by a stranger",
+              "Reps should take bereavement leave immediately, because grief can't be processed while working",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Corie's story: the day his father died was one of the hardest of his life, and there was nothing to be grateful for in the immediate aftermath. The reframe offered later — that he was there himself instead of a stranger delivering the news to his mother — didn't erase the pain. It gave the pain meaning. That's the mechanism.",
+          },
+          {
+            id: "s43-q4",
+            type: "multiple-choice",
+            prompt:
+              "The three-question daily check the session offered is...",
+            topic: "Eat, breathe, live another day",
+            options: [
+              "Am I healthy? Am I safe? Do I have enough money in the bank for the next month or so?",
+              "Did I dial today? Did I book a meeting? Did I close a deal before the day ended?",
+              "Am I present? Am I engaged? Am I contributing my best work to the team around me?",
+              "Can you eat? Can you breathe? Can you live another day? Yes to all — ground is there.",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "The three-question check is deliberately basic. Eat, breathe, live another day. If all three answer yes — and they almost always do — the ground under the rep is still there. Doesn't minimise the problem. Just makes the ground visible again after the moment made it feel invisible.",
+          },
+          {
+            id: "s43-q5",
+            type: "multiple-choice",
+            prompt:
+              "Which pair of questions does the session say reps should learn to swap when a setback lands?",
+            topic: "Question swap",
+            options: [
+              "\"Was that entirely my fault?\" → \"Could someone else have handled it better than I did?\"",
+              "\"Why did the buyer say no?\" → \"What could I have said differently in that call?\"",
+              "\"Why is this happening to me?\" → \"What can I learn from this?\" — swap the frame deliberately",
+              "\"Is this the wrong career?\" → \"Should I speak to my manager about role fit soon?\"",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The default question produces frustration and self-pity. The redirect question produces movement and skill. The discipline isn't to never ask the first question — it's to notice when it's running, let it pass, then swap deliberately. Over time the redirect becomes automatic.",
+          },
+          {
+            id: "s43-q6",
+            type: "multiple-choice",
+            prompt:
+              "The session says processing emotion isn't a solo activity. What does it recommend instead?",
+            topic: "Think alongside someone",
+            options: [
+              "Book a professional therapist for weekly sessions, because emotional health should be private",
+              "Speak with a small trusted circle to think alongside — not to complain to, but for clarity",
+              "Post about it on social platforms where the community can respond with support and love",
+              "Journal daily first thing in the morning before opening the laptop or checking messages",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The strongest people know when to ask and who to ask. Not to unload on — to think alongside. Sometimes speaking a thought out loud to a trusted person stops the loop the rep couldn't stop inside their own head. Someone else's perspective adds context the rep couldn't generate alone.",
+          },
+          {
+            id: "s43-q7",
+            type: "multiple-choice",
+            prompt:
+              "Why does processed emotion matter for the buyer on the other end of a sales call?",
+            topic: "Buyers feel mindset",
+            options: [
+              "Buyers can feel the rep's mindset through the phone — processed reps sound calmer and present",
+              "Buyers actively test the rep's emotional stability by asking difficult personal questions early on",
+              "Buyers will only sign contracts with reps who appear professionally happy and enthusiastic on calls",
+              "Buyers rate reps on emotional intelligence, and the ratings determine the rep's future commission rates",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "Every buyer is doing pattern recognition on the rep's tone. Overwhelmed reps get treated differently than calm ones — even by buyers who couldn't articulate what they're picking up on. Processed reps sound different: calmer, more present, less reactive. Buyers feel it. Deals close differently.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Session 41 — Cement, Then Negotiate. (Mon 13 Jul 2026) ────────────
   // Sales-origin, all-teams. Number 41 in the sales-training sequence
   // (closer view). Renumbered 34 in the LG/CS projection via
@@ -6910,6 +7354,9 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-39-anchor-high", newNumber: "32" },
   { sourceId: "session-40-deals-not-dials", newNumber: "33" },
   { sourceId: "session-41-cement-then-negotiate", newNumber: "34" },
+  { sourceId: "session-43-process-your-problems", newNumber: "35" },
+  { sourceId: "session-44-progress-is-slow", newNumber: "36" },
+  { sourceId: "session-45-build-mental-resilience", newNumber: "37" },
   // CS-origin videos — projected onto the LG/CS track with CS-1/2/3
   // display numbers so they don't take up numbered sales-training slots.
   { sourceId: "session-41-get-involved-create-value", newNumber: "CS-1" },
