@@ -51,6 +51,238 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── BONUS EP · Product Knowledge — What Makes Quodo Different (Jul 2026) ───
+  // Bonus product-knowledge training available to all three teams. 3-asset
+  // shape: intro video + Google Slides deck (embedded) + 12-question quiz.
+  // No debrief, no toolkit. Sits alongside the sales training but flagged
+  // with a "BONUS EP" pill so reps understand it's product knowledge, not
+  // the numbered sales-training sequence. In LEAD_GEN_SESSION_MAP with
+  // newNumber "BONUS" so LG/CS reps see it too.
+  {
+    id: "session-bonus-quodo-different",
+    number: "BONUS",
+    date: "2026-07-21",
+    title: "What Makes Quodo Different.",
+    summary:
+      "The Quodo model — how it differs from the industry standard, the A-B-C-D-E build process, plan structure, and why what clients actually buy is certainty (not a website).",
+    keyTakeaway:
+      "Clients don't buy a website — they buy CERTAINTY. That their investment is protected, that someone competent is running it, that support won't disappear. The website is the outcome. The confidence is the product. Everything Quodo does — the five structured plans, content-before-design, PandaDoc approvals at every stage, 170+ steps across 5 departments — is engineered to deliver that certainty.",
+    director: "Corie Dawson",
+    totalTime: "~35 min",
+    cardBanner: "BONUS EP",
+    assets: [
+      {
+        kind: "intro",
+        estimate: "~10 min watch",
+        url: "https://youtu.be/w0Fb8Z4DRKY",
+      },
+      {
+        kind: "presentation",
+        estimate: "~15 min self-paced",
+        url: "https://docs.google.com/presentation/d/1ULiOdvxxvbOp849oIvNRZAP3FN51CTUURi2Lgsy_42I/embed",
+        mode: "slides",
+      },
+      {
+        kind: "quiz",
+        estimate: "12 questions · ~14 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "bonus-quodo-q1",
+            type: "multiple-choice",
+            prompt:
+              "Why is the reality of the web development industry a problem for business owners looking for a developer?",
+            topic: "Industry pain",
+            options: [
+              "It's oversaturated with large corporate agencies whose pricing is too high",
+              "It's largely unregulated — anyone can call themselves a developer, and AI has lowered the barrier further",
+              "It's dominated by international freelance platforms — quality control is difficult",
+              "It's tied up with a small handful of legacy CMS platforms that limit businesses",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Slide 6 · The web industry is largely unregulated. Anyone can call themselves a developer, and today AI has lowered the barrier further. That's the setup for why Quodo's model matters — it exists to solve the trust problem the industry itself created.",
+          },
+          {
+            id: "bonus-quodo-q2",
+            type: "multiple-choice",
+            prompt:
+              "According to the industry pain points slide, what percentage of web development operators are sole traders?",
+            topic: "Sole traders",
+            options: [
+              "43% — many providers can't scale to serve larger businesses",
+              "53% — turnaround times end up inconsistent",
+              "63% — businesses fold and leave clients stranded",
+              "73% — quality varies wildly between providers",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Slide 6 · 63% of operators are sole traders. That's why businesses fold or disappear regularly, leaving clients stranded without support. It's one of the six core industry pain points the guide identifies.",
+          },
+          {
+            id: "bonus-quodo-q3",
+            type: "multiple-choice",
+            prompt:
+              "How many website plans exist within the Quodo range — and what governs the structure of each?",
+            topic: "Plan structure",
+            options: [
+              "Three plans, each governed by the buyer's monthly marketing budget",
+              "Four plans, each governed by the client's industry vertical",
+              "Five plans, each with a unique page allocation, sitemap, and page classifications",
+              "Six plans, each scaled to team size and revised annually",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Slide 10 · Five plans in the Quodo range. Each has a unique page allocation, a defined sitemap, and page classifications that control section counts. Structured plans remove ambiguity and prevent scope creep.",
+          },
+          {
+            id: "bonus-quodo-q4",
+            type: "multiple-choice",
+            prompt:
+              "The Quodo build process is described as an A-B-C-D-E framework. What do the five letters stand for, in order?",
+            topic: "A-B-C-D-E",
+            options: [
+              "Analyse — Blueprint — Construct — Deploy — Enhance",
+              "Assess — Brief — Compose — Deliver — Evaluate",
+              "Advise — Book — Create — Draft — Establish",
+              "Ask — Build — Create — Deliver — Edit",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "Slide 20 · Ask → Build → Create → Deliver → Edit. The order is deliberate. Ask before assuming. Build the content before designing. Create the visual around approved information. Deliver what was signed off. Edit and support after launch.",
+          },
+          {
+            id: "bonus-quodo-q5",
+            type: "multiple-choice",
+            prompt:
+              "What's the specific reason Quodo builds the CONTENT before designing the website — rather than the other way around?",
+            topic: "Content-first",
+            options: [
+              "The design software works most efficiently when content is imported first",
+              "The client can reuse the finished content in other marketing channels",
+              "Designing first forces information into spaces it wasn't built to fit — content-first ensures the site actually communicates",
+              "The Australian hosting server requires content review before design uploads",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Design-first forces information into spaces it wasn't built to fit. Content-first ensures the site actually communicates — a beautiful site that doesn't explain the business doesn't help anyone. Reversing the industry default is one of Quodo's biggest structural differences.",
+          },
+          {
+            id: "bonus-quodo-q6",
+            type: "multiple-choice",
+            prompt:
+              "How does Quodo manage client approvals throughout the build process?",
+            topic: "Approvals",
+            options: [
+              "One combined approval covers the entire project after handover",
+              "Two approvals — one before design and one before launch — via email",
+              "Approvals at every major stage of A-B-C-D-E, signed via PandaDoc, before the next stage begins",
+              "One approval at handover, one at midpoint, and one after launch",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Slides 22, 30, 31 · Approval at every major stage of A-B-C-D-E, sent via PandaDoc, with sign-off required before the next stage begins. Protects everyone. Prevents rework. Keeps the project moving. And gives the client confidence they're always in control.",
+          },
+          {
+            id: "bonus-quodo-q7",
+            type: "multiple-choice",
+            prompt:
+              "Roughly how much effort actually goes into producing a single Quodo website — across steps, hours, and people?",
+            topic: "Production scale",
+            options: [
+              "50+ steps, 20+ hours, ~10 team members across 3 departments",
+              "170+ steps, 60+ hours, 30+ team members across 5 departments",
+              "300+ steps, 100+ hours, 50+ team members across 7 departments",
+              "80+ steps, 40+ hours, ~20 team members across 4 departments",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Slide 12 · 170+ production steps, 60+ hours of specialist labour, 30+ team members across 5 departments. Every specialist focuses on what they do best. That's completely different to the typical one-person agency trying to do everything themselves.",
+          },
+          {
+            id: "bonus-quodo-q8",
+            type: "multiple-choice",
+            prompt:
+              "In Stage A (Ask), which specific tool is used for the brand questionnaire — and what happens with it BEFORE the handover meeting?",
+            topic: "Content Snare",
+            options: [
+              "The client fills in a Google Form, then research reviews it during the meeting",
+              "Content Snare — the research team completes it in advance from public sources, then verifies with the client",
+              "A shared Notion workspace, populated collaboratively during the project",
+              "Airtable — the client answers ~50 questions before the handover meeting",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Slide 23 · Content Snare. The research team completes up to 50 questions in advance from public sources, then verifies with the client during the handover meeting. Clients recognise immediately they've partnered with professionals who invested time understanding them.",
+          },
+          {
+            id: "bonus-quodo-q9",
+            type: "multiple-choice",
+            prompt:
+              "The Selection Suite (Stage A) is often explained to clients using which analogy?",
+            topic: "Selection Suite analogy",
+            options: [
+              "Booking a holiday — destination first, then flights, hotel, activities",
+              "Ordering at a restaurant — the menu presents the options, client chooses",
+              "Buying a car — pick the model, then trim, colour, optional extras",
+              "Building a home — selecting finishes like kitchen cabinetry, carpet, tiles",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "Slide 24 · The home-building analogy. The Selection Suite is likened to picking design finishes for a new home — kitchen cabinetry, carpet colours, bathroom tiles. It gives designers direction on stylistic intent without needing the client to think in design language.",
+          },
+          {
+            id: "bonus-quodo-q10",
+            type: "multiple-choice",
+            prompt:
+              "In Stage C (Create), what specifically is delivered — and why does this stage require fewer revision rounds than typical design work?",
+            topic: "Create stage",
+            options: [
+              "A rough Figma wireframe, revised repeatedly as the client hasn't seen anything visual",
+              "A full high-fidelity Figma concept using APPROVED copy — structure + content are already locked",
+              "A design mockup with placeholder text, so the client focuses on look and feel",
+              "A PDF concept document with sample screens, before development begins on staging",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Slide 28 · High-fidelity Figma concept, using the REAL approved copy from Stage B — not placeholder text. Structure (Stage B) and content are already locked, so two of the three major design variables are settled. Result: far fewer revision rounds.",
+          },
+          {
+            id: "bonus-quodo-q11",
+            type: "multiple-choice",
+            prompt:
+              "In Stage D (Deliver), what platform does Quodo build on — and what's important about how the websites are constructed?",
+            topic: "Build platform",
+            options: [
+              "Shopify — the industry standard, with a customised premium theme",
+              "Wix Studio — chosen for delivery speed and ease of post-launch client edits",
+              "WordPress + Elementor — fully custom, no templates, responsive across desktop, mobile, tablet",
+              "Webflow — built from a Quodo-owned template library that's customised per client",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Slide 29 · WordPress with Elementor. Fully custom, no templates. Responsive builds for desktop, mobile, and tablet. Full functional testing, contact forms, internal links, speed, structured SEO setup. Every prior approval stage de-risks the development — by build time it's execution.",
+          },
+          {
+            id: "bonus-quodo-q12",
+            type: "multiple-choice",
+            prompt:
+              "The Sales Training Guide argues that clients aren't really buying a website — they're buying something else. What is it?",
+            topic: "What clients buy",
+            options: [
+              "SEO performance — Marketing Sweet foundations mean sites rank on Google",
+              "Speed of delivery — Quodo's 30-day turnaround beats most agencies",
+              "Cost predictability — low upfront + flexible payments protect the budget",
+              "Certainty — that their investment is protected, that someone competent is running it, that support won't disappear",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "The central thesis of the whole training. Clients don't buy websites — they buy CERTAINTY. That their investment is protected, that someone competent is running it, that they'll receive what was promised, and that support will still be there long after the site goes live. The website is the outcome. The confidence is the product.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Session 45 — Build Mental Resilience. (Mon 20 Jul 2026) ──────────
   // Sales-origin, all-teams. Number 45 in the sales-training sequence
   // (closer view). Renumbered 37 in the LG/CS projection via
@@ -7362,6 +7594,10 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-41-get-involved-create-value", newNumber: "CS-1" },
   { sourceId: "session-42-slow-is-smooth", newNumber: "CS-2" },
   { sourceId: "session-43-work-on-your-terms", newNumber: "CS-3" },
+  // Bonus product-knowledge session — projected as lg-session-bonus so
+  // LG/CS reps see it too. Uses non-numeric newNumber so it doesn't take
+  // a sales-training numbered slot.
+  { sourceId: "session-bonus-quodo-different", newNumber: "BONUS" },
 ];
 
 function projectForLeadGen(source: Session, newNumber: string): Session {
