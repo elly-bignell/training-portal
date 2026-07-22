@@ -16,9 +16,15 @@ function TraineeDashboardContent() {
   const slug = params.slug as string;
   // Look up the trainee + related flags from the Airtable-driven context.
   // Falls back to bundled data if Airtable is unreachable.
-  const { allTrainees, isCSOnboarding } = useTraineeContext();
+  const { allTrainees, isCSOnboarding, isCustomerService } = useTraineeContext();
   const trainee = allTrainees.find((t) => t.slug === slug);
-  const filteredProgram = isCSOnboarding(slug)
+  // Module 4 is sales-only (Call Scripts & Additional Resources). Auto-
+  // hide it for anyone on the Customer Service team so colleagues don't
+  // need to remember to tick CSOnboarding for every new CS hire. The
+  // CSOnboarding flag still works as an override for edge cases (e.g. a
+  // non-CS person on the CS onboarding path).
+  const hideSalesModule = isCustomerService(slug) || isCSOnboarding(slug);
+  const filteredProgram = hideSalesModule
     ? trainingProgram.filter((m) => m.id !== "module-4")
     : trainingProgram;
 
@@ -28,7 +34,7 @@ function TraineeDashboardContent() {
     "module-2": ["Understanding of Marketing Sweet"],
     "module-3": ["Understanding of Quodo"],
   };
-  const isCSApplicant = isCSOnboarding(slug);
+  const isCSApplicant = hideSalesModule;
 
   // Get all checklist item IDs for overall progress calculation (excluding section headers)
   const allChecklistIds = filteredProgram.flatMap((module) =>
@@ -261,8 +267,9 @@ function TraineeDashboardContent() {
             message, wire it up here reading from Airtable rather than
             hardcoding the date. */}
 
-        {/* Resource Reflection — Customer Service applicants only */}
-        {isCSOnboarding(slug) && (
+        {/* Resource Reflection — Customer Service only (also shows for
+            anyone with CSOnboarding ticked for edge cases). */}
+        {hideSalesModule && (
           <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-lg">💡</span>
