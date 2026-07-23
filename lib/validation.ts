@@ -31,6 +31,7 @@ export const BUDDY_PAIRS: Record<string, string> = {
   "Riley Kerrison": "Dylan Munro",
   "Sydney Arnold": "Felipe Garcia",
   "Shian Roux": "Felipe Garcia",
+  "Holly Best": "Felipe Garcia",
   // Archived — kept so historical bookings still display a buddy in the UI.
   // Krishna's existing bookings stay under Dylan, Tom's stay under Felipe.
   "Krishna Patel": "Dylan Munro",
@@ -38,7 +39,7 @@ export const BUDDY_PAIRS: Record<string, string> = {
 };
 
 // Staff that appear in the New Booking dropdown (currently active only).
-export const ACTIVE_STAFF_MEMBERS = ["Cindy Manrique", "Shian Roux", "Riley Kerrison", "Sydney Arnold", "Jade Bautista"];
+export const ACTIVE_STAFF_MEMBERS = ["Cindy Manrique", "Shian Roux", "Riley Kerrison", "Sydney Arnold", "Jade Bautista", "Holly Best"];
 
 // STAFF_MEMBERS is the dropdown source for forms / filters across the app.
 // Aliased to ACTIVE_STAFF_MEMBERS so archived staff don't reappear in pickers.
