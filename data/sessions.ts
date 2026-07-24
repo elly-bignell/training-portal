@@ -283,6 +283,344 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Session 47 — People Buy People. (Fri 24 Jul 2026) ────────────────
+  // Whole-team training (all departments). Number 47 in the sales-training
+  // sequence (closer view). Renumbered 39 in the LG/CS projection via
+  // LEAD_GEN_SESSION_MAP. 3-asset shape: intro video + debrief + quiz
+  // (no toolkit, no podcast, no presentation).
+  {
+    id: "session-47-people-buy-people",
+    number: "47",
+    date: "2026-07-24",
+    title: "People Buy People.",
+    summary:
+      "The single skill that runs through Sales, CS, Accounts, Marketing, and Leadership: before anyone buys the product or trusts the advice, they decide whether they trust the person. Listen better than you talk. Adapt to the person in front of you. Acknowledge before you solve. Remember the small details. Carry confidence and humility together — the strongest relationships aren't built by scripts, they're built one genuine conversation at a time.",
+    keyTakeaway:
+      "People buy people. Listen better than you talk. Adapt to who's in front of you. Acknowledge before you solve. Remember the small details. Carry confidence AND humility together. The strongest relationships aren't built by having the perfect script — they're built one genuine conversation at a time. Because people don't remember what you said. They remember how you made them feel.",
+    director: "Corie Dawson",
+    totalTime: "~30 min",
+    assets: [
+      {
+        kind: "intro",
+        estimate: "~10 min watch",
+        url: "https://youtu.be/PIJDwskw0CM",
+      },
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-47-people-buy-people/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "5 min reference",
+        url: "/sample-content/session-47-people-buy-people/toolkit.pdf",
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s47-q1",
+            type: "multiple-choice",
+            prompt:
+              "The session's central claim about how buyers decide whether to work with someone is...",
+            topic: "The trust decision",
+            options: [
+              "They evaluate the product itself first — trust in the vendor comes after they've seen the offering",
+              "They compare quotes across providers — the best price and terms usually win the deal outright",
+              "They ask a quiet question about the person — do I trust them? — before anything about the product",
+              "They check references from other clients — social proof carries far more weight than a sales pitch",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Before any buyer decides on the product, the advice, or the working relationship, they make a quiet trust decision about the person in front of them. That decision runs underneath everything else. Every professional interaction — sales, CS, accounts, leadership — comes back to that same variable.",
+          },
+          {
+            id: "s47-q2",
+            type: "multiple-choice",
+            prompt:
+              "The session says the misconception about sales is that people buy because of a perfect script. What actually drives it?",
+            topic: "Scripts vs comfort",
+            options: [
+              "Product features — buyers make rational comparisons and choose the offering with the strongest benefits",
+              "People buy from people they like — and they like those who make them feel comfortable, not impressed",
+              "Price positioning — the anchoring of the initial number sets the buyer's expectation for the whole call",
+              "Perceived urgency — a well-timed deadline pushes the buyer to act before they can second-guess it",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Reps who obsess over the script are optimising for the wrong variable. People buy from people they like — and they like those who make them feel comfortable. Comfortable doesn't mean loud or impressive. It means making the conversation about them, not about you. Same words. Completely different landing.",
+          },
+          {
+            id: "s47-q3",
+            type: "multiple-choice",
+            prompt:
+              "How does the session define the difference between HEARING and LISTENING?",
+            topic: "Hearing vs listening",
+            options: [
+              "Hearing is what you do on the phone; listening is what you do in a meeting where you can see the person",
+              "Hearing is when you can't remember; listening is when you take notes to reference back to later on",
+              "Hearing is polite; listening involves interrupting with follow-up questions when something is unclear",
+              "Hearing is passive; listening is active — you pay attention, remember details, show genuine interest",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "Hearing is what the ear does. Listening is what a person does when they're actually engaged — attention, memory, interest, letting the other person feel like what they've said matters. Buyers can tell the difference in seconds. They may not name it, but they feel it and respond accordingly.",
+          },
+          {
+            id: "s47-q4",
+            type: "multiple-choice",
+            prompt:
+              "What common conversational mistake does the session call out — and what should you do instead?",
+            topic: "Waiting to speak",
+            options: [
+              "Mistake: making eye contact too intensely. Fix: soften the gaze and give the person more space to think",
+              "Mistake: waiting for your turn to speak, planning your reply. Fix: stay curious, ask another question",
+              "Mistake: taking too many notes during the call. Fix: put the pen down and be fully present in the moment",
+              "Mistake: agreeing too much. Fix: push back respectfully when the buyer says things you don't agree with",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Most conversations quietly become competitions — someone else is talking and you're already planning your reply. Real listening reverses that: stay curious, ask another question, dig deeper. Two wins from one habit change — the person feels more connected, and you learn more about how to help them.",
+          },
+          {
+            id: "s47-q5",
+            type: "multiple-choice",
+            prompt:
+              "The session uses a music analogy to make a specific point. What is it?",
+            topic: "Music analogy",
+            options: [
+              "Every conversation has a rhythm — sync your pace with the buyer's for the interaction to feel natural",
+              "You're never going to be everyone's favourite — communicate to give yourself the best chance",
+              "Practice matters — like a musician, only reps who rehearse daily produce genuinely polished conversations",
+              "The right tone matters — a warm delivery lands better than a flat one, regardless of the words being used",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The music analogy is about acceptance. Some people love rock. Others love classical. Preferences are personal and won't shift. Same with people — you're not for everyone. Your job isn't to be liked by everyone; it's to communicate in a way that gives you the best chance of connecting with the person in front of you.",
+          },
+          {
+            id: "s47-q6",
+            type: "multiple-choice",
+            prompt:
+              "When a client shares a frustration, what does the session say you should do BEFORE offering a solution?",
+            topic: "Acknowledge before solve",
+            options: [
+              "Take the issue away to your manager — some frustrations should be resolved at a higher level than yours",
+              "Ask several clarifying questions — the details will help you decide which of the possible solutions applies",
+              "Acknowledge first. Slow the pace. Reflect it back. Ask a question. Let them feel understood",
+              "Offer sincere apologies on behalf of the company — the emotional acknowledgement lands before any solution",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The reflex — for helpful people — is to jump to solving. That skips over the feeling and makes the help feel dismissive even when it's good help. Acknowledge first. Slow the pace. Reflect what they said back. Ask a question. Then solve. In that order, the help lands. In the reverse order, it doesn't.",
+          },
+          {
+            id: "s47-q7",
+            type: "multiple-choice",
+            prompt:
+              "The session emphasises remembering small details about people. What kind of gesture does it recommend?",
+            topic: "Small details",
+            options: [
+              "Elaborate gifts for high-value clients — significant investment produces significant loyalty and repeat business",
+              "Formal follow-up emails referencing previous conversations — a written record maintains a professional distance",
+              "Small mentions in normal conversation — \"how's your daughter's soccer season?\" — the invisible work others skip",
+              "Public recognition on social media — tagging clients in posts creates measurable visibility and social proof",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The easiest habit any professional can build. Small mentions carry more weight than elaborate gestures because they can't be faked — you either remembered, or you didn't. Five seconds of a call. Enormous trust over months and years. It's the invisible work competitors won't do.",
+          },
+          {
+            id: "s47-q8",
+            type: "multiple-choice",
+            prompt:
+              "What does the session say people actually remember from an interaction with you?",
+            topic: "How they felt",
+            options: [
+              "The specifics of what you said — reps who remember exact phrasing tend to close significantly more deals",
+              "How you made them feel — not the perfect script, not the exact words, but how the conversation felt",
+              "The price you quoted — pricing anchors are what stick in the buyer's memory long after the meeting ends",
+              "The promises you made — reps should be careful about what they commit to because clients remember every one",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The closing line of the session and the whole thesis. People forget the exact words. They forget most of the details. What they remember — sometimes for years — is how the interaction made them feel. That's what the training exists to make you conscious of and deliberate about.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─── Session 46 — Nobody Owes You Success. (Fri 24 Jul 2026) ──────────
+  // Whole-team training (all departments). Number 46 in the sales-training
+  // sequence (closer view). Renumbered 38 in the LG/CS projection via
+  // LEAD_GEN_SESSION_MAP. 3-asset shape: intro video + debrief + quiz
+  // (no toolkit, no podcast, no presentation).
+  {
+    id: "session-46-nobody-owes-you-success",
+    number: "46",
+    date: "2026-07-24",
+    title: "Nobody Owes You Success.",
+    summary:
+      "The most important mindset shift anyone in the business will ever make: your future belongs to you. The company creates opportunity — you decide what to do with it. Bring the switched-on version of yourself to work (the one you already bring to your hobbies). Take ownership rather than completing tasks. Prepare properly. Measure yourself on effort, not results.",
+    keyTakeaway:
+      "Nobody owes you success. The company creates opportunity — you decide what to do with it. Bring the switched-on version of yourself to work. Take ownership rather than completing tasks. Prepare properly. Measure yourself on effort, not results. Life isn't designed to get easier — you're designed to get stronger. Your future starts with the choices you make today. Own it.",
+    director: "Corie Dawson",
+    totalTime: "~30 min",
+    assets: [
+      {
+        kind: "intro",
+        estimate: "~10 min watch",
+        url: "https://youtu.be/qNYbx5ckK9c",
+      },
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-46-nobody-owes-you-success/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "5 min reference",
+        url: "/sample-content/session-46-nobody-owes-you-success/toolkit.pdf",
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s46-q1",
+            type: "multiple-choice",
+            prompt:
+              "The session's central claim about who is responsible for your future in this company is...",
+            topic: "Who owns your future",
+            options: [
+              "The company owns it — they set the systems, so they carry the ownership as well",
+              "Your manager owns it — that's why you have regular coaching and one-to-one meetings",
+              "You own it — the company creates opportunity, but the decisions are entirely yours",
+              "The team owns it — modern careers are collective, not individual, in a good workplace",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The company's job is to create real opportunity — training, coaching, systems, chances to grow. Your job is to decide what to do with it. Nobody in this business will pretend otherwise. Reps who wait for the company to \"deliver\" their careers wait forever. The ones who take ownership build them.",
+          },
+          {
+            id: "s46-q2",
+            type: "multiple-choice",
+            prompt:
+              "How does the session prove that you already have initiative, even if you don't feel like you do?",
+            topic: "Initiative at home",
+            options: [
+              "Everyone in the interview process passes the initiative screen before they're offered a role",
+              "Your hobbies — nobody chases you to do them; you organise, research, improve without any prompt",
+              "You made it here — showing up every day at work is itself proof of your daily initiative",
+              "Initiative shows up in small moments — like organising your desk or being on time each morning",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Nobody has to chase you into your hobbies. You organise, research, improve, and make time — that's initiative operating at full volume. The question isn't whether you have it. The question is whether you leave it at home when you come to work. Most people do. The invitation is to bring the switched-on version of yourself to the desk.",
+          },
+          {
+            id: "s46-q3",
+            type: "multiple-choice",
+            prompt:
+              "The difference between \"completing assigned tasks\" and \"ownership\" is best described as...",
+            topic: "Completion vs ownership",
+            options: [
+              "Completion means finishing on time; ownership means finishing early with better quality work",
+              "Completion answers to your manager; ownership answers to the client's satisfaction with the work",
+              "Completion is what you were told to do; ownership asks what else needs doing before it's asked",
+              "Completion is measured by hours worked; ownership is measured by results delivered on time",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "\"I've done what I was asked\" is completion. \"What else needs doing? What can I improve? What problem can I solve before it lands on someone else's desk?\" is ownership. Businesses don't grow through people waiting for instructions — they grow through people taking responsibility. That's the mindset that gets promoted.",
+          },
+          {
+            id: "s46-q4",
+            type: "multiple-choice",
+            prompt:
+              "Why does the session say preparation matters — using the pilot analogy?",
+            topic: "Preparation",
+            options: [
+              "Because pilots are highly paid and their standards should apply to any professional working environment",
+              "Because checklists are a legal requirement in aviation, and businesses should adopt the same discipline",
+              "Because preparation prevents unnecessary mistakes — even in the hands of experienced experts already",
+              "Because pilots handle stress well, and the checklist is what teaches them to stay calm under pressure",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Every flight begins with a checklist. Not because pilots don't know what they're doing — because preparation prevents unnecessary mistakes even in the hands of experts. Same principle at the desk. Prepare for the meeting, the call, the training. Preparation is respect: for yourself, teammates, clients, and your future.",
+          },
+          {
+            id: "s46-q5",
+            type: "multiple-choice",
+            prompt:
+              "What does the session say is the actual measurement of high performance — and what's the by-product?",
+            topic: "Effort vs results",
+            options: [
+              "Results are the measurement; effort is the by-product of a well-designed process that runs itself",
+              "Effort is the measurement; results are the by-product that eventually catches up if the effort is real",
+              "Both are measured together; separating them creates false incentives that damage team performance",
+              "Attitude is the measurement; both effort and results follow from a genuinely positive mental approach",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Businesses celebrate results, so people assume results are the measurement. Underneath, the real measurement is effort. Effort compounds. Someone giving everything they've got and still learning outperforms raw talent that doesn't care. Every week of real effort builds a more skilled person. Over years, that compounding is the whole difference.",
+          },
+          {
+            id: "s46-q6",
+            type: "multiple-choice",
+            prompt:
+              "The session says life isn't designed to get easier. What's the corrective it offers instead?",
+            topic: "Get stronger",
+            options: [
+              "Choose an easier career path — pick roles that suit your natural strengths rather than fighting them",
+              "Learn to negotiate better — the strongest people negotiate their working conditions ahead of time",
+              "Build a support system — you can't handle harder alone, so surround yourself with capable people",
+              "Become capable of handling a harder one — challenges develop skills; obstacles teach resilience",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "The economy changes. Technology changes. Markets shift. Clients get more demanding. Easier isn't coming. The people who succeed don't wait for easier conditions — they become stronger. Every difficult season develops new skills. Every obstacle teaches resilience. Don't wish for an easier career; become capable of handling a harder one.",
+          },
+          {
+            id: "s46-q7",
+            type: "multiple-choice",
+            prompt:
+              "According to the session, what's the correct ORDER of action, confidence, and competence?",
+            topic: "Action first",
+            options: [
+              "Confidence comes first — feel ready before you act, otherwise you'll make expensive early mistakes",
+              "Action first — competence follows from action, then confidence follows from competence over time",
+              "Competence first — build the skills through training before you attempt anything in front of clients",
+              "All three together — they're inseparable in practice and shouldn't be treated as sequential stages",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The waiting trap is real. Reps who wait until they \"feel ready\" wait forever, because readiness never arrives on its own. Action produces competence. Competence produces confidence. Confidence produces more action. The loop compounds. But it only starts when action goes first — regardless of how ready the rep feels in that moment.",
+          },
+          {
+            id: "s46-q8",
+            type: "multiple-choice",
+            prompt:
+              "The session's honest closing question — the one it asks reps to sit with — is...",
+            topic: "Participating vs turning up",
+            options: [
+              "\"Am I in the right role for me — or would a different position suit my personality much better?\"",
+              "\"Have I chosen the right industry — or is my skill set genuinely better suited to somewhere else?\"",
+              "\"Am I participating in my own success — or am I just turning up? There's a huge difference.\"",
+              "\"Do I trust my manager — or are there conversations I need to have with them about my future?\"",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The blunt closing question of the session. Managers can coach you. The company can invest in you. Nobody can make you care. Nobody can make you hungry. Nobody can make you ambitious. The choice — quiet, made in your own head — is yours. Participating vs. turning up looks similar day-to-day. It looks completely different at year five.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Session 45 — Build Mental Resilience. (Mon 20 Jul 2026) ──────────
   // Sales-origin, all-teams. Number 45 in the sales-training sequence
   // (closer view). Renumbered 37 in the LG/CS projection via
@@ -7589,6 +7927,8 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-43-process-your-problems", newNumber: "35" },
   { sourceId: "session-44-progress-is-slow", newNumber: "36" },
   { sourceId: "session-45-build-mental-resilience", newNumber: "37" },
+  { sourceId: "session-46-nobody-owes-you-success", newNumber: "38" },
+  { sourceId: "session-47-people-buy-people", newNumber: "39" },
   // CS-origin videos — projected onto the LG/CS track with CS-1/2/3
   // display numbers so they don't take up numbered sales-training slots.
   { sourceId: "session-41-get-involved-create-value", newNumber: "CS-1" },
