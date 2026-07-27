@@ -624,8 +624,8 @@ export const sessions: Session[] = [
   // ─── Session 45 — Build Mental Resilience. (Mon 20 Jul 2026) ──────────
   // Sales-origin, all-teams. Number 45 in the sales-training sequence
   // (closer view). Renumbered 37 in the LG/CS projection via
-  // LEAD_GEN_SESSION_MAP. 3-asset shape: debrief + toolkit + quiz
-  // (no intro video, no podcast, no presentation).
+  // LEAD_GEN_SESSION_MAP. 4-asset shape: intro video + debrief + toolkit
+  // + quiz (no podcast, no presentation).
   {
     id: "session-45-build-mental-resilience",
     number: "45",
@@ -638,6 +638,11 @@ export const sessions: Session[] = [
     director: "Corie Dawson",
     totalTime: "~40 min",
     assets: [
+      {
+        kind: "intro",
+        estimate: "~10 min watch",
+        url: "https://youtu.be/bAaVHtNpq-I",
+      },
       {
         kind: "debrief",
         estimate: "10 min read",
@@ -772,7 +777,8 @@ export const sessions: Session[] = [
   // ─── Session 44 — Progress Is Supposed to Feel Slow. (Mon 20 Jul 2026) ─
   // Sales-origin, all-teams. Number 44 in the sales-training sequence
   // (closer view). Renumbered 36 in the LG/CS projection via
-  // LEAD_GEN_SESSION_MAP. 3-asset shape: debrief + toolkit + quiz.
+  // LEAD_GEN_SESSION_MAP. 4-asset shape: intro video + debrief + toolkit
+  // + quiz.
   {
     id: "session-44-progress-is-slow",
     number: "44",
@@ -785,6 +791,11 @@ export const sessions: Session[] = [
     director: "Corie Dawson",
     totalTime: "~40 min",
     assets: [
+      {
+        kind: "intro",
+        estimate: "~10 min watch",
+        url: "https://youtu.be/4PeuWM-rk4A",
+      },
       {
         kind: "debrief",
         estimate: "10 min read",
@@ -919,7 +930,8 @@ export const sessions: Session[] = [
   // ─── Session 43 — Process Your Problems. Don't Hide Them. (Mon 20 Jul 2026)
   // Sales-origin, all-teams. Number 43 in the sales-training sequence
   // (closer view). Renumbered 35 in the LG/CS projection via
-  // LEAD_GEN_SESSION_MAP. 3-asset shape: debrief + toolkit + quiz.
+  // LEAD_GEN_SESSION_MAP. 4-asset shape: intro video + debrief + toolkit
+  // + quiz.
   // Note: the id `session-43-process-your-problems` is distinct from the
   // existing CS-3 slug `session-43-work-on-your-terms` — no collision.
   {
@@ -934,6 +946,11 @@ export const sessions: Session[] = [
     director: "Corie Dawson",
     totalTime: "~40 min",
     assets: [
+      {
+        kind: "intro",
+        estimate: "~10 min watch",
+        url: "https://youtu.be/Q4JDrAn05Q4",
+      },
       {
         kind: "debrief",
         estimate: "10 min read",
