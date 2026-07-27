@@ -7967,6 +7967,15 @@ function projectForLeadGen(source: Session, newNumber: string): Session {
     // which isn't part of the LG mapping anyway, but belt and braces).
     featured: false,
     bannerLabel: undefined,
+    // salesOnly is stripped too. Being in LEAD_GEN_SESSION_MAP is the
+    // explicit "this is available to LG/CS reps" signal — if a session
+    // shouldn't be shown to CS, either omit it from the map or set the
+    // csHidden flag on the map entry. Without this strip, sessions like
+    // #19 (Reheat) or #32 (Burnt Buyer) that are salesOnly on the source
+    // (to keep them off the CS view of the raw sessions array) would
+    // 404 for CS when they hit their lg-session-* URL — bug found and
+    // fixed 24 Jul 2026.
+    salesOnly: false,
     assets,
   };
 }
