@@ -283,6 +283,175 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Session 48 — Belief Creates Conviction. (Mon 27 Jul 2026) ──────
+  // Sales-origin, all-teams. Number 48 in the sales-training sequence
+  // (closer view). Renumbered 40 in the LG/CS projection via
+  // LEAD_GEN_SESSION_MAP. 4-asset shape: intro video + debrief + toolkit
+  // + quiz.
+  {
+    id: "session-48-belief-creates-conviction",
+    number: "48",
+    date: "2026-07-27",
+    title: "Belief Creates Conviction. You Can't Sell What You Don't Believe.",
+    summary:
+      "The question every rep will be asked — \"Why should I choose Marketing Sweet?\" — cannot be answered by a script. It can only be answered by a rep who has done the internal work of building their own belief. This session is about how conviction actually gets built, why authenticity beats rehearsal every time, and what the difference sounds like on the other end of a phone.",
+    keyTakeaway:
+      "You can't sell what you don't believe. Buyers aren't asking about features — they're asking \"can I trust you?\" A script gives you words; it doesn't give you conviction, and buyers hear the difference immediately. Rapport is recognition, not likeability. Swap defensive for curious. Confidence is competence in action — do the internal work, investigate the company from the inside, find the reasons that actually resonate with you. When belief becomes genuine, prospects don't just hear your words — they believe them.",
+    director: "Corie Dawson",
+    totalTime: "~35 min",
+    assets: [
+      {
+        kind: "intro",
+        estimate: "~10 min watch",
+        url: "https://youtu.be/y04oYr5XAek",
+      },
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-48-belief-creates-conviction/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "5 min reference",
+        url: "/sample-content/session-48-belief-creates-conviction/toolkit.pdf",
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s48-q1",
+            type: "multiple-choice",
+            prompt:
+              "When a prospect asks \"Why should I choose Marketing Sweet?\" the session says they're actually asking...",
+            topic: "The question underneath the question",
+            options: [
+              "For a comparison — how our features stack up against the other agencies they've been quoting",
+              "For social proof — the client count and case studies that prove our size and credibility",
+              "For pricing signals — an early read on whether we sit at the premium or budget end of the market",
+              "\"Can I trust you? Will you look after my business? Are you different from the ones who've disappointed me?\"",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "The feature-list answer misses the actual conversation. The trust question is what the prospect is really asking — and reps who answer the trust question win the meeting even before they've listed a single feature. The reverse is not true: perfectly delivered features do not answer the trust question.",
+          },
+          {
+            id: "s48-q2",
+            type: "multiple-choice",
+            prompt:
+              "According to the session, the core problem with relying on a script in a live sales conversation is...",
+            topic: "Script vs conviction",
+            options: [
+              "Scripts get outdated quickly and reps forget to update them when the product offering changes",
+              "A script gives you words but not conviction — and buyers can hear the difference immediately",
+              "Scripts prevent reps from personalising the pitch to the specific industry the prospect works in",
+              "Managers can't measure whether the script is working when every rep is trained on the same words",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "A script gives you words. It doesn't give you belief. On a live call, rehearsed words sound like performance within the first sentence. Believed words sound like a person who has actually thought about this. Prospects have been through enough sales conversations to hear the difference instantly.",
+          },
+          {
+            id: "s48-q3",
+            type: "multiple-choice",
+            prompt:
+              "If ten reps at Marketing Sweet were asked \"What makes us different?\", the session says the correct outcome is...",
+            topic: "Ten reps, ten answers",
+            options: [
+              "One aligned answer — consistency is what protects the brand across every customer interaction on record",
+              "One official answer plus permitted variations — reps ranking their preferred reason from a defined list",
+              "Ten slightly different answers — each anchored in something that particular rep genuinely believes",
+              "Two answers max — one for SEO prospects and one for website prospects, tailored by the service the buyer wants",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The point isn't uniformity — it's authenticity. Each rep should find the reason that resonates with them personally, because that's the reason they'll communicate with real energy. Customer service, transparency, culture, results, honesty — all of them are true, and each of them is the strongest answer in the mouth of the rep who actually believes it.",
+          },
+          {
+            id: "s48-q4",
+            type: "multiple-choice",
+            prompt:
+              "The session defines rapport as...",
+            topic: "Rapport is recognition",
+            options: [
+              "Being liked — reps who put in the effort to make prospects like them personally close more of their pipeline",
+              "Mirroring — matching the prospect's tone, pace, and vocabulary so the interaction feels naturally in sync",
+              "Small talk — investing a few minutes at the top of the call in personal conversation before pitching",
+              "Showing someone you understand what they're already thinking — before they have to say it out loud",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "The widespread misunderstanding: reps think rapport means being liked. It doesn't. Rapport is recognition — the moment the prospect thinks \"this person gets it.\" That happens when the rep names what the prospect is already thinking before the prospect has to explain it. Charm is optional. Recognition isn't.",
+          },
+          {
+            id: "s48-q5",
+            type: "multiple-choice",
+            prompt:
+              "When a prospect says they're sceptical, the session says the scepticism is usually because...",
+            topic: "Where scepticism comes from",
+            options: [
+              "Of the current rep — first impressions in the opening minute set the tone for the entire conversation",
+              "Of what happened before — someone overpromised, underdelivered, or stopped answering the phone",
+              "Of industry reputation — buyers assume agencies overcharge and underdeliver as a category, unfortunately",
+              "Of internal pressure — the prospect's boss has made them cautious about committing to another vendor",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Prospect scepticism is almost never about the rep in front of them. It's about the last agency who overpromised. The one who underdelivered. The one who stopped answering the phone. Naming that pattern before the prospect has to explain it forms the connection instantly — because it tells them this conversation is going to be different.",
+          },
+          {
+            id: "s48-q6",
+            type: "multiple-choice",
+            prompt:
+              "Which pair of instincts does the session say a rep should swap when a prospect pushes back?",
+            topic: "Defensive → curious",
+            options: [
+              "Slow → fast — pick up the pace so the objection doesn't become the focus of the rest of the call",
+              "Talk → pitch — move straight into the offer so the prospect can evaluate value against the concern raised",
+              "Silent → assertive — hold your ground and defend the position rather than backing down under pressure",
+              "Defensive → curious — ask questions like \"what happened last time?\" instead of defending the company",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "The instinct when a prospect pushes back is to defend the company. That instinct is wrong. Defence signals fragility — as if the objection was expected to land and needed shielding. Curiosity signals confidence and genuine interest. The three curiosity questions — what happened, what frustrated you, what would you change — reset the entire conversation.",
+          },
+          {
+            id: "s48-q7",
+            type: "multiple-choice",
+            prompt:
+              "The session defines confidence as...",
+            topic: "Confidence = competence in action",
+            options: [
+              "Talking more — reps who fill silences and hold conversational floor space tend to feel more confident on calls",
+              "Rehearsing more — the best reps run through their pitch out loud several times before every important call",
+              "Simply competence in action — the better you know the material, the more naturally confidence appears",
+              "Positive mindset — reps who visualise the sale before the call generally sound more confident on the phone",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Confidence isn't a personality trait. It isn't volume or bravado. It's competence in action — the natural by-product of a rep who has done the internal work to understand the business, the services, the processes, and the values. When you know your material, the hard question stops being a threat and becomes an opportunity to show what you know.",
+          },
+          {
+            id: "s48-q8",
+            type: "multiple-choice",
+            prompt:
+              "The session says scepticism has a limit — what does it become if it doesn't turn into investigation?",
+            topic: "Scepticism has a shelf life",
+            options: [
+              "Wisdom — reps who stay sceptical longer tend to develop sharper instincts about the market they're operating in",
+              "Balance — a permanent healthy caution that keeps reps from overpromising on things they can't personally verify",
+              "Just doubt in a nicer jacket — and doubt never closes deals; belief has to be investigated to become useful",
+              "Neutrality — a professional distance from the company that helps reps stay objective in every client conversation",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Scepticism is healthy — questioning things, doing your own research, refusing to believe something just because someone said it. But scepticism has a shelf life. If it never becomes investigation, it's just doubt with better manners. And doubt never closes deals. Investigated belief does.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Session 47 — People Buy People. (Fri 24 Jul 2026) ────────────────
   // Whole-team training (all departments). Number 47 in the sales-training
   // sequence (closer view). Renumbered 39 in the LG/CS projection via
@@ -7946,6 +8115,7 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-45-build-mental-resilience", newNumber: "37" },
   { sourceId: "session-46-nobody-owes-you-success", newNumber: "38" },
   { sourceId: "session-47-people-buy-people", newNumber: "39" },
+  { sourceId: "session-48-belief-creates-conviction", newNumber: "40" },
   // CS-origin videos — projected onto the LG/CS track with CS-1/2/3
   // display numbers so they don't take up numbered sales-training slots.
   { sourceId: "session-41-get-involved-create-value", newNumber: "CS-1" },
