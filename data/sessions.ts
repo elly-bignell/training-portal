@@ -283,6 +283,344 @@ export const sessions: Session[] = [
       },
     ],
   },
+  // ─── Session 50 — Less Talking. More Doing. (Thu 30 Jul 2026) ────────
+  // Whole-team training (all departments). Number 50 in the sales-training
+  // sequence (closer view). Renumbered 42 in the LG/CS projection via
+  // LEAD_GEN_SESSION_MAP. 4-asset shape: intro video + debrief + toolkit
+  // + quiz.
+  {
+    id: "session-50-less-talking-more-doing",
+    number: "50",
+    date: "2026-07-30",
+    title: "Less Talking. More Doing. Value Always Wins.",
+    summary:
+      "Activity is not progress. Communication is not the product. Results are. This session is about the difference between people who look busy and people who create value — across sales, CS, production, management, and admin. Every role. Same lesson.",
+    keyTakeaway:
+      "Clients don't pay us to stay busy — they pay us to improve their business. Great service isn't identical service; it's understanding what each client values most and delivering that. Communication supports great work — it doesn't replace it. In sales, most \"we've already got someone\" replies are polite \"not interested\" — investigate, don't argue. Tell the truth when you see a genuine problem. Notice the wins, not just the noise. Results are a delayed reaction to consistent habits — the work comes first, the rewards come later. Measure your day by value created, not activity logged.",
+    director: "Corie Dawson",
+    totalTime: "~35 min",
+    assets: [
+      {
+        kind: "intro",
+        estimate: "~10 min watch",
+        url: "https://youtu.be/1x2TEs6Us04",
+      },
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-50-less-talking-more-doing/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "5 min reference",
+        url: "/sample-content/session-50-less-talking-more-doing/toolkit.pdf",
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s50-q1",
+            type: "multiple-choice",
+            prompt:
+              "The session's core distinction between activity and value is best captured by which statement?",
+            topic: "Activity vs value",
+            options: [
+              "Activity is the input; value is the output — you need both, in equal measure, to satisfy a client's expectations",
+              "Activity earns short-term trust; value earns long-term trust — reps should balance both across the account",
+              "Activity is what the team can see; value is what the client sees — both matter, just to different audiences",
+              "Clients don't pay us to stay busy — they pay us to improve their business, and the two aren't the same thing",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "Activity is easy to measure and hard to defend. Value is harder to measure and impossible to argue with. The confusion — treating activity as though it were progress — is what quietly kills service quality in agencies. The reset is to name the distinction out loud and measure the right thing.",
+          },
+          {
+            id: "s50-q2",
+            type: "multiple-choice",
+            prompt:
+              "In the \"I haven't heard from you in six months\" story, what does the session say the correct response is?",
+            topic: "The client-cadence conversation",
+            options: [
+              "Apologise, reinstate the fortnightly call, and reassure the client the old process is coming back for them",
+              "Yes — we've changed the process, because uniform contact schedules make the business look attentive, not be it",
+              "Explain that the team was restructured and their new account manager will resume regular fortnightly touchpoints",
+              "Defend the old cadence — a call every two weeks is best practice and shouldn't have been dropped in the first place",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "The old fortnightly cadence was well-intentioned and structurally lazy. It made the business look attentive without requiring it to be attentive. The revised approach is harder: understand what each client actually values, then deliver against that. The honest answer to the question is yes — the process changed, on purpose.",
+          },
+          {
+            id: "s50-q3",
+            type: "multiple-choice",
+            prompt:
+              "According to the session, great customer service is defined as...",
+            topic: "What great service is",
+            options: [
+              "Consistency — the same rhythm and touch across every client so no one ever feels less looked-after than another",
+              "Availability — being reachable within a defined SLA whenever a client happens to need something urgent",
+              "Understanding what each client values most, then serving them that way, even if it looks different across clients",
+              "Proactivity — reaching out before the client has to ask, so the account always feels one step ahead of expectations",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Uniform service is efficient. Personalised service is valuable. The uniformity feels safer to the business; the personalisation feels better to the client. \"Great service\" isn't the same as \"identical service.\" It's serving each client the way that client actually wants to be served.",
+          },
+          {
+            id: "s50-q4",
+            type: "multiple-choice",
+            prompt:
+              "What role does communication play, according to the session?",
+            topic: "Communication vs the work",
+            options: [
+              "It IS the product — a well-run cadence of communication is what clients actually pay a professional agency for",
+              "It's secondary — as long as the work gets done, communication is a nice-to-have but not something to invest in",
+              "It supports great work, but doesn't replace it — a call by itself doesn't create value; the work does",
+              "It replaces work — reps who communicate well can compensate for gaps in delivery through relationship management",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Communication matters — enormously. But its role is to support great work, not replace it. There's a huge difference between ringing a client to report results and ringing because the calendar told you to. Clients remember outcomes. They forget conversations.",
+          },
+          {
+            id: "s50-q5",
+            type: "multiple-choice",
+            prompt:
+              "When a sales prospect says \"we've already got someone,\" the session says the mistake most reps make is...",
+            topic: "The polite no",
+            options: [
+              "Not asking for a name — knowing which competitor holds the account is the first step to displacing them",
+              "Assuming that's the real objection and starting to argue — most of the time it's a polite \"I'm not interested\"",
+              "Not offering a proposal — reps should send pricing anyway so the prospect can compare when the contract expires",
+              "Backing off too quickly — persistence is what separates successful reps from the ones who accept every soft no",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Not every conversation is supposed to become a sale. Reps who argue with polite nos waste energy that would be better spent on prospects who actually want to talk. The upgrade is to ask investigation questions instead — the answers will tell you whether there's a real conversation available or not.",
+          },
+          {
+            id: "s50-q6",
+            type: "multiple-choice",
+            prompt:
+              "The session says the right thing to do when you identify a genuine problem in a prospect's business is...",
+            topic: "Tell the truth",
+            options: [
+              "Tell the truth — say the site is outdated, damaging credibility, or costing opportunities. Not to scare — to help",
+              "Soften it — professionals should reframe hard truths in ways that don't put the prospect on the defensive early",
+              "Delay it — wait until the prospect trusts you before raising concerns, otherwise the message won't land properly",
+              "Escalate it — pass the observation to the manager, who can raise it with the prospect at a more senior level",
+            ],
+            correctAnswer: 0,
+            rationale:
+              "Curiosity doesn't mean softness. If a genuine problem is identified, the professional answer is to say so. Not to scare. Not to pressure. Because that's what professionals do. Clients don't need another vendor telling them everything looks fine — they need someone prepared to tell them the truth and help them fix it.",
+          },
+          {
+            id: "s50-q7",
+            type: "multiple-choice",
+            prompt:
+              "The session's phrase \"results are simply a delayed reaction to consistent habits\" is used to argue that...",
+            topic: "The delay before rewards",
+            options: [
+              "Reps should track leading indicators and lagging indicators separately — the two shouldn't be conflated in reports",
+              "Habits alone aren't enough — reps also need talent, luck, and timing to convert consistent effort into visible outcomes",
+              "The work always comes first and the rewards come later — reps who understand the delay don't quit during it",
+              "Weekly targets should be scrapped — results take too long to arrive for weekly measurement to be a fair yardstick",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "The phrase is the antidote to the \"nothing is working\" spiral that hits reps during quiet weeks. The work always comes first. The rewards come later. Reps who understand the delay stay in the game long enough for the compounding to arrive. Reps who don't, quit right before it does.",
+          },
+          {
+            id: "s50-q8",
+            type: "multiple-choice",
+            prompt:
+              "Today's challenge — the way the session asks you to measure your contribution — is...",
+            topic: "The value check",
+            options: [
+              "By hours logged — the honest measure of contribution is the time you actually invested in the client's account this week",
+              "By touchpoints made — the number of client and team interactions you've had captures the true reach of your effort",
+              "By meetings attended — presence in the right conversations is often the single most under-recognised form of contribution",
+              "By value created — solved a problem, improved a client, helped a teammate, left something better than you found it",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "The six-question end-of-day check: solved a problem, improved a client, helped a teammate, made a process better, left something better, created something the client will remember. Activity without outcomes is just movement. Value is what people remember.",
+          },
+        ],
+      },
+    ],
+  },
+  // ─── Session 49 — Think Like the Expert. (Wed 29 Jul 2026) ──────────
+  // Sales-origin, all-teams. Number 49 in the sales-training sequence
+  // (closer view). Renumbered 41 in the LG/CS projection via
+  // LEAD_GEN_SESSION_MAP. 4-asset shape: intro video + debrief + toolkit
+  // + quiz.
+  {
+    id: "session-49-think-like-the-expert",
+    number: "49",
+    date: "2026-07-29",
+    title: "Think Like the Expert. Position Yourself to Win.",
+    summary:
+      "The difference between people who have conversations and people who influence outcomes. Most reps unintentionally hand control to the client by asking the wrong questions — creating easy exit ramps out of conversations that should have kept moving forward. This session is about how to think and position like a professional, so momentum stays with you and every conversation lands closer to a decision.",
+    keyTakeaway:
+      "Stop asking questions the client can answer with \"no.\" Reframe as a choice between two forward paths, not an accept/reject on one. Think like a doctor, mechanic, or accountant — diagnose first, recommend second. Understanding before recommendation is expertise; the reverse is guessing. Confidence is a by-product of preparation, not a personality trait. People trust competence, not volume. Success is thousands of tiny decisions compounding — and courage is moving forward despite fear, not waiting for it to disappear.",
+    director: "Corie Dawson",
+    totalTime: "~35 min",
+    assets: [
+      {
+        kind: "intro",
+        estimate: "~10 min watch",
+        url: "https://youtu.be/Zd07GnrEc3k",
+      },
+      {
+        kind: "debrief",
+        estimate: "10 min read",
+        url: "/sample-content/session-49-think-like-the-expert/debrief.pdf",
+      },
+      {
+        kind: "toolkit",
+        estimate: "5 min reference",
+        url: "/sample-content/session-49-think-like-the-expert/toolkit.pdf",
+      },
+      {
+        kind: "quiz",
+        estimate: "8 questions · ~9 min",
+        passMark: 100,
+        questions: [
+          {
+            id: "s49-q1",
+            type: "multiple-choice",
+            prompt:
+              "The session says the problem with asking a client \"Do you want to grow your business?\" is that...",
+            topic: "The question that hands over control",
+            options: [
+              "It sounds patronising — most business owners take offence at the implication they aren't already growing",
+              "It hands the client control and an easy exit — \"no\" — and leaves the rep with nowhere to go",
+              "It's premature — growth conversations should only happen after the initial rapport phase is complete",
+              "It's too broad — reps should ask about specific channels like SEO or paid ads rather than growth overall",
+            ],
+            correctAnswer: 1,
+            rationale:
+              "Any question that can be answered with a flat \"no\" is a question that hands the client an exit ramp. Sometimes that's the right thing to do — you actually want to know. Most of the time, it isn't. Notice which of your habitual questions transfer control, and reframe them.",
+          },
+          {
+            id: "s49-q2",
+            type: "multiple-choice",
+            prompt:
+              "The recommended reframe of the growth question, according to the session, is...",
+            topic: "Reframe as a choice between paths",
+            options: [
+              "\"Would growth make sense for you this quarter, or is it better to revisit next quarter?\"",
+              "\"On a scale of one to ten, how important is business growth to you right now?\"",
+              "\"What's stopping you from growing faster than you currently are as a business?\"",
+              "\"We've identified two paths — a slower economical one and a more aggressive one. Which suits best?\"",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "The rep is no longer asking whether growth matters. They're helping the client choose which form of it. That's a completely different conversation, and it starts from a completely different premise — that the client is already interested and now needs help deciding.",
+          },
+          {
+            id: "s49-q3",
+            type: "multiple-choice",
+            prompt:
+              "The session's reason for reframing the question this way is...",
+            topic: "Friction removal, not manipulation",
+            options: [
+              "It's a persuasion technique that increases conversion rates by narrowing the client's decision-making frame",
+              "It's a compliance trick — once the client answers a small question, they're primed to answer bigger ones later",
+              "It's not manipulation — it's friction removal, so a conversation that should move forward actually does",
+              "It's a scarcity tactic — presenting two options creates urgency that a single open question cannot generate",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "This is important to get right. The reframe isn't a persuasion trick. It's the removal of unnecessary friction from a conversation that should be moving forward anyway. Forward-moving conversations are how decisions get made. Backwards-moving conversations kill deals.",
+          },
+          {
+            id: "s49-q4",
+            type: "multiple-choice",
+            prompt:
+              "The session compares the sales role to which set of professionals — and what do those professionals do?",
+            topic: "Diagnose, then recommend",
+            options: [
+              "Marketers, PR consultants, and brand strategists — they craft the narrative before recommending the tactics",
+              "Coaches, mentors, and personal trainers — they set the goals first before designing the plan to achieve them",
+              "Doctors, mechanics, accountants — they diagnose first, then recommend. They don't ask the client what to prescribe",
+              "Consultants, analysts, and researchers — they investigate a market before making any commercial recommendation",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "A doctor doesn't ask what medicine you'd like. A mechanic doesn't ask what part you think needs replacing. An accountant doesn't ask what tax strategy to use. They diagnose. Then they recommend. That's why people came to them. Same role — different industry.",
+          },
+          {
+            id: "s49-q5",
+            type: "multiple-choice",
+            prompt:
+              "According to the session, the rep's first responsibility in a client conversation is...",
+            topic: "Understanding before recommendation",
+            options: [
+              "Building rapport — the first few minutes of any conversation are what determine whether the client trusts you",
+              "Setting the agenda — outlining what you'll cover in the meeting so the client feels the time is being used well",
+              "Understanding — ask good questions, review the facts, then recommend. Recommendation before understanding is guessing",
+              "Establishing credibility — leading with case studies and results so the client knows they're speaking to an expert",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "Recommendation before understanding is guessing. Guessing sounds like sales-talk. Understanding-then-recommending sounds like expertise. Prospects can hear the difference within the first two questions the rep asks. The order — diagnose first, prescribe second — is not optional.",
+          },
+          {
+            id: "s49-q6",
+            type: "multiple-choice",
+            prompt:
+              "How does the session define confidence?",
+            topic: "Confidence = preparation",
+            options: [
+              "A skill built through repetition — reps who make more calls in a week feel more confident by the end of it",
+              "A mindset choice — reps who decide to be confident, in the moment, project it and the client responds to it",
+              "A trait some reps have and others don't — the coaching goal is to help each rep work within their natural range",
+              "A by-product of preparation — when you've done the work beforehand, you rely on preparation, not on confidence",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "Confidence is not a personality trait, not bravado, not the ability to hold a room. It's the natural by-product of a rep who has done the work — knows the account, the history, the opportunities, the challenges. Preparation creates confidence naturally. The reverse doesn't work.",
+          },
+          {
+            id: "s49-q7",
+            type: "multiple-choice",
+            prompt:
+              "What does the session say people ACTUALLY trust in the professionals they rely on — a doctor, a mechanic, an adviser?",
+            topic: "Trust competence, not volume",
+            options: [
+              "Volume — reps and professionals who fill the space with certainty tend to win the trust of their clients quickly",
+              "Confidence alone — professionals who project confidence, even without deep expertise, still earn client loyalty",
+              "Rapport — the professionals who invest in personal connection are the ones clients return to over the long term",
+              "Competence — trusted professionals aren't loud or pushy; they calmly explain what they've found and recommend",
+            ],
+            correctAnswer: 3,
+            rationale:
+              "Think about the professionals you personally trust. None of them are loud. None are pushy. They calmly explain what they've found, why it matters, and what they recommend. People don't trust confidence alone — they trust competence. Competence delivered calmly is far more persuasive than confidence delivered loudly.",
+          },
+          {
+            id: "s49-q8",
+            type: "multiple-choice",
+            prompt:
+              "The session's core claim about how success is built is best expressed as...",
+            topic: "Thousands of tiny decisions",
+            options: [
+              "One decisive career-defining bet — the reps who take the biggest calculated risks end up in the biggest roles",
+              "A ratio of preparation to execution — the reps who prepare more than they execute produce the strongest outcomes",
+              "Thousands of tiny decisions compounding — how well you prepared, whether you asked one better question, followed through",
+              "A clear five-year plan — reps with mapped goals outperform reps who are simply improving day-to-day incrementally",
+            ],
+            correctAnswer: 2,
+            rationale:
+              "How well did you prepare today? Did you research before making the call? Did you ask one better question? Did you listen properly? Did you follow through? Every one of those tiny decisions compounds. People overestimate what they can achieve in a week and underestimate what they can achieve in five years.",
+          },
+        ],
+      },
+    ],
+  },
   // ─── Session 48 — Belief Creates Conviction. (Mon 27 Jul 2026) ──────
   // Sales-origin, all-teams. Number 48 in the sales-training sequence
   // (closer view). Renumbered 40 in the LG/CS projection via
@@ -8116,6 +8454,8 @@ const LEAD_GEN_SESSION_MAP: LeadGenMapEntry[] = [
   { sourceId: "session-46-nobody-owes-you-success", newNumber: "38" },
   { sourceId: "session-47-people-buy-people", newNumber: "39" },
   { sourceId: "session-48-belief-creates-conviction", newNumber: "40" },
+  { sourceId: "session-49-think-like-the-expert", newNumber: "41" },
+  { sourceId: "session-50-less-talking-more-doing", newNumber: "42" },
   // CS-origin videos — projected onto the LG/CS track with CS-1/2/3
   // display numbers so they don't take up numbered sales-training slots.
   { sourceId: "session-41-get-involved-create-value", newNumber: "CS-1" },
