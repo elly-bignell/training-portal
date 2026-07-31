@@ -21,6 +21,13 @@
 import { NextResponse } from "next/server";
 import { parseQuizDocx } from "@/lib/parse-quiz-docx";
 import { parseDebriefDocx } from "@/lib/parse-debrief-docx";
+import { convertDebriefDocxToPdf } from "@/lib/docx-to-pdf";
+
+// Puppeteer + @sparticuz/chromium need the Node runtime (not Edge).
+export const runtime = "nodejs";
+// PDF conversion + Airtable uploads can take longer than Vercel's default
+// 10s cap on hobby plans; bump to 60s so a slow submit still completes.
+export const maxDuration = 60;
 
 const BASE_ID = process.env.AIRTABLE_BASE_ID!;
 const API_KEY = process.env.AIRTABLE_API_KEY!;
@@ -93,8 +100,23 @@ async function uploadAttachment(
   fieldId: string,
   file: File
 ): Promise<void> {
-  const arrayBuffer = await file.arrayBuffer();
-  const base64 = Buffer.from(arrayBuffer).toString("base64");
+  const buf = Buffer.from(await file.arrayBuffer());
+  const contentType =
+    file.type ||
+    (file.name.endsWith(".pdf")
+      ? "application/pdf"
+      : "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+  await uploadAttachmentFromBuffer(recordId, fieldId, buf, file.name, contentType);
+}
+
+async function uploadAttachmentFromBuffer(
+  recordId: string,
+  fieldId: string,
+  buffer: Buffer,
+  filename: string,
+  contentType: string
+): Promise<void> {
+  const base64 = buffer.toString("base64");
   const res = await fetch(
     `https://content.airtable.com/v0/${BASE_ID}/${recordId}/${fieldId}/uploadAttachment`,
     {
@@ -103,15 +125,7 @@ async function uploadAttachment(
         Authorization: `Bearer ${API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        contentType:
-          file.type ||
-          (file.name.endsWith(".pdf")
-            ? "application/pdf"
-            : "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
-        file: base64,
-        filename: file.name,
-      }),
+      body: JSON.stringify({ contentType, file: base64, filename }),
     }
   );
   if (!res.ok) {
@@ -154,7 +168,7 @@ export async function POST(req: Request) {
   }
 
   const debriefDocx = form.get("debriefDocx") as File | null;
-  const debriefPdf = form.get("debriefPdf") as File | null;
+  const debriefPdfUpload = form.get("debriefPdf") as File | null;
   const toolkitPdf = form.get("toolkitPdf") as File | null;
   const quizDocx = form.get("quizDocx") as File | null;
   const youtubeUrl = (form.get("youtubeUrl") as string) ?? "";
@@ -180,9 +194,13 @@ export async function POST(req: Request) {
       { status: 400 }
     );
   }
-  if (!debriefPdf) {
+  if (!debriefDocx && !debriefPdfUpload) {
     return NextResponse.json(
-      { ok: false, error: "Missing debrief PDF (used to serve to reps)." },
+      {
+        ok: false,
+        error:
+          "Missing debrief — upload the DOCX (server converts to PDF) or a PDF directly.",
+      },
       { status: 400 }
     );
   }
@@ -316,9 +334,44 @@ export async function POST(req: Request) {
     );
   }
 
+  // ─── Resolve the debrief PDF ─────────────────────────────────────────
+  // Preference order: a PDF the colleague uploaded directly, otherwise a
+  // server-generated PDF from the debrief DOCX. Only one of these paths
+  // actually runs per submit — DOCX conversion is the common case.
+  let debriefPdfForUpload: File | { buffer: Buffer; name: string; type: string } | null =
+    debriefPdfUpload;
+  if (!debriefPdfForUpload && debriefDocx) {
+    try {
+      const docxBuf = Buffer.from(await debriefDocx.arrayBuffer());
+      const pdfBuf = await convertDebriefDocxToPdf(docxBuf);
+      const pdfName = debriefDocx.name.replace(/\.docx$/i, ".pdf");
+      debriefPdfForUpload = {
+        buffer: pdfBuf,
+        name: pdfName,
+        type: "application/pdf",
+      };
+    } catch (err) {
+      warnings.push(
+        `Debrief DOCX→PDF conversion failed: ${err}. The DOCX was still parsed for Summary/KeyTakeaway, but the portal won't have a debrief PDF to serve. You can convert manually (Word > Save As > PDF) and attach in Airtable.`
+      );
+    }
+  }
+
   // ─── Upload attachments (sequential — Airtable rate-limits) ─────────
   try {
-    await uploadAttachment(recordId, FIELDS.DebriefPDF, debriefPdf);
+    if (debriefPdfForUpload) {
+      if (debriefPdfForUpload instanceof File) {
+        await uploadAttachment(recordId, FIELDS.DebriefPDF, debriefPdfForUpload);
+      } else {
+        await uploadAttachmentFromBuffer(
+          recordId,
+          FIELDS.DebriefPDF,
+          debriefPdfForUpload.buffer,
+          debriefPdfForUpload.name,
+          debriefPdfForUpload.type
+        );
+      }
+    }
     await uploadAttachment(recordId, FIELDS.ToolkitPDF, toolkitPdf);
     await uploadAttachment(recordId, FIELDS.QuizDocx, quizDocx);
   } catch (err) {

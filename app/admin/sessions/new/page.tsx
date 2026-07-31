@@ -57,7 +57,6 @@ function slugify(title: string): string {
 
 function NewSessionForm() {
   const [debriefDocx, setDebriefDocx] = useState<File | null>(null);
-  const [debriefPdf, setDebriefPdf] = useState<File | null>(null);
   const [toolkitPdf, setToolkitPdf] = useState<File | null>(null);
   const [quizDocx, setQuizDocx] = useState<File | null>(null);
 
@@ -81,10 +80,9 @@ function NewSessionForm() {
   const [result, setResult] = useState<SubmitResponse | null>(null);
 
   const canSubmit = useMemo(() => {
-    // Must have at least the quiz + one of the docs, and audience with
-    // at least one team ticked.
+    // Must have all three files + audience with at least one team ticked.
     if (!quizDocx) return false;
-    if (!debriefDocx && !debriefPdf) return false;
+    if (!debriefDocx) return false;
     if (!toolkitPdf) return false;
     if (!Object.values(audience).some(Boolean)) return false;
     if (!sessionDate) return false;
@@ -92,7 +90,6 @@ function NewSessionForm() {
     return !submitting;
   }, [
     debriefDocx,
-    debriefPdf,
     toolkitPdf,
     quizDocx,
     audience,
@@ -110,7 +107,6 @@ function NewSessionForm() {
     try {
       const fd = new FormData();
       if (debriefDocx) fd.append("debriefDocx", debriefDocx);
-      if (debriefPdf) fd.append("debriefPdf", debriefPdf);
       if (toolkitPdf) fd.append("toolkitPdf", toolkitPdf);
       if (quizDocx) fd.append("quizDocx", quizDocx);
       fd.append("youtubeUrl", youtubeUrl.trim());
@@ -148,7 +144,6 @@ function NewSessionForm() {
         // Reset only the file inputs — leave text fields in case she
         // wants to publish a follow-up with similar metadata.
         setDebriefDocx(null);
-        setDebriefPdf(null);
         setToolkitPdf(null);
         setQuizDocx(null);
       }
@@ -220,17 +215,10 @@ function NewSessionForm() {
         >
           <FileField
             label="Debrief DOCX"
-            hint="Corie's team sends this. Server auto-extracts the summary + key takeaway."
+            hint="Corie's team sends this. Server auto-extracts the summary + key takeaway AND converts it to a PDF for reps to download."
             accept=".docx"
             file={debriefDocx}
             onChange={setDebriefDocx}
-          />
-          <FileField
-            label="Debrief PDF"
-            hint="The PDF version reps download. If you only have the docx, open it in Word and Save As PDF."
-            accept=".pdf"
-            file={debriefPdf}
-            onChange={setDebriefPdf}
           />
           <FileField
             label="Toolkit PDF"
