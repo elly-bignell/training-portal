@@ -74,13 +74,16 @@ function gradeAttempt(
 
 function QuizInner() {
   const params = useParams<{ id: string }>();
-  const { sessions, leadGenSessions } = useSessionsData();
+  const { sessions, leadGenSessions, source } = useSessionsData();
 
   const session =
     sessions.find((s) => s.id === params.id) ??
     leadGenSessions.find((s) => s.id === params.id) ??
     getBundledSessionById(params.id);
   const quiz = session ? getQuiz(session) : undefined;
+  // Airtable-added sessions won't be present until the fetch resolves —
+  // don't render "Quiz not found" during the loading window.
+  const catalogLoading = source === "loading";
 
   const [repSlug, setRepSlug] = useState<string | null>(null);
   const [repName, setRepName] = useState<string>("");
@@ -95,6 +98,13 @@ function QuizInner() {
     useState<QuizAttempt | null>(null);
 
   if (!session || !quiz || quiz.kind !== "quiz") {
+    if (catalogLoading) {
+      return (
+        <main className="min-h-screen bg-slate-50 flex items-center justify-center">
+          <div className="text-slate-500 text-sm">Loading quiz…</div>
+        </main>
+      );
+    }
     return (
       <main className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-center">

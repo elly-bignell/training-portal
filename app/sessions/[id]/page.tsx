@@ -34,8 +34,9 @@ const NUMERALS = ["①", "②", "③", "④", "⑤", "⑥"];
 
 function SessionDetailInner() {
   const params = useParams<{ id: string }>();
-  const { sessions, leadGenSessions, customerServiceSessions } =
-    useSessionsData();
+  const catalog = useSessionsData();
+  const { sessions, leadGenSessions, customerServiceSessions, source } =
+    catalog;
   // Look up against the merged catalog first; fall back to bundled only
   // to cover the tiny race where the fetch hasn't resolved.
   const session =
@@ -51,7 +52,19 @@ function SessionDetailInner() {
   // rules-of-hooks requires the same hook call order every render.
   const { isCustomerService, usesLeadGenTrack } = useTraineeContext();
 
-  if (!session) return notFound();
+  // If the session isn't in the current catalog, don't 404 immediately —
+  // Airtable-added sessions won't appear until the /api/sessions fetch
+  // resolves. Show a loading state until the fetch reports back.
+  if (!session) {
+    if (source === "loading") {
+      return (
+        <main className="min-h-screen bg-slate-50 flex items-center justify-center">
+          <div className="text-slate-500 text-sm">Loading session…</div>
+        </main>
+      );
+    }
+    return notFound();
+  }
 
   if (!repSlug) {
     return (
