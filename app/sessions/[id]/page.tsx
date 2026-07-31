@@ -10,8 +10,9 @@ import Link from "next/link";
 import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import AssetCard from "@/components/sessions/AssetCard";
-import { getSessionById, customerServiceSessions } from "@/data/sessions";
+import { getSessionById as getBundledSessionById } from "@/data/sessions";
 import { useTraineeContext } from "@/hooks/useTraineeContext";
+import { useSessionsData } from "@/hooks/useSessionsData";
 import {
   assetsViewedCount,
   bestQuizScore,
@@ -33,7 +34,14 @@ const NUMERALS = ["①", "②", "③", "④", "⑤", "⑥"];
 
 function SessionDetailInner() {
   const params = useParams<{ id: string }>();
-  const session = getSessionById(params.id);
+  const { sessions, leadGenSessions, customerServiceSessions } =
+    useSessionsData();
+  // Look up against the merged catalog first; fall back to bundled only
+  // to cover the tiny race where the fetch hasn't resolved.
+  const session =
+    sessions.find((s) => s.id === params.id) ??
+    leadGenSessions.find((s) => s.id === params.id) ??
+    getBundledSessionById(params.id);
 
   const [repSlug, setRepSlug] = useState<string | null>(null);
   const [repName, setRepName] = useState<string>("");

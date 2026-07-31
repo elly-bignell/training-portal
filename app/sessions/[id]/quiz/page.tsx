@@ -20,7 +20,8 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
-import { getSessionById, getQuiz } from "@/data/sessions";
+import { getSessionById as getBundledSessionById, getQuiz } from "@/data/sessions";
+import { useSessionsData } from "@/hooks/useSessionsData";
 import { useTraineeContext } from "@/hooks/useTraineeContext";
 import { useSessionsProgress } from "@/hooks/useSessionsProgress";
 import {
@@ -73,8 +74,12 @@ function gradeAttempt(
 
 function QuizInner() {
   const params = useParams<{ id: string }>();
+  const { sessions, leadGenSessions } = useSessionsData();
 
-  const session = getSessionById(params.id);
+  const session =
+    sessions.find((s) => s.id === params.id) ??
+    leadGenSessions.find((s) => s.id === params.id) ??
+    getBundledSessionById(params.id);
   const quiz = session ? getQuiz(session) : undefined;
 
   const [repSlug, setRepSlug] = useState<string | null>(null);
@@ -365,7 +370,7 @@ function ResultScreen({
   repName,
   onTryAgain,
 }: {
-  session: ReturnType<typeof getSessionById> & {};
+  session: ReturnType<typeof getBundledSessionById> & {};
   quiz: ReturnType<typeof getQuiz> & {};
   attempt: QuizAttempt;
   repName: string;

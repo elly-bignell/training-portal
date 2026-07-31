@@ -19,12 +19,13 @@ import {
   SessionStatus,
 } from "@/types/sessions";
 import {
-  sessions,
-  leadGenSessions,
-  customerServiceSessions,
-  getSessionById,
+  sessions as bundledSessions,
+  leadGenSessions as bundledLeadGenSessions,
+  customerServiceSessions as bundledCustomerServiceSessions,
+  getSessionById as getBundledSessionById,
 } from "@/data/sessions";
 import { useTraineeContext } from "@/hooks/useTraineeContext";
+import { useSessionsData } from "@/hooks/useSessionsData";
 
 const REP_SLUG_KEY = "sessions-rep-slug";
 
@@ -162,6 +163,22 @@ export function assetsViewedCount(
 
 export function useSessionsProgress(slug: string | null) {
   const { trainees, isCustomerService, usesLeadGenTrack } = useTraineeContext();
+  // Merged (bundled + Airtable) sessions. Falls back to bundled on load
+  // so first render never misses a session.
+  const {
+    sessions,
+    leadGenSessions,
+    customerServiceSessions,
+  } = useSessionsData();
+  // getSessionById helper against the merged pool. Used by the
+  // asset-view mirror below.
+  const getSessionById = useCallback(
+    (id: string) =>
+      sessions.find((s) => s.id === id) ??
+      leadGenSessions.find((s) => s.id === id) ??
+      getBundledSessionById(id),
+    [sessions, leadGenSessions]
+  );
   const [data, setData] = useState<RepSessionsProgress>(EMPTY_REP_PROGRESS);
   const [hydrated, setHydrated] = useState(false);
 

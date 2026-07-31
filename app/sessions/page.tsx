@@ -15,7 +15,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import RepPicker from "@/components/sessions/RepPicker";
 import SessionsHeader from "@/components/sessions/SessionsHeader";
 import SessionCard from "@/components/sessions/SessionCard";
-import { sessions, leadGenSessions, customerServiceSessions } from "@/data/sessions";
+import { useSessionsData } from "@/hooks/useSessionsData";
 import { useTraineeContext } from "@/hooks/useTraineeContext";
 import {
   assetsViewedCount,
@@ -83,13 +83,15 @@ function SessionsHomeInner() {
   // everywhere downstream — same id, same metadata. That way the dots,
   // counts, denominators and status calcs all line up.
   const { isCustomerService, usesLeadGenTrack } = useTraineeContext();
+  const { sessions, leadGenSessions, customerServiceSessions } =
+    useSessionsData();
   const isCS = isCustomerService(repSlug);
   const onLeadGenTrack = usesLeadGenTrack(repSlug);
   const effectiveSessions: Session[] = useMemo(() => {
     if (isCS) return customerServiceSessions;
     if (onLeadGenTrack) return leadGenSessions;
     return sessions;
-  }, [isCS, onLeadGenTrack]);
+  }, [isCS, onLeadGenTrack, sessions, leadGenSessions, customerServiceSessions]);
 
   // Rank sessions: newest first (latest date wins).
   const ranked = useMemo(
