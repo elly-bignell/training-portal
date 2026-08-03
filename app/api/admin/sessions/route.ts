@@ -21,12 +21,11 @@
 import { NextResponse } from "next/server";
 import { parseQuizDocx } from "@/lib/parse-quiz-docx";
 import { parseDebriefDocx } from "@/lib/parse-debrief-docx";
-import { convertDebriefDocxToPdf } from "@/lib/docx-to-pdf";
+import { parseDebriefPdf } from "@/lib/parse-debrief-pdf";
 
-// Puppeteer + @sparticuz/chromium need the Node runtime (not Edge).
+// Attachment uploads to Airtable can outrun the default 10s Vercel cap,
+// so give the route a generous ceiling.
 export const runtime = "nodejs";
-// PDF conversion + Airtable uploads can take longer than Vercel's default
-// 10s cap on hobby plans; bump to 60s so a slow submit still completes.
 export const maxDuration = 60;
 
 const BASE_ID = process.env.AIRTABLE_BASE_ID!;
@@ -194,12 +193,12 @@ export async function POST(req: Request) {
       { status: 400 }
     );
   }
-  if (!debriefDocx && !debriefPdfUpload) {
+  if (!debriefPdfUpload) {
     return NextResponse.json(
       {
         ok: false,
         error:
-          "Missing debrief — upload the DOCX (server converts to PDF) or a PDF directly.",
+          "Missing debrief PDF. If Corie's team only sent a DOCX, ask them to also export as PDF.",
       },
       { status: 400 }
     );
@@ -223,7 +222,10 @@ export async function POST(req: Request) {
 
   const warnings: string[] = [];
 
-  // ─── Auto-extract from debrief DOCX ──────────────────────────────────
+  // ─── Auto-extract Summary + KeyTakeaway ─────────────────────────────
+  // Prefer the DOCX (structured text is cleaner) when Corie sends it too;
+  // otherwise parse the PDF which she'll always have. Same landmarks
+  // either way — "WHAT THIS SESSION IS" + "Today's challenge".
   let extractedTitle = "";
   let extractedSummary = "";
   let extractedKeyTakeaway = "";
@@ -236,12 +238,22 @@ export async function POST(req: Request) {
       extractedKeyTakeaway = parsed.keyTakeaway;
       warnings.push(...parsed.warnings);
     } catch (err) {
-      warnings.push(`Debrief extraction failed: ${err}`);
+      warnings.push(`Debrief DOCX extraction failed: ${err}`);
     }
-  } else {
-    warnings.push(
-      "No debrief DOCX uploaded — Summary + KeyTakeaway will use overrides only."
-    );
+  }
+  if (!extractedTitle || !extractedSummary || !extractedKeyTakeaway) {
+    // Fall back to PDF for anything the DOCX didn't produce (or if the
+    // colleague didn't upload a DOCX at all).
+    try {
+      const pdfBuf = Buffer.from(await debriefPdfUpload.arrayBuffer());
+      const parsedPdf = await parseDebriefPdf(pdfBuf);
+      if (!extractedTitle) extractedTitle = parsedPdf.title;
+      if (!extractedSummary) extractedSummary = parsedPdf.summary;
+      if (!extractedKeyTakeaway) extractedKeyTakeaway = parsedPdf.keyTakeaway;
+      warnings.push(...parsedPdf.warnings);
+    } catch (err) {
+      warnings.push(`Debrief PDF extraction failed: ${err}`);
+    }
   }
 
   const title = titleOverride || extractedTitle;
@@ -334,44 +346,9 @@ export async function POST(req: Request) {
     );
   }
 
-  // ─── Resolve the debrief PDF ─────────────────────────────────────────
-  // Preference order: a PDF the colleague uploaded directly, otherwise a
-  // server-generated PDF from the debrief DOCX. Only one of these paths
-  // actually runs per submit — DOCX conversion is the common case.
-  let debriefPdfForUpload: File | { buffer: Buffer; name: string; type: string } | null =
-    debriefPdfUpload;
-  if (!debriefPdfForUpload && debriefDocx) {
-    try {
-      const docxBuf = Buffer.from(await debriefDocx.arrayBuffer());
-      const pdfBuf = await convertDebriefDocxToPdf(docxBuf);
-      const pdfName = debriefDocx.name.replace(/\.docx$/i, ".pdf");
-      debriefPdfForUpload = {
-        buffer: pdfBuf,
-        name: pdfName,
-        type: "application/pdf",
-      };
-    } catch (err) {
-      warnings.push(
-        `Debrief DOCX→PDF conversion failed: ${err}. The DOCX was still parsed for Summary/KeyTakeaway, but the portal won't have a debrief PDF to serve. You can convert manually (Word > Save As > PDF) and attach in Airtable.`
-      );
-    }
-  }
-
   // ─── Upload attachments (sequential — Airtable rate-limits) ─────────
   try {
-    if (debriefPdfForUpload) {
-      if (debriefPdfForUpload instanceof File) {
-        await uploadAttachment(recordId, FIELDS.DebriefPDF, debriefPdfForUpload);
-      } else {
-        await uploadAttachmentFromBuffer(
-          recordId,
-          FIELDS.DebriefPDF,
-          debriefPdfForUpload.buffer,
-          debriefPdfForUpload.name,
-          debriefPdfForUpload.type
-        );
-      }
-    }
+    await uploadAttachment(recordId, FIELDS.DebriefPDF, debriefPdfUpload);
     await uploadAttachment(recordId, FIELDS.ToolkitPDF, toolkitPdf);
     await uploadAttachment(recordId, FIELDS.QuizDocx, quizDocx);
   } catch (err) {
