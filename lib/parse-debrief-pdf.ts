@@ -10,8 +10,11 @@
 // opposite tradeoff to the puppeteer path.
 
 // pdf-parse is CommonJS with a default export and no built-in types.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const pdfParse: (buffer: Buffer) => Promise<{ text: string }> = require("pdf-parse");
+// Import via ES module syntax and cast to the shape we actually use.
+import pdfParseModule from "pdf-parse";
+const pdfParse = pdfParseModule as unknown as (
+  buffer: Buffer
+) => Promise<{ text: string }>;
 
 export interface ExtractedDebrief {
   summary: string;
