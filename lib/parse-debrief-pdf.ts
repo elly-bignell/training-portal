@@ -9,12 +9,9 @@
 // pdf-parse is pure Node (no chromium), tiny, reliable on Vercel — the
 // opposite tradeoff to the puppeteer path.
 
-// pdf-parse is CommonJS with a default export and no built-in types.
-// Import via ES module syntax and cast to the shape we actually use.
-import pdfParseModule from "pdf-parse";
-const pdfParse = pdfParseModule as unknown as (
-  buffer: Buffer
-) => Promise<{ text: string }>;
+// pdf-parse v2 exposes a class-based API (was a simple function in v1).
+// getText() returns { text: string } after parsing all pages.
+import { PDFParse } from "pdf-parse";
 
 export interface ExtractedDebrief {
   summary: string;
@@ -36,7 +33,10 @@ export async function parseDebriefPdf(
 
   let text: string;
   try {
-    const parsed = await pdfParse(buffer);
+    // Convert Buffer → Uint8Array so pdf-parse (which speaks pdfjs's data
+    // shape) accepts it without complaint.
+    const parser = new PDFParse({ data: new Uint8Array(buffer) });
+    const parsed = await parser.getText();
     text = parsed.text ?? "";
   } catch (err) {
     warnings.push(`Couldn't read the debrief PDF: ${String(err)}`);
