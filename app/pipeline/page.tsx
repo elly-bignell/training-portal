@@ -7,7 +7,7 @@ const CLOSERS = ['Lucas', 'Dylan', 'Felipe', 'Riley'];
 const BOOKERS = ['Cindy', 'Shian', 'Riley', 'Sydney', 'Jade', 'Holly', 'Felipe', 'Dylan', 'Lucas'];
 const VIEWERS = ['Lucas', 'Dylan', 'Felipe', 'Admin'];
 
-const MS_PLANS  = ['Web Support','SEO Support','Digital Support'];
+const MS_PLANS  = ['Reach+','Momentum+','Authority+','Dominance+','Elite+','Web Support','SEO Support','Digital Support'];
 const Q_PLANS   = ['Bronze','Silver','Gold','Platinum','Diamond'];
 const MS_EXTRAS = ['Web Changes','SEO Backlinking','SEO Page Building','Google Ads','O/O Web Changes','O/O Page Building','O/O SEO Overhaul'];
 const Q_EXTRAS  = ['LiteHost','Plus36 Hosting','Plus24 Hosting','FlexiHost'];
