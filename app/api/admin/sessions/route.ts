@@ -21,7 +21,10 @@
 import { NextResponse } from "next/server";
 import { parseQuizDocx } from "@/lib/parse-quiz-docx";
 import { parseDebriefDocx } from "@/lib/parse-debrief-docx";
-import { parseDebriefPdf } from "@/lib/parse-debrief-pdf";
+// parseDebriefPdf is loaded lazily below — pdf-parse depends on pdfjs
+// and can throw at import time in serverless environments. Deferring the
+// import means the auto-extract feature degrades gracefully to "blank
+// Summary/KeyTakeaway" instead of taking down the whole submit route.
 
 // Attachment uploads to Airtable can outrun the default 10s Vercel cap,
 // so give the route a generous ceiling.
@@ -137,6 +140,25 @@ async function uploadAttachmentFromBuffer(
 
 // ─── POST handler ─────────────────────────────────────────────────────
 export async function POST(req: Request) {
+  // Top-level guard: any uncaught throw inside the handler bubbles up
+  // to Vercel and returns HTML (the "<!DOCTYPE" the client can't parse).
+  // Wrapping in try/catch ensures the form always sees a JSON response
+  // it can render as a readable error, not a stack trace it can't.
+  try {
+    return await handlePost(req);
+  } catch (err) {
+    console.error("[/api/admin/sessions] uncaught:", err);
+    return NextResponse.json(
+      {
+        ok: false,
+        error: `Server error: ${String(err).slice(0, 300)}`,
+      },
+      { status: 500 }
+    );
+  }
+}
+
+async function handlePost(req: Request) {
   // Auth
   const password = req.headers.get("x-auth-password");
   const authed = await isMasterAuth(password);
@@ -243,8 +265,10 @@ export async function POST(req: Request) {
   }
   if (!extractedTitle || !extractedSummary || !extractedKeyTakeaway) {
     // Fall back to PDF for anything the DOCX didn't produce (or if the
-    // colleague didn't upload a DOCX at all).
+    // colleague didn't upload a DOCX at all). Lazy-load pdf-parse so a
+    // runtime import failure surfaces as a warning, not a 500.
     try {
+      const { parseDebriefPdf } = await import("@/lib/parse-debrief-pdf");
       const pdfBuf = Buffer.from(await debriefPdfUpload.arrayBuffer());
       const parsedPdf = await parseDebriefPdf(pdfBuf);
       if (!extractedTitle) extractedTitle = parsedPdf.title;
@@ -252,7 +276,10 @@ export async function POST(req: Request) {
       if (!extractedKeyTakeaway) extractedKeyTakeaway = parsedPdf.keyTakeaway;
       warnings.push(...parsedPdf.warnings);
     } catch (err) {
-      warnings.push(`Debrief PDF extraction failed: ${err}`);
+      warnings.push(
+        `Debrief PDF auto-extract skipped (${String(err).slice(0, 120)}). ` +
+          "You can edit Summary + KeyTakeaway directly in the Airtable Sessions row after publish."
+      );
     }
   }
 
