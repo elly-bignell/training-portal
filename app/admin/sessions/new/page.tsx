@@ -72,19 +72,24 @@ function NewSessionForm() {
   });
   const [origin, setOrigin] = useState<"sales" | "customer-service">("sales");
 
-  // Optional overrides — colleague can edit if auto-extract is off
-  const [titleOverride, setTitleOverride] = useState("");
-  const [summaryOverride, setSummaryOverride] = useState("");
-  const [keyTakeawayOverride, setKeyTakeawayOverride] = useState("");
+  // Title is a required visible field (auto-extract from PDF is
+  // unreliable, so we always ask). Summary + KeyTakeaway are visible
+  // optional fields — server still tries auto-extract as a fallback,
+  // but the colleague can also type them here for full control.
+  const [title, setTitle] = useState("");
+  const [summary, setSummary] = useState("");
+  const [keyTakeaway, setKeyTakeaway] = useState("");
 
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<SubmitResponse | null>(null);
 
   const canSubmit = useMemo(() => {
-    // Debrief DOCX is optional now — everything else is required.
+    // Debrief DOCX is optional. Everything else is required (including
+    // Title now, since PDF auto-extract is unreliable).
     if (!quizDocx) return false;
     if (!debriefPdf) return false;
     if (!toolkitPdf) return false;
+    if (!title.trim()) return false;
     if (!Object.values(audience).some(Boolean)) return false;
     if (!sessionDate) return false;
     if (!number.trim()) return false;
@@ -93,6 +98,7 @@ function NewSessionForm() {
     debriefPdf,
     toolkitPdf,
     quizDocx,
+    title,
     audience,
     sessionDate,
     number,
@@ -120,11 +126,10 @@ function NewSessionForm() {
         .filter(([, v]) => v)
         .map(([k]) => k);
       fd.append("audience", JSON.stringify(teams));
-      if (titleOverride.trim()) fd.append("titleOverride", titleOverride.trim());
-      if (summaryOverride.trim())
-        fd.append("summaryOverride", summaryOverride.trim());
-      if (keyTakeawayOverride.trim())
-        fd.append("keyTakeawayOverride", keyTakeawayOverride.trim());
+      if (title.trim()) fd.append("titleOverride", title.trim());
+      if (summary.trim()) fd.append("summaryOverride", summary.trim());
+      if (keyTakeaway.trim())
+        fd.append("keyTakeawayOverride", keyTakeaway.trim());
 
       // Pass the same password PasswordGate stored — the API validates it
       // matches an Admin-role Portal Users row before accepting the upload.
@@ -143,12 +148,16 @@ function NewSessionForm() {
       const json = (await res.json()) as SubmitResponse;
       setResult(json);
       if (json.ok) {
-        // Reset only the file inputs — leave text fields in case she
-        // wants to publish a follow-up with similar metadata.
+        // Reset the file inputs AND the prose fields — the next session
+        // will have different title/summary/keyTakeaway. Leave audience +
+        // origin + date since those often carry across.
         setDebriefDocx(null);
         setDebriefPdf(null);
         setToolkitPdf(null);
         setQuizDocx(null);
+        setTitle("");
+        setSummary("");
+        setKeyTakeaway("");
       }
     } catch (err) {
       setResult({ ok: false, error: String(err) });
@@ -244,6 +253,54 @@ function NewSessionForm() {
             file={quizDocx}
             onChange={setQuizDocx}
           />
+
+          <div>
+            <label className="block text-sm font-semibold text-slate-800 mb-1">
+              Session title <span className="text-red-600">*</span>
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. Get Over the Curb."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+            />
+            <p className="text-xs text-slate-500 mt-1">
+              Include the trailing full stop if the session title has one.
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-slate-800 mb-1">
+              Summary
+            </label>
+            <textarea
+              rows={3}
+              placeholder="One-paragraph thesis of the session. Shown on the card and detail hero."
+              value={summary}
+              onChange={(e) => setSummary(e.target.value)}
+              className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+            />
+            <p className="text-xs text-slate-500 mt-1">
+              Optional. Leave blank to try auto-extract from the debrief PDF, or edit later in Airtable.
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-slate-800 mb-1">
+              Key takeaway
+            </label>
+            <textarea
+              rows={4}
+              placeholder="The gold callout on the detail page. What the rep should walk away with."
+              value={keyTakeaway}
+              onChange={(e) => setKeyTakeaway(e.target.value)}
+              className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+            />
+            <p className="text-xs text-slate-500 mt-1">
+              Optional. Leave blank to try auto-extract, or edit later in Airtable.
+            </p>
+          </div>
 
           <div>
             <label className="block text-sm font-semibold text-slate-800 mb-1">
@@ -345,50 +402,6 @@ function NewSessionForm() {
               Drives the coloured pill on the session card.
             </p>
           </div>
-
-          <details className="text-sm">
-            <summary className="cursor-pointer font-semibold text-slate-800">
-              Overrides (only if auto-extract looks wrong)
-            </summary>
-            <div className="mt-3 space-y-3 pl-2">
-              <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
-                  Title override
-                </label>
-                <input
-                  type="text"
-                  value={titleOverride}
-                  onChange={(e) => setTitleOverride(e.target.value)}
-                  className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
-                  placeholder="Auto-extracted from debrief header"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
-                  Summary override
-                </label>
-                <textarea
-                  rows={3}
-                  value={summaryOverride}
-                  onChange={(e) => setSummaryOverride(e.target.value)}
-                  className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
-                  placeholder="Auto-extracted from 'WHAT THIS SESSION IS' paragraph"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
-                  Key takeaway override
-                </label>
-                <textarea
-                  rows={4}
-                  value={keyTakeawayOverride}
-                  onChange={(e) => setKeyTakeawayOverride(e.target.value)}
-                  className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
-                  placeholder="Auto-extracted from 'Today's challenge' section"
-                />
-              </div>
-            </div>
-          </details>
 
           <div className="pt-2 border-t border-slate-200">
             <button
