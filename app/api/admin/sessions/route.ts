@@ -55,6 +55,7 @@ const FIELDS = {
   QuizJSON: "fldADe0TutRRuNxj6",
   Audience: "fldZ1SH9MPzSRKcRP",
   Origin: "fld1v0EoxX1YrWEVP",
+  Origins: "fldnJ9yjPAzKnbTTE",
   Published: "flde0tYTLiP7ax5GB",
   Notes: "flds7ijnLSFgsFUtu",
 };
@@ -197,6 +198,27 @@ async function handlePost(req: Request) {
   const number = (form.get("number") as string) ?? "";
   const lgNumber = (form.get("lgNumber") as string) ?? "";
   const origin = (form.get("origin") as string) ?? "sales";
+  // Prefer the new multi-select `origins` (JSON array) over the legacy
+  // singular `origin`. Map internal codes → Airtable option names.
+  const originsRaw = (form.get("origins") as string) ?? "";
+  const originCodes: string[] = (() => {
+    try {
+      const parsed = JSON.parse(originsRaw);
+      if (Array.isArray(parsed)) return parsed.filter((x) => typeof x === "string");
+    } catch {
+      /* fall through */
+    }
+    return [origin];
+  })();
+  const originsForAirtable: string[] = originCodes
+    .map((c): string | null =>
+      c === "sales"
+        ? "Sales"
+        : c === "customer-service"
+        ? "Customer Service"
+        : null
+    )
+    .filter((v): v is string => v !== null);
   const audienceRaw = (form.get("audience") as string) ?? "[]";
   const titleOverride = (form.get("titleOverride") as string) ?? "";
   const summaryOverride = (form.get("summaryOverride") as string) ?? "";
@@ -344,7 +366,11 @@ async function handlePost(req: Request) {
                 [FIELDS.IntroYouTubeUrl]: youtubeUrl || undefined,
                 [FIELDS.QuizJSON]: quizJson,
                 [FIELDS.Audience]: audience,
-                [FIELDS.Origin]: origin,
+                // Legacy singular field kept in sync for older readers.
+                [FIELDS.Origin]: originCodes[0] ?? origin,
+                // New multi-select — this is what the fetcher prefers.
+                [FIELDS.Origins]:
+                  originsForAirtable.length > 0 ? originsForAirtable : ["Sales"],
                 [FIELDS.Published]: true,
               },
             },

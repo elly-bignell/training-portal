@@ -70,7 +70,10 @@ function NewSessionForm() {
     "Lead Gen": true,
     "Customer Service": true,
   });
-  const [origin, setOrigin] = useState<"sales" | "customer-service">("sales");
+  const [origins, setOrigins] = useState({
+    sales: true,
+    "customer-service": false,
+  });
 
   // Title is a required visible field (auto-extract from PDF is
   // unreliable, so we always ask). Summary + KeyTakeaway are visible
@@ -85,12 +88,14 @@ function NewSessionForm() {
 
   const canSubmit = useMemo(() => {
     // Debrief DOCX is optional. Everything else is required (including
-    // Title now, since PDF auto-extract is unreliable).
+    // Title now, since PDF auto-extract is unreliable, and at least one
+    // Origin so the session groups into a section).
     if (!quizDocx) return false;
     if (!debriefPdf) return false;
     if (!toolkitPdf) return false;
     if (!title.trim()) return false;
     if (!Object.values(audience).some(Boolean)) return false;
+    if (!Object.values(origins).some(Boolean)) return false;
     if (!sessionDate) return false;
     if (!number.trim()) return false;
     return !submitting;
@@ -100,6 +105,7 @@ function NewSessionForm() {
     quizDocx,
     title,
     audience,
+    origins,
     sessionDate,
     number,
     submitting,
@@ -121,7 +127,13 @@ function NewSessionForm() {
       fd.append("sessionDate", sessionDate);
       fd.append("number", number.trim());
       fd.append("lgNumber", lgNumber.trim());
-      fd.append("origin", origin);
+      const originList = Object.entries(origins)
+        .filter(([, v]) => v)
+        .map(([k]) => k);
+      fd.append("origins", JSON.stringify(originList));
+      // Backwards-compat: legacy single "origin" field so older API
+      // versions don't reject the request during deploy overlap.
+      fd.append("origin", originList[0] ?? "sales");
       const teams = Object.entries(audience)
         .filter(([, v]) => v)
         .map(([k]) => k);
@@ -385,21 +397,37 @@ function NewSessionForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-800 mb-1">
-              Origin
+            <label className="block text-sm font-semibold text-slate-800 mb-2">
+              Origin <span className="text-red-600">*</span>
             </label>
-            <select
-              value={origin}
-              onChange={(e) =>
-                setOrigin(e.target.value as "sales" | "customer-service")
-              }
-              className="rounded border border-slate-300 px-3 py-2 text-sm"
-            >
-              <option value="sales">Sales training</option>
-              <option value="customer-service">Customer service training</option>
-            </select>
+            <div className="flex flex-wrap gap-4">
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={origins.sales}
+                  onChange={(e) =>
+                    setOrigins({ ...origins, sales: e.target.checked })
+                  }
+                />
+                Sales training
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={origins["customer-service"]}
+                  onChange={(e) =>
+                    setOrigins({
+                      ...origins,
+                      "customer-service": e.target.checked,
+                    })
+                  }
+                />
+                Customer service training
+              </label>
+            </div>
             <p className="text-xs text-slate-500 mt-1">
-              Drives the coloured pill on the session card.
+              Tick either or both. Drives the coloured pill and which
+              section (Sales / CS Training) it appears under for each viewer.
             </p>
           </div>
 

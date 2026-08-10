@@ -11,8 +11,12 @@
 //     a bundled session with an edit (change the intro URL, swap the
 //     debrief PDF) without needing a code change.
 //
-// Cached at the edge for 60 seconds. Falls back to bundled-only if
-// Airtable is unreachable (existing sessions never disappear).
+// Dynamic (no cache) — earlier attempts to cache at the edge caused
+// inconsistent renders when different Vercel regions held different
+// snapshots of the response. A newly-published Airtable session would
+// appear on one refresh and disappear on the next depending on which
+// region served the request. Fetching Airtable on every request adds
+// ~200ms per page load but keeps the catalog consistent.
 //
 // Auth: none. The session catalog itself isn't sensitive (any rep
 // already sees these on /sessions). The write endpoint at
@@ -27,7 +31,8 @@ import {
 import { getAirtableSessionsContext } from "@/lib/airtable-sessions";
 import type { Session } from "@/types/sessions";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export interface SessionsCatalog {
   sessions: Session[];
@@ -91,8 +96,9 @@ export async function GET() {
 
   return NextResponse.json(merged, {
     headers: {
-      "Cache-Control":
-        "public, max-age=60, s-maxage=60, stale-while-revalidate=120",
+      // No caching — every request queries Airtable fresh so a just-
+      // published session doesn't flicker in/out between edge regions.
+      "Cache-Control": "no-store, max-age=0",
     },
   });
 }

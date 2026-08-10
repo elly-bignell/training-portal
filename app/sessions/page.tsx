@@ -22,7 +22,7 @@ import {
   getSessionStatus,
   useSessionsProgress,
 } from "@/hooks/useSessionsProgress";
-import { Session, SessionFilter } from "@/types/sessions";
+import { Session, SessionFilter, sessionOrigins } from "@/types/sessions";
 
 const FILTER_LABELS: Record<SessionFilter, string> = {
   all: "All",
@@ -132,13 +132,28 @@ function SessionsHomeInner() {
   // reps and LG reps see sales-origin up top. Sessions without an origin
   // field default to "sales" for the grouping — most historical debriefs
   // were run for the sales team.
+  // A session tagged with BOTH origins shows in the viewer's own team
+  // section (avoids doubling up). Single-origin sessions show in that
+  // section only.
   const primarySessions = useMemo(() => {
-    if (isCS) return visibleSessions.filter((s) => s.origin === "customer-service");
-    return visibleSessions.filter((s) => (s.origin ?? "sales") === "sales");
+    if (isCS)
+      return visibleSessions.filter((s) =>
+        sessionOrigins(s).includes("customer-service")
+      );
+    return visibleSessions.filter((s) => sessionOrigins(s).includes("sales"));
   }, [visibleSessions, isCS]);
   const secondarySessions = useMemo(() => {
-    if (isCS) return visibleSessions.filter((s) => (s.origin ?? "sales") === "sales");
-    return visibleSessions.filter((s) => s.origin === "customer-service");
+    if (isCS)
+      return visibleSessions.filter(
+        (s) =>
+          sessionOrigins(s).includes("sales") &&
+          !sessionOrigins(s).includes("customer-service")
+      );
+    return visibleSessions.filter(
+      (s) =>
+        sessionOrigins(s).includes("customer-service") &&
+        !sessionOrigins(s).includes("sales")
+    );
   }, [visibleSessions, isCS]);
   const primaryHeading = isCS
     ? "Customer Service training"

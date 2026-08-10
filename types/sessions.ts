@@ -124,13 +124,27 @@ export interface Session {
    *  one-off themed sessions you want to flag without hoisting them out
    *  of the lineup (e.g. "SPIN TO WIN"). */
   cardBanner?: string;
-  /** Which team the session was originally run for. Used to render a
-   *  small coloured pill on the card + detail hero ("SALES TRAINING" in
-   *  blue, "CUSTOMER SERVICE TRAINING" in teal) and to reorder the
-   *  session grid by the viewing rep's own team. Defaults to "sales" at
-   *  the render layer if omitted, since most historical sessions were
-   *  sales-team debriefs. */
-  origin?: "sales" | "customer-service";
+  /** Which team(s) the session was originally run for. Drives the
+   *  coloured pill on the card + detail hero ("SALES TRAINING" in blue,
+   *  "CUSTOMER SERVICE TRAINING" in teal) and grouping on the sessions
+   *  grid. A session may belong to one origin (most common) or both — a
+   *  "both" session shows in whichever section matches the viewer's team.
+   *  Legacy string form is still accepted for bundled entries and old
+   *  Airtable rows. Renderers should use the `sessionOrigins()` helper. */
+  origin?: "sales" | "customer-service" | ("sales" | "customer-service")[];
+}
+
+/** Normalise a Session.origin into an array of origin tags. Handles the
+ *  legacy string form, the new array form, and the missing-value case
+ *  (defaults to ["sales"] since most historical sessions were sales). */
+export function sessionOrigins(
+  s: Session
+): ("sales" | "customer-service")[] {
+  if (Array.isArray(s.origin)) {
+    return s.origin.length > 0 ? s.origin : ["sales"];
+  }
+  if (s.origin) return [s.origin];
+  return ["sales"];
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

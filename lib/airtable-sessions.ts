@@ -56,6 +56,7 @@ interface SessionRecord {
     QuizJSON?: string;
     Audience?: string[];
     Origin?: string;
+    Origins?: string[];
     Published?: boolean;
     Notes?: string;
   };
@@ -102,7 +103,10 @@ export async function getAirtableSessionsContext(): Promise<AirtableSessionsCont
       `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE)}?${params}`,
       {
         headers: { Authorization: `Bearer ${API_KEY}` },
-        next: { revalidate: CACHE_SECONDS },
+        // No cache — the calling /api/sessions route is also dynamic;
+        // caching here would defeat the point and cause the flicker bug
+        // that appeared with edge-cached responses.
+        cache: "no-store",
       }
     );
 
@@ -224,8 +228,33 @@ function buildSession(rec: SessionRecord): Session | null {
     director: Director ?? "Corie Dawson",
     totalTime: TotalTime ?? estimateTotalTime(assets),
     assets,
-    origin: Origin === "customer-service" ? "customer-service" : "sales",
+    origin: deriveOrigin(rec.fields.Origins, Origin),
   };
+}
+
+/** Prefer the new Origins multi-select, fall back to the legacy Origin
+ *  single-select. Returns an array of origin tags (empty = default
+ *  "sales" applied at the render layer). */
+function deriveOrigin(
+  origins: string[] | undefined,
+  legacyOrigin: string | undefined
+): ("sales" | "customer-service")[] {
+  const tag = (s: string): "sales" | "customer-service" | null => {
+    const norm = s.toLowerCase().trim();
+    if (norm === "sales") return "sales";
+    if (norm === "customer service" || norm === "customer-service")
+      return "customer-service";
+    return null;
+  };
+  if (origins && origins.length > 0) {
+    const mapped = origins.map(tag).filter((v): v is "sales" | "customer-service" => !!v);
+    if (mapped.length > 0) return mapped;
+  }
+  if (legacyOrigin) {
+    const mapped = tag(legacyOrigin);
+    if (mapped) return [mapped];
+  }
+  return ["sales"];
 }
 
 /** Safely parse the QuizJSON string into a QuizAsset. If parsing fails
