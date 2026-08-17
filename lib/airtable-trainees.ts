@@ -186,7 +186,10 @@ export async function getTraineeContext(): Promise<TraineeContext> {
       `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE)}?${params}`,
       {
         headers: { Authorization: `Bearer ${API_KEY}` },
-        next: { revalidate: CACHE_SECONDS },
+        // No cache — the calling /api/trainees route is dynamic; caching
+        // here would defeat the point and re-introduce the stale-read
+        // bug for the PB Day/Week inputs after an inline edit.
+        cache: "no-store",
       }
     );
 

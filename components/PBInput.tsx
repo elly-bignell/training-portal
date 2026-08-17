@@ -55,6 +55,33 @@ export default function PBInput({ slug, kind, initial }: PBInputProps) {
         setError(json.error?.slice(0, 40) ?? "save failed");
         // Revert
         setValue(initial != null ? String(initial) : "");
+      } else {
+        // Patch the localStorage trainee-context cache so a page refresh
+        // within the 10-minute TTL still shows the new value (otherwise
+        // the stale cached snapshot would flash for ~200ms until the
+        // background /api/trainees fetch resolves).
+        try {
+          const raw = localStorage.getItem("trainee-context-v2");
+          if (raw) {
+            const parsed = JSON.parse(raw) as {
+              value: { allTrainees?: Array<{ slug: string; pbBookingsDay?: number; pbBookingsWeek?: number }> };
+              ts: number;
+            };
+            const list = parsed.value?.allTrainees ?? [];
+            const target = list.find((t) => t.slug === slug);
+            if (target) {
+              if (kind === "day") {
+                target.pbBookingsDay = numeric ?? undefined;
+              } else {
+                target.pbBookingsWeek = numeric ?? undefined;
+              }
+              localStorage.setItem("trainee-context-v2", JSON.stringify(parsed));
+            }
+          }
+        } catch {
+          // Cache patch is best-effort — safe to ignore failures since
+          // the background fetch will overwrite on next mount anyway.
+        }
       }
     } catch (err) {
       setError(String(err).slice(0, 40));
