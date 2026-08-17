@@ -7,6 +7,7 @@ import Link from "next/link";
 import { trainees } from "@/data/trainees";
 import { LEAD_GEN_SLUGS } from "@/data/leadGen";
 import { useTraineeContext } from "@/hooks/useTraineeContext";
+import PBInput from "@/components/PBInput";
 import { weeklyStandards, getCurrentWeekNumber, getWeekBoundaries, getDayOfWeek, TRAINEE_WEEK_OVERRIDES, getTraineeWeek, getYearWeekLabel } from "@/hooks/useActivityTracking";
 
 interface DailyData {
@@ -200,7 +201,14 @@ function getWeekDates(weekNum: number): string[] {
 }
 
 export default function PerformanceSummary() {
-  const { juniorSlugsBySeniorSlug } = useTraineeContext();
+  const { juniorSlugsBySeniorSlug, allTrainees } = useTraineeContext();
+  const pbBySlug = useMemo(() => {
+    const m = new Map<string, { day?: number; week?: number }>();
+    for (const t of allTrainees) {
+      m.set(t.slug, { day: t.pbBookingsDay, week: t.pbBookingsWeek });
+    }
+    return m;
+  }, [allTrainees]);
   const [weekData, setWeekData] = useState<TraineeWeekData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshTick, setRefreshTick] = useState(0);
@@ -406,8 +414,26 @@ export default function PerformanceSummary() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
+              {/* Super-header: PBs (Bookings) spans the Day + Week columns */}
+              <tr>
+                <th></th>
+                <th
+                  colSpan={2}
+                  className="text-center px-2 pt-3 pb-1 font-semibold text-gray-600"
+                >
+                  PBs (Bookings)
+                </th>
+                <th></th>
+                {weekDays.map((day) => (
+                  <th key={`sp-${day}`}></th>
+                ))}
+                <th></th>
+                <th></th>
+              </tr>
               <tr>
                 <th className="text-left px-4 py-3 font-semibold min-w-[160px]">Trainee</th>
+                <th className="text-center px-2 py-3 font-semibold w-[70px]">Day</th>
+                <th className="text-center px-2 py-3 font-semibold w-[70px]">Week</th>
                 <th className="text-center px-1 py-3 font-semibold w-[50px]"></th>
                 {weekDays.map((day) => (
                   <th key={day} className="text-center px-2 py-3 font-semibold">
@@ -429,7 +455,7 @@ export default function PerformanceSummary() {
                 <tbody key={team.name} className={teamIndex > 0 ? "border-t-2 border-gray-200" : ""}>
                   {/* Team header */}
                   <tr className="bg-slate-800">
-                    <td colSpan={9} className="px-4 py-2.5">
+                    <td colSpan={11} className="px-4 py-2.5">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-bold text-white">{team.name}</span>
                         <div className="flex items-center gap-4">
@@ -472,6 +498,21 @@ export default function PerformanceSummary() {
                                 </span>
                               );
                             })()}
+                          </td>
+                          {/* PB Day + Week — rowSpan=2 so it sits between the two-row block */}
+                          <td rowSpan={2} className="px-2 py-2 text-center align-middle border-b border-gray-100">
+                            <PBInput
+                              slug={td.slug}
+                              kind="day"
+                              initial={pbBySlug.get(td.slug)?.day}
+                            />
+                          </td>
+                          <td rowSpan={2} className="px-2 py-2 text-center align-middle border-b border-gray-100">
+                            <PBInput
+                              slug={td.slug}
+                              kind="week"
+                              initial={pbBySlug.get(td.slug)?.week}
+                            />
                           </td>
                           <td className="px-1 py-1.5 text-center">
                             <span className="text-[10px] text-gray-400 uppercase font-semibold">Book</span>
@@ -521,6 +562,9 @@ export default function PerformanceSummary() {
                     <td className="px-4 py-2 text-xs font-bold text-slate-600 uppercase">
                       {team.name} Total
                     </td>
+                    {/* Empty cells for the PB Day + PB Week columns */}
+                    <td></td>
+                    <td></td>
                     <td className="px-1 py-2 text-center">
                       <span className="text-[10px] text-slate-400 uppercase font-semibold">Book</span>
                     </td>
@@ -548,12 +592,15 @@ export default function PerformanceSummary() {
             {/* Grand Total — all teams */}
             <tbody className="border-t-4 border-slate-800">
               <tr className="bg-slate-900">
-                <td colSpan={9} className="px-4 py-2">
+                <td colSpan={11} className="px-4 py-2">
                   <span className="text-sm font-bold text-white">All Teams — Daily Total</span>
                 </td>
               </tr>
               <tr className="bg-slate-100">
                 <td className="px-4 py-2 text-xs font-bold text-slate-700 uppercase">Bookings</td>
+                {/* Empty cells for PB Day + PB Week columns */}
+                <td></td>
+                <td></td>
                 <td></td>
                 {grandDayTotals.map((dayTotal, idx) => (
                   <td key={`grand-book-${idx}`} className={`px-2 py-2 text-center text-sm font-bold ${getTeamBookingStatusClass(dayTotal.bookings, grandDailyTarget)}`}>
@@ -571,6 +618,9 @@ export default function PerformanceSummary() {
               </tr>
               <tr className="bg-slate-50">
                 <td className="px-4 py-2 text-xs font-bold text-slate-700 uppercase">Calls</td>
+                {/* Empty cells for PB Day + PB Week columns */}
+                <td></td>
+                <td></td>
                 <td></td>
                 {grandDayTotals.map((dayTotal, idx) => (
                   <td key={`grand-calls-${idx}`} className="px-2 py-2 text-center text-sm font-bold text-slate-800">

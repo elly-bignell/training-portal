@@ -54,6 +54,11 @@ export interface EnrichedTrainee extends Trainee {
   applicant: boolean;
   csOnboarding: boolean;
   buddy?: string;
+  /** Personal best bookings in a single day. Editable inline on the
+   *  Calls & Bookings section of the home page. Undefined = not set. */
+  pbBookingsDay?: number;
+  /** Personal best bookings in a single week. */
+  pbBookingsWeek?: number;
 }
 
 export interface TraineeContext {
@@ -104,6 +109,8 @@ interface AirtableRecord {
     Applicant?: boolean;
     Archived?: boolean;
     CSOnboarding?: boolean;
+    PBBookingsDay?: number;
+    PBBookingsWeek?: number;
   };
 }
 
@@ -171,6 +178,8 @@ export async function getTraineeContext(): Promise<TraineeContext> {
     params.append("fields[]", "Applicant");
     params.append("fields[]", "Archived");
     params.append("fields[]", "CSOnboarding");
+    params.append("fields[]", "PBBookingsDay");
+    params.append("fields[]", "PBBookingsWeek");
     params.set("pageSize", "100");
 
     const res = await fetch(
@@ -211,6 +220,8 @@ export async function getTraineeContext(): Promise<TraineeContext> {
         Applicant,
         Archived,
         CSOnboarding,
+        PBBookingsDay,
+        PBBookingsWeek,
       } = rec.fields;
 
       // Slug + Name are required for the record to be usable. Admins are
@@ -238,6 +249,10 @@ export async function getTraineeContext(): Promise<TraineeContext> {
         archived,
         applicant,
         csOnboarding,
+        pbBookingsDay:
+          typeof PBBookingsDay === "number" ? PBBookingsDay : undefined,
+        pbBookingsWeek:
+          typeof PBBookingsWeek === "number" ? PBBookingsWeek : undefined,
         buddy: Buddy,
       };
       allTrainees.push(enriched);

@@ -38,6 +38,8 @@ export interface EnrichedTrainee extends Trainee {
   applicant: boolean;
   csOnboarding: boolean;
   buddy?: string;
+  pbBookingsDay?: number;
+  pbBookingsWeek?: number;
 }
 
 export interface TraineeContext {
