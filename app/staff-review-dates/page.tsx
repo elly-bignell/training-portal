@@ -9,7 +9,6 @@ import PasswordGate from "@/components/PasswordGate";
 
 // ─── Recruits to show on this page (display order) ───
 const RECRUIT_SLUGS: { slug: string; displayName: string }[] = [
-  { slug: "cindy-rose-rondez-manrique", displayName: "Cindy Rose Rondez Manrique" },
   { slug: "krishna-patel",              displayName: "Krishna Patel" },
   { slug: "sydney-arnold",              displayName: "Sydney Arnold" },
   { slug: "riley-kerrison",             displayName: "Riley Kerrison" },

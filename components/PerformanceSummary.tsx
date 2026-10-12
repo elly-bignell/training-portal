@@ -39,7 +39,7 @@ interface TraineeWeekData {
 // from Airtable inside the component below. Fallback ordering used
 // when Airtable is unreachable.
 const TEAM_CLOSERS: { name: string; closer: string; fallbackMembers: string[] }[] = [
-  { name: "Team 1", closer: "lucas-tirri", fallbackMembers: ["lucas-tirri", "cindy-rose-rondez-manrique"] },
+  { name: "Team 1", closer: "lucas-tirri", fallbackMembers: ["lucas-tirri"] },
   { name: "Team 2", closer: "felipe-garcia", fallbackMembers: ["felipe-garcia", "sydney-arnold", "shian-roux"] },
   { name: "Team 3", closer: "dylan-munro", fallbackMembers: ["dylan-munro", "riley-kerrison", "jade-bautista"] },
 ];

@@ -21,7 +21,6 @@
 // (They keep their scorecard; the checklist link just disappears.)
 
 export const LEAD_GEN_SLUGS = [
-  "cindy-rose-rondez-manrique",
   "sydney-arnold",
   "riley-kerrison",
   "shian-roux",

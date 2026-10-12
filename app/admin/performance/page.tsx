@@ -37,7 +37,7 @@ const DEFAULT_DEAL_VALUE = 400;
 // in fallback mode). Actual `members` for each pair are derived from
 // Airtable inside the component below when available.
 const FALLBACK_BUDDY_PAIRS: { closer: string; label: string; sublabel?: string; members: string[] }[] = [
-  { closer: "lucas-tirri", label: "Lucas & Cindy", members: ["lucas-tirri", "cindy-rose-rondez-manrique"] },
+  { closer: "lucas-tirri", label: "Lucas", members: ["lucas-tirri"] },
   { closer: "felipe-garcia", label: "Felipe, Sydney & Shian", members: ["felipe-garcia", "sydney-arnold", "shian-roux"] },
   { closer: "dylan-munro", label: "Dylan, Riley & Jade", members: ["dylan-munro", "riley-kerrison", "jade-bautista"] },
 ];

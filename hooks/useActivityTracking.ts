@@ -52,7 +52,6 @@ export const weeklyStandards: Record<number, DailyActivity> = {
 // overrides). Other trainees (buddies, senior staff) default to the current
 // program week and don't get a ramp badge.
 export const RAMP_UP_TRAINEE_SLUGS = [
-  "cindy-rose-rondez-manrique",
   "riley-kerrison",
   "sydney-arnold",
   "shian-roux",

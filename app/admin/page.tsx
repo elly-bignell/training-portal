@@ -384,7 +384,6 @@ function AdminDashboardContent() {
           <div className="space-y-4">
             {[
               { name: "Sydney Arnold", dir: "sydney" },
-              { name: "Cindy Rose Rondez Manrique", dir: "cindy" },
               { name: "Krishna Patel", dir: "krishna" },
             ].map((t) => (
               <div key={t.dir}>

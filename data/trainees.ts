@@ -40,12 +40,6 @@ export const trainees: Trainee[] = [
     startDate: "2026-02-10",
   },
   {
-    id: "cindy-rose-rondez-manrique",
-    name: "Cindy Rose Rondez Manrique",
-    slug: "cindy-rose-rondez-manrique",
-    startDate: "2026-02-23",
-  },
-  {
     id: "krishna-patel",
     name: "Krishna Patel",
     slug: "krishna-patel",
@@ -211,7 +205,6 @@ export const CUSTOMER_SERVICE_SLUGS: string[] = [
 // feedback) — but quizzes for this team are multiple-choice only. The full
 // 7-session projection is built in data/sessions.ts as `leadGenSessions`.
 export const LEAD_GEN_SLUGS: string[] = [
-  "cindy-rose-rondez-manrique",
   "shian-roux",
   "riley-kerrison",
   "sydney-arnold",
@@ -298,4 +291,14 @@ export const FALLBACK_CS_ONBOARDING_SLUGS: string[] = [
   "dasha-axenova",
   "jeremy-valiente",
   "dylanna-thach",
+];
+
+// ─── Removed from the portal ────────────────────────────────────────────────
+// People listed here are stripped out of every Airtable-driven list at fetch
+// time (lib/airtable-trainees.ts), so they disappear from the home page,
+// scorecards, Calls & Bookings widget, session picker and admin views even
+// if their Airtable row is still Active / has a Buddy set.
+// Cindy Rose Rondez Manrique removed 12 Oct 2026.
+export const REMOVED_TRAINEE_SLUGS: string[] = [
+  "cindy-rose-rondez-manrique",
 ];

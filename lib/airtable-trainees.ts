@@ -36,6 +36,7 @@ import {
   FALLBACK_ARCHIVED_SLUGS,
   FALLBACK_APPLICANT_SLUGS,
   FALLBACK_CS_ONBOARDING_SLUGS,
+  REMOVED_TRAINEE_SLUGS,
 } from "@/data/trainees";
 import { Trainee } from "@/types";
 
@@ -231,6 +232,8 @@ export async function getTraineeContext(): Promise<TraineeContext> {
       // filtered out entirely (they don't appear in trainee lists).
       if (!Slug || !Name) continue;
       if (Team === "Admin") continue;
+      // Removed from the portal entirely (see data/trainees.ts).
+      if (REMOVED_TRAINEE_SLUGS.includes(Slug)) continue;
 
       const team: EnrichedTrainee["team"] =
         Team === "Sales" || Team === "Lead Gen" || Team === "Customer Service"
