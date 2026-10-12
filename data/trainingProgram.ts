@@ -86,7 +86,7 @@ export const trainingProgram: Module[] = [
     checklist: [
       {
         id: "m2-item1",
-        label: "🔐 Launch M-Quote to complete this module (Password: MQuote0101)",
+        label: "🔐 Launch M-Quote to complete this module (Password: MQuote1226!)",
         link: "https://app.m-quote.com.au/login?redirect=%2F",
       },
       {
@@ -504,8 +504,8 @@ export const trainingProgram: Module[] = [
       },
       {
         id: "m3-item1",
-        label: "🔐 Launch Q-Quote to complete this module (Password: QQuote0101)",
-        link: "https://www.app.quodo.com.au/plans",
+        label: "🔐 Launch Q-Quote to complete this module (Password: QQuote1226!)",
+        link: "https://q.digitalau1.com.au/plans",
       },
       {
         id: "m3-section1",
@@ -520,7 +520,7 @@ export const trainingProgram: Module[] = [
       {
         id: "m3-item2",
         label: "Play the Service Walkthrough",
-        link: "https://www.app.quodo.com.au/plans",
+        link: "https://q.digitalau1.com.au/plans",
         estimatedTime: "3 mins",
       },
       {
@@ -532,7 +532,7 @@ export const trainingProgram: Module[] = [
       {
         id: "m3-item4",
         label: "Play the Payment Options",
-        link: "https://www.app.quodo.com.au/plans",
+        link: "https://q.digitalau1.com.au/plans",
         estimatedTime: "4 mins",
       },
       {
@@ -543,7 +543,7 @@ export const trainingProgram: Module[] = [
       {
         id: "m3-item5",
         label: "Play the Service Walkthrough",
-        link: "https://www.app.quodo.com.au/plans",
+        link: "https://q.digitalau1.com.au/plans",
         estimatedTime: "3 mins",
       },
       {
@@ -555,7 +555,7 @@ export const trainingProgram: Module[] = [
       {
         id: "m3-item7",
         label: "Play the Payment Options",
-        link: "https://www.app.quodo.com.au/plans",
+        link: "https://q.digitalau1.com.au/plans",
         estimatedTime: "4 mins",
       },
       {
@@ -566,7 +566,7 @@ export const trainingProgram: Module[] = [
       {
         id: "m3-item8",
         label: "Play the Service Walkthrough",
-        link: "https://www.app.quodo.com.au/plans",
+        link: "https://q.digitalau1.com.au/plans",
         estimatedTime: "3 mins",
       },
       {
@@ -578,7 +578,7 @@ export const trainingProgram: Module[] = [
       {
         id: "m3-item10",
         label: "Play the Payment Options",
-        link: "https://www.app.quodo.com.au/plans",
+        link: "https://q.digitalau1.com.au/plans",
         estimatedTime: "4 mins",
       },
       {
@@ -589,7 +589,7 @@ export const trainingProgram: Module[] = [
       {
         id: "m3-item11",
         label: "Play the Service Walkthrough",
-        link: "https://www.app.quodo.com.au/plans",
+        link: "https://q.digitalau1.com.au/plans",
         estimatedTime: "3 mins",
       },
       {
@@ -601,7 +601,7 @@ export const trainingProgram: Module[] = [
       {
         id: "m3-item13",
         label: "Play the Payment Options",
-        link: "https://www.app.quodo.com.au/plans",
+        link: "https://q.digitalau1.com.au/plans",
         estimatedTime: "4 mins",
       },
       {
@@ -612,7 +612,7 @@ export const trainingProgram: Module[] = [
       {
         id: "m3-item14",
         label: "Play the Service Walkthrough",
-        link: "https://www.app.quodo.com.au/plans",
+        link: "https://q.digitalau1.com.au/plans",
         estimatedTime: "3 mins",
       },
       {
@@ -624,12 +624,12 @@ export const trainingProgram: Module[] = [
       {
         id: "m3-item16",
         label: "Play the Payment Options",
-        link: "https://www.app.quodo.com.au/plans",
+        link: "https://q.digitalau1.com.au/plans",
         estimatedTime: "4 mins",
       },
     ],
     resources: [
-      { label: "Q-Quote Login", url: "https://www.app.quodo.com.au/plans" },
+      { label: "Q-Quote Login", url: "https://q.digitalau1.com.au/plans" },
     ],
   },
   {
