@@ -40,8 +40,9 @@ interface TraineeWeekData {
 // when Airtable is unreachable.
 const TEAM_CLOSERS: { name: string; closer: string; fallbackMembers: string[] }[] = [
   { name: "Team 1", closer: "lucas-tirri", fallbackMembers: ["lucas-tirri"] },
-  { name: "Team 2", closer: "felipe-garcia", fallbackMembers: ["felipe-garcia", "sydney-arnold", "shian-roux"] },
-  { name: "Team 3", closer: "dylan-munro", fallbackMembers: ["dylan-munro", "riley-kerrison", "jade-bautista"] },
+  { name: "Team 2", closer: "felipe-garcia", fallbackMembers: ["felipe-garcia", "holly-best", "sydney-arnold"] },
+  { name: "Team 3", closer: "dylan-munro", fallbackMembers: ["dylan-munro", "jade-bautista", "noah-conlon"] },
+  { name: "Team 4", closer: "riley-kerrison", fallbackMembers: ["riley-kerrison", "fady-saleh"] },
 ];
 
 // Trainees who carry the 7/day individual booking target. Sourced from

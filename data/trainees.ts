@@ -113,6 +113,18 @@ export const trainees: Trainee[] = [
     slug: "holly-best",
     startDate: "2026-12-31",
   },
+  {
+    id: "noah-conlon",
+    name: "Noah Conlon",
+    slug: "noah-conlon",
+    startDate: "2026-10-26",
+  },
+  {
+    id: "fady-saleh",
+    name: "Fady Saleh",
+    slug: "fady-saleh",
+    startDate: "2026-10-27",
+  },
   // ─── Customer Service team (Sessions area) ───────────────────────────────
   // Logan and Claire were briefly moved to the Lead Gen view (16 Jun 2026)
   // then moved back to Customer Service (9 Jul 2026) when the CS team was
@@ -205,12 +217,12 @@ export const CUSTOMER_SERVICE_SLUGS: string[] = [
 // feedback) — but quizzes for this team are multiple-choice only. The full
 // 7-session projection is built in data/sessions.ts as `leadGenSessions`.
 export const LEAD_GEN_SLUGS: string[] = [
-  "shian-roux",
-  "riley-kerrison",
   "sydney-arnold",
   "jade-bautista",
   "peter-vizzari",
   "holly-best",
+  "noah-conlon",
+  "fady-saleh",
 ];
 
 /** Anyone allowed into the Sessions area (sales + customer service + lead gen). */
@@ -299,6 +311,8 @@ export const FALLBACK_CS_ONBOARDING_SLUGS: string[] = [
 // scorecards, Calls & Bookings widget, session picker and admin views even
 // if their Airtable row is still Active / has a Buddy set.
 // Cindy Rose Rondez Manrique removed 12 Oct 2026.
+// Shian Roux removed 13 Oct 2026.
 export const REMOVED_TRAINEE_SLUGS: string[] = [
   "cindy-rose-rondez-manrique",
+  "shian-roux",
 ];
