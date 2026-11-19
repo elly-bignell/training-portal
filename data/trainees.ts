@@ -125,6 +125,12 @@ export const trainees: Trainee[] = [
     slug: "fady-saleh",
     startDate: "2026-10-27",
   },
+  {
+    id: "christian-saladaga",
+    name: "Christian Saladaga",
+    slug: "christian-saladaga",
+    startDate: "2026-11-19",
+  },
   // ─── Customer Service team (Sessions area) ───────────────────────────────
   // Logan and Claire were briefly moved to the Lead Gen view (16 Jun 2026)
   // then moved back to Customer Service (9 Jul 2026) when the CS team was
@@ -223,6 +229,7 @@ export const LEAD_GEN_SLUGS: string[] = [
   "holly-best",
   "noah-conlon",
   "fady-saleh",
+  "christian-saladaga",
 ];
 
 /** Anyone allowed into the Sessions area (sales + customer service + lead gen). */
