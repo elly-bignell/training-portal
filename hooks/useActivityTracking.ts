@@ -29,8 +29,8 @@ interface WeeklyData {
 const UNIVERSAL_DAILY_STANDARD: DailyActivity = {
   calls_made: 110,
   calls: 70,
-  bookings: 7,
-  follow_up_call_scheduled: 0,
+  bookings: 5,
+  follow_up_call_scheduled: 10,
   meetings: 3,
   units: 1.5,
   revenue: 525,

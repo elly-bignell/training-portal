@@ -53,6 +53,7 @@ export async function GET(request: NextRequest) {
       calls_made: record.fields.calls_made || 0,
       calls: record.fields.calls || 0,
       bookings: record.fields.bookings || 0,
+      follow_up_call_scheduled: record.fields["follow up call scheduled"] || 0,
       meetings: record.fields.meetings || 0,
       units: record.fields.units || 0,
       revenue: record.fields.revenue || 0,

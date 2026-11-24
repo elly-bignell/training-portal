@@ -15,6 +15,7 @@ interface DailyData {
   dayName: string;
   calls: number;
   bookings: number;
+  followUps: number;
   meetings: number;
   units: number;
   revenue: number;
@@ -27,6 +28,7 @@ interface TraineeWeekData {
   totals: {
     calls: number;
     bookings: number;
+    followUps: number;
     meetings: number;
     units: number;
     revenue: number;
@@ -42,7 +44,7 @@ const TEAM_CLOSERS: { name: string; closer: string; fallbackMembers: string[] }[
   { name: "Team 1", closer: "lucas-tirri", fallbackMembers: ["lucas-tirri"] },
   { name: "Team 2", closer: "felipe-garcia", fallbackMembers: ["felipe-garcia", "holly-best", "sydney-arnold"] },
   { name: "Team 3", closer: "dylan-munro", fallbackMembers: ["dylan-munro", "jade-bautista", "noah-conlon"] },
-  { name: "Team 4", closer: "riley-kerrison", fallbackMembers: ["riley-kerrison", "fady-saleh"] },
+  { name: "Team 4", closer: "riley-kerrison", fallbackMembers: ["riley-kerrison", "christian-saladaga"] },
 ];
 
 // Trainees who carry the 7/day individual booking target. Sourced from
@@ -54,9 +56,15 @@ const TEAM_CLOSERS: { name: string; closer: string; fallbackMembers: string[] }[
 const TRAINEES_WITH_TARGET = new Set<string>(LEAD_GEN_SLUGS);
 
 // Booking targets
-const TRAINEE_BOOKINGS_TARGET_DAILY = 7;
-const TEAM_BOOKINGS_TARGET_DAILY = 7;
-const TEAM_BOOKINGS_TARGET_EOW = 35; // 7/day × 5 days
+const TRAINEE_BOOKINGS_TARGET_DAILY = 5;
+const TEAM_BOOKINGS_TARGET_DAILY = 5;
+const TEAM_BOOKINGS_TARGET_EOW = 25; // 5/day × 5 days
+
+// Follow-up targets (follow-up calls scheduled — same field the trainee
+// logs on their scorecard). Applies to the same people as the booking
+// target; buddies/closers carry no individual follow-up target.
+const TRAINEE_FOLLOWUPS_TARGET_DAILY = 10;
+const TRAINEE_FOLLOWUPS_TARGET_EOW = 50; // 10/day × 5 days
 
 // Days of the week
 const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri"];
@@ -155,6 +163,25 @@ function getTeamDailyTarget(memberSlugs: string[]): number {
 
 function getTeamEowTarget(memberSlugs: string[]): number {
   return memberSlugs.reduce((sum, slug) => sum + getIndividualEowTarget(slug), 0);
+}
+
+// Follow-up targets — anyone carrying a booking target (and who has started)
+// carries the 10/day follow-up target too. Team targets are summed from the
+// members, so they scale with however many trainees are in the team.
+function hasFollowUpTarget(slug: string): boolean {
+  return TRAINEES_WITH_TARGET.has(slug) && hasTraineeStarted(slug);
+}
+function getIndividualFollowUpDayTarget(slug: string): number {
+  return hasFollowUpTarget(slug) ? TRAINEE_FOLLOWUPS_TARGET_DAILY : 0;
+}
+function getIndividualFollowUpEowTarget(slug: string): number {
+  return hasFollowUpTarget(slug) ? TRAINEE_FOLLOWUPS_TARGET_EOW : 0;
+}
+function getTeamFollowUpDailyTarget(memberSlugs: string[]): number {
+  return memberSlugs.reduce((sum, slug) => sum + getIndividualFollowUpDayTarget(slug), 0);
+}
+function getTeamFollowUpEowTarget(memberSlugs: string[]): number {
+  return memberSlugs.reduce((sum, slug) => sum + getIndividualFollowUpEowTarget(slug), 0);
 }
 
 // Get booking status colour for a person
@@ -264,6 +291,7 @@ export default function PerformanceSummary() {
                 dayName: weekDays[idx],
                 calls: record?.calls || 0,
                 bookings: record?.bookings || 0,
+                followUps: record?.follow_up_call_scheduled || 0,
                 meetings: record?.meetings || 0,
                 units: record?.units || 0,
                 revenue: record?.revenue || 0,
@@ -274,11 +302,12 @@ export default function PerformanceSummary() {
               (acc, day) => ({
                 calls: acc.calls + day.calls,
                 bookings: acc.bookings + day.bookings,
+                followUps: acc.followUps + day.followUps,
                 meetings: acc.meetings + day.meetings,
                 units: acc.units + day.units,
                 revenue: acc.revenue + day.revenue,
               }),
-              { calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 }
+              { calls: 0, bookings: 0, followUps: 0, meetings: 0, units: 0, revenue: 0 }
             );
 
             return {
@@ -297,11 +326,12 @@ export default function PerformanceSummary() {
                 dayName: weekDays[idx],
                 calls: 0,
                 bookings: 0,
+                followUps: 0,
                 meetings: 0,
                 units: 0,
                 revenue: 0,
               })),
-              totals: { calls: 0, bookings: 0, meetings: 0, units: 0, revenue: 0 },
+              totals: { calls: 0, bookings: 0, followUps: 0, meetings: 0, units: 0, revenue: 0 },
             };
           }
         })
@@ -338,6 +368,7 @@ export default function PerformanceSummary() {
     return weekDays.map((_, idx) => ({
       calls: memberData.reduce((sum, m) => sum + (m.days[idx]?.calls || 0), 0),
       bookings: memberData.reduce((sum, m) => sum + (m.days[idx]?.bookings || 0), 0),
+      followUps: memberData.reduce((sum, m) => sum + (m.days[idx]?.followUps || 0), 0),
     }));
   };
 
@@ -346,6 +377,7 @@ export default function PerformanceSummary() {
     return {
       calls: memberData.reduce((sum, m) => sum + m.totals.calls, 0),
       bookings: memberData.reduce((sum, m) => sum + m.totals.bookings, 0),
+      followUps: memberData.reduce((sum, m) => sum + m.totals.followUps, 0),
       meetings: memberData.reduce((sum, m) => sum + m.totals.meetings, 0),
       units: memberData.reduce((sum, m) => sum + m.totals.units, 0),
       revenue: memberData.reduce((sum, m) => sum + m.totals.revenue, 0),
@@ -359,6 +391,7 @@ export default function PerformanceSummary() {
     return weekDays.map((_, idx) => ({
       calls: memberData.reduce((sum, m) => sum + (m.days[idx]?.calls || 0), 0),
       bookings: memberData.reduce((sum, m) => sum + (m.days[idx]?.bookings || 0), 0),
+      followUps: memberData.reduce((sum, m) => sum + (m.days[idx]?.followUps || 0), 0),
     }));
   })();
   const grandWeekTotals = (() => {
@@ -366,6 +399,7 @@ export default function PerformanceSummary() {
     return {
       calls: memberData.reduce((sum, m) => sum + m.totals.calls, 0),
       bookings: memberData.reduce((sum, m) => sum + m.totals.bookings, 0),
+      followUps: memberData.reduce((sum, m) => sum + m.totals.followUps, 0),
     };
   })();
 
@@ -375,6 +409,8 @@ export default function PerformanceSummary() {
   // 175/EOW. Auto-adjusts as TRAINEES_WITH_TARGET membership changes.
   const grandDailyTarget = teams.reduce((sum, t) => sum + getTeamDailyTarget(t.members), 0);
   const grandEowTarget = teams.reduce((sum, t) => sum + getTeamEowTarget(t.members), 0);
+  const grandFollowUpDailyTarget = teams.reduce((sum, t) => sum + getTeamFollowUpDailyTarget(t.members), 0);
+  const grandFollowUpEowTarget = teams.reduce((sum, t) => sum + getTeamFollowUpEowTarget(t.members), 0);
 
   return (
     <div className="space-y-6">
@@ -384,7 +420,7 @@ export default function PerformanceSummary() {
         <div className="p-4 border-b border-gray-100">
           <div className="flex items-start justify-between">
             <div>
-              <h3 className="text-lg font-bold text-gray-800">📊 Calls & Bookings</h3>
+              <h3 className="text-lg font-bold text-gray-800">📊 Calls, Bookings & Follow-ups</h3>
               <div className="flex items-center gap-2 mt-1">
                 <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${phaseTag.color}`}>
                   {phaseTag.label}
@@ -451,6 +487,8 @@ export default function PerformanceSummary() {
               const teamWeekTotals = getTeamWeekTotals(team.members);
               const teamDailyTarget = getTeamDailyTarget(team.members);
               const teamEowTarget = getTeamEowTarget(team.members);
+              const teamFollowUpDailyTarget = getTeamFollowUpDailyTarget(team.members);
+              const teamFollowUpEowTarget = getTeamFollowUpEowTarget(team.members);
 
               return (
                 <tbody key={team.name} className={teamIndex > 0 ? "border-t-2 border-gray-200" : ""}>
@@ -464,7 +502,10 @@ export default function PerformanceSummary() {
                             Booking target: <span className="font-semibold text-white">{teamDailyTarget}/team/day</span> · <span className="font-semibold text-white">{TRAINEE_BOOKINGS_TARGET_DAILY}/trainee</span>
                           </span>
                           <span className="text-xs text-slate-300">
-                            EOW: <span className="font-semibold text-white">{teamEowTarget} bookings</span>
+                            Follow-up target: <span className="font-semibold text-white">{teamFollowUpDailyTarget}/team/day</span> · <span className="font-semibold text-white">{TRAINEE_FOLLOWUPS_TARGET_DAILY}/trainee</span>
+                          </span>
+                          <span className="text-xs text-slate-300">
+                            EOW: <span className="font-semibold text-white">{teamEowTarget} bookings · {teamFollowUpEowTarget} follow-ups</span>
                           </span>
                         </div>
                       </div>
@@ -480,7 +521,7 @@ export default function PerformanceSummary() {
                       <React.Fragment key={td.slug}>
                         {/* Bookings row */}
                         <tr className="border-b border-gray-50 hover:bg-gray-50/50">
-                          <td rowSpan={2} className="px-4 py-2 align-middle border-b border-gray-100">
+                          <td rowSpan={3} className="px-4 py-2 align-middle border-b border-gray-100">
                             <Link
                               href={`/scorecard/${td.slug}`}
                               className="font-medium text-gray-900 hover:text-[#E6017D] transition-colors"
@@ -500,15 +541,15 @@ export default function PerformanceSummary() {
                               );
                             })()}
                           </td>
-                          {/* PB Day + Week — rowSpan=2 so it sits between the two-row block */}
-                          <td rowSpan={2} className="px-2 py-2 text-center align-middle border-b border-gray-100">
+                          {/* PB Day + Week — rowSpan=3 so it sits beside the three-row block */}
+                          <td rowSpan={3} className="px-2 py-2 text-center align-middle border-b border-gray-100">
                             <PBInput
                               slug={td.slug}
                               kind="day"
                               initial={pbBySlug.get(td.slug)?.day}
                             />
                           </td>
-                          <td rowSpan={2} className="px-2 py-2 text-center align-middle border-b border-gray-100">
+                          <td rowSpan={3} className="px-2 py-2 text-center align-middle border-b border-gray-100">
                             <PBInput
                               slug={td.slug}
                               kind="week"
@@ -538,6 +579,30 @@ export default function PerformanceSummary() {
                           <td className="px-2 py-1.5 text-center text-xs font-semibold text-gray-600">
                             {td.totals.calls > 0 ? `${Math.round((td.totals.bookings / td.totals.calls) * 100)}%` : <span className="text-gray-300">–</span>}
                           </td>
+                        </tr>
+                        {/* Follow-ups row */}
+                        <tr className="border-b border-gray-50 hover:bg-gray-50/50">
+                          <td className="px-1 py-1.5 text-center">
+                            <span className="text-[10px] text-gray-400 uppercase font-semibold">F/Up</span>
+                          </td>
+                          {td.days.map((day) => {
+                            const target = getIndividualFollowUpDayTarget(td.slug);
+                            const statusClass = target > 0
+                              ? getBookingStatusClass(day.followUps, target)
+                              : "text-gray-700";
+                            return (
+                              <td key={`${td.slug}-fu-${day.date}`} className={`px-2 py-1.5 text-center ${statusClass}`}>
+                                {day.followUps > 0 ? day.followUps : <span className="text-gray-300">–</span>}
+                                {target > 0 && (
+                                  <span className="text-gray-300 text-[10px]">/{target}</span>
+                                )}
+                              </td>
+                            );
+                          })}
+                          <td className={`px-3 py-1.5 text-center font-semibold ${getIndividualFollowUpEowTarget(td.slug) > 0 ? getBookingStatusClass(td.totals.followUps, getIndividualFollowUpEowTarget(td.slug)) : "text-gray-800"}`}>
+                            {td.totals.followUps}
+                          </td>
+                          <td></td>
                         </tr>
                         {/* Calls row */}
                         <tr className="border-b border-gray-100 hover:bg-gray-50/50">
@@ -586,6 +651,25 @@ export default function PerformanceSummary() {
                       {teamWeekTotals.calls > 0 ? `${Math.round((teamWeekTotals.bookings / teamWeekTotals.calls) * 100)}%` : "–"}
                     </td>
                   </tr>
+                  <tr className="bg-slate-50 border-b border-gray-200">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td className="px-1 py-2 text-center">
+                      <span className="text-[10px] text-slate-400 uppercase font-semibold">F/Up</span>
+                    </td>
+                    {teamDayTotals.map((dayTotal, idx) => (
+                      <td key={`team-fu-${team.name}-${idx}`} className={`px-2 py-2 text-center text-sm ${getTeamBookingStatusClass(dayTotal.followUps, teamFollowUpDailyTarget)}`}>
+                        {dayTotal.followUps}
+                        <span className="text-gray-400 font-normal text-xs">/{teamFollowUpDailyTarget}</span>
+                      </td>
+                    ))}
+                    <td className={`px-3 py-2 text-center text-sm ${getTeamBookingStatusClass(teamWeekTotals.followUps, teamFollowUpEowTarget)}`}>
+                      {teamWeekTotals.followUps}
+                      <span className="text-gray-400 font-normal text-xs">/{teamFollowUpEowTarget}</span>
+                    </td>
+                    <td></td>
+                  </tr>
                 </tbody>
               );
             })}
@@ -618,6 +702,23 @@ export default function PerformanceSummary() {
                 </td>
               </tr>
               <tr className="bg-slate-50">
+                <td className="px-4 py-2 text-xs font-bold text-slate-700 uppercase">Follow-ups</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                {grandDayTotals.map((dayTotal, idx) => (
+                  <td key={`grand-fu-${idx}`} className={`px-2 py-2 text-center text-sm font-bold ${getTeamBookingStatusClass(dayTotal.followUps, grandFollowUpDailyTarget)}`}>
+                    {dayTotal.followUps}
+                    <span className="text-gray-400 font-normal text-xs">/{grandFollowUpDailyTarget}</span>
+                  </td>
+                ))}
+                <td className={`px-3 py-2 text-center text-sm font-bold ${getTeamBookingStatusClass(grandWeekTotals.followUps, grandFollowUpEowTarget)}`}>
+                  {grandWeekTotals.followUps}
+                  <span className="text-gray-400 font-normal text-xs">/{grandFollowUpEowTarget}</span>
+                </td>
+                <td></td>
+              </tr>
+              <tr className="bg-slate-50">
                 <td className="px-4 py-2 text-xs font-bold text-slate-700 uppercase">Calls</td>
                 {/* Empty cells for PB Day + PB Week columns */}
                 <td></td>
@@ -643,9 +744,12 @@ export default function PerformanceSummary() {
             <div>
               <span className="font-semibold">Booking targets:</span>{" "}
               {TRAINEE_BOOKINGS_TARGET_DAILY}/trainee/day · {grandDailyTarget}/all-teams/day (buddies pick up the slack)
+              {" · "}
+              <span className="font-semibold">Follow-up targets:</span>{" "}
+              {TRAINEE_FOLLOWUPS_TARGET_DAILY}/trainee/day · {grandFollowUpDailyTarget}/all-teams/day
             </div>
             <div className="font-semibold text-[#E6017D]">
-              EOW: {grandEowTarget} bookings total
+              EOW: {grandEowTarget} bookings · {grandFollowUpEowTarget} follow-ups
             </div>
           </div>
         </div>

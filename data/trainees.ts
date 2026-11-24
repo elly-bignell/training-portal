@@ -228,7 +228,6 @@ export const LEAD_GEN_SLUGS: string[] = [
   "peter-vizzari",
   "holly-best",
   "noah-conlon",
-  "fady-saleh",
   "christian-saladaga",
 ];
 
@@ -319,7 +318,9 @@ export const FALLBACK_CS_ONBOARDING_SLUGS: string[] = [
 // if their Airtable row is still Active / has a Buddy set.
 // Cindy Rose Rondez Manrique removed 12 Oct 2026.
 // Shian Roux removed 13 Oct 2026.
+// Fady Saleh removed 24 Nov 2026.
 export const REMOVED_TRAINEE_SLUGS: string[] = [
   "cindy-rose-rondez-manrique",
   "shian-roux",
+  "fady-saleh",
 ];

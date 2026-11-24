@@ -25,7 +25,6 @@ export const LEAD_GEN_SLUGS = [
   "jade-bautista",
   "holly-best",
   "noah-conlon",
-  "fady-saleh",
   "christian-saladaga",
 ] as const;
 
