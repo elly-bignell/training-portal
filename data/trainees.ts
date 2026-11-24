@@ -111,7 +111,8 @@ export const trainees: Trainee[] = [
     id: "holly-best",
     name: "Holly Best",
     slug: "holly-best",
-    startDate: "2026-12-31",
+    // Was a 2026-12-31 placeholder, which hid her booking/follow-up targets.
+    startDate: "2026-07-08",
   },
   {
     id: "noah-conlon",
